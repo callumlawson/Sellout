@@ -11,6 +11,7 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
+        private const float TickPeriodInSeconds = 1f;
         private EntityStateSystem entitySystem;
 
         [UsedImplicitly]
@@ -20,9 +21,10 @@ namespace Assets.Scripts
 
             StaticStates.Add(new SelectedState(gameObject));
 
+            entitySystem.AddSystem(new SpawningSystem());
+            entitySystem.AddSystem(new PathfindingSystem());
+            entitySystem.AddSystem(new RandomWanderSystem());
             entitySystem.AddSystem(new HealthSystem());
-
-            entitySystem.CreateEntity(new List<IState>{new HealthState(100.0f)});
 
             entitySystem.Init();
             StartCoroutine(Ticker());
@@ -39,8 +41,9 @@ namespace Assets.Scripts
             while (true)
             {
                 entitySystem.Tick();
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(TickPeriodInSeconds);
             }
+            // ReSharper disable once IteratorNeverReturns
         }
     }
 }
