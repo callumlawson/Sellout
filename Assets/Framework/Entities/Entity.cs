@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Framework.States;
+using UnityEngine;
 
 namespace Assets.Framework.Entities
 {
@@ -10,7 +11,10 @@ namespace Assets.Framework.Entities
     public class Entity
     {
         private readonly EntityManager entityManager;
+        
         public int EntityId { get; private set; }
+
+        [NonSerialized] public GameObject gameObject;
 
         //For debugging only!
         public IEnumerable<IState> DebugStates
@@ -29,7 +33,7 @@ namespace Assets.Framework.Entities
             var state =  entityManager.GetState<T>(this);
             if (state == null)
             {
-                UnityEngine.Debug.LogError(string.Format("State {0} missing for entity \n {1}", typeof(T), this));
+                Debug.LogError(string.Format("State {0} missing for entity \n {1}", typeof(T), this));
             }
             return state;
         }

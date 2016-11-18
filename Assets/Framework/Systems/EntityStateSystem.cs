@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.Util;
@@ -103,10 +106,17 @@ namespace Assets.Framework.Systems
 
         public Entity CreateEntity(List<IState> states)
         {
-            var newStates = states.DeepClone();
-            var entity =  entityManager.BuildEntity(newStates);
-            EntityAdded(entity);
-            return entity;
+            try
+            {
+                var newStates = states.DeepClone();
+                var entity = entityManager.BuildEntity(newStates);
+                EntityAdded(entity);
+                return entity;
+            }
+            catch (SerializationException se)
+            {
+                throw new SerializationException("All states must be marked [Serializable]!", se);
+            }
         }
 
         public void RemoveEntity(Entity entityToRemove)

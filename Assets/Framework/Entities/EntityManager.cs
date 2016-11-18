@@ -4,6 +4,7 @@ using System.Reflection;
 using Assets.Framework.States;
 using Assets.Framework.Util;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Framework.Entities
 {
@@ -13,7 +14,7 @@ namespace Assets.Framework.Entities
         private readonly Dictionary<Type, Bag<IState>> statesByType = new Dictionary<Type, Bag<IState>>();
         private int nextAvailableId;
 
-        //Premature optimisation is the devil's work... This to be replaced by init time refelection.
+        //TODO: Premature optimisation is the devil's work... This to be replaced by init time refelection.
         private readonly MethodInfo addStateMethod = typeof(EntityManager).GetMethod("AddState");
         private readonly MethodInfo getStateMethod = typeof(EntityManager).GetMethod("GetState", new[] { typeof(Entity) });
 
@@ -24,6 +25,13 @@ namespace Assets.Framework.Entities
             {
                 var genericAdd = addStateMethod.MakeGenericMethod(state.GetType());
                 genericAdd.Invoke(this, new object[] { entity, state });
+
+                //Yuck, special case - might want to reconsider.
+                if (state is PrefabState)
+                {
+                    var prefabState = state as PrefabState;
+                    entity.gameObject = UnityEngine.Object.Instantiate(Resources.Load(prefabState.PrefabName)) as GameObject;
+                }
             }
             return entity;
         }
@@ -35,10 +43,15 @@ namespace Assets.Framework.Entities
 
         public void DeleteEntity(Entity entity)
         {
+            if (entity.gameObject != null)
+            {
+                UnityEngine.Object.Destroy(entity.gameObject);
+            }
             RemoveStatesForEntity(entity);
             entities[entity.EntityId] = null;
         }
 
+        [UsedImplicitly]
         public void AddState<T>([NotNull] Entity entity, [NotNull] IState state) where T : IState
         {
             Bag<IState> componentsOfType;
