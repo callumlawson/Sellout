@@ -2,6 +2,7 @@
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.States;
+using Assets.Scripts.Util;
 using UnityEngine;
 
 namespace Assets.Scripts.Systems
@@ -22,8 +23,16 @@ namespace Assets.Scripts.Systems
             if (Physics.Raycast(ray, out hit, 100))
             {
                 var objectHit = hit.collider.gameObject;
+                var selectedEntity = StaticStates.Get<SelectedState>().SelectedEntity;
+
+                if (selectedEntity != null)
+                {
+                    Recursive.SetLayerRecursively(selectedEntity.gameObject.transform, LayerMask.NameToLayer("Default"));
+                }
+
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
+                    Recursive.SetLayerRecursively(objectHit.transform, LayerMask.NameToLayer("Outline"));
                     StaticStates.Get<SelectedState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
                 }
                 else
