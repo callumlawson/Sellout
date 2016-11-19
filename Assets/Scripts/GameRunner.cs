@@ -26,6 +26,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new PathfindingSystem());
             entitySystem.AddSystem(new RandomWanderSystem());
             entitySystem.AddSystem(new HealthSystem());
+            entitySystem.AddSystem(new DrinkMakingSystem());
 
             entitySystem.Init();
             StartCoroutine(Ticker());

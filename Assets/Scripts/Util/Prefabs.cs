@@ -3,5 +3,7 @@
     public static class Prefabs
     {
         public static string Person = "Person";
+        public static string Drink = "Drinks/Drink";
+        public static string DrinkMixingUI = "UI/DrinkMixingUI";
     }
 }

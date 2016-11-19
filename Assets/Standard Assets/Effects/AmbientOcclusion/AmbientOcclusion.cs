@@ -157,7 +157,9 @@ namespace UnityStandardAssets.CinematicEffects
             get { return _quadMesh; }
         }
 
+#pragma warning disable 649
         [SerializeField] Mesh _quadMesh;
+#pragma warning restore 649
 
         #endregion
 
