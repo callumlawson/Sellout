@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
+using System;
 
 namespace Assets.Scripts.Systems
 {
@@ -31,8 +32,7 @@ namespace Assets.Scripts.Systems
             }
 
             drinkState = drinkTemplate.GetState<DrinkState>();
-            drinkState.Clear();
-
+            
             if (ui == null)
             {
                 var uiResource = Resources.Load(Prefabs.DrinkMixingUI);
@@ -45,9 +45,29 @@ namespace Assets.Scripts.Systems
                 ui.onDecrementIngredient += OnDecrementIngredient;
             }
 
-            UpdateUI();
+            OnCloseUI();
 
+            EventSystem.onEventBroadcast += OnEventBroadcast;
+        }
+
+        private void OnEventBroadcast(Message message)
+        {
+            if (message == Message.ClickedOnCounter)
+            {
+                OpenUI();
+            }
+        }
+
+        private void OpenUI()
+        {
+            drinkState.Clear();
+            UpdateUI();
             ui.gameObject.SetActive(true);
+        }
+
+        private void OnCloseUI()
+        {
+            ui.gameObject.SetActive(false);
         }
 
         private void OnDecrementIngredient(Ingredient ingredient)
@@ -61,12 +81,7 @@ namespace Assets.Scripts.Systems
             drinkState.ChangeIngredientAmount(ingredient, 1);
             UpdateUI();
         }
-
-        public void OnCloseUI()
-        {
-            ui.gameObject.SetActive(false);
-        }
-
+        
         private void OnMixEvent()
         {
             MakeDrink(drinkState);

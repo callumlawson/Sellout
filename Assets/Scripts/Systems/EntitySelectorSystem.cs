@@ -32,7 +32,7 @@ namespace Assets.Scripts.Systems
 
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
-                    Recursive.SetLayerRecursively(objectHit.transform, LayerMask.NameToLayer("Outline"));
+                    Recursive.SetLayerRecursively(objectHit.GetEntityObject().transform, LayerMask.NameToLayer("Outline"));
                     StaticStates.Get<SelectedState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
                 }
                 else

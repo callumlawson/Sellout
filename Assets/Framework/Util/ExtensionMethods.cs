@@ -19,8 +19,14 @@ namespace Assets.Framework.Util
 
         public static int GetEntityId(this GameObject go)
         {
-            var idComponent = go.GetComponent<EntityIdComponent>();
-            return idComponent == null ? EntityIdComponent.InvalidEntityId : idComponent.EntityId;
+            var idComponent = go.GetComponentInParent<EntityIdComponent>();
+            return idComponent != null ? idComponent.EntityId : EntityIdComponent.InvalidEntityId;
+        }
+
+        public static GameObject GetEntityObject(this GameObject go)
+        {
+            var idComponent = go.GetComponentInParent<EntityIdComponent>();
+            return idComponent != null ? idComponent.gameObject : null;
         }
     }
 }

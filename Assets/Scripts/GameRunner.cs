@@ -21,7 +21,6 @@ namespace Assets.Scripts
             StaticStates.Add(new SelectedState(null));
 
             //Debug
-            entitySystem.AddSystem(new EntitySelectorSystem());
             entitySystem.AddSystem(new EntityTooltipSystem());
 
             //Init
@@ -33,6 +32,8 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new RandomWanderSystem());
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
+            entitySystem.AddSystem(new EntityInteractionSystem());
+            entitySystem.AddSystem(new EntitySelectorSystem());
 
             entitySystem.Init();
             StartCoroutine(Ticker());
