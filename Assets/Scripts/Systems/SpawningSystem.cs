@@ -45,6 +45,11 @@ namespace Assets.Scripts.Systems
                     Object.Destroy(go);
                 }
             }
+            var spawnableRoot = GameObject.Find("Blueprints-DestroyedOnPlay");
+            if (spawnableRoot != null)
+            {
+                Object.Destroy(spawnableRoot);
+            }
         }
 
         private static void RemoveBlueprint(Entity entity)

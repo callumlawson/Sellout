@@ -1,10 +1,8 @@
-﻿// Simple pooling for Unity.
+﻿//   Based on - Simple pooling for Unity.
 //   Author: Martin "quill18" Glaude (quill18@quill18.com)
 //   Latest Version: https://gist.github.com/quill18/5a7cfffae68892621267
 //   License: CC0 (http://creativecommons.org/publicdomain/zero/1.0/)
-//   UPDATES:
-// 	2015-04-16: Changed Pool to use a Stack generic.
-// 
+//
 // Usage:
 // 
 //   There's no need to do any special setup of any kind.
@@ -158,6 +156,8 @@ namespace Assets.Framework.Util
                     obj = (GameObject) Object.Instantiate(prefab, pos, rot);
                     obj.name = prefab.name + " (" + nextId++ + ")";
 
+                    AddObjectToEntityRoot(obj);
+
                     // Add a PoolMember component so we know what pool
                     // we belong to.
                     obj.AddComponent<PoolMember>().myPool = this;
@@ -185,6 +185,17 @@ namespace Assets.Framework.Util
                 obj.transform.rotation = rot;
                 obj.SetActive(true);
                 return obj;
+            }
+
+            private static void AddObjectToEntityRoot(GameObject obj)
+            {
+                var entityParent = GameObject.Find("Entities");
+                if (entityParent == null)
+                {
+                    entityParent = new GameObject();
+                    entityParent.name = "Entities";
+                }
+                obj.transform.parent = entityParent.transform;
             }
 
             // Return an object to the inactive pool.

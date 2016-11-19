@@ -30,7 +30,7 @@ namespace Assets.Framework.Entities
                 if (state is PrefabState)
                 {
                     var prefabState = state as PrefabState;
-                    var go = UnityEngine.Object.Instantiate(Resources.Load(prefabState.PrefabName)) as GameObject;
+                    var go = SimplePool.Spawn(Resources.Load(prefabState.PrefabName) as GameObject);
                     var entityIdComponent = go.AddComponent<EntityIdComponent>();
                     entityIdComponent.EntityId = entity.EntityId;
                     entity.GameObject = go;
@@ -48,7 +48,7 @@ namespace Assets.Framework.Entities
         {
             if (entity.GameObject != null)
             {
-                UnityEngine.Object.Destroy(entity.GameObject);
+                SimplePool.Despawn(entity.GameObject);
             }
             RemoveStatesForEntity(entity);
             entities[entity.EntityId] = null;
