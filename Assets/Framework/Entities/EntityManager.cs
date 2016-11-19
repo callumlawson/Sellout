@@ -33,7 +33,7 @@ namespace Assets.Framework.Entities
                     var go = UnityEngine.Object.Instantiate(Resources.Load(prefabState.PrefabName)) as GameObject;
                     var entityIdComponent = go.AddComponent<EntityIdComponent>();
                     entityIdComponent.EntityId = entity.EntityId;
-                    entity.gameObject = go;
+                    entity.GameObject = go;
                 }
             }
             return entity;
@@ -46,9 +46,9 @@ namespace Assets.Framework.Entities
 
         public void DeleteEntity(Entity entity)
         {
-            if (entity.gameObject != null)
+            if (entity.GameObject != null)
             {
-                UnityEngine.Object.Destroy(entity.gameObject);
+                UnityEngine.Object.Destroy(entity.GameObject);
             }
             RemoveStatesForEntity(entity);
             entities[entity.EntityId] = null;

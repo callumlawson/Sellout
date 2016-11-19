@@ -54,7 +54,7 @@ namespace Assets.Scripts.Systems
         private static string TooltipMessage(Entity entity)
         {
             var message = new StringBuilder();
-            message.Append(string.Format("> {0} ID: {1}", entity.GetState<PrefabState>().PrefabName, entity.EntityId));
+            message.Append(string.Format("Entity ID: {0}", entity.EntityId));
             foreach (var state in entity.DebugStates)
             {
                 message.Append(Environment.NewLine);

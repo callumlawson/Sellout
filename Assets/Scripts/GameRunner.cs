@@ -20,9 +20,15 @@ namespace Assets.Scripts
 
             StaticStates.Add(new SelectedState(null));
 
+            //Debug
             entitySystem.AddSystem(new EntitySelectorSystem());
             entitySystem.AddSystem(new EntityTooltipSystem());
+
+            //Init
             entitySystem.AddSystem(new SpawningSystem());
+            entitySystem.AddSystem(new PositionInitSystem());
+
+            //Game
             entitySystem.AddSystem(new PathfindingSystem());
             entitySystem.AddSystem(new RandomWanderSystem());
             entitySystem.AddSystem(new HealthSystem());

@@ -14,7 +14,7 @@ namespace Assets.Framework.Entities
         
         public int EntityId { get; private set; }
 
-        [NonSerialized] public GameObject gameObject;
+        [NonSerialized] public GameObject GameObject;
 
         //For debugging only!
         public IEnumerable<IState> DebugStates

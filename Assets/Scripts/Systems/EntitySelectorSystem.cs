@@ -27,7 +27,7 @@ namespace Assets.Scripts.Systems
 
                 if (selectedEntity != null)
                 {
-                    Recursive.SetLayerRecursively(selectedEntity.gameObject.transform, LayerMask.NameToLayer("Default"));
+                    Recursive.SetLayerRecursively(selectedEntity.GameObject.transform, LayerMask.NameToLayer("Default"));
                 }
 
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)

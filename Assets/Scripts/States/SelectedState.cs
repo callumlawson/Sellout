@@ -1,7 +1,6 @@
 ﻿using System;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
-using UnityEngine;
 
 namespace Assets.Scripts.States
 {
