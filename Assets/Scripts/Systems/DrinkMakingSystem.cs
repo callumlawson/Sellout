@@ -50,7 +50,8 @@ namespace Assets.Scripts.Systems
             entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(prefab),
-                new DrinkState(template)
+                new DrinkState(template),
+                new PositionState(new Vector3(-9.68f, 1.27f, -14.27f))
             });
         }
     }
