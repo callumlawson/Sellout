@@ -24,8 +24,8 @@ namespace Assets.Scripts.States
                 contents.Add(content.Key, content.Value);
             }
         }
-
-        public IEnumerable<KeyValuePair<Ingredient, int>> GetContents()
+        
+        public Dictionary<Ingredient, int> GetContents()
         {
             return contents;
         }
@@ -38,11 +38,11 @@ namespace Assets.Scripts.States
         public void ChangeIngredientAmount(Ingredient ingredient, int delta)
         {
             var currentAmount = contents.ContainsKey(ingredient) ? contents[ingredient] : 0;
-            var newAmount = Mathf.Clamp(currentAmount + delta, 0, int.MaxValue);
+            var newAmount = Mathf.Clamp(currentAmount + delta, 0, int.MaxValue);            
 
             if (newAmount > 0)
             {
-                contents.Add(ingredient, currentAmount + delta);
+                contents[ingredient] = currentAmount + delta;
             }
             else
             {

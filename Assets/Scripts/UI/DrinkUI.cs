@@ -18,12 +18,24 @@ namespace Assets.Scripts.Systems
         public delegate void OnIncrementIngredient(Ingredient ingredient);
         public delegate void OnDecrementIngredient(Ingredient ingredient);
 
-        public OnMixEvent onMixEvent;
-        public OnCloseEvent onCloseEvent;
-        public OnIncrementIngredient onIncrementIngredient;
-        public OnDecrementIngredient onDecrementIngredient;
+        public OnMixEvent onMixEvent = null;
+        public OnCloseEvent onCloseEvent = null;
+        public OnIncrementIngredient onIncrementIngredient = null;
+        public OnDecrementIngredient onDecrementIngredient = null;
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
+
+        public void Awake()
+        {
+            ingredientPanels = new Dictionary<Ingredient, IngredientPanelUI>();
+            foreach (Ingredient ingredient in Enum.GetValues(typeof(Ingredient)))
+            {
+                var panel = Instantiate(ingredientTemplate);
+                panel.Initialize(ingredient, ingredientListParent);
+
+                ingredientPanels.Add(ingredient, panel);
+            }
+        }
 
         public void Mix()
         {
@@ -51,15 +63,13 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        public void Awake()
+        internal void UpdateUI(Dictionary<Ingredient, int> contents)
         {
-            ingredientPanels = new Dictionary<Ingredient, IngredientPanelUI>();
-            foreach (Ingredient ingredient in Enum.GetValues(typeof(Ingredient)))
+            foreach (var panel in ingredientPanels)
             {
-                var panel = Instantiate(ingredientTemplate);
-                panel.Initialize(ingredient, ingredientListParent);
-                
-                ingredientPanels.Add(ingredient, panel);
+                var ingredient = panel.Key;
+                var amount = contents.ContainsKey(ingredient) ? contents[ingredient] : 0;
+                ingredientPanels[ingredient].SetAmount(amount);
             }
         }
     }
