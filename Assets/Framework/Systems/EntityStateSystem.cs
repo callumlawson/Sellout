@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
-using Assets.Scripts.Util;
+using Assets.Framework.Util;
 
 namespace Assets.Framework.Systems
 {
@@ -13,8 +11,8 @@ namespace Assets.Framework.Systems
         private readonly Dictionary<IFilteredSystem, List<Entity>> activeEntitiesPerSystem = new Dictionary<IFilteredSystem, List<Entity>>();
         private readonly List<ITickEntitySystem> tickEntitySystems = new List<ITickEntitySystem>();
         private readonly List<ITickSystem> tickSystems = new List<ITickSystem>();
-        private readonly List<IUpdateEntitySystem> updateEntitySystems = new List<IUpdateEntitySystem>();
-        private readonly List<IUpdateSystem> updateSytems = new List<IUpdateSystem>();
+        private readonly List<IFrameEntitySystem> updateEntitySystems = new List<IFrameEntitySystem>();
+        private readonly List<IFrameSystem> updateSytems = new List<IFrameSystem>();
         private readonly List<IInitSystem> initSystems = new List<IInitSystem>();
         private readonly List<Entity> entitiesToRemove = new List<Entity>();
         private readonly EntityManager entityManager;
@@ -27,8 +25,8 @@ namespace Assets.Framework.Systems
         public void AddSystem(ISystem system)
         {
             var tickEntitySystem = system as ITickEntitySystem;
-            var updateEntitySystem = system as IUpdateEntitySystem;
-            var updateSystem = system as IUpdateSystem;
+            var updateEntitySystem = system as IFrameEntitySystem;
+            var updateSystem = system as IFrameSystem;
             var tickSystem = system as ITickSystem;
             var fiteredSystem = system as IFilteredSystem;
             var entityManagerSystem = system as IEntityManager;
@@ -82,11 +80,11 @@ namespace Assets.Framework.Systems
         {
             foreach (var system in updateEntitySystems)
             {
-                system.Update(activeEntitiesPerSystem[system]);
+                system.OnFrame(activeEntitiesPerSystem[system]);
             }
             foreach (var system in updateSytems)
             {
-                system.Update();
+                system.OnFrame();
             }
             //DeleteMarkedEntities();
         }
@@ -117,6 +115,15 @@ namespace Assets.Framework.Systems
             {
                 throw new SerializationException("All states must be marked [Serializable]!", se);
             }
+        }
+
+        public Entity GetEntity(int entityId)
+        {
+            if (entityId == EntityIdComponent.InvalidEntityId)
+            {
+                UnityEngine.Debug.LogError("Tried to get entity using the invalid entity id.");
+            }
+            return entityManager.GetEntity(entityId);
         }
 
         public void RemoveEntity(Entity entityToRemove)

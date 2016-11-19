@@ -30,7 +30,10 @@ namespace Assets.Framework.Entities
                 if (state is PrefabState)
                 {
                     var prefabState = state as PrefabState;
-                    entity.gameObject = UnityEngine.Object.Instantiate(Resources.Load(prefabState.PrefabName)) as GameObject;
+                    var go = UnityEngine.Object.Instantiate(Resources.Load(prefabState.PrefabName)) as GameObject;
+                    var entityIdComponent = go.AddComponent<EntityIdComponent>();
+                    entityIdComponent.EntityId = entity.EntityId;
+                    entity.gameObject = go;
                 }
             }
             return entity;

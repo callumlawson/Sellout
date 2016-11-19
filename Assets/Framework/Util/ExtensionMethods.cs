@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
-namespace Assets.Scripts.Util
+namespace Assets.Framework.Util
 {
     public static class ExtensionMethods
     {
@@ -14,6 +15,12 @@ namespace Assets.Scripts.Util
                 stream.Position = 0;
                 return (T)formatter.Deserialize(stream);
             }
+        }
+
+        public static int GetEntityId(this GameObject go)
+        {
+            var idComponent = go.GetComponent<EntityIdComponent>();
+            return idComponent == null ? EntityIdComponent.InvalidEntityId : idComponent.EntityId;
         }
     }
 }

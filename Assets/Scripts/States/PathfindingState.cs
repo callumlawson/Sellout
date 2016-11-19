@@ -13,5 +13,10 @@ namespace Assets.Scripts.States
         {
             Goal = goal;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Pathfinding Goal: {0}", Goal);
+        }
     }
 }

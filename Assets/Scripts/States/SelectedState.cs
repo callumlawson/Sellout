@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Framework.Entities;
 using Assets.Framework.States;
 using UnityEngine;
 
@@ -7,11 +8,10 @@ namespace Assets.Scripts.States
     [Serializable]
     public class SelectedState : IState
     {
-        public GameObject SelectedGameObject;
+        public Entity SelectedEntity;
 
-        public SelectedState(GameObject selectedGameObject)
+        public SelectedState(Entity selectedEntity)
         {
-            SelectedGameObject = selectedGameObject;
         }
     }
 }

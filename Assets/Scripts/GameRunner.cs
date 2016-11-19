@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
@@ -15,12 +14,14 @@ namespace Assets.Scripts
         private EntityStateSystem entitySystem;
 
         [UsedImplicitly]
-        public void Awake()
+        public void Start()
         {
             entitySystem = new EntityStateSystem();
 
-            StaticStates.Add(new SelectedState(gameObject));
+            StaticStates.Add(new SelectedState(null));
 
+            entitySystem.AddSystem(new EntitySelectorSystem());
+            entitySystem.AddSystem(new EntityTooltipSystem());
             entitySystem.AddSystem(new SpawningSystem());
             entitySystem.AddSystem(new PathfindingSystem());
             entitySystem.AddSystem(new RandomWanderSystem());

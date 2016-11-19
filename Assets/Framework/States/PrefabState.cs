@@ -11,5 +11,10 @@ namespace Assets.Framework.States
         {
             PrefabName = prefabName;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Prefab: {0}", PrefabName);
+        }
     }
 }

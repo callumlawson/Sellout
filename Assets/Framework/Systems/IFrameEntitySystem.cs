@@ -3,8 +3,8 @@ using Assets.Framework.Entities;
 
 namespace Assets.Framework.Systems
 {
-    public interface IUpdateEntitySystem : IFilteredSystem
+    public interface IFrameEntitySystem : IFilteredSystem
     {
-        void Update(List<Entity> matchingEntities);
+        void OnFrame(List<Entity> matchingEntities);
     }
 }
