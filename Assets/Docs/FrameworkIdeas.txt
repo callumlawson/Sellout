@@ -1,0 +1,1 @@
+﻿IEntityBlueprints should be buildable with an inspector widget. No needs to make a new script for every object unless you want to. 

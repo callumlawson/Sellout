@@ -10,6 +10,7 @@ namespace Assets.Scripts.Blueprints
     public class WaypointSpawner : MonoBehaviour, IEntityBlueprint
     {
         [UsedImplicitly] public GameObject NextWaypoint;
+        [UsedImplicitly] public Goal Goal;
 
         public List<IState> EntityToSpawn()
         {
@@ -18,7 +19,8 @@ namespace Assets.Scripts.Blueprints
                 new PositionState(transform.position),
                 new BlueprintGameObjectState(gameObject),
                 new WaypointState(),
-                new PrefabState(Prefabs.Waypoint)
+                new PrefabState(Prefabs.Waypoint),
+                new GoalSatisfierState(new List<Goal> {Goal})
             };
         }
     }

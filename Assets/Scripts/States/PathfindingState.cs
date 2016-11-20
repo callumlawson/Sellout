@@ -7,16 +7,16 @@ namespace Assets.Scripts.States
     [Serializable]
     class PathfindingState : IState
     {
-        public SerializableVector3? Goal;
+        public SerializableVector3? TargetPosition;
 
-        public PathfindingState(Vector3? goal)
+        public PathfindingState(Vector3? targetPosition)
         {
-            Goal = goal;
+            TargetPosition = targetPosition;
         }
 
         public override string ToString()
         {
-            return string.Format("Pathfinding Goal: {0}", Goal);
+            return string.Format("Pathfinding target: {0}", TargetPosition);
         }
     }
 }

@@ -28,13 +28,17 @@
 //     or implied, of GAMADU.COM.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+//
+// This code is a modification of the original code from the srouce above. 
 #endregion File description
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Framework.Util
 {
-    public class Bag<T>
+    public class Bag<T> : IEnumerable<T>
     {
         private T[] contents;
 
@@ -212,6 +216,22 @@ namespace Assets.Framework.Util
             var oldElements = contents;
             contents = new T[newCapacity];
             Array.Copy(oldElements, 0, contents, 0, oldElements.Length);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (T entity in contents)
+            {
+                if (entity != null)
+                {
+                    yield return entity;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

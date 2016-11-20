@@ -85,17 +85,18 @@ namespace Assets.Scripts.Systems
         {
             for (var i = 0; i < 5; i++)
             {
-                SpawnNPC(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
+                SpawnNpc(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
             }
         }
 
-        private void SpawnNPC(string prefab, Vector3 position)
+        private void SpawnNpc(string prefab, Vector3 position)
         {
             entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(prefab),
-                new RandomWandererFlagState(),
-                new PathfindingState(position),
+                new PositionState(position),
+                new PathfindingState(null),
+                new CurrentGoalState(Goal.Nothing),
                 new InventoryState(),
                 new VisibleSlotState()
             });

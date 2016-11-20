@@ -18,7 +18,7 @@ namespace Assets.Scripts.Systems
         {
             foreach (var entity in matchingEntities)
             {
-                var goal = entity.GetState<PathfindingState>().Goal;
+                var goal = entity.GetState<PathfindingState>().TargetPosition;
 
                 var navAgent = entity.GameObject.GetComponent<NavMeshAgent>();
                 if (goal.HasValue)

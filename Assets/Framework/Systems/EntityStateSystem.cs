@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
@@ -139,6 +140,11 @@ namespace Assets.Framework.Systems
                 UnityEngine.Debug.LogError("Tried to get entity using the invalid entity id.");
             }
             return entityManager.GetEntity(entityId);
+        }
+
+        public IEnumerable<Entity> GetEntitiesWithState<T>() where T : IState
+        {
+            return entityManager.GetEntitiesWithState<T>();
         }
 
         public void RemoveEntity(Entity entityToRemove)

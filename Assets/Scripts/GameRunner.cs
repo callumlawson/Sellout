@@ -3,6 +3,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
+using Assets.Scripts.Systems.AI;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -35,15 +36,15 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new InventoryExchangeSystem());
             entitySystem.AddSystem(new VisibleSlotSystem());
 
-            //NPC
-            entitySystem.AddSystem(new RandomWanderSystem());
+            //NPC/AI
+            entitySystem.AddSystem(new GoalDecisionSystem());
+            entitySystem.AddSystem(new PayForGoalSystem());
+            entitySystem.AddSystem(new WanderGoalSystem());
 
             //Player
             entitySystem.AddSystem(new PlayerInventoryInteractionSystem());
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
-
-           
 
             entitySystem.Init();
             StartCoroutine(Ticker());

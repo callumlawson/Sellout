@@ -100,6 +100,19 @@ namespace Assets.Framework.Entities
             return default(T);
         }
 
+        public IEnumerable<Entity> GetEntitiesWithState<T>() where T : IState
+        {
+            var results = new List<Entity>();
+            foreach (var entity in entities)
+            {
+                if (entity.HasState<T>())
+                {
+                    results.Add(entity);
+                }
+            }
+            return results;
+        }
+
         private Entity CreateEmptyEntity()
         {
             var entityId = nextAvailableId;

@@ -1,7 +1,6 @@
 ﻿using System;
-using Assets.Framework.States;
 
-namespace Assets.Scripts.States
+namespace Assets.Framework.States
 {
     [Serializable]
     class PositionState : IState
