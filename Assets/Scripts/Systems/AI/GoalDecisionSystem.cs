@@ -12,7 +12,7 @@ namespace Assets.Scripts.Systems.AI
     {
         public List<Type> RequiredStates()
         {
-            return new List<Type> {typeof(CurrentGoalState), typeof(InventoryState)};
+            return new List<Type> {typeof(GoalState), typeof(InventoryState)};
         }
 
         public void Tick(List<Entity> matchingEntities)
@@ -21,14 +21,18 @@ namespace Assets.Scripts.Systems.AI
             {
                 if (entity.GetState<InventoryState>().child != null)
                 {
-                    entity.GetState<CurrentGoalState>().CurrentGoal = Goal.PayFor;
+                    entity.GetState<GoalState>().UpdateGoal(Goal.PayFor);
+                    entity.GetState<GoalState>().UpdateGoalStatus(GoalStatus.Start);
                 }
-
-                if (Random.value > 0.9)
+                else if (Random.value > 0.9)
                 {
                     var goals = new List<Goal> {Goal.Wander, Goal.Sit};
                     var randomGoal = goals[Random.Range(0, goals.Count)];
-                    entity.GetState<CurrentGoalState>().CurrentGoal = randomGoal;
+                    if (randomGoal != entity.GetState<GoalState>().CurrentGoal)
+                    {
+                        entity.GetState<GoalState>().UpdateGoal(randomGoal);
+                        entity.GetState<GoalState>().UpdateGoalStatus(GoalStatus.Start);
+                    }
                 }
             }
         }

@@ -20,7 +20,8 @@ namespace Assets.Scripts.Blueprints
                 new BlueprintGameObjectState(gameObject),
                 new WaypointState(),
                 new PrefabState(Prefabs.Waypoint),
-                new GoalSatisfierState(new List<Goal> {Goal})
+                new GoalSatisfierState(new List<Goal> {Goal}),
+                new UserState(null)
             };
         }
     }

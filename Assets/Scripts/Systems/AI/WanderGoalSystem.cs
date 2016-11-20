@@ -13,14 +13,14 @@ namespace Assets.Scripts.Systems.AI
     {
         public List<Type> RequiredStates()
         {
-            return new List<Type> { typeof(CurrentGoalState) };
+            return new List<Type> { typeof(GoalState) };
         }
 
         public void Tick(List<Entity> matchingEntities)
         {
             foreach (var entity in matchingEntities)
             {
-                if (entity.GetState<CurrentGoalState>().CurrentGoal == Goal.Wander)
+                if (entity.GetState<GoalState>().CurrentGoal == Goal.Wander)
                 {
                     if (Random.value > 0.6)
                     {

@@ -20,24 +20,40 @@ namespace Assets.Scripts.Systems.AI
 
         public List<Type> RequiredStates()
         {
-            return new List<Type> { typeof(CurrentGoalState), typeof(PathfindingState) };
+            return new List<Type> { typeof(GoalState), typeof(PathfindingState) };
         }
 
         public void Tick(List<Entity> matchingEntities)
         {
             foreach (var entity in matchingEntities)
             {
-                if (entity.GetState<CurrentGoalState>().CurrentGoal == Goal.PayFor)
+                var goalState = entity.GetState<GoalState>();
+                if (goalState.PreviousGoal == Goal.PayFor)
+                {
+                    var payPoints = entitySystem.GetEntitiesWithState<GoalSatisfierState>()
+                                    .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.PayFor));
+                    foreach (var payPoint in payPoints)
+                    {
+                        if (Equals(payPoint.GetState<UserState>().User, entity))
+                        {
+                            payPoint.GetState<UserState>().User = null;
+                        }
+                    }
+                }
+                else if (goalState.CurrentGoal == Goal.PayFor && goalState.CurrentGoalStatus == GoalStatus.Start)
                 {
                     var goalSatisfiers = entitySystem.GetEntitiesWithState<GoalSatisfierState>();
-                    var payPoint = goalSatisfiers.FirstOrDefault(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.PayFor));
+                    var payPoint = goalSatisfiers
+                        .Where(satisfierEntity => satisfierEntity.GetState<UserState>().IsFree())
+                        .FirstOrDefault(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.PayFor));
                     if (payPoint != null)
                     {
+                        entity.GetState<GoalState>().UpdateGoalStatus(GoalStatus.Ongoing);
+                        payPoint.GetState<UserState>().User = entity;
                         entity.GetState<PathfindingState>().TargetPosition = payPoint.GetState<PositionState>().Position;
                     }
                 }
             }
         }
-
     }
 }
