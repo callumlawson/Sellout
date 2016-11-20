@@ -24,8 +24,9 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new EntityTooltipSystem());
 
             //Init
-            entitySystem.AddSystem(new SpawningSystem());
+            entitySystem.AddSystem(new WaypointInitSystem());
             entitySystem.AddSystem(new PositionInitSystem());
+            entitySystem.AddSystem(new SpawningSystem());
 
             //Game
             entitySystem.AddSystem(new PathfindingSystem());
@@ -34,6 +35,8 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DrinkMakingSystem());
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
+
+           
 
             entitySystem.Init();
             StartCoroutine(Ticker());
