@@ -1,15 +1,31 @@
-﻿using Assets.Scripts.Util;
+﻿using Assets.Scripts.Util.Events;
 
 namespace Assets.Scripts.Systems
 {
     static class EventSystem
     {
-        public delegate void OnEventBroadcast(Message message);
-        public static OnEventBroadcast onEventBroadcast;
+        public delegate void OnClickEvent(ClickEvent clickEvent);
+        public static OnClickEvent onClickInteraction = null;
 
-        public static void BroadcastMessage(Message message)
+        public delegate void OnInventoryRequestEvent(InventoryRequestEvent inventoryRequestEvent);
+        public static OnInventoryRequestEvent onInventoryRequestEvent = null;
+
+        public delegate void OnInventoryEvent(InventoryEvent inventoryEvent);
+        public static OnInventoryEvent onInventoryEvent = null;
+
+        public static void BroadcastEvent(ClickEvent clickEvent)
         {
-            onEventBroadcast(message);
+            onClickInteraction(clickEvent);
+        }
+
+        public static void BroadcastEvent(InventoryRequestEvent inventoryRequestEvent)
+        {
+            onInventoryRequestEvent(inventoryRequestEvent);
+        }
+
+        public static void BroadcastEvent(InventoryEvent inventoryEvent)
+        {
+            onInventoryEvent(inventoryEvent);
         }
     }
 }

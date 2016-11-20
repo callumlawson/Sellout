@@ -13,7 +13,6 @@ namespace Assets.Scripts.Blueprints
             return new List<IState>
             {
                 new PositionState(transform.position),
-                new InteractionState(Message.ClickedOnCounter),
                 new PrefabState(Prefabs.Counter)
             };
         }

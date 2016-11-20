@@ -28,10 +28,17 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new PositionInitSystem());
 
             //Game
-            entitySystem.AddSystem(new PathfindingSystem());
-            entitySystem.AddSystem(new RandomWanderSystem());
+            entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
+            entitySystem.AddSystem(new InventoryExchangeSystem());
+            entitySystem.AddSystem(new VisibleSlotSystem());
+
+            //NPC
+            entitySystem.AddSystem(new RandomWanderSystem());
+
+            //Player
+            entitySystem.AddSystem(new PlayerInventoryInteractionSystem());
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
 

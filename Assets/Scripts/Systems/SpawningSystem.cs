@@ -20,15 +20,27 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
+            SpawnPlayer();
             SpawnPeople();
             SpawnEntitiesFromBlueprints();
+        }
+
+        private void SpawnPlayer()
+        {
+            var player = entitySystem.CreateEntity(new List<IState>
+            {
+                new PrefabState(Prefabs.Player),
+                new InventoryState(),
+                new VisibleSlotState()
+            });
+            StaticStates.Add(new PlayerState(player));
         }
 
         private void SpawnPeople()
         {
             for (var i = 0; i < 5; i++)
             {
-                Spawn(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
+                SpawnNPC(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
             }
         }
 
@@ -61,13 +73,15 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void Spawn(string prefab, Vector3 position)
+        private void SpawnNPC(string prefab, Vector3 position)
         {
             entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(prefab),
                 new RandomWandererFlagState(),
-                new PathfindingState(position)
+                new PathfindingState(position),
+                new InventoryState(),
+                new VisibleSlotState()
             });
         }
     }

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
-using System;
+using Assets.Framework.Util;
+using Assets.Scripts.Util.Events;
 
 namespace Assets.Scripts.Systems
 {
@@ -47,12 +48,12 @@ namespace Assets.Scripts.Systems
 
             OnCloseUI();
 
-            EventSystem.onEventBroadcast += OnEventBroadcast;
+            EventSystem.onClickInteraction += OnEventBroadcast;
         }
 
-        private void OnEventBroadcast(Message message)
+        private void OnEventBroadcast(ClickEvent message)
         {
-            if (message == Message.ClickedOnCounter)
+            if (message.target.HasState<PrefabState>() && message.target.GetState<PrefabState>().PrefabName == Prefabs.Counter)
             {
                 OpenUI();
             }
@@ -84,16 +85,25 @@ namespace Assets.Scripts.Systems
         
         private void OnMixEvent()
         {
-            MakeDrink(drinkState);
+            var player = StaticStates.Get<PlayerState>().Player;
+            if (player.GetState<InventoryState>().child == null)
+            {
+                var drink = MakeDrink(drinkState);
+                EventSystem.BroadcastEvent(new InventoryRequestEvent(null, player, drink));
 
-            drinkState.Clear();
-            UpdateUI();
+                drinkState.Clear();
+                UpdateUI();
+            }
+            else
+            {
+                Debug.Log("Unable to make a drink because the player is already holding one!");
+            }
         }
 
-        private void MakeDrink(DrinkState template)
+        private Entity MakeDrink(DrinkState template)
         {
             var prefab = Prefabs.Drink;
-            entitySystem.CreateEntity(new List<IState>
+            return entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(prefab),
                 new DrinkState(template),

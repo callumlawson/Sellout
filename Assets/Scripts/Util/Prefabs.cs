@@ -7,5 +7,6 @@
         public static string Drink = "Drinks/Drink";
         public static string DrinkMixingUI = "UI/DrinkMixingUI";
         public static string Counter = "Environment/Counter";
+        public static string Player = "Player";
     }
 }
