@@ -16,7 +16,8 @@ namespace Assets.Scripts.Blueprints
             return new List<IState>
             {
                 new PositionState(transform.position),
-                new WaypointState(NextWaypoint),
+                new BlueprintGameObjectState(gameObject),
+                new WaypointState(),
                 new PrefabState(Prefabs.Waypoint)
             };
         }

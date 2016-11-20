@@ -14,6 +14,7 @@ namespace Assets.Framework.Systems
         private readonly List<IFrameEntitySystem> updateEntitySystems = new List<IFrameEntitySystem>();
         private readonly List<IFrameSystem> updateSytems = new List<IFrameSystem>();
         private readonly List<IInitSystem> initSystems = new List<IInitSystem>();
+        private readonly List<IEndInitSystem> endInitSystems = new List<IEndInitSystem>();
         private readonly List<Entity> entitiesToRemove = new List<Entity>();
         private readonly EntityManager entityManager;
 
@@ -31,6 +32,7 @@ namespace Assets.Framework.Systems
             var fiteredSystem = system as IFilteredSystem;
             var entityManagerSystem = system as IEntityManager;
             var initSystem = system as IInitSystem;
+            var endInitSystem = system as IEndInitSystem;
 
             if (entityManagerSystem != null)
             {
@@ -66,6 +68,11 @@ namespace Assets.Framework.Systems
             {
                 initSystems.Add(initSystem);
             }
+
+            if (endInitSystem != null)
+            {
+                endInitSystems.Add(endInitSystem);
+            }
         }
 
         public void Init()
@@ -73,6 +80,11 @@ namespace Assets.Framework.Systems
             foreach (var system in initSystems)
             {
                 system.OnInit();
+            }
+
+            foreach (var system in endInitSystems)
+            {
+                system.OnEndInit();
             }
         }
 
@@ -102,13 +114,16 @@ namespace Assets.Framework.Systems
             DeleteMarkedEntities();
         }
 
-        public Entity CreateEntity(List<IState> states)
+        public Entity CreateEntity(List<IState> states, bool copyStates = true, bool fireEntityAdded = true)
         {
             try
             {
-                var newStates = states.DeepClone();
+                var newStates = copyStates ? states.DeepClone() : states;
                 var entity = entityManager.BuildEntity(newStates);
-                EntityAdded(entity);
+                if (fireEntityAdded)
+                {
+                    EntityAdded(entity);
+                }
                 return entity;
             }
             catch (SerializationException se)
@@ -150,7 +165,7 @@ namespace Assets.Framework.Systems
             });
         }
 
-        private void EntityAdded(Entity entity)
+        public void EntityAdded(Entity entity)
         {
             foreach (var system in activeEntitiesPerSystem.Keys)
             {
