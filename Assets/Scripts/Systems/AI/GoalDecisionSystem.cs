@@ -24,9 +24,9 @@ namespace Assets.Scripts.Systems.AI
                     entity.GetState<CurrentGoalState>().CurrentGoal = Goal.PayFor;
                 }
 
-                if (Random.value > 0.8)
+                if (Random.value > 0.9)
                 {
-                    var goals = new List<Goal> {Goal.Nothing, Goal.Wander};
+                    var goals = new List<Goal> {Goal.Wander, Goal.Sit};
                     var randomGoal = goals[Random.Range(0, goals.Count)];
                     entity.GetState<CurrentGoalState>().CurrentGoal = randomGoal;
                 }

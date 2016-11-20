@@ -2,6 +2,7 @@
 {
     public enum Goal
     {
+        Sit,
         Nothing,
         Wander,
         PayFor,

@@ -38,6 +38,7 @@ namespace Assets.Scripts
 
             //NPC/AI
             entitySystem.AddSystem(new GoalDecisionSystem());
+            entitySystem.AddSystem(new SitGoalSystem());
             entitySystem.AddSystem(new PayForGoalSystem());
             entitySystem.AddSystem(new WanderGoalSystem());
 

@@ -96,7 +96,7 @@ namespace Assets.Scripts.Systems
                 new PrefabState(prefab),
                 new PositionState(position),
                 new PathfindingState(null),
-                new CurrentGoalState(Goal.Nothing),
+                new CurrentGoalState(Goal.Sit),
                 new InventoryState(),
                 new VisibleSlotState()
             });
