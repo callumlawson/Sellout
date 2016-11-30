@@ -20,7 +20,7 @@ namespace Assets.Scripts.Systems
             {
                 var goal = entity.GetState<PathfindingState>().TargetPosition;
 
-                var navAgent = entity.GameObject.GetComponent<NavMeshAgent>();
+                var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
                 if (goal.HasValue)
                 {
                     navAgent.destination = goal.Value;
