@@ -3,7 +3,7 @@
 namespace Assets.Framework.States
 {
     [Serializable]
-    class PositionState : IState
+    public class PositionState : IState
     {
         public SerializableVector3 Position;
 
