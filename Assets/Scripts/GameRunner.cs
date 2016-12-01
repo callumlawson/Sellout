@@ -35,6 +35,8 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DrinkMakingSystem());
             entitySystem.AddSystem(new InventoryExchangeSystem());
             entitySystem.AddSystem(new VisibleSlotSystem());
+            entitySystem.AddSystem(new CharacterResponseSystem());
+            entitySystem.AddSystem(new DialogueSystem());
 
             //NPC/AI
             entitySystem.AddSystem(new GoalDecisionSystem());

@@ -4,5 +4,6 @@ namespace Assets.Scripts.Visualizers.Slots
 {
     class SlotVisualizer : MonoBehaviour
     {
+        //Used as marker.
     }
 }

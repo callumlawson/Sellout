@@ -6,7 +6,7 @@ using Assets.Scripts.Util.Events;
 
 namespace Assets.Scripts.Systems
 {
-    class PlayerInventoryInteractionSystem : ISystem, IInitSystem
+    class PlayerInventoryInteractionSystem : IInitSystem
     {
         private Entity player;
 

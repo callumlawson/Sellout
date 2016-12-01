@@ -10,7 +10,7 @@ namespace Assets.Scripts.Systems
     {
         public void OnFrame()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 var selectedGameObject = StaticStates.Get<SelectedState>().SelectedEntity;
                 if (selectedGameObject != null)
