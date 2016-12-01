@@ -68,17 +68,17 @@ namespace Assets.Scripts.Systems
             {
                 DialogueSystem.Instance.StartDialogue();
                 DialogueSystem.Instance.WriteNPCLine("What you looking at?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", BitFriendly);
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", Whoops);
             }
 
-            private static void BitFriendly()
+            private static void Whoops()
             {
                 DialogueSystem.Instance.WriteNPCLine("What you looking at <b>me</b> for?" );
-                DialogueSystem.Instance.WritePlayerChoiceLine("I, err, don't know.", RunningBar);
+                DialogueSystem.Instance.WritePlayerChoiceLine("I, err, don't know.", DiggingHole);
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk away</i>", End);
             }
 
-            private static void RunningBar()
+            private static void DiggingHole()
             {
                 DialogueSystem.Instance.WriteNPCLine("Well sodd off then.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", End);
