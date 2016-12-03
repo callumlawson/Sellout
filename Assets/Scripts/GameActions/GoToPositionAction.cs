@@ -1,9 +1,10 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
+using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using UnityEngine;
 
-namespace Assets.Scripts.Systems.AI.AIActions
+namespace Assets.Scripts.GameActions
 {
     class GoToPositionAction : GameAction
     {
@@ -23,7 +24,11 @@ namespace Assets.Scripts.Systems.AI.AIActions
 
         public override void OnFrame(Entity entity)
         {
-            IsComplete = Vector3.Distance(entity.GetState<PositionState>().Position, targetPosition) < PositionTolerance;
+            if (Vector3.Distance(entity.GetState<PositionState>().Position, targetPosition) < PositionTolerance)
+            {
+                ActionStatus = ActionStatus.Succeeded;
+            }
+            //TODO: Add timeout.
         }
     }
 }

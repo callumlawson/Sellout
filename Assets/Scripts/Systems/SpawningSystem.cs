@@ -96,7 +96,7 @@ namespace Assets.Scripts.Systems
                 new PrefabState(prefab),
                 new PositionState(position),
                 new PathfindingState(null),
-                new GoalState(),
+                new ActionBlackboardState(null),
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PersonState()

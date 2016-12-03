@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.GameActions.Framework;
 
-namespace Assets.Scripts.Systems.AI.AIActions
+namespace Assets.Scripts.GameActions.Composite
 {
     public abstract class CompositeAction : GameAction
     {

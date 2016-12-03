@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
-using Assets.Scripts.Systems.AI.AIActions;
-using UnityEditor;
+using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.States;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Systems.AI
             foreach (var entityToActions in entityActions)
             {
                 entityToActions.Value.OnFrame(entityToActions.Key);
+                entityToActions.Key.GetState<ActionBlackboardState>().CurrentActions = entityToActions.Value.ToString();
             }
         }
 
@@ -45,7 +47,7 @@ namespace Assets.Scripts.Systems.AI
 
         public bool IsEntityIdle(Entity entity)
         {
-            return !entityActions.ContainsKey(entity) || GetActionsForEntity(entity).IsComplete;
+            return !entityActions.ContainsKey(entity) || GetActionsForEntity(entity).IsComplete();
         }
     }
 }

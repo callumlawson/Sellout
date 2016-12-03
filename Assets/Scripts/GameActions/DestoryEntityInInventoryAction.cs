@@ -1,30 +1,26 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Framework.Systems;
+using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 
-namespace Assets.Scripts.Systems.AI.AIActions
+namespace Assets.Scripts.GameActions
 {
     public class DestoryEntityInInventoryAction : GameAction
     {
-        private readonly Entity entityToRemove;
-
-        public DestoryEntityInInventoryAction(Entity entity)
-        {
-            entityToRemove = entity;
-        }
-
         public override void OnStart(Entity entity)
         {
-            if (entityToRemove != null)
+            var inventoryItem = entity.GetState<InventoryState>().child;
+            if (inventoryItem != null)
             {
                 entity.GetState<InventoryState>().RemoveChild();
-                EntityStateSystem.Instance.RemoveEntity(entityToRemove);
+                EntityStateSystem.Instance.RemoveEntity(inventoryItem);
             }
-            IsComplete = true;
+            ActionStatus = ActionStatus.Succeeded;
         }
 
         public override void OnFrame(Entity entity)
         {
+            //Nothing doing.
         }
     }
 }

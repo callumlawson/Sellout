@@ -1,3 +1,8 @@
-﻿Need the concept of failure.
+﻿All actions must either Sucseed or Fail or the system with stop.
+
+Add decorators!
+Add "fallback" combination node.
+Need the concept of failure. DONE
 Need the concept of "interuptable".
 Inject the ESS instead of using singleton instance. 
+Adds a Pause action - find prefered timing method.
