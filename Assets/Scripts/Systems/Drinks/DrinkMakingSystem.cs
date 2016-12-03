@@ -47,15 +47,7 @@ namespace Assets.Scripts.Systems.Drinks
 
             OnCloseUI();
 
-            EventSystem.onClickInteraction += OnEventBroadcast;
-        }
-
-        private void OnEventBroadcast(ClickEvent message)
-        {
-            if (message.target.HasState<PrefabState>() && message.target.GetState<PrefabState>().PrefabName == Prefabs.Counter)
-            {
-                OpenUI();
-            }
+            EventSystem.onOpenDrinkMenuEvent += OpenUI;
         }
 
         private void OpenUI()

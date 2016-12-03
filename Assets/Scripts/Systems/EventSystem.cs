@@ -7,6 +7,9 @@ namespace Assets.Scripts.Systems
         public delegate void OnClickEvent(ClickEvent clickEvent);
         public static OnClickEvent onClickInteraction = null;
 
+        public delegate void OnOpenDrinkMenuEvent();
+        public static OnOpenDrinkMenuEvent onOpenDrinkMenuEvent = null;
+
         public delegate void OnInventoryRequestEvent(InventoryRequestEvent inventoryRequestEvent);
         public static OnInventoryRequestEvent onInventoryRequestEvent = null;
 
@@ -26,6 +29,11 @@ namespace Assets.Scripts.Systems
         public static void BroadcastEvent(InventoryEvent inventoryEvent)
         {
             onInventoryEvent(inventoryEvent);
+        }
+
+        public static void BroadcastEvent(OpenDrinkMakingMenuEvent openDrinkMakingMenuEvent)
+        {
+            onOpenDrinkMenuEvent();
         }
     }
 }

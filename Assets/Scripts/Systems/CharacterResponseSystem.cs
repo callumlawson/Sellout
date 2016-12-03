@@ -38,11 +38,22 @@ namespace Assets.Scripts.Systems
             if (targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();
-                if (prefab.PrefabName == Prefabs.Person)
-                {
+                QueueActionsForPrefab(targetEntity, prefab.PrefabName);
+            }
+        }
+
+        private static void QueueActionsForPrefab(Entity targetEntity, string prefab)
+        {
+            switch (prefab)
+            {
+                case Prefabs.Counter:
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetWaypointAction(Goal.RingUp));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToWaypointAction());
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new OpenDrinkMakingMenuAction());
+                    break;
+                case Prefabs.Person:
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GetPersonAction(targetEntity));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingWaypointAction());
-                    
                     if (Random.value > 0.4)
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueOne));
@@ -51,8 +62,9 @@ namespace Assets.Scripts.Systems
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueTwo));
                     }
-                    
-                }
+                    break;
+                default:
+                    break;
             }
         }
 
