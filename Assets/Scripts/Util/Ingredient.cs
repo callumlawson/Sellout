@@ -2,6 +2,10 @@
 {
     public enum Ingredient
     {
-        Alcohol
+        Synthol,
+        Alcohol,
+        
+        OrangeJuice,
+        Cola,
     };
 }

@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
-using Assets.Framework.Util;
 using Assets.Scripts.Util.Events;
 
-namespace Assets.Scripts.Systems
+namespace Assets.Scripts.Systems.Drinks
 {
     class DrinkMakingSystem : IEntityManager, IInitSystem
     {
