@@ -26,14 +26,7 @@ namespace Assets.Scripts.States
 
         public override string ToString()
         {
-            if (User != null)
-            {
-                return string.Format("Current User: {0}", User.EntityId);
-            }
-            else
-            {
-                return "No User";
-            }
+            return User != null ? string.Format("Current User: {0}", User.EntityId) : "No User";
         }
     }
 }

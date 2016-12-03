@@ -12,7 +12,7 @@ namespace Assets.Scripts.Systems.AI
     {
         public List<Type> RequiredStates()
         {
-            return new List<Type> {typeof(GoalState), typeof(InventoryState)};
+            return new List<Type> {typeof(GoalState), typeof(PersonState)};
         }
 
         public void Tick(List<Entity> matchingEntities)

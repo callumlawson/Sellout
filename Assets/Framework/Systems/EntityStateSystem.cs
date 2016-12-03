@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
@@ -9,6 +8,9 @@ namespace Assets.Framework.Systems
 {
     public class EntityStateSystem
     {
+        //TODO: Remove this and replace with dependency injection
+        public static EntityStateSystem Instance;
+
         private readonly Dictionary<IFilteredSystem, List<Entity>> activeEntitiesPerSystem = new Dictionary<IFilteredSystem, List<Entity>>();
         private readonly List<ITickEntitySystem> tickEntitySystems = new List<ITickEntitySystem>();
         private readonly List<ITickSystem> tickSystems = new List<ITickSystem>();
@@ -22,6 +24,7 @@ namespace Assets.Framework.Systems
         public EntityStateSystem()
         {
             entityManager = new EntityManager();
+            Instance = this;
         }
 
         public void AddSystem(ISystem system)

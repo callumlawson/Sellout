@@ -1,0 +1,3 @@
+﻿Need the concept of failure.
+Need the concept of "interuptable".
+Inject the ESS instead of using singleton instance. 

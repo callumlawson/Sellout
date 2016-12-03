@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
-using Assets.Scripts.States;
 
 namespace Assets.Scripts.Systems
 {
-    class PositionInitSystem : IReactiveEntitySystem
+    class PositionInitSystem : IReactiveEntitySystem, IFrameEntitySystem
     {
         public List<Type> RequiredStates()
         {
             return new List<Type> {typeof(PositionState), typeof(PrefabState)};
+        }
+
+        public void OnFrame(List<Entity> matchingEntities)
+        {
+            foreach (var entity in matchingEntities)
+            {
+                entity.GetState<PositionState>().Position = entity.GameObject.transform.position;
+            }
         }
 
         public void OnEntityAdded(Entity entity)

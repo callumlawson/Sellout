@@ -25,7 +25,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new EntityTooltipSystem());
 
             //Init
-            entitySystem.AddSystem(new WaypointInitSystem());
+            entitySystem.AddSystem(new WaypointSystem());
             entitySystem.AddSystem(new PositionInitSystem());
             entitySystem.AddSystem(new SpawningSystem());
 
@@ -39,10 +39,12 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DialogueSystem());
 
             //NPC/AI
-            entitySystem.AddSystem(new GoalDecisionSystem());
-            entitySystem.AddSystem(new SitGoalSystem());
-            entitySystem.AddSystem(new PayForGoalSystem());
-            entitySystem.AddSystem(new WanderGoalSystem());
+            entitySystem.AddSystem(new ActionManagerSystem());
+            entitySystem.AddSystem(new PersonDescisionSystem());
+//            entitySystem.AddSystem(new GoalDecisionSystem());
+//            entitySystem.AddSystem(new SitGoalSystem());
+//            entitySystem.AddSystem(new PayForGoalSystem());
+//            entitySystem.AddSystem(new WanderGoalSystem());
 
             //Player
             entitySystem.AddSystem(new PlayerInventoryInteractionSystem());

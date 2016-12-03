@@ -1,14 +1,14 @@
-﻿using Assets.Framework.States;
-using System;
+﻿using System;
+using Assets.Framework.States;
 
 namespace Assets.Scripts.States
 {
     [Serializable]
-    class VisibleSlotState : IState
+    public class PersonState : IState
     {
         public override string ToString()
         {
-            return "Has visible slot";
+            return "Is Person";
         }
     }
 }

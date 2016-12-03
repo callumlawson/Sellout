@@ -98,7 +98,8 @@ namespace Assets.Scripts.Systems
                 new PathfindingState(null),
                 new GoalState(),
                 new InventoryState(),
-                new VisibleSlotState()
+                new VisibleSlotState(),
+                new PersonState()
             });
         }
     }
