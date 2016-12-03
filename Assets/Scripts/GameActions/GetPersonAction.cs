@@ -15,7 +15,7 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
-            entity.GetState<ActionBlackboardState>().TargetWaypoint = goal;
+            entity.GetState<ActionBlackboardState>().TargetEntity = goal;
             ActionStatus = ActionStatus.Succeeded;            
         }
 

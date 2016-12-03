@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;

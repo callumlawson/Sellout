@@ -20,7 +20,7 @@ namespace Assets.Scripts.GameActions
             var waypoint = WaypointSystem.Instance.GetFreeWaypointThatSatisfiesGoal(goal);
             if (waypoint != null)
             {
-                entity.GetState<ActionBlackboardState>().TargetWaypoint = waypoint;
+                entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
             else

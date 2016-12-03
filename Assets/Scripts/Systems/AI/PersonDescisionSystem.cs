@@ -42,8 +42,10 @@ namespace Assets.Scripts.Systems.AI
             var drink = new ActionSequence();
             drink.Add(new GetWaypointAction(Goal.PayFor));
             drink.Add(new GoToWaypointAction());
+            drink.Add(new PauseAction(10.0f));
             drink.Add(new GetWaypointAction(Goal.Sit));
             drink.Add(new GoToWaypointAction());
+            drink.Add(new PauseAction(30.0f));
             drink.Add(new DestoryEntityInInventoryAction());
             return drink;
         }
