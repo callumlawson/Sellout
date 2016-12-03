@@ -6,9 +6,11 @@ namespace Assets.Scripts.UI
 {
     class MixologyBookUI : MonoBehaviour
     {
+#pragma warning disable 649
         [SerializeField] private GameObject recipeContentPane;
         [SerializeField] private GameObject recipeTemplate;
         [SerializeField] private GameObject ingredientTemplate;
+#pragma warning restore 649
 
         private string recipeToNamePath = "Title/Text";
         private string ingredientToNamePath = "Panel/Name";

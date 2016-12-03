@@ -1,6 +1,11 @@
-﻿using Assets.Framework.States;
+﻿using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Scripts.GameActions;
+using Assets.Scripts.States;
+using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
+using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.Events;
 using UnityEngine;
 
@@ -8,85 +13,93 @@ namespace Assets.Scripts.Systems
 {
     class CharacterResponseSystem : IInitSystem
     {
+        private static DemoDialogueOne dialogueOne = new DemoDialogueOne();
+        private static DemoDialogueTwo dialogueTwo = new DemoDialogueTwo();
+
+        private static Entity player; 
+
         public void OnInit()
         {
             EventSystem.onClickInteraction += OnClickInteraction;
+
+            player = StaticStates.Get<PlayerState>().Player;
         }
 
         private static void OnClickInteraction(ClickEvent clickevent)
         {
+            if (ActionManagerSystem.Instance.EntityHasActions(player))
+            {
+                Debug.Log("Player already has actions!");
+                // Do this for now, then add cancelling...
+                return;
+            }
+            
             var targetEntity = clickevent.target;
             if (targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();
                 if (prefab.PrefabName == Prefabs.Person)
                 {
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetPersonAction(targetEntity));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingWaypointAction());
+                    
                     if (Random.value > 0.4)
                     {
-                        DemoDialogueOne.Start();
+                        ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueOne));
                     }
                     else
                     {
-                        DemoDialogueTwo.Start();
+                        ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueTwo));
                     }
+                    
                 }
             }
         }
 
-        private static class DemoDialogueOne
+        private class DemoDialogueOne : Conversation
         {
-            public static void Start()
+            protected override void StartConversation()
             {
                 DialogueSystem.Instance.StartDialogue();
                 DialogueSystem.Instance.WriteNPCLine("Hello there, what you up to?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("You're a bit friendly.", BitFriendly);
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm running the bar now.", RunningBar);
-                DialogueSystem.Instance.WritePlayerChoiceLine("Sorry, gotta wipe this up. Can't talk now.", End);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Sorry, gotta wipe this up. Can't talk now.", EndConversation);
             }
 
-            private static void BitFriendly()
+            private void BitFriendly()
             {
                 DialogueSystem.Instance.WriteNPCLine("It's a small boat. Friendly will get you far.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Fair point - thanks.", End);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Fair point - thanks.", EndConversation);
             }
 
-            private static void RunningBar()
+            private void RunningBar()
             {
                 DialogueSystem.Instance.WriteNPCLine("Ah, shame about poor Fred... still, glad you'll have the taps flowing again.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll do my best.", End);
-            }
-
-            private static void End()
-            {
-                DialogueSystem.Instance.StopDialogue();
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll do my best.", EndConversation);
             }
         }
 
-        private static class DemoDialogueTwo
+        private class DemoDialogueTwo : Conversation
         {
-            public static void Start()
+            protected override void StartConversation()
             {
                 DialogueSystem.Instance.StartDialogue();
                 DialogueSystem.Instance.WriteNPCLine("What you looking at?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", Whoops);
             }
 
-            private static void Whoops()
+            private void Whoops()
             {
                 DialogueSystem.Instance.WriteNPCLine("What you looking at <b>me</b> for?" );
                 DialogueSystem.Instance.WritePlayerChoiceLine("I, err, don't know.", DiggingHole);
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk away</i>", End);
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk away</i>", EndConversation);
             }
 
-            private static void DiggingHole()
+            private void DiggingHole()
             {
                 DialogueSystem.Instance.WriteNPCLine("Well sodd off then.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", End);
-            }
-
-            private static void End()
-            {
-                DialogueSystem.Instance.StopDialogue();
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", EndConversation);
             }
         }
     }

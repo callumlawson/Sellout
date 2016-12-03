@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
@@ -42,7 +43,22 @@ namespace Assets.Scripts.Systems.AI
 
         public ActionSequence GetActionsForEntity(Entity entity)
         {
+            if (!entityActions.ContainsKey(entity))
+            {
+                return new ActionSequence();
+            }
+
             return entityActions[entity];
+        }
+
+        public bool EntityHasActions(Entity entity)
+        {
+            if (!entityActions.ContainsKey(entity))
+            {
+                return false;
+            }
+
+            return entityActions[entity].NonEmpty();
         }
 
         public bool IsEntityIdle(Entity entity)

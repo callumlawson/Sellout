@@ -12,6 +12,11 @@ namespace Assets.Scripts.GameActions.Composite
         {
         }
 
+        public bool NonEmpty()
+        {
+            return Actions.Count > 0;
+        }
+
         public override void OnFrame(Entity entity)
         {
             if (Actions.Any())

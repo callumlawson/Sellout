@@ -21,20 +21,9 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            SpawnPlayer();
+            SpawnPlayer(Vector3.zero);
             SpawnPeople();
             SpawnEntitiesFromBlueprints();
-        }
-
-        private void SpawnPlayer()
-        {
-            var player = entitySystem.CreateEntity(new List<IState>
-            {
-                new PrefabState(Prefabs.Player),
-                new InventoryState(),
-                new VisibleSlotState()
-            });
-            StaticStates.Add(new PlayerState(player));
         }
 
         public void OnEndInit()
@@ -87,6 +76,20 @@ namespace Assets.Scripts.Systems
             {
                 SpawnNpc(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
             }
+        }
+
+        private void SpawnPlayer(Vector3 position)
+        {
+            var player = entitySystem.CreateEntity(new List<IState>
+            {
+                new PrefabState(Prefabs.Player),
+                new InventoryState(),
+                new VisibleSlotState(),
+                new PositionState(position),
+                new PathfindingState(null),
+                new ActionBlackboardState(null),
+            });
+            StaticStates.Add(new PlayerState(player));
         }
 
         private void SpawnNpc(string prefab, Vector3 position)

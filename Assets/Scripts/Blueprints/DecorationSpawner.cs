@@ -7,7 +7,9 @@ namespace Assets.Scripts.Blueprints
     //TODO need nicer system for this other than magic string.
     class DecorationSpawner : MonoBehaviour, IEntityBlueprint
     {
+#pragma warning disable 649
         public string Prefab;
+#pragma warning restore 649
 
         public List<IState> EntityToSpawn()
         {
