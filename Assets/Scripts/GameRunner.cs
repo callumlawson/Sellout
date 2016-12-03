@@ -6,6 +6,7 @@ using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using JetBrains.Annotations;
 using UnityEngine;
+using Assets.Scripts.Systems.Drinks;
 
 namespace Assets.Scripts
 {

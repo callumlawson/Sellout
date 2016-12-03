@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.UI;
+﻿using Assets.Scripts.States;
+using Assets.Scripts.UI;
 using Assets.Scripts.Util;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Systems
     class DrinkUI : MonoBehaviour
     {
 #pragma warning disable 649
+        [SerializeField] private MixologyBookUI mixologyBook;
         public IngredientPanelUI ingredientTemplate;
         public RectTransform ingredientListParent;
 #pragma warning restore 649
@@ -25,6 +27,24 @@ namespace Assets.Scripts.Systems
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
+        private static readonly Dictionary<Ingredient, int> screwdriverIngredients = new Dictionary<Ingredient, int>
+        {
+            {Ingredient.Alcohol, 1},
+            {Ingredient.OrangeJuice, 1}
+        };
+
+        private static readonly Dictionary<Ingredient, int> rumAndColaIngredients = new Dictionary<Ingredient, int>
+        {
+            {Ingredient.Alcohol, 1},
+            {Ingredient.Cola, 1}
+        };
+
+        private List<DrinkRecipe> recipes = new List<DrinkRecipe>
+        {
+            new DrinkRecipe("Space Screwdriver", new DrinkState(screwdriverIngredients)),
+            new DrinkRecipe("Space Rum and Cola", new DrinkState(rumAndColaIngredients))
+        };
+
         public void Awake()
         {
             ingredientPanels = new Dictionary<Ingredient, IngredientPanelUI>();
@@ -35,6 +55,11 @@ namespace Assets.Scripts.Systems
 
                 ingredientPanels.Add(ingredient, panel);
             }
+
+            for (var i = 0; i < recipes.Count; i++)
+            {
+                mixologyBook.AddRecipe(recipes[i]);
+            }
         }
 
         public void Mix()
@@ -44,7 +69,13 @@ namespace Assets.Scripts.Systems
         
         public void Close()
         {
+            mixologyBook.gameObject.SetActive(false);
             onCloseEvent();
+        }
+
+        public void OpenMixologyBook()
+        {
+            mixologyBook.gameObject.SetActive(true);
         }
 
         public void IncrementIngredient(Ingredient ingredient)

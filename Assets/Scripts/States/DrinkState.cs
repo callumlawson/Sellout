@@ -16,6 +16,11 @@ namespace Assets.Scripts.States
             contents = new Dictionary<Ingredient, int>();
         }
 
+        public DrinkState(Dictionary<Ingredient, int> contents)
+        {
+            this.contents = new Dictionary<Ingredient, int>(contents);
+        }
+
         public DrinkState(DrinkState template)
         {
             contents = new Dictionary<Ingredient, int>();

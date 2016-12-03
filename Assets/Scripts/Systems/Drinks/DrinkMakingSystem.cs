@@ -7,7 +7,7 @@ using UnityEngine;
 using Assets.Framework.Entities;
 using Assets.Scripts.Util.Events;
 
-namespace Assets.Scripts.Systems
+namespace Assets.Scripts.Systems.Drinks
 {
     class DrinkMakingSystem : IEntityManager, IInitSystem
     {
