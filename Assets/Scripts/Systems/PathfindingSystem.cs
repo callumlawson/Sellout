@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
-    class PathfindingSystem : IFrameEntitySystem
+    class PathfindingSystem : ITickEntitySystem
     {
         public List<Type> RequiredStates()
         {
             return new List<Type> {typeof(PathfindingState)};
         }
 
-        public void OnFrame(List<Entity> matchingEntities)
+        public void Tick(List<Entity> matchingEntities)
         {
             foreach (var entity in matchingEntities)
             {
