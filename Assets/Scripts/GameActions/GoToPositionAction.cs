@@ -29,6 +29,8 @@ namespace Assets.Scripts.GameActions
         {
             if (Vector3.Distance(entity.GetState<PositionState>().Position, targetPosition) < PositionTolerance)
             {
+                pathfindingState = entity.GetState<PathfindingState>();
+                pathfindingState.TargetPosition = null;
                 ActionStatus = ActionStatus.Succeeded;
             }
             //TODO: Add timeout.

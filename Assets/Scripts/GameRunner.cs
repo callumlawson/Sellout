@@ -12,7 +12,7 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
-        private const float TickPeriodInSeconds = 1f;
+        private const float TickPeriodInSeconds = 0.4f;
         private EntityStateSystem entitySystem;
 
         [UsedImplicitly]

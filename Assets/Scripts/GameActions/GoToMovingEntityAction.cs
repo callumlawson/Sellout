@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
@@ -41,6 +40,8 @@ namespace Assets.Scripts.GameActions
 
             if (Vector3.Distance(entity.GetState<PositionState>().Position, pathfindingState.TargetPosition.GetValueOrDefault()) < PositionTolerance)
             {
+                pathfindingState = entity.GetState<PathfindingState>();
+                pathfindingState.TargetPosition = null;
                 ActionStatus = ActionStatus.Succeeded;
             }
             //TODO: Add timeout => Failure.
