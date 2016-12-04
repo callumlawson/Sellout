@@ -12,6 +12,8 @@ namespace Assets.Scripts.Systems
 {
     class SpawningSystem : IInitSystem, IEndInitSystem, IEntityManager
     {
+        private const int numNPCs = 5;
+
         private EntityStateSystem entitySystem;
 
         public void SetEntitySystem(EntityStateSystem ess)
@@ -72,7 +74,7 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople()
         {
-            for (var i = 0; i < 1; i++)
+            for (var i = 0; i < numNPCs; i++)
             {
                 SpawnNpc(Prefabs.Person, new Vector3(5f, 0.0f, 14f));
             }
