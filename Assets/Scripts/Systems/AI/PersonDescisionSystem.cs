@@ -30,7 +30,7 @@ namespace Assets.Scripts.Systems.AI
                     }
                     else
                     {
-                        var xyPos = Random.insideUnitCircle * 15;
+                        var xyPos = Random.insideUnitCircle * 6;
                         ActionManagerSystem.Instance.QueueActionForEntity(entity, new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
                     }
                 }

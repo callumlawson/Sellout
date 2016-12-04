@@ -21,7 +21,7 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            SpawnPlayer(Vector3.zero);
+            SpawnPlayer(new Vector3(-3.5f, 0, -15));
             SpawnPeople();
             SpawnEntitiesFromBlueprints();
         }
@@ -74,7 +74,7 @@ namespace Assets.Scripts.Systems
         {
             for (var i = 0; i < 5; i++)
             {
-                SpawnNpc(Prefabs.Person, new Vector3(12.28f, 0.0f, 11.21f));
+                SpawnNpc(Prefabs.Person, new Vector3(5f, 0.0f, 14f));
             }
         }
 
