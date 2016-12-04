@@ -53,7 +53,7 @@ namespace Assets.Scripts.Systems
                     break;
                 case Prefabs.Person:
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GetEntityAction(targetEntity));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingEntityAction(1.0f));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingEntityAction(2.0f));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new PauseTargetActionSequeunceAction(targetEntity));
                     if (Random.value > 0.4)
                     {
