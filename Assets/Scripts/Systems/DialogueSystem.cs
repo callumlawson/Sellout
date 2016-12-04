@@ -45,6 +45,16 @@ namespace Assets.Scripts.Systems
             ShowDialogue(false);
         }
 
+        public void PauseDialogue()
+        {
+            ShowDialogue(false);
+        }
+
+        public void UnpauseDialogue()
+        {
+            ShowDialogue(false);
+        }
+
         public void WriteNPCLine(string line)
         {
             CreateDialogueLine(line);

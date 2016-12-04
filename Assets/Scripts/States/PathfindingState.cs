@@ -8,6 +8,8 @@ namespace Assets.Scripts.States
     class PathfindingState : IState
     {
         public SerializableVector3? TargetPosition;
+        public bool Paused;
+        public float StoppingDistance;
 
         public PathfindingState(Vector3? targetPosition)
         {

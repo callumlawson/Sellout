@@ -1,4 +1,5 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Util.Events;
@@ -16,6 +17,16 @@ namespace Assets.Scripts.GameActions
         {
             EventSystem.BroadcastEvent(new OpenDrinkMakingMenuEvent());
             ActionStatus = ActionStatus.Succeeded;
+        }
+
+        public override void Pause()
+        {
+            //Do Nothing
+        }
+
+        public override void Unpause()
+        {
+            //Do Nothing
         }
     }
 }

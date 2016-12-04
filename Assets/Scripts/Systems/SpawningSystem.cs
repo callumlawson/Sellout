@@ -72,7 +72,7 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople()
         {
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < 1; i++)
             {
                 SpawnNpc(Prefabs.Person, new Vector3(5f, 0.0f, 14f));
             }

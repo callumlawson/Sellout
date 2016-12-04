@@ -2,12 +2,16 @@
 using System.Text;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.States;
+using UnityEngine;
 
 namespace Assets.Scripts.GameActions.Composite
 {
     //Run actions in sequence ignoring failure
     class ActionSequence : CompositeAction
     {
+        private bool paused;
+
         public override void OnStart(Entity entity)
         {
         }
@@ -17,8 +21,33 @@ namespace Assets.Scripts.GameActions.Composite
             return Actions.Count > 0;
         }
 
+        public override void Pause()
+        {
+            paused = true;
+            if (Actions.Count > 0)
+            {
+                Actions[0].Pause();
+            }
+        }
+
+        public override void Unpause()
+        {
+            paused = false;
+            if (Actions.Count > 0)
+            {
+                Actions[0].Unpause();
+            }
+        }
+
         public override void OnFrame(Entity entity)
         {
+            UpdatePauseState(entity);
+
+            if (paused)
+            {
+                return;
+            }
+
             if (Actions.Any())
             {
                 ActionStatus = ActionStatus.Running;
@@ -40,6 +69,19 @@ namespace Assets.Scripts.GameActions.Composite
             else
             {
                 ActionStatus = ActionStatus.Succeeded;
+            }
+        }
+
+        private void UpdatePauseState(Entity entity)
+        {
+            var entityIsPaused = entity.GetState<ActionBlackboardState>().Paused;
+            if (entityIsPaused && !paused)
+            {
+                Pause();
+            }
+            else if (!entityIsPaused && paused)
+            {
+                Unpause();
             }
         }
 

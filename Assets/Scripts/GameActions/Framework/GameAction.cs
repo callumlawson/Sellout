@@ -26,6 +26,10 @@ namespace Assets.Scripts.GameActions.Framework
         {
             return ActionStatus == ActionStatus.Failed || ActionStatus == ActionStatus.Succeeded;
         }
+        
+        public abstract void Pause();
+
+        public abstract void Unpause();
 
         public override string ToString()
         {

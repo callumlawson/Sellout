@@ -33,5 +33,15 @@ namespace Assets.Scripts.GameActions
         {
             //Do Nothing
         }
+
+        public override void Pause()
+        {
+            //Do Nothing
+        }
+
+        public override void Unpause()
+        {
+            //Do Nothing
+        }
     }
 }

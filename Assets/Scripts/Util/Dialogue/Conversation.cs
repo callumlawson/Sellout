@@ -13,7 +13,17 @@ namespace Assets.Scripts.Util.Dialogue
             StartConversation();
         }
 
-        protected abstract void StartConversation();        
+        public void Pause()
+        {
+            DialogueSystem.Instance.PauseDialogue();
+        }
+
+        public void Unpause()
+        {
+            DialogueSystem.Instance.UnpauseDialogue();
+        }
+
+        protected abstract void StartConversation();      
 
         protected void EndConversation()
         {

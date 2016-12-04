@@ -1,4 +1,5 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using UnityEngine;
 
@@ -26,6 +27,16 @@ namespace Assets.Scripts.GameActions
             {
                 ActionStatus = ActionStatus.Succeeded;
             }
+        }
+
+        public override void Pause()
+        {
+            //Do Nothing
+        }
+
+        public override void Unpause()
+        {
+            //Do Nothing;
         }
     }
 }

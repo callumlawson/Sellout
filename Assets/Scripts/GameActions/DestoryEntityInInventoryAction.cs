@@ -1,4 +1,5 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
@@ -21,6 +22,16 @@ namespace Assets.Scripts.GameActions
         public override void OnFrame(Entity entity)
         {
             //Nothing doing.
+        }
+
+        public override void Pause()
+        {
+            //Do Nothing
+        }
+
+        public override void Unpause()
+        {
+            //Do Nothing
         }
     }
 }

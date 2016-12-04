@@ -18,12 +18,26 @@ namespace Assets.Scripts.Systems
         {
             foreach (var entity in matchingEntities)
             {
-                var goal = entity.GetState<PathfindingState>().TargetPosition;
+                var pathfindingState = entity.GetState<PathfindingState>();
+                var goal = pathfindingState.TargetPosition;
+                var paused = pathfindingState.Paused;
+                var stoppingDistance = pathfindingState.StoppingDistance;
 
                 var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
                 if (goal.HasValue)
                 {
                     navAgent.destination = goal.Value;
+                    navAgent.stoppingDistance = stoppingDistance;
+                }
+
+                if (paused)
+                {
+                    navAgent.Stop();
+                    navAgent.velocity = Vector3.zero;
+                }
+                else
+                {
+                    navAgent.Resume();
                 }
             }
         }

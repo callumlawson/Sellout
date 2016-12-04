@@ -9,6 +9,7 @@ namespace Assets.Scripts.States
     class ActionBlackboardState : IState
     {
         public Entity TargetEntity;
+        public bool Paused;
         public string CurrentActions;
 
         public ActionBlackboardState(Entity targetEntity)

@@ -1,14 +1,15 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions
 {
-    class GetPersonAction : GameAction
+    class GetEntityAction : GameAction
     {
         private Entity goal;
 
-        public GetPersonAction(Entity person)
+        public GetEntityAction(Entity person)
         {
             goal = person;
         }
@@ -20,6 +21,16 @@ namespace Assets.Scripts.GameActions
         }
 
         public override void OnFrame(Entity entity)
+        {
+            //Do Nothing
+        }
+
+        public override void Pause()
+        {
+            //Do Nothing
+        }
+
+        public override void Unpause()
         {
             //Do Nothing
         }

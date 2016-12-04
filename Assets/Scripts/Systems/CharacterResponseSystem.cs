@@ -52,8 +52,9 @@ namespace Assets.Scripts.Systems
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new OpenDrinkMakingMenuAction());
                     break;
                 case Prefabs.Person:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetPersonAction(targetEntity));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingWaypointAction());
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetEntityAction(targetEntity));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingEntityAction(4.0f));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new PauseTargetActionSequeunceAction(targetEntity));
                     if (Random.value > 0.4)
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueOne));
@@ -62,6 +63,7 @@ namespace Assets.Scripts.Systems
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueTwo));
                     }
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new UnpauseTargetActionSequeunceAction(targetEntity));
                     break;
                 default:
                     break;

@@ -1,41 +1,37 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
-using Assets.Scripts.Util.Dialogue;
+using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions
 {
-    class ConversationAction : GameAction
+    class UnpauseTargetActionSequeunceAction : GameAction
     {
-        private Conversation conversation;
+        private Entity target;
 
-        public ConversationAction(Conversation conversation)
+        public UnpauseTargetActionSequeunceAction(Entity target)
         {
-            this.conversation = conversation;
+            this.target = target;
         }
 
         public override void OnFrame(Entity entity)
         {
-            
+            // Do nothing
         }
 
         public override void OnStart(Entity entity)
         {
-            conversation.Start(ConversationEnded);
-        }
-
-        private void ConversationEnded()
-        {
+            target.GetState<ActionBlackboardState>().Paused = false;
             ActionStatus = ActionStatus.Succeeded;
         }
 
         public override void Pause()
         {
-            conversation.Pause();
+            // Do nothing
         }
 
         public override void Unpause()
         {
-            conversation.Unpause();
+            // Do nothing
         }
     }
 }

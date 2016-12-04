@@ -1,4 +1,5 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
@@ -10,6 +11,7 @@ namespace Assets.Scripts.GameActions
     {
         private const float PositionTolerance = 2.0f;
         private readonly Vector3 targetPosition;
+        private PathfindingState pathfindingState;
 
         public GoToPositionAction(Vector3 position)
         {
@@ -18,8 +20,9 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
-            var pathfinding = entity.GetState<PathfindingState>();
-            pathfinding.TargetPosition = targetPosition;
+            pathfindingState = entity.GetState<PathfindingState>();
+            pathfindingState.TargetPosition = targetPosition;
+            pathfindingState.StoppingDistance = 0f;
         }
 
         public override void OnFrame(Entity entity)
@@ -29,6 +32,16 @@ namespace Assets.Scripts.GameActions
                 ActionStatus = ActionStatus.Succeeded;
             }
             //TODO: Add timeout.
+        }
+
+        public override void Pause()
+        {
+            pathfindingState.Paused = true;
+        }
+
+        public override void Unpause()
+        {
+            pathfindingState.Paused = false;
         }
     }
 }
