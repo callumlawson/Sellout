@@ -30,7 +30,7 @@ namespace Assets.Scripts.Systems
 
         public void OnEndInit()
         {
-            CleanUpBlueprints();
+            CleanNestedBlueprints();
         }
 
         private void SpawnEntitiesFromBlueprints()
@@ -53,7 +53,7 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void CleanUpBlueprints()
+        private void CleanNestedBlueprints()
         {
             var spawnableRoot = GameObject.Find("Blueprints-DestroyedOnPlay");
             if (spawnableRoot != null)
@@ -65,9 +65,10 @@ namespace Assets.Scripts.Systems
             foreach (var go in allObjects)
             {
                 var possibleBlueprint = go.GetComponent<IEntityBlueprint>() as MonoBehaviour;
-                if (possibleBlueprint != null)
+                var isEntityRoot = go.GetComponent<EntityIdComponent>() as MonoBehaviour;
+                if (possibleBlueprint != null && !isEntityRoot)
                 {
-                    Object.Destroy(possibleBlueprint);
+                    Object.Destroy(possibleBlueprint.gameObject);
                 }
             }
         }

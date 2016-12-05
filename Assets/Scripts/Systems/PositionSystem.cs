@@ -6,11 +6,17 @@ using Assets.Framework.Systems;
 
 namespace Assets.Scripts.Systems
 {
-    class PositionInitSystem : IReactiveEntitySystem, IFrameEntitySystem
+    class PositionSystem : IReactiveEntitySystem, IFrameEntitySystem
     {
         public List<Type> RequiredStates()
         {
             return new List<Type> {typeof(PositionState), typeof(PrefabState)};
+        }
+
+        public void OnEntityAdded(Entity entity)
+        {
+            var position = entity.GetState<PositionState>().Position;
+            entity.GameObject.transform.position = position;
         }
 
         public void OnFrame(List<Entity> matchingEntities)
@@ -19,12 +25,6 @@ namespace Assets.Scripts.Systems
             {
                 entity.GetState<PositionState>().Position = entity.GameObject.transform.position;
             }
-        }
-
-        public void OnEntityAdded(Entity entity)
-        {
-            var position = entity.GetState<PositionState>().Position;
-            entity.GameObject.transform.position = position;
         }
 
         public void OnEntityRemoved(Entity entity)

@@ -4,7 +4,7 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.Systems
 {
-    class InventoryExchangeSystem : ISystem, IInitSystem
+    class InventoryExchangeSystem : IInitSystem
     {
         public void OnInit()
         {
