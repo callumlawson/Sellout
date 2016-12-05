@@ -53,7 +53,7 @@ namespace Assets.Scripts.Systems
             //Do nothing.
         }
 
-        public IEnumerable<Entity> GetFreeWaypointsThatSatisfyGoal(Goal goal)
+        private IEnumerable<Entity> GetFreeWaypointsThatSatisfyGoal(Goal goal)
         {
             return entitySystem.GetEntitiesWithState<GoalSatisfierState>()
                 .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(goal))
@@ -63,6 +63,25 @@ namespace Assets.Scripts.Systems
         public Entity GetFreeWaypointThatSatisfiesGoal(Goal goal)
         {
             return GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
+        }
+
+        public Entity GetAndUseWaypointThatSatisfiedGoal(Goal goal, Entity entity)
+        {
+            var waypoint = GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
+            if (waypoint == null)
+            {
+                return null;
+            }
+            waypoint.GetState<UserState>().User = entity;
+            return waypoint;
+        }
+
+        public static void ReleaseWaypoint(Entity waypoint)
+        {
+            if (waypoint != null)
+            {
+                waypoint.GetState<UserState>().User = null;
+            }
         }
     }
 }

@@ -30,8 +30,7 @@ namespace Assets.Scripts.Systems.AI
                     }
                     else
                     {
-                        var xyPos = Random.insideUnitCircle * 6;
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander(new Vector3(xyPos.x, 0.0f, xyPos.y)));
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                     }
                 }
             }
@@ -43,18 +42,27 @@ namespace Assets.Scripts.Systems.AI
             drink.Add(new GetWaypointAction(Goal.PayFor));
             drink.Add(new GoToWaypointAction());
             drink.Add(new PauseAction(10.0f));
-            drink.Add(new GetWaypointAction(Goal.Sit));
+            drink.Add(new GetAndUseWaypointAction(Goal.Sit));
             drink.Add(new GoToWaypointAction());
             drink.Add(new PauseAction(30.0f));
             drink.Add(new DestoryEntityInInventoryAction());
+            drink.Add(new StopUsingWaypointAction());
             return drink;
         }
 
-        private static ActionSequence Wander(Vector3 randomPosition)
+        private static ActionSequence Wander()
         {
             var wander = new ActionSequence();
-            wander.Add(new GoToPositionAction(new Vector3(randomPosition.x, 0.0f, randomPosition.z)));
+            var xyPos = Random.insideUnitCircle * 6;
+            wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
             wander.Add(new PauseAction(4.0f));
+            if (Random.value > 0.80)
+            {
+                wander.Add(new GetAndUseWaypointAction(Goal.Sit));
+                wander.Add(new GoToWaypointAction());
+                wander.Add(new PauseAction(40.0f));
+                wander.Add(new StopUsingWaypointAction());
+            }
             return wander;
         }
     }

@@ -19,7 +19,7 @@ namespace Assets.Scripts.GameActions
             this.entity = entity;
 
             pathfindingState = entity.GetState<PathfindingState>();
-            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
+            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetWaypoint;
             if (targetWaypoint != null)
             {
                 TargetPosition = targetWaypoint.GetState<PositionState>().Position;

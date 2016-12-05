@@ -6,18 +6,18 @@ using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions
 {
-    class GetWaypointAction : GameAction
+    class GetAndUseWaypointAction : GameAction
     {
         private Goal goal;
 
-        public GetWaypointAction(Goal waypointGoal)
+        public GetAndUseWaypointAction(Goal waypointGoal)
         {
             goal = waypointGoal;
         }
 
         public override void OnStart(Entity entity)
         {
-            var waypoint = WaypointSystem.Instance.GetFreeWaypointThatSatisfiesGoal(goal);
+            var waypoint = WaypointSystem.Instance.GetAndUseWaypointThatSatisfiedGoal(goal, entity);
             if (waypoint != null)
             {
                 entity.GetState<ActionBlackboardState>().TargetWaypoint = waypoint;

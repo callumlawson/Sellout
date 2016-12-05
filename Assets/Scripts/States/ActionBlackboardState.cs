@@ -8,13 +8,13 @@ namespace Assets.Scripts.States
     [Serializable]
     class ActionBlackboardState : IState
     {
-        public Entity TargetEntity;
+        public Entity TargetWaypoint;
         public bool Paused;
         public string CurrentActions;
 
-        public ActionBlackboardState(Entity targetEntity)
+        public ActionBlackboardState(Entity targetWaypoint)
         {
-            TargetEntity = targetEntity;
+            TargetWaypoint = targetWaypoint;
         }
 
         public override string ToString()
