@@ -21,8 +21,8 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            tooltipWindow = InterfaceComponents.Instance.TooltipWindow;
-            tooltipRoot = InterfaceComponents.Instance.TooltipRoot;
+            tooltipWindow = Interface.Instance.TooltipWindow;
+            tooltipRoot = Interface.Instance.TooltipRoot;
             tooltipWindow.SetActive(false);
         }
 

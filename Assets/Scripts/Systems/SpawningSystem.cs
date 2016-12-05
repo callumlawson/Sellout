@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -12,7 +13,7 @@ namespace Assets.Scripts.Systems
 {
     class SpawningSystem : IInitSystem, IEndInitSystem, IEntityManager
     {
-        private const int numNPCs = 5;
+        private const int NonNamedNpcs = 0;
 
         private EntityStateSystem entitySystem;
 
@@ -75,9 +76,15 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople()
         {
-            for (var i = 0; i < numNPCs; i++)
+            SpawnNpc(Color.red, "Q");
+            SpawnNpc(Color.blue, "Tolstoy");
+            SpawnNpc(Color.yellow, "Jannet");
+            SpawnNpc(Color.cyan, "McGraw");
+            SpawnNpc(Color.green, "Ellie");
+
+            for (var i = 0; i < NonNamedNpcs; i++)
             {
-                SpawnNpc(Prefabs.Person, new Vector3(5.63f, 0.0f, 16.49f));
+                SpawnNpc(Color.white);
             }
         }
 
@@ -95,17 +102,19 @@ namespace Assets.Scripts.Systems
             StaticStates.Add(new PlayerState(player));
         }
 
-        private void SpawnNpc(string prefab, Vector3 position)
+        private void SpawnNpc(Color color, string name = "Expendable")
         {
             entitySystem.CreateEntity(new List<IState>
             {
-                new PrefabState(prefab),
-                new PositionState(position),
-                new PathfindingState(null),
                 new ActionBlackboardState(null),
+                new PrefabState(Prefabs.Person),
+                new NameState(name),
+                new PositionState(new Vector3(5.63f, 0.0f, 16.49f)),
+                new PathfindingState(null),
                 new InventoryState(),
                 new VisibleSlotState(),
-                new PersonState()
+                new PersonState(),
+                new ColorState(color)
             });
         }
     }

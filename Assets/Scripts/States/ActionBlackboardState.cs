@@ -20,7 +20,7 @@ namespace Assets.Scripts.States
         public override string ToString()
         {
             var message = new StringBuilder();
-            message.Append("AI: \n");
+            message.Append("AI\n");
             message.Append(CurrentActions);
             return message.ToString();
         }

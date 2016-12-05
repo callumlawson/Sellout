@@ -31,13 +31,13 @@ namespace Assets.Scripts.Systems.AI
                     else
                     {
                         var xyPos = Random.insideUnitCircle * 6;
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander(new Vector3(xyPos.x, 0.0f, xyPos.y)));
                     }
                 }
             }
         }
 
-        private ActionSequence Drink()
+        private static ActionSequence Drink()
         {
             var drink = new ActionSequence();
             drink.Add(new GetWaypointAction(Goal.PayFor));
@@ -48,6 +48,14 @@ namespace Assets.Scripts.Systems.AI
             drink.Add(new PauseAction(30.0f));
             drink.Add(new DestoryEntityInInventoryAction());
             return drink;
+        }
+
+        private static ActionSequence Wander(Vector3 randomPosition)
+        {
+            var wander = new ActionSequence();
+            wander.Add(new GoToPositionAction(new Vector3(randomPosition.x, 0.0f, randomPosition.z)));
+            wander.Add(new PauseAction(4.0f));
+            return wander;
         }
     }
 }

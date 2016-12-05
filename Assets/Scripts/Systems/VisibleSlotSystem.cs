@@ -7,7 +7,7 @@ using Assets.Scripts.Visualizers.Slots;
 
 namespace Assets.Scripts.Systems
 {
-    class VisibleSlotSystem : ISystem, IInitSystem
+    class VisibleSlotSystem : IInitSystem
     {
         public void OnInit()
         {

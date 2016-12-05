@@ -2,9 +2,9 @@
 
 namespace Assets.Scripts.Util
 {
-    public class InterfaceComponents : MonoBehaviour
+    public class Interface : MonoBehaviour
     {
-        public static InterfaceComponents Instance;
+        public static Interface Instance;
 
         public GameObject TooltipRoot;
         public GameObject TooltipWindow;

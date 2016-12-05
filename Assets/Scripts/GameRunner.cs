@@ -30,6 +30,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new PositionSystem());
             entitySystem.AddSystem(new SpawningSystem());
             entitySystem.AddSystem(new RotationInitSystem());
+            entitySystem.AddSystem(new InitVisualizersSystem());
 
             //Game
             entitySystem.AddSystem(new PathfindingSystem());            

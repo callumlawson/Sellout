@@ -3,7 +3,6 @@ using System.Text;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
-using UnityEngine;
 
 namespace Assets.Scripts.GameActions.Composite
 {
@@ -97,10 +96,14 @@ namespace Assets.Scripts.GameActions.Composite
         public override string ToString()
         {
             var message = new StringBuilder();
-            message.Append("Action Sequence - Status: " + ActionStatus + " \n");
+            message.Append("Action Sequence - Status: " + ActionStatus);
             foreach (var action in Actions)
             {
-                message.AppendLine(action.ToString());
+                message.Append("\n" + action);
+            }
+            if (Actions.Count == 0)
+            {
+                message.AppendLine();
             }
             return message.ToString();
         }
