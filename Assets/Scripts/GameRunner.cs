@@ -21,6 +21,7 @@ namespace Assets.Scripts
             entitySystem = new EntityStateSystem();
 
             StaticStates.Add(new SelectedState(null));
+            StaticStates.Add(new TimeState(1, 9, 0));
 
             //Debug
             entitySystem.AddSystem(new EntityTooltipSystem());
@@ -33,6 +34,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new InitVisualizersSystem());
 
             //Game
+            entitySystem.AddSystem(new TimeSystem());
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
