@@ -42,11 +42,14 @@ namespace Assets.Scripts.Systems.AI
             drink.Add(new GetWaypointAction(Goal.PayFor));
             drink.Add(new GoToWaypointAction());
             drink.Add(new PauseAction(10.0f));
+            //EntityIsUsingWaypoint(Goal.RingUp, PlayerEntity)
+            //StartConversation()
+            //EntityIsInInventory()
             drink.Add(new GetAndUseWaypointAction(Goal.Sit));
             drink.Add(new GoToWaypointAction());
             drink.Add(new PauseAction(30.0f));
             drink.Add(new DestoryEntityInInventoryAction());
-            drink.Add(new StopUsingWaypointAction());
+            drink.Add(new StopUsingWaypointAction());//Remove?
             return drink;
         }
 

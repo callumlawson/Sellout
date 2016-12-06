@@ -9,7 +9,7 @@ namespace Assets.Scripts.Systems
     class TimeSystem : IFrameSystem, IInitSystem
     {
         private float secondsPerGameMinute = 1f;
-        private float secondsSinceLastMinute = 0f;
+        private float secondsSinceLastMinute;
 
         private TimeState timeState;
 
@@ -24,26 +24,8 @@ namespace Assets.Scripts.Systems
             secondsSinceLastMinute += dt;
             if (secondsSinceLastMinute >= secondsPerGameMinute)
             {
-                var newDay = timeState.day;
-                var newHour = timeState.hour;
-                var newMinute = timeState.minute + 1;
-                
-                if (newMinute >= 60)
-                {
-                    newMinute = 0;
-                    newHour++;
-                }
 
-                if (newHour >= 24)
-                {
-                    newHour = 0;
-                    newDay++;
-                }
-
-                timeState.day = newDay;
-                timeState.hour = newHour;
-                timeState.minute = newMinute;
-
+                timeState.time = timeState.time.AddMinutes(1.0f);
                 secondsSinceLastMinute = Math.Max(secondsSinceLastMinute - secondsPerGameMinute, 0f);
             }
         }

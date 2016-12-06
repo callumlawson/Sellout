@@ -1,5 +1,6 @@
 ﻿using Assets.Framework.States;
 using Assets.Scripts.States;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,17 +8,16 @@ namespace Assets.Scripts.UI
 {
     class ClockUI : MonoBehaviour
     {
-#pragma warning disable 649
-        public Text Day;
-        public Text Time;
-#pragma warning restore 649
+        [UsedImplicitly] public Text Day;
+        [UsedImplicitly] public Text Time;
 
-        private readonly string DayText = "Day {0}";
-        private readonly string TimeText = "{0:00}:{1:00}";
+        private const string DayText = "Day {0}";
+        private const string TimeText = "{0:00}:{1:00}";
 
         private TimeState timeState;
         
-        void Update()
+        [UsedImplicitly]
+        public void Update()
         {
             if (timeState == null)
             {
@@ -29,8 +29,8 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            Day.text = string.Format(DayText, timeState.day);
-            Time.text = string.Format(TimeText, timeState.hour, timeState.minute);
+            Day.text = string.Format(DayText, timeState.time.Day);
+            Time.text = string.Format(TimeText, timeState.time.Hour, timeState.time.Minute);
         }
     }
 }

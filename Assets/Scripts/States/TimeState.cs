@@ -6,15 +6,11 @@ namespace Assets.Scripts.States
     [Serializable]
     class TimeState : IState
     {
-        public int day;
-        public int hour;
-        public int minute;
+        public DateTime time;
 
-        public TimeState(int day, int hour, int minute)
+        public TimeState(DateTime time)
         {
-            this.day = day;
-            this.hour = hour;
-            this.minute = minute;
+            this.time = time;
         }
     }
 }
