@@ -45,6 +45,7 @@ namespace Assets.Scripts.Systems
 
         private static void QueueActionsForPrefab(Entity targetEntity, string prefab)
         {
+            ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
             switch (prefab)
             {
                 case Prefabs.Counter:

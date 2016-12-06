@@ -94,7 +94,7 @@ namespace Assets.Scripts.Systems
 
         public static void ReleaseWaypoint(Entity waypoint)
         {
-            if (waypoint != null)
+            if (waypoint != null && waypoint.HasState<UserState>())
             {
                 waypoint.GetState<UserState>().Reserver = null;
                 waypoint.GetState<UserState>().User = null;
