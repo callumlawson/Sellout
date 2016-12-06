@@ -34,9 +34,9 @@ namespace Assets.Scripts.Systems.AI
                                     .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.PayFor));
                     foreach (var payPoint in payPoints)
                     {
-                        if (Equals(payPoint.GetState<UserState>().User, entity))
+                        if (Equals(payPoint.GetState<UserState>().Reserver, entity))
                         {
-                            payPoint.GetState<UserState>().User = null;
+                            payPoint.GetState<UserState>().Reserver = null;
                         }
                     }
                 }
@@ -49,7 +49,7 @@ namespace Assets.Scripts.Systems.AI
                     if (payPoint != null)
                     {
                         entity.GetState<GoalState>().UpdateGoalStatus(GoalStatus.Ongoing);
-                        payPoint.GetState<UserState>().User = entity;
+                        payPoint.GetState<UserState>().Reserver = entity;
                         entity.GetState<PathfindingState>().TargetPosition = payPoint.GetState<PositionState>().Position;
                     }
                 }

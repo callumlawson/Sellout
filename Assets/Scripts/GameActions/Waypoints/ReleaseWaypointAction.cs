@@ -1,22 +1,17 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Systems;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Waypoints
 {
-    class GetEntityAction : GameAction
+    class ReleaseWaypointAction : GameAction
     {
-        private Entity goal;
-
-        public GetEntityAction(Entity person)
-        {
-            goal = person;
-        }
-
         public override void OnStart(Entity entity)
         {
-            entity.GetState<ActionBlackboardState>().TargetEntity = goal;
-            ActionStatus = ActionStatus.Succeeded;            
+            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
+            WaypointSystem.ReleaseWaypoint(targetWaypoint);
+            ActionStatus = ActionStatus.Succeeded;
         }
 
         public override void OnFrame(Entity entity)

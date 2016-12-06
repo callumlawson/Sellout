@@ -21,7 +21,7 @@ namespace Assets.Scripts.Blueprints
                 new WaypointState(),
                 new PrefabState(Prefabs.Waypoint),
                 new GoalSatisfierState(new List<Goal> {Goal}),
-                new UserState(null)
+                new UserState()
             };
         }
     }

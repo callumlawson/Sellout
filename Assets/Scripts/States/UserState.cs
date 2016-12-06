@@ -7,16 +7,12 @@ namespace Assets.Scripts.States
     [Serializable]
     class UserState : IState
     {
+        public Entity Reserver;
         public Entity User;
-
-        public UserState(Entity user)
-        {
-            User = user;
-        }
 
         public bool IsFree()
         {
-            return User == null;
+            return Reserver == null && User == null;
         }
 
         public bool IsOccupied()
@@ -24,9 +20,23 @@ namespace Assets.Scripts.States
             return !IsFree();
         }
 
+        public bool IsInUse()
+        {
+            return User != null;
+        }
+
+        public bool IsReserved()
+        {
+            return Reserver != null;
+        }
+
         public override string ToString()
         {
-            return User != null ? string.Format("Current User: {0}", User.EntityId) : "No User";
+            var reserved = Reserver != null
+                ? string.Format("Reserved by: {0}", Reserver.EntityId)
+                : "Reserved by: Nobody";
+            var used = User != null ? string.Format("Used by: {0}", User.EntityId) : "Used by: Nobody";
+            return reserved + " " + used;
         }
     }
 }

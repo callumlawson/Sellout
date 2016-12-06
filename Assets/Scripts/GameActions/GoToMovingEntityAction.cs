@@ -21,7 +21,7 @@ namespace Assets.Scripts.GameActions
         public override void OnStart(Entity entity)
         {
             pathfindingState = entity.GetState<PathfindingState>();
-            targetWaypoint = entity.GetState<ActionBlackboardState>().TargetWaypoint;
+            targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
             if (targetWaypoint != null)
             {
                 pathfindingState.TargetPosition = targetWaypoint.GetState<PositionState>().Position;

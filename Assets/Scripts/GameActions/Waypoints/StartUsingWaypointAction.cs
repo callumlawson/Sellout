@@ -3,14 +3,14 @@ using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Waypoints
 {
-    class StopUsingWaypointAction : GameAction
+    class StartUsingWaypointAction : GameAction
     {
         public override void OnStart(Entity entity)
         {
-            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetWaypoint;
-            WaypointSystem.ReleaseWaypoint(targetWaypoint);
+            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
+            WaypointSystem.StartUsingWaypoint(targetWaypoint, entity);
             ActionStatus = ActionStatus.Succeeded;
         }
 

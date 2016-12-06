@@ -65,7 +65,7 @@ namespace Assets.Scripts.Systems
             return entitySystem
                .GetEntitiesWithState<GoalSatisfierState>()
                .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(goal))
-               .FirstOrDefault(entity => Equals(entity.GetState<UserState>().User, occupant));
+               .FirstOrDefault(entity => Equals(entity.GetState<UserState>().Reserver, occupant));
         }
 
         public Entity GetFreeWaypointThatSatisfiesGoal(Goal goal)
@@ -73,21 +73,30 @@ namespace Assets.Scripts.Systems
             return GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
         }
 
-        public Entity GetAndUseWaypointThatSatisfiedGoal(Goal goal, Entity entity)
+        public Entity GetAndReserveWaypointThatSatisfiedGoal(Goal goal, Entity entity)
         {
             var waypoint = GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
             if (waypoint == null)
             {
                 return null;
             }
-            waypoint.GetState<UserState>().User = entity;
+            waypoint.GetState<UserState>().Reserver = entity;
             return waypoint;
+        }
+
+        public static void StartUsingWaypoint(Entity waypoint, Entity user)
+        {
+            if (waypoint != null)
+            {
+                waypoint.GetState<UserState>().User = user;
+            }
         }
 
         public static void ReleaseWaypoint(Entity waypoint)
         {
             if (waypoint != null)
             {
+                waypoint.GetState<UserState>().Reserver = null;
                 waypoint.GetState<UserState>().User = null;
             }
         }

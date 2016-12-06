@@ -27,7 +27,7 @@ namespace Assets.Scripts.Systems
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
-        private static readonly Dictionary<Ingredient, int> screwdriverIngredients = new Dictionary<Ingredient, int>
+        public static readonly Dictionary<Ingredient, int> screwdriverIngredients = new Dictionary<Ingredient, int>
         {
             {Ingredient.Alcohol, 1},
             {Ingredient.OrangeJuice, 1}

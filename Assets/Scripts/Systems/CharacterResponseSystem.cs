@@ -2,6 +2,7 @@
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
+using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -47,22 +48,16 @@ namespace Assets.Scripts.Systems
             switch (prefab)
             {
                 case Prefabs.Counter:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetWaypointAction(Goal.RingUp));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetAndReserveWaypointAction(Goal.RingUp));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToWaypointAction());
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new StartUsingWaypointAction()); //TODO: Need to release this.
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new OpenDrinkMakingMenuAction());
                     break;
                 case Prefabs.Person:
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GetEntityAction(targetEntity));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingEntityAction(2.0f));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new PauseTargetActionSequeunceAction(targetEntity));
-                    if (Random.value > 0.4)
-                    {
-                        ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueOne));
-                    }
-                    else
-                    {
-                        ActionManagerSystem.Instance.QueueActionForEntity(player, new ConversationAction(dialogueTwo));
-                    }
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, Random.value > 0.4 ? new ConversationAction(dialogueOne) : new ConversationAction(dialogueTwo));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new UnpauseTargetActionSequeunceAction(targetEntity));
                     break;
                 default:

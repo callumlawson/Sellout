@@ -4,23 +4,23 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Waypoints
 {
-    class GetAndUseWaypointAction : GameAction
+    class GetAndReserveWaypointAction : GameAction
     {
         private Goal goal;
 
-        public GetAndUseWaypointAction(Goal waypointGoal)
+        public GetAndReserveWaypointAction(Goal waypointGoal)
         {
             goal = waypointGoal;
         }
 
         public override void OnStart(Entity entity)
         {
-            var waypoint = WaypointSystem.Instance.GetAndUseWaypointThatSatisfiedGoal(goal, entity);
+            var waypoint = WaypointSystem.Instance.GetAndReserveWaypointThatSatisfiedGoal(goal, entity);
             if (waypoint != null)
             {
-                entity.GetState<ActionBlackboardState>().TargetWaypoint = waypoint;
+                entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
             else

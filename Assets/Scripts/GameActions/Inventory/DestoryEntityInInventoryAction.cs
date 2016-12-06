@@ -1,10 +1,9 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Inventory
 {
     public class DestoryEntityInInventoryAction : GameAction
     {

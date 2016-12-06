@@ -22,7 +22,7 @@ namespace Assets.Scripts
             entitySystem = new EntityStateSystem();
 
             StaticStates.Add(new SelectedState(null));
-            StaticStates.Add(new TimeState(new DateTime(2337, 1, 1, 9, 0, 0)));
+            StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 9, 0, 0)));
 
             //Debug
             entitySystem.AddSystem(new EntityTooltipSystem());

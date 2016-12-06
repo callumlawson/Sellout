@@ -3,23 +3,19 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems;
-using Assets.Scripts.Util;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Inventory
 {
-    class GetWaypointWithOccupantAction : GameAction
+    public class DrinkIsInInventoryAction : GameAction
     {
-        private readonly Goal goal;
-        private readonly Entity occupant;
+        private DrinkState drinkState;
         private DateTime startTime;
         private TimeState timeState;
         private int timeoutInMins;
 
-        public GetWaypointWithOccupantAction(Goal goal, Entity occupant, int timeoutInMins)
+        public DrinkIsInInventoryAction(DrinkState drinkState, int timeoutInMins)
         {
-            this.goal = goal;
-            this.occupant = occupant;
+            this.drinkState = drinkState;
             this.timeoutInMins = timeoutInMins;
         }
 
@@ -31,17 +27,13 @@ namespace Assets.Scripts.GameActions
 
         public override void OnFrame(Entity entity)
         {
-            TryGetWaypoint(entity);
-
-        }
-
-        private void TryGetWaypoint(Entity entity)
-        {
-            var waypoint = WaypointSystem.Instance.GetWaypointThatSatisfiesGoalWithOcupant(goal, occupant);
-            if (waypoint != null)
+            var inventoryItem = entity.GetState<InventoryState>().child;
+            if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
-                entity.GetState<ActionBlackboardState>().TargetWaypoint = waypoint;
-                ActionStatus = ActionStatus.Succeeded;
+                if (inventoryItem.GetState<DrinkState>().ToString() == drinkState.ToString()) //Horrible hack. Sorry.
+                {
+                    ActionStatus = ActionStatus.Succeeded;
+                }
             }
             if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {

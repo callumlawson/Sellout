@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Inventory;
+using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
+using Assets.Scripts.UI;
 using Assets.Scripts.Util;
+using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,9 +29,9 @@ namespace Assets.Scripts.Systems.AI
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(entity))
                 {
-                    if (entity.GetState<InventoryState>().child != null)
+                    if (entity.GetState<NameState>().Name == "Tolstoy")
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Drink());
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink());
                     }
                     else
                     {
@@ -36,20 +41,20 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private static ActionSequence Drink()
+        private static ActionSequence OrderDrink()
         {
             var drink = new ActionSequence();
             drink.Add(new GetWaypointAction(Goal.PayFor));
             drink.Add(new GoToWaypointAction());
-            drink.Add(new PauseAction(10.0f));
-            //EntityIsUsingWaypoint(Goal.RingUp, PlayerEntity)
-            //StartConversation()
-            //EntityIsInInventory()
-            drink.Add(new GetAndUseWaypointAction(Goal.Sit));
+            drink.Add(new PauseAction(3.0f));
+            drink.Add(new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30));
+            drink.Add(new ConversationAction(new OrderDrinkConversation()));
+            drink.Add(new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30));
+            drink.Add(new GetAndReserveWaypointAction(Goal.Sit));
             drink.Add(new GoToWaypointAction());
             drink.Add(new PauseAction(30.0f));
             drink.Add(new DestoryEntityInInventoryAction());
-            drink.Add(new StopUsingWaypointAction());//Remove?
+            drink.Add(new ReleaseWaypointAction());//TODO: Make this not required.
             return drink;
         }
 
@@ -61,12 +66,22 @@ namespace Assets.Scripts.Systems.AI
             wander.Add(new PauseAction(4.0f));
             if (Random.value > 0.80)
             {
-                wander.Add(new GetAndUseWaypointAction(Goal.Sit));
+                wander.Add(new GetAndReserveWaypointAction(Goal.Sit));
                 wander.Add(new GoToWaypointAction());
                 wander.Add(new PauseAction(40.0f));
-                wander.Add(new StopUsingWaypointAction());
+                wander.Add(new ReleaseWaypointAction());
             }
             return wander;
+        }
+
+        private class OrderDrinkConversation : Conversation
+        {
+            protected override void StartConversation()
+            {
+                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.WriteNPCLine("Once Space Screwdriver please.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation);
+            }
         }
     }
 }

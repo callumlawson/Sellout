@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts.States
 {
     [Serializable]
-    class DrinkState : IState
+    public class DrinkState : IState
     {
         [SerializeField] private Dictionary<Ingredient, int> contents;
 

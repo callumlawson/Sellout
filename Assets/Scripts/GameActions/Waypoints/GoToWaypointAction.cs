@@ -4,13 +4,13 @@ using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using UnityEngine;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Waypoints
 {
     class GoToWaypointAction : GameAction
     {
         private const float PositionTolerance = 2.0f;
         private PathfindingState pathfindingState;
-        private Vector3 TargetPosition;
+        private Vector3 targetPosition;
 
         private Entity entity;
 
@@ -19,11 +19,11 @@ namespace Assets.Scripts.GameActions
             this.entity = entity;
 
             pathfindingState = entity.GetState<PathfindingState>();
-            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetWaypoint;
+            var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
             if (targetWaypoint != null)
             {
-                TargetPosition = targetWaypoint.GetState<PositionState>().Position;
-                pathfindingState.TargetPosition = TargetPosition;
+                targetPosition = targetWaypoint.GetState<PositionState>().Position;
+                pathfindingState.TargetPosition = targetPosition;
                 pathfindingState.StoppingDistance = 0f;
             }
             else
