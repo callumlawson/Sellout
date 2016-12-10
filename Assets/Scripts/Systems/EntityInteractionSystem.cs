@@ -10,13 +10,10 @@ namespace Assets.Scripts.Systems
     {
         public void OnFrame()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
-                var selectedGameObject = StaticStates.Get<SelectedState>().SelectedEntity;
-                if (selectedGameObject != null)
-                {
-                    EventSystem.BroadcastEvent(new ClickEvent(selectedGameObject));
-                }
+                var cursorState = StaticStates.Get<CursorState>();
+                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition));
             }
         }
     }

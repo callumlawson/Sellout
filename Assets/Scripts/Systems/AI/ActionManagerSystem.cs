@@ -4,6 +4,7 @@ using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using UnityEngine.VR;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -40,6 +41,15 @@ namespace Assets.Scripts.Systems.AI
             entityActions[entity].Add(action);
         }
 
+        public void TryClearActionsForEntity(Entity entity)
+        {
+            if (entityActions.ContainsKey(entity))
+            {
+                var action = entityActions[entity];
+                action.Cancel();
+            }
+        }
+
         public ActionSequence GetActionsForEntity(Entity entity)
         {
             if (!entityActions.ContainsKey(entity))
@@ -48,16 +58,6 @@ namespace Assets.Scripts.Systems.AI
             }
 
             return entityActions[entity];
-        }
-
-        public bool EntityHasActions(Entity entity)
-        {
-            if (!entityActions.ContainsKey(entity))
-            {
-                return false;
-            }
-
-            return entityActions[entity].NonEmpty();
         }
 
         public bool IsEntityIdle(Entity entity)

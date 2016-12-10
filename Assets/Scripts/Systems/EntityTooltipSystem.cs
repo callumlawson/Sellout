@@ -28,7 +28,7 @@ namespace Assets.Scripts.Systems
 
         public void OnFrame()
         {
-            var selectedEntity = StaticStates.Get<SelectedState>().SelectedEntity;
+            var selectedEntity = StaticStates.Get<CursorState>().SelectedEntity;
 
             UpdateHoverTime(selectedEntity);
             CleanPreviousTooltips();

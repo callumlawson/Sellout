@@ -5,15 +5,14 @@ using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.Events;
 using UnityEngine;
 
-namespace Assets.Scripts.Systems
+namespace Assets.Scripts.Systems.AI
 {
-    class CharacterResponseSystem : IInitSystem
+    class ClickResponseSystem : IInitSystem
     {
         private static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
         private static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
@@ -23,24 +22,30 @@ namespace Assets.Scripts.Systems
         public void OnInit()
         {
             EventSystem.onClickInteraction += OnClickInteraction;
-
             player = StaticStates.Get<PlayerState>().Player;
         }
 
         private static void OnClickInteraction(ClickEvent clickevent)
         {
-            if (ActionManagerSystem.Instance.EntityHasActions(player))
+            if (!ActionManagerSystem.Instance.IsEntityIdle(player))
             {
-                Debug.Log("Player already has actions!");
-                // Do this for now, then add cancelling...
+                ActionManagerSystem.Instance.TryClearActionsForEntity(player);
+            }
+
+            if (!ActionManagerSystem.Instance.IsEntityIdle(player))
+            {
                 return;
             }
             
-            var targetEntity = clickevent.target;
-            if (targetEntity.HasState<PrefabState>())
+            var targetEntity = clickevent.Target;
+            if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();
                 QueueActionsForPrefab(targetEntity, prefab.PrefabName);
+            }
+            else
+            {
+                ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(clickevent.ClickPosition));
             }
         }
 

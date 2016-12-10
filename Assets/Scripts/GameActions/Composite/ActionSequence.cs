@@ -7,17 +7,12 @@ using Assets.Scripts.States;
 namespace Assets.Scripts.GameActions.Composite
 {
     //Run actions in sequence ignoring failure
-    class ActionSequence : CompositeAction
+    class ActionSequence : CompositeAction, ICancellableAction
     {
         private bool paused;
 
         public override void OnStart(Entity entity)
         {
-        }
-
-        public bool NonEmpty()
-        {
-            return Actions.Count > 0;
         }
 
         public override void Pause()
@@ -106,6 +101,30 @@ namespace Assets.Scripts.GameActions.Composite
                 message.AppendLine();
             }
             return message.ToString();
+        }
+
+        //Only cancel if all actions can be cancelled.
+        public void Cancel()
+        {
+            if (IsCancellable())
+            {
+                Actions.ForEach(action =>
+                {
+                    var cancellableAction = (ICancellableAction)action;
+                    cancellableAction.Cancel();
+                });
+                Actions.Clear();
+                ActionStatus = ActionStatus.Succeeded;
+            }
+        }
+
+        public bool IsCancellable()
+        {
+            return Actions.TrueForAll(action =>
+            {
+                var cancellable = action as ICancellableAction;
+                return cancellable != null && cancellable.IsCancellable();
+            });
         }
     }
 }

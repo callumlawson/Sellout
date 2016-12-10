@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameActions
 {
-    class GoToPositionAction : GameAction
+    class GoToPositionAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 2.0f;
         private readonly Vector3 targetPosition;
@@ -44,6 +43,16 @@ namespace Assets.Scripts.GameActions
         public override void Unpause()
         {
             pathfindingState.Paused = false;
+        }
+
+        public void Cancel()
+        {
+            pathfindingState.TargetPosition = null;
+        }
+
+        public bool IsCancellable()
+        {
+            return true;
         }
     }
 }

@@ -8,6 +8,7 @@ using Assets.Scripts.Systems.AI;
 using JetBrains.Annotations;
 using UnityEngine;
 using Assets.Scripts.Systems.Drinks;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts
 {
@@ -21,7 +22,7 @@ namespace Assets.Scripts
         {
             entitySystem = new EntityStateSystem();
 
-            StaticStates.Add(new SelectedState(null));
+            StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 9, 0, 0)));
 
             //Debug
@@ -41,7 +42,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DrinkMakingSystem());
             entitySystem.AddSystem(new InventoryExchangeSystem());
             entitySystem.AddSystem(new VisibleSlotSystem());
-            entitySystem.AddSystem(new CharacterResponseSystem());
+            entitySystem.AddSystem(new ClickResponseSystem());
             entitySystem.AddSystem(new DialogueSystem());
 
             //NPC/AI

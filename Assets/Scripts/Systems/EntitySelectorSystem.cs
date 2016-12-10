@@ -23,7 +23,7 @@ namespace Assets.Scripts.Systems
             if (Physics.Raycast(ray, out hit, 100))
             {
                 var objectHit = hit.collider.gameObject;
-                var selectedEntity = StaticStates.Get<SelectedState>().SelectedEntity;
+                var selectedEntity = StaticStates.Get<CursorState>().SelectedEntity;
 
                 if (selectedEntity != null)
                 {
@@ -33,12 +33,13 @@ namespace Assets.Scripts.Systems
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
                     Recursive.SetLayerRecursively(objectHit.GetEntityObject().transform, LayerMask.NameToLayer("Outline"));
-                    StaticStates.Get<SelectedState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
+                    StaticStates.Get<CursorState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
                 }
                 else
                 {
-                    StaticStates.Get<SelectedState>().SelectedEntity = null;
+                    StaticStates.Get<CursorState>().SelectedEntity = null;
                 }
+                StaticStates.Get<CursorState>().MousedOverPosition = hit.point;
             }
         }
     }

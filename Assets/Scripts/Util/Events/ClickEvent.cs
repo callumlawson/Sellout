@@ -4,11 +4,13 @@ namespace Assets.Scripts.Util.Events
 {
     public class ClickEvent
     {
-        public readonly Entity target;
+        public readonly Entity Target;
+        public SerializableVector3 ClickPosition;
 
-        public ClickEvent(Entity target)
+        public ClickEvent(Entity target, SerializableVector3 clickPosition)
         {
-            this.target = target;
+            Target = target;
+            ClickPosition = clickPosition;
         }
     }
 }

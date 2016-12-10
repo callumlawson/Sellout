@@ -1,4 +1,5 @@
 ﻿using Assets.Framework.Entities;
+using JetBrains.Annotations;
 
 namespace Assets.Scripts.GameActions.Framework
 {
@@ -35,5 +36,11 @@ namespace Assets.Scripts.GameActions.Framework
         {
             return GetType().Name + " Status: " + ActionStatus + " ";
         }
+    }
+
+    public interface ICancellableAction
+    {
+        void Cancel();
+        bool IsCancellable();
     }
 }
