@@ -55,7 +55,6 @@ namespace Assets.Scripts
             //entitySystem.AddSystem(new WanderGoalSystem());
 
             //Player
-            entitySystem.AddSystem(new PlayerInventoryInteractionSystem());
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
 

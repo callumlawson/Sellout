@@ -2,6 +2,7 @@
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
+using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
@@ -14,8 +15,8 @@ namespace Assets.Scripts.Systems
 {
     class CharacterResponseSystem : IInitSystem
     {
-        private static DemoDialogueOne dialogueOne = new DemoDialogueOne();
-        private static DemoDialogueTwo dialogueTwo = new DemoDialogueTwo();
+        private static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
+        private static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
 
         private static Entity player; 
 
@@ -55,15 +56,29 @@ namespace Assets.Scripts.Systems
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new OpenDrinkMakingMenuAction());
                     break;
                 case Prefabs.Person:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetEntityAction(targetEntity));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToMovingEntityAction(2.0f));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new PauseTargetActionSequeunceAction(targetEntity));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, Random.value > 0.4 ? new ConversationAction(dialogueOne) : new ConversationAction(dialogueTwo));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new UnpauseTargetActionSequeunceAction(targetEntity));
-                    break;
-                default:
+                    var playerInventory = player.GetState<InventoryState>();
+                    var childToMove = playerInventory.child;
+                    if (childToMove != null)
+                    {
+                        EventSystem.BroadcastEvent(new InventoryRequestEvent(player, targetEntity, childToMove));
+                    }
+                    else
+                    {
+                        ActionManagerSystem.Instance.QueueActionForEntity(player, TalkToPerson(targetEntity));
+                    }
                     break;
             }
+        }
+
+        private static ActionSequence TalkToPerson(Entity targetEntity)
+        {
+            var actions = new ActionSequence();
+            actions.Add(new GetEntityAction(targetEntity));
+            actions.Add(new GoToMovingEntityAction(2.0f));
+            actions.Add(new PauseTargetActionSequeunceAction(targetEntity));
+            actions.Add(Random.value > 0.4 ? new ConversationAction(DialogueOne) : new ConversationAction(DialogueTwo));
+            actions.Add(new UnpauseTargetActionSequeunceAction(targetEntity));
+            return actions;
         }
 
         private class DemoDialogueOne : Conversation
