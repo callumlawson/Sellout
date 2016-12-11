@@ -12,5 +12,10 @@ namespace Assets.Scripts.States
         {
             BlueprintGameObject = blueprintGameObject;
         }
+
+        public override string ToString()
+        {
+            return "You should not see this at runtime.";
+        }
     }
 }

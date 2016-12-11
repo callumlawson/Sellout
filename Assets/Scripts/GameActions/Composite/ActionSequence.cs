@@ -91,7 +91,7 @@ namespace Assets.Scripts.GameActions.Composite
         public override string ToString()
         {
             var message = new StringBuilder();
-            message.Append("Action Sequence - Status: " + ActionStatus);
+            message.Append("Action Sequence - Status: " + ActionStatus.ToColoredString());
             foreach (var action in Actions)
             {
                 message.Append("\n" + action);

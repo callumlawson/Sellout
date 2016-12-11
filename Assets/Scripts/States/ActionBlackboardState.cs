@@ -20,7 +20,6 @@ namespace Assets.Scripts.States
         public override string ToString()
         {
             var message = new StringBuilder();
-            message.AppendLine("<b>AI State:</b>");
             if (TargetEntity != null)
             {
                 message.AppendLine("Target Entity: " + TargetEntity.EntityId);

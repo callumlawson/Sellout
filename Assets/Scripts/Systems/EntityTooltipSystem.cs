@@ -54,11 +54,11 @@ namespace Assets.Scripts.Systems
         private static string TooltipMessage(Entity entity)
         {
             var message = new StringBuilder();
-            message.Append(string.Format("Entity ID: {0}", entity.EntityId));
+            message.Append(string.Format("<b>Entity ID</b>: {0}", entity.EntityId));
             foreach (var state in entity.DebugStates)
             {
                 message.Append(Environment.NewLine);
-                message.Append(state);
+                message.Append(string.Format("<b>{0}</b> {1}", state.GetType().Name, state));
             }
             return message.ToString();
         }

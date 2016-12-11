@@ -15,7 +15,7 @@ namespace Assets.Scripts.States
 
         public override string ToString()
         {
-            return string.Format("Name: {0}", Name);
+            return Name;
         }
     }
 }
