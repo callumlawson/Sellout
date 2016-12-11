@@ -8,10 +8,11 @@ namespace Assets.Scripts.GameActions.Inventory
 {
     public class DrinkIsInInventoryAction : GameAction
     {
-        private DrinkState drinkState;
+        private readonly DrinkState drinkState;
+        private readonly int timeoutInMins;
+
         private DateTime startTime;
         private TimeState timeState;
-        private int timeoutInMins;
 
         public DrinkIsInInventoryAction(DrinkState drinkState, int timeoutInMins)
         {
