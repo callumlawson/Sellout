@@ -40,7 +40,7 @@ namespace Assets.Scripts.Systems.AI
         {
             if (!entityActions.ContainsKey(entity))
             {
-                entityActions.Add(entity, new ActionSequence());
+                entityActions.Add(entity, new ActionSequence("Root"));
             }
             entityActions[entity].Add(action);
         }
@@ -54,14 +54,9 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        public ActionSequence GetActionsForEntity(Entity entity)
+        private ActionSequence GetActionsForEntity(Entity entity)
         {
-            if (!entityActions.ContainsKey(entity))
-            {
-                return new ActionSequence();
-            }
-
-            return entityActions[entity];
+            return !entityActions.ContainsKey(entity) ? new ActionSequence() : entityActions[entity];
         }
 
         public bool IsEntityIdle(Entity entity)

@@ -34,6 +34,10 @@ namespace Assets.Scripts.GameActions.Inventory
                 {
                     ActionStatus = ActionStatus.Succeeded;
                 }
+                else
+                {
+                    ActionStatus = ActionStatus.Failed;
+                }
             }
             if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {

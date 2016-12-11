@@ -120,20 +120,13 @@ namespace Assets.Framework.Systems
 
         public Entity CreateEntity(List<IState> states, bool copyStates = true, bool fireEntityAdded = true)
         {
-            try
+            var newStates = copyStates ? states.DeepClone() : states;
+            var entity = entityManager.BuildEntity(newStates);
+            if (fireEntityAdded)
             {
-                var newStates = copyStates ? states.DeepClone() : states;
-                var entity = entityManager.BuildEntity(newStates);
-                if (fireEntityAdded)
-                {
-                    EntityAdded(entity);
-                }
-                return entity;
+                EntityAdded(entity);
             }
-            catch (SerializationException se)
-            {
-                throw new SerializationException("All states must be marked [Serializable]!", se);
-            }
+            return entity;
         }
 
         public Entity GetEntity(int entityId)

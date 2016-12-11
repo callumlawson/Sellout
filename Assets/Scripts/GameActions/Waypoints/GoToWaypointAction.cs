@@ -12,12 +12,8 @@ namespace Assets.Scripts.GameActions.Waypoints
         private PathfindingState pathfindingState;
         private Vector3 targetPosition;
 
-        private Entity entity;
-
         public override void OnStart(Entity entity)
         {
-            this.entity = entity;
-
             pathfindingState = entity.GetState<PathfindingState>();
             var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
             if (targetWaypoint != null)

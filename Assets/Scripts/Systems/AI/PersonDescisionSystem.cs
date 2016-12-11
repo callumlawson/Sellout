@@ -5,10 +5,10 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Decorators;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
-using Assets.Scripts.UI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
@@ -29,9 +29,10 @@ namespace Assets.Scripts.Systems.AI
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(entity))
                 {
-                    if (entity.GetState<NameState>().Name == "Tolstoy")
+                    if (entity.GetState<NameState>().Name == "Tolstoy") //Short term debug!
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink());
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, new PauseAction(5.0f));
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink(entity));
                     }
                     else
                     {
@@ -41,26 +42,38 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private static ActionSequence OrderDrink()
+        private static ConditionalActionSequence OrderDrink(Entity entity)
         {
-            var drink = new ActionSequence();
-            drink.Add(new GetWaypointAction(Goal.PayFor));
-            drink.Add(new GoToWaypointAction());
-            drink.Add(new PauseAction(3.0f));
-            drink.Add(new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30));
-            drink.Add(new ConversationAction(new OrderDrinkConversation()));
-            drink.Add(new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30));
-            drink.Add(new GetAndReserveWaypointAction(Goal.Sit));
-            drink.Add(new GoToWaypointAction());
-            drink.Add(new PauseAction(30.0f));
-            drink.Add(new DestoryEntityInInventoryAction());
-            drink.Add(new ReleaseWaypointAction());//TODO: Make this not required.
-            return drink;
+            var orderDrink = new ConditionalActionSequence("Order Drink");
+            var drinkDrink = new ActionSequence("Drink Drink");
+
+            orderDrink.Add(new GetWaypointAction(Goal.PayFor));
+            orderDrink.Add(new GoToWaypointAction());
+            orderDrink.Add(new PauseAction(3.0f));
+            orderDrink.Add(
+            new OnFailureDecorator(
+                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30), 
+                () => ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.AngryDialogue)))
+            );
+            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation()));
+
+            orderDrink.Add(drinkDrink);
+            drinkDrink.Add(new OnFailureDecorator(
+               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30),
+               () => ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
+            );
+            drinkDrink.Add(new GetAndReserveWaypointAction(Goal.Sit));
+            drinkDrink.Add(new GoToWaypointAction());
+            drinkDrink.Add(new PauseAction(30.0f));
+            drinkDrink.Add(new DestoryEntityInInventoryAction());
+            drinkDrink.Add(new ReleaseWaypointAction()); //We need to give up the reserved seat.
+
+            return orderDrink;
         }
 
         private static ActionSequence Wander()
         {
-            var wander = new ActionSequence();
+            var wander = new ActionSequence("Wander Around");
             var xyPos = Random.insideUnitCircle * 6;
             wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
             wander.Add(new PauseAction(4.0f));
@@ -72,16 +85,6 @@ namespace Assets.Scripts.Systems.AI
                 wander.Add(new ReleaseWaypointAction());
             }
             return wander;
-        }
-
-        private class OrderDrinkConversation : Conversation
-        {
-            protected override void StartConversation()
-            {
-                DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("Once Space Screwdriver please.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation);
-            }
         }
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace Assets.Scripts.Util.Dialogue
 {
-    abstract class Conversation
+    public abstract class Conversation
     {
         private Action onEnd;
 

@@ -14,9 +14,6 @@ namespace Assets.Scripts.Systems.AI
 {
     class ClickResponseSystem : IInitSystem
     {
-        private static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
-        private static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
-
         private static Entity player; 
 
         public void OnInit()
@@ -72,65 +69,20 @@ namespace Assets.Scripts.Systems.AI
                         ActionManagerSystem.Instance.QueueActionForEntity(player, TalkToPerson(targetEntity));
                     }
                     break;
+                default:
+                    break;
             }
         }
 
         private static ActionSequence TalkToPerson(Entity targetEntity)
         {
-            var actions = new ActionSequence();
+            var actions = new ActionSequence("Talk to Person");
             actions.Add(new GetEntityAction(targetEntity));
             actions.Add(new GoToMovingEntityAction(2.0f));
             actions.Add(new PauseTargetActionSequeunceAction(targetEntity));
-            actions.Add(Random.value > 0.4 ? new ConversationAction(DialogueOne) : new ConversationAction(DialogueTwo));
+            actions.Add(Random.value > 0.4 ? new ConversationAction(Dialogues.DialogueOne) : new ConversationAction(Dialogues.DialogueTwo));
             actions.Add(new UnpauseTargetActionSequeunceAction(targetEntity));
             return actions;
-        }
-
-        private class DemoDialogueOne : Conversation
-        {
-            protected override void StartConversation()
-            {
-                DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("Hello there, what you up to?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("You're a bit friendly.", BitFriendly);
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'm running the bar now.", RunningBar);
-                DialogueSystem.Instance.WritePlayerChoiceLine("Sorry, gotta wipe this up. Can't talk now.", EndConversation);
-            }
-
-            private void BitFriendly()
-            {
-                DialogueSystem.Instance.WriteNPCLine("It's a small boat. Friendly will get you far.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Fair point - thanks.", EndConversation);
-            }
-
-            private void RunningBar()
-            {
-                DialogueSystem.Instance.WriteNPCLine("Ah, shame about poor Fred... still, glad you'll have the taps flowing again.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll do my best.", EndConversation);
-            }
-        }
-
-        private class DemoDialogueTwo : Conversation
-        {
-            protected override void StartConversation()
-            {
-                DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("What you looking at?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", Whoops);
-            }
-
-            private void Whoops()
-            {
-                DialogueSystem.Instance.WriteNPCLine("What you looking at <b>me</b> for?" );
-                DialogueSystem.Instance.WritePlayerChoiceLine("I, err, don't know.", DiggingHole);
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk away</i>", EndConversation);
-            }
-
-            private void DiggingHole()
-            {
-                DialogueSystem.Instance.WriteNPCLine("Well sod off then.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", EndConversation);
-            }
         }
     }
 }

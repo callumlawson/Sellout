@@ -49,12 +49,6 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new ActionManagerSystem());
             entitySystem.AddSystem(new PersonDescisionSystem());
 
-            //OLD AI SYSTEM
-            //entitySystem.AddSystem(new GoalDecisionSystem());
-            //entitySystem.AddSystem(new SitGoalSystem());
-            //entitySystem.AddSystem(new PayForGoalSystem());
-            //entitySystem.AddSystem(new WanderGoalSystem());
-
             //Player
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
