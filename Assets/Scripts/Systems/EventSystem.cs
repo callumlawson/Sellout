@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Util.Events;
+﻿using System;
+using Assets.Scripts.Util.Events;
 
 namespace Assets.Scripts.Systems
 {
@@ -7,14 +8,14 @@ namespace Assets.Scripts.Systems
         public delegate void OnClickEvent(ClickEvent clickEvent);
         public static OnClickEvent onClickInteraction = null;
 
-        public delegate void OnOpenDrinkMenuEvent();
-        public static OnOpenDrinkMenuEvent onOpenDrinkMenuEvent = null;
-
         public delegate void OnInventoryRequestEvent(InventoryRequestEvent inventoryRequestEvent);
         public static OnInventoryRequestEvent onInventoryRequestEvent = null;
 
         public delegate void OnInventoryEvent(InventoryEvent inventoryEvent);
         public static OnInventoryEvent onInventoryEvent = null;
+
+        public static Action OpenDrinkMakingEvent = null;
+        public static Action CloseDrinkMakingEvent = null;
 
         public static void BroadcastEvent(ClickEvent clickEvent)
         {
@@ -29,11 +30,6 @@ namespace Assets.Scripts.Systems
         public static void BroadcastEvent(InventoryEvent inventoryEvent)
         {
             onInventoryEvent(inventoryEvent);
-        }
-
-        public static void BroadcastEvent(OpenDrinkMakingMenuEvent openDrinkMakingMenuEvent)
-        {
-            onOpenDrinkMenuEvent();
         }
     }
 }

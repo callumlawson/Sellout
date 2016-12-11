@@ -58,7 +58,7 @@ namespace Assets.Scripts.Systems.AI
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GetAndReserveWaypointAction(Goal.RingUp));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToWaypointAction());
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new StartUsingWaypointAction()); //TODO: Need to release this.
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new OpenDrinkMakingMenuAction());
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new MakeDrinkAction());
                     break;
                 case Prefabs.Person:
                     var playerInventory = player.GetState<InventoryState>();
@@ -128,7 +128,7 @@ namespace Assets.Scripts.Systems.AI
 
             private void DiggingHole()
             {
-                DialogueSystem.Instance.WriteNPCLine("Well sodd off then.");
+                DialogueSystem.Instance.WriteNPCLine("Well sod off then.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", EndConversation);
             }
         }

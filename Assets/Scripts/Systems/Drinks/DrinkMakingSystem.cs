@@ -47,10 +47,11 @@ namespace Assets.Scripts.Systems.Drinks
 
             OnCloseUI();
 
-            EventSystem.onOpenDrinkMenuEvent += OpenUI;
+            EventSystem.OpenDrinkMakingEvent += OnOpenUI;
+            EventSystem.CloseDrinkMakingEvent += OnCloseUI;
         }
 
-        private void OpenUI()
+        private void OnOpenUI()
         {
             drinkState.Clear();
             UpdateUI();

@@ -4,7 +4,7 @@ using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
-using UnityEngine.VR;
+using UnityEngine.Profiling;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -25,11 +25,15 @@ namespace Assets.Scripts.Systems.AI
 
         public void OnFrame()
         {
+            Profiler.BeginSample("ActionManagerSystem-OnFrame");
             foreach (var entityToActions in entityActions)
             {
                 entityToActions.Value.OnFrame(entityToActions.Key);
+                Profiler.BeginSample("ActionManagerSystem-OnFrame-Debug");
                 entityToActions.Key.GetState<ActionBlackboardState>().CurrentActions = entityToActions.Value.ToString();
+                Profiler.EndSample();
             }
+            Profiler.EndSample();
         }
 
         public void QueueActionForEntity(Entity entity, GameAction action)
