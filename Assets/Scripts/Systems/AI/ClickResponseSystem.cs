@@ -37,18 +37,19 @@ namespace Assets.Scripts.Systems.AI
             var targetEntity = clickevent.Target;
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
+                ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
                 var prefab = targetEntity.GetState<PrefabState>();
                 QueueActionsForPrefab(targetEntity, prefab.PrefabName);
             }
             else
             {
+                ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
                 ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(clickevent.ClickPosition));
             }
         }
 
         private static void QueueActionsForPrefab(Entity targetEntity, string prefab)
         {
-            ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
             switch (prefab)
             {
                 case Prefabs.Counter:

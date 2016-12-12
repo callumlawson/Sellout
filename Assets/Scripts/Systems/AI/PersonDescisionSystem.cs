@@ -62,7 +62,7 @@ namespace Assets.Scripts.Systems.AI
 
             orderDrink.Add(drinkDrink);
             drinkDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30),
+               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30), //TODO: Need to account for the "No drink" case here.
                () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
             );
             drinkDrink.Add(new GetAndReserveWaypointAction(Goal.Sit));
