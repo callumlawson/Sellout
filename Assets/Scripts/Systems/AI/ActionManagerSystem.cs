@@ -38,11 +38,14 @@ namespace Assets.Scripts.Systems.AI
 
         public void QueueActionForEntity(Entity entity, GameAction action)
         {
-            if (!entityActions.ContainsKey(entity))
-            {
-                entityActions.Add(entity, new ActionSequence("Root"));
-            }
+            InitActionsIfNone(entity);
             entityActions[entity].Add(action);
+        }
+
+        public void AddActionToFrontOfQueueForEntity(Entity entity, GameAction action)
+        {
+            InitActionsIfNone(entity);
+            entityActions[entity].AddToStart(action);
         }
 
         public void TryClearActionsForEntity(Entity entity)
@@ -54,14 +57,22 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private ActionSequence GetActionsForEntity(Entity entity)
-        {
-            return !entityActions.ContainsKey(entity) ? new ActionSequence() : entityActions[entity];
-        }
-
         public bool IsEntityIdle(Entity entity)
         {
             return !entityActions.ContainsKey(entity) || GetActionsForEntity(entity).IsComplete();
+        }
+
+        private void InitActionsIfNone(Entity entity)
+        {
+            if (!entityActions.ContainsKey(entity))
+            {
+                entityActions.Add(entity, new ActionSequence("Root"));
+            }
+        }
+
+        private ActionSequence GetActionsForEntity(Entity entity)
+        {
+            return !entityActions.ContainsKey(entity) ? new ActionSequence() : entityActions[entity];
         }
     }
 }

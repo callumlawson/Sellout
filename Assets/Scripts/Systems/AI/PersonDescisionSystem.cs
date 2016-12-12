@@ -31,7 +31,6 @@ namespace Assets.Scripts.Systems.AI
                 {
                     if (entity.GetState<NameState>().Name == "Tolstoy") //Short term debug!
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, new PauseAction(5.0f));
                         ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink(entity));
                     }
                     else
@@ -52,15 +51,19 @@ namespace Assets.Scripts.Systems.AI
             orderDrink.Add(new PauseAction(3.0f));
             orderDrink.Add(
             new OnFailureDecorator(
-                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30), 
-                () => ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.AngryDialogue)))
+                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30),
+                () =>
+                {
+                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.AngryDialogue));
+                    ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
+                })
             );
             orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation()));
 
             orderDrink.Add(drinkDrink);
             drinkDrink.Add(new OnFailureDecorator(
                new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30),
-               () => ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
+               () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
             );
             drinkDrink.Add(new GetAndReserveWaypointAction(Goal.Sit));
             drinkDrink.Add(new GoToWaypointAction());

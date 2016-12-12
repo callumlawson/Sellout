@@ -8,5 +8,6 @@ namespace Assets.Scripts.GameActions.Composite
         public string CompositeActionName;
         protected readonly List<GameAction> Actions = new List<GameAction>();
         public void Add(GameAction action) { Actions.Add(action); }
+        public void AddToStart(GameAction action) { Actions.Insert(0, action); }
     }
 }
