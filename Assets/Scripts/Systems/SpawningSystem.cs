@@ -115,7 +115,8 @@ namespace Assets.Scripts.Systems
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PersonState(),
-                new ColorState(color)
+                new ColorState(color),
+                new MoodState(Mood.Happy)
             });
         }
     }

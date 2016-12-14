@@ -54,11 +54,11 @@ namespace Assets.Scripts.Systems.AI
                 new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30),
                 () =>
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ConversationAction(Dialogues.AngryDialogue));
+                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                 })
             );
-            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation()));
+            orderDrink.Add(new ConversationAction(Dialogues.OrderDrinkDialogue));
 
             orderDrink.Add(drinkDrink);
             drinkDrink.Add(new OnFailureDecorator(

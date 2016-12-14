@@ -14,5 +14,6 @@
         public const string DiagloguePanelUI = "UI/DialoguePanel";
         public const string DialogueLineUI = "UI/DialogueLine";
         public const string NameTagUI = "UI/NameTag";
+        public const string MoodBubbleUI = "UI/MoodBubble";
     }
 }

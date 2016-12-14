@@ -7,7 +7,6 @@ namespace Assets.Scripts.Util.Dialogue
         public static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
         public static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
         public static readonly OrderDrinkConverstation OrderDrinkDialogue = new OrderDrinkConverstation();
-        public static readonly AngryConversation AngryDialogue = new AngryConversation();
         public static readonly WrongDrinkConversation WrongDrinkDialogue = new WrongDrinkConversation();
 
         public class OrderDrinkConverstation : Conversation
@@ -17,16 +16,6 @@ namespace Assets.Scripts.Util.Dialogue
                 DialogueSystem.Instance.StartDialogue();
                 DialogueSystem.Instance.WriteNPCLine("Once Space Screwdriver please.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation);
-            }
-        }
-
-        public class AngryConversation : Conversation
-        {
-            protected override void StartConversation()
-            {
-                DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("I've been here for ages! I only come here because it's the only bar on the ship.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Oh dear.</i>", EndConversation);
             }
         }
 
