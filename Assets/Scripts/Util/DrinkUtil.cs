@@ -24,14 +24,14 @@ namespace Assets.Scripts.Util
             return alcholAmount;
         }
 
-        public static float GetSimilarity(DrinkState goal, DrinkState drink)
+        public static float GetDifference(DrinkState goal, DrinkState drink)
         {
             var goalContents = goal.GetContents();
             var drinkContents = drink.GetContents();
 
-            int totalGoalIngredients = 0;
+            var totalGoalIngredients = 0;
+            var totalDifference = 0;
 
-            int totalDifference = 0;
             foreach (var ingredientAmt in goalContents)
             {
                 var ingredient = ingredientAmt.Key;
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Util
 
                 totalGoalIngredients += goalAmt;
 
-                var amtDrink = 0;
+                int amtDrink;
                 drinkContents.TryGetValue(ingredient, out amtDrink);
 
                 var difference = Mathf.Abs(goalAmt - amtDrink);

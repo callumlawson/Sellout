@@ -93,7 +93,7 @@ namespace Assets.Scripts.Systems
             var player = entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(Prefabs.Player),
-                new InventoryState(),
+                new HierarchyState(),
                 new VisibleSlotState(),
                 new PositionState(position),
                 new PathfindingState(null),
@@ -112,7 +112,7 @@ namespace Assets.Scripts.Systems
                 new NameState(name),
                 new PositionState(new Vector3(5.63f, 0.0f, 16.49f)),
                 new PathfindingState(null),
-                new InventoryState(),
+                new HierarchyState(),
                 new VisibleSlotState(),
                 new PersonState(),
                 new ColorState(color),

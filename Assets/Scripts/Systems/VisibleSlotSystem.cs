@@ -1,9 +1,8 @@
 ﻿using Assets.Framework.Systems;
-using Assets.Scripts.Util.Events;
 using Assets.Scripts.States;
 using UnityEngine;
 using Assets.Framework.Entities;
-using Assets.Scripts.Visualizers.Slots;
+using Assets.Scripts.Visualizers;
 
 namespace Assets.Scripts.Systems
 {
@@ -11,21 +10,20 @@ namespace Assets.Scripts.Systems
     {
         public void OnInit()
         {
-            EventSystem.onInventoryEvent += OnInventoryEvent;
+            EventSystem.ParentingRequestEvent += OnInventoryEvent;
         }
 
-        private void OnInventoryEvent(InventoryEvent inventoryEvent)
+        private void OnInventoryEvent(ParentingRequest parentingRequest)
         {
-            var childGameObject = inventoryEvent.child.GameObject;
-            if (childGameObject != null)
+            if (parentingRequest.EntityTo != null)
             {
-                if (inventoryEvent.to.HasState<VisibleSlotState>())
+                if (parentingRequest.EntityTo.HasState<VisibleSlotState>())
                 {
-                    MoveChildIntoVisibleSlot(inventoryEvent.to, childGameObject);
+                    MoveChildIntoVisibleSlot(parentingRequest.EntityTo, parentingRequest.Mover.GameObject);
                 }
                 else
                 {
-                    MoveChildOutOfView(childGameObject);
+                    MoveChildOutOfView(parentingRequest.Mover.GameObject);
                 }
             }
         }

@@ -30,6 +30,22 @@ namespace Assets.Scripts.States
             return Reserver != null;
         }
 
+        public void ClearUser()
+        {
+            User = null;
+        }
+
+        public void ClearReserver()
+        {
+            Reserver = null;
+        }
+
+        public void Free()
+        {
+            Reserver = null;
+            User = null;
+        }
+
         public override string ToString()
         {
             var reserved = Reserver != null

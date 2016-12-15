@@ -8,16 +8,26 @@ namespace Assets.Scripts.GameActions.Waypoints
 {
     class GetWaypointAction : GameAction
     {
-        private Goal goal;
+        private readonly Goal goal;
+        private readonly bool reserve;
+        private readonly bool closest;
 
-        public GetWaypointAction(Goal waypointGoal)
+        public GetWaypointAction(Goal waypointGoal, bool reserve = false, bool closest = false)
         {
             goal = waypointGoal;
+            this.reserve = reserve;
+            this.closest = closest;
         }
 
         public override void OnStart(Entity entity)
         {
-            var waypoint = WaypointSystem.Instance.GetFreeWaypointThatSatisfiesGoal(goal);
+            var waypoint = closest ? WaypointSystem.Instance.GetClosestFreeWaypointThatSatisfiesGoal(entity, goal) : WaypointSystem.Instance.GetFreeWaypointThatSatisfiesGoal(goal);
+
+            if (waypoint != null && reserve)
+            {
+                waypoint.GetState<UserState>().Reserver = entity;
+            }
+
             if (waypoint != null)
             {
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;

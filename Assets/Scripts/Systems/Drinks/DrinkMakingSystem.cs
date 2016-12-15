@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
-using Assets.Scripts.Util.Events;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -78,11 +77,10 @@ namespace Assets.Scripts.Systems.Drinks
         private void OnMixEvent()
         {
             var player = StaticStates.Get<PlayerState>().Player;
-            if (player.GetState<InventoryState>().child == null)
+            if (player.GetState<HierarchyState>().Child == null)
             {
                 var drink = MakeDrink(drinkState);
-                EventSystem.BroadcastEvent(new InventoryRequestEvent(null, player, drink));
-
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = null, EntityTo = player, Mover = drink });
                 drinkState.Clear();
                 UpdateUI();
             }
@@ -99,7 +97,8 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 new PrefabState(prefab),
                 new DrinkState(template),
-                new PositionState(new Vector3(-9.68f, 1.27f, -14.27f))
+                new PositionState(new Vector3(-9.68f, 1.27f, -14.27f)),
+                new HierarchyState()
             });
         }
 

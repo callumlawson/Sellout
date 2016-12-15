@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.Blueprints;
@@ -28,7 +29,7 @@ namespace Assets.Scripts.Systems
 
         public List<Type> RequiredStates()
         {
-            return new List<Type> {typeof(WaypointState), typeof(BlueprintGameObjectState)};
+            return new List<Type> {typeof(WaypointState), typeof(BlueprintGameObjectState), typeof(UserState)};
         }
 
         public void OnEntityAdded(Entity entity)
@@ -50,7 +51,7 @@ namespace Assets.Scripts.Systems
 
         public void OnEntityRemoved(Entity entity)
         {
-            //Do nothing.
+            //Do Nothing
         }
 
         private IEnumerable<Entity> GetFreeWaypointsThatSatisfyGoal(Goal goal)
@@ -73,15 +74,21 @@ namespace Assets.Scripts.Systems
             return GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
         }
 
-        public Entity GetAndReserveWaypointThatSatisfiedGoal(Goal goal, Entity entity)
+        public Entity GetClosestFreeWaypointThatSatisfiesGoal(Entity searcher, Goal goal)
         {
-            var waypoint = GetFreeWaypointsThatSatisfyGoal(goal).FirstOrDefault();
-            if (waypoint == null)
+            Entity closestWaypoint = null;
+            var closestDistance = 0.0f;
+            var freeWaypoints = GetFreeWaypointsThatSatisfyGoal(goal);
+            foreach (var waypoint in freeWaypoints)
             {
-                return null;
+                var distance = DistanceBetweenEntities(waypoint, searcher);
+                if (distance < closestDistance || closestWaypoint == null)
+                {
+                    closestWaypoint = waypoint;
+                    closestDistance = distance;
+                }
             }
-            waypoint.GetState<UserState>().Reserver = entity;
-            return waypoint;
+            return closestWaypoint;
         }
 
         public static void StartUsingWaypoint(Entity waypoint, Entity user)
@@ -99,6 +106,11 @@ namespace Assets.Scripts.Systems
                 waypoint.GetState<UserState>().Reserver = null;
                 waypoint.GetState<UserState>().User = null;
             }
+        }
+
+        private float DistanceBetweenEntities(Entity entity, Entity otherEntity)
+        {
+            return entity.GetState<PositionState>().DistanceFrom(otherEntity.GetState<PositionState>());
         }
     }
 }

@@ -4,9 +4,7 @@ namespace Assets.Scripts.Util
 {
     public static class CanvasExtensions
     {
-        public static Vector2 WorldToCanvas(this Canvas canvas,
-            Vector3 worldPosition,
-            Camera camera = null)
+        public static Vector2 WorldToCanvas(this Canvas canvas, Vector3 worldPosition, Camera camera = null)
         {
             if (camera == null)
             {

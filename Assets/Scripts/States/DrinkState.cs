@@ -11,6 +11,8 @@ namespace Assets.Scripts.States
     {
         [SerializeField] private Dictionary<Ingredient, int> contents;
 
+        public Action DrinkAmountChanged = delegate {  };
+
         public DrinkState()
         {
             contents = new Dictionary<Ingredient, int>();
@@ -38,6 +40,7 @@ namespace Assets.Scripts.States
         public void Clear()
         {
             contents.Clear();
+            DrinkAmountChanged.Invoke();
         }
 
         public void ChangeIngredientAmount(Ingredient ingredient, int delta)
@@ -53,6 +56,17 @@ namespace Assets.Scripts.States
             {
                 contents.Remove(ingredient);
             }
+            DrinkAmountChanged.Invoke();
+        }
+
+        public int GetTotalDrinkSize()
+        {
+            var size = 0;
+            foreach (var drinkToAmount in contents)
+            {
+                size += drinkToAmount.Value;
+            }
+            return size;
         }
 
         public override string ToString()

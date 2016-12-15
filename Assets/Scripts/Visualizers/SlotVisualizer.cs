@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Visualizers.Slots
+namespace Assets.Scripts.Visualizers
 {
     class SlotVisualizer : MonoBehaviour
     {

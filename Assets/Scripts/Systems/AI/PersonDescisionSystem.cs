@@ -51,7 +51,7 @@ namespace Assets.Scripts.Systems.AI
             orderDrink.Add(new PauseAction(3.0f));
             orderDrink.Add(
             new OnFailureDecorator(
-                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 30),
+                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 20),
                 () =>
                 {
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
@@ -62,15 +62,16 @@ namespace Assets.Scripts.Systems.AI
 
             orderDrink.Add(drinkDrink);
             drinkDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 30), //TODO: Need to account for the "No drink" case here.
+               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 20), //TODO: Need to account for the "No drink" case here.
                () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
             );
-            drinkDrink.Add(new GetAndReserveWaypointAction(Goal.Sit));
+            drinkDrink.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
             drinkDrink.Add(new GoToWaypointAction());
-            drinkDrink.Add(new PauseAction(30.0f));
-            drinkDrink.Add(new DestoryEntityInInventoryAction());
-            drinkDrink.Add(new ReleaseWaypointAction()); //We need to give up the reserved seat.
-
+            drinkDrink.Add(new PauseAction(15.0f));
+            drinkDrink.Add(new DrinkItemInInventory());
+            drinkDrink.Add(new ReleaseWaypointAction());
+            drinkDrink.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
+            drinkDrink.Add(new PutDownInventoryItemAtWaypoint());
             return orderDrink;
         }
 
@@ -82,7 +83,7 @@ namespace Assets.Scripts.Systems.AI
             wander.Add(new PauseAction(4.0f));
             if (Random.value > 0.80)
             {
-                wander.Add(new GetAndReserveWaypointAction(Goal.Sit));
+                wander.Add(new GetWaypointAction(Goal.Sit, reserve: true));
                 wander.Add(new GoToWaypointAction());
                 wander.Add(new PauseAction(40.0f));
                 wander.Add(new ReleaseWaypointAction());

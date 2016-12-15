@@ -3,6 +3,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions.Inventory
 {
@@ -28,17 +29,11 @@ namespace Assets.Scripts.GameActions.Inventory
 
         public override void OnFrame(Entity entity)
         {
-            var inventoryItem = entity.GetState<InventoryState>().child;
+            var inventoryItem = entity.GetState<HierarchyState>().Child;
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
-                if (inventoryItem.GetState<DrinkState>().ToString() == drinkState.ToString()) //Horrible hack. Sorry.
-                {
-                    ActionStatus = ActionStatus.Succeeded;
-                }
-                else
-                {
-                    ActionStatus = ActionStatus.Failed;
-                }
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkState) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
             if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {

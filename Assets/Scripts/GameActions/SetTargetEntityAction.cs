@@ -4,18 +4,18 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions
 {
-    class GetEntityAction : GameAction
+    class SetTargetEntityAction : GameAction
     {
-        private Entity goal;
+        private Entity targetEntity;
 
-        public GetEntityAction(Entity person)
+        public SetTargetEntityAction(Entity person)
         {
-            goal = person;
+            targetEntity = person;
         }
 
         public override void OnStart(Entity entity)
         {
-            entity.GetState<ActionBlackboardState>().TargetEntity = goal;
+            entity.GetState<ActionBlackboardState>().TargetEntity = targetEntity;
             ActionStatus = ActionStatus.Succeeded;            
         }
 

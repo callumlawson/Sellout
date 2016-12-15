@@ -40,10 +40,10 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
-            entitySystem.AddSystem(new InventoryExchangeSystem());
-            entitySystem.AddSystem(new VisibleSlotSystem());
             entitySystem.AddSystem(new ClickResponseSystem());
             entitySystem.AddSystem(new DialogueSystem());
+            entitySystem.AddSystem(new HierarchyManipulationSystem()); //Must run before VisibleSlotSystem
+            entitySystem.AddSystem(new VisibleSlotSystem());
 
             //NPC/AI
             entitySystem.AddSystem(new ActionManagerSystem());

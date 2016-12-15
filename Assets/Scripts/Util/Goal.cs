@@ -7,6 +7,7 @@
         Sit,
         Wander,
         PayFor,
-        RingUp
+        RingUp,
+        Storage
     }
 }

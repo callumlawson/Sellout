@@ -1,19 +1,18 @@
 ﻿using Assets.Framework.Entities;
-using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions.Inventory
 {
-    public class DestoryEntityInInventoryAction : GameAction
+    class DrinkItemInInventory : GameAction
     {
         public override void OnStart(Entity entity)
         {
             var inventoryItem = entity.GetState<HierarchyState>().Child;
             if (inventoryItem != null)
             {
-                entity.GetState<HierarchyState>().RemoveChild();
-                EntityStateSystem.Instance.RemoveEntity(inventoryItem);
+                var drinkState = inventoryItem.GetState<DrinkState>();
+                drinkState.Clear();
             }
             ActionStatus = ActionStatus.Succeeded;
         }

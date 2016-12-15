@@ -3,6 +3,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
@@ -53,22 +54,26 @@ namespace Assets.Scripts.Systems.AI
             switch (prefab)
             {
                 case Prefabs.Counter:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetAndReserveWaypointAction(Goal.RingUp));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetWaypointAction(Goal.RingUp, reserve: true));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToWaypointAction());
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new StartUsingWaypointAction()); //TODO: Need to release this.
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new MakeDrinkAction());
                     break;
                 case Prefabs.Person:
-                    var playerInventory = player.GetState<InventoryState>();
-                    var childToMove = playerInventory.child;
+                    var playerInventory = player.GetState<HierarchyState>();
+                    var childToMove = playerInventory.Child;
                     if (childToMove != null)
                     {
-                        EventSystem.BroadcastEvent(new InventoryRequestEvent(player, targetEntity, childToMove));
+                        EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = targetEntity, Mover = childToMove });
                     }
                     else
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(player, TalkToPerson(targetEntity));
                     }
+                    break;
+                case Prefabs.Drink:
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new SetTargetEntityAction(targetEntity));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new PickUpItem());
                     break;
                 default:
                     break;
@@ -78,7 +83,7 @@ namespace Assets.Scripts.Systems.AI
         private static ActionSequence TalkToPerson(Entity targetEntity)
         {
             var actions = new ActionSequence("Talk to Person");
-            actions.Add(new GetEntityAction(targetEntity));
+            actions.Add(new SetTargetEntityAction(targetEntity));
             actions.Add(new GoToMovingEntityAction(2.0f));
             actions.Add(new PauseTargetActionSequeunceAction(targetEntity));
             actions.Add(Random.value > 0.4 ? new ConversationAction(Dialogues.DialogueOne) : new ConversationAction(Dialogues.DialogueTwo));
