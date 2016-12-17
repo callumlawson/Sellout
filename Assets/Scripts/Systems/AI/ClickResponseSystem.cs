@@ -72,8 +72,14 @@ namespace Assets.Scripts.Systems.AI
                     }
                     break;
                 case Prefabs.Drink:
+                    //TODO replace with GOTO entity
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new SetTargetEntityAction(targetEntity));
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new PickUpItem());
+                    break;
+                case Prefabs.Washup:
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
+                    ActionManagerSystem.Instance.QueueActionForEntity(player, new DestoryEntityInInventoryAction()); 
                     break;
                 default:
                     break;

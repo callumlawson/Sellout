@@ -24,7 +24,7 @@ namespace Assets.Scripts.Util.Dialogue
             protected override void StartConversation()
             {
                 DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. I'll drink it. I won't pay for it.");
+                DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Figures.</i>", EndConversation);
             }
         }

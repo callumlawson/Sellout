@@ -66,7 +66,7 @@ namespace Assets.Scripts.Systems
             return entitySystem
                .GetEntitiesWithState<GoalSatisfierState>()
                .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(goal))
-               .FirstOrDefault(entity => Equals(entity.GetState<UserState>().Reserver, occupant));
+               .FirstOrDefault(entity => Equals(entity.GetState<UserState>().User, occupant));
         }
 
         public Entity GetFreeWaypointThatSatisfiesGoal(Goal goal)

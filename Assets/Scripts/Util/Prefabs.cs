@@ -7,6 +7,7 @@
         public const string Waypoint = "Waypoint";
         public const string Drink = "Drinks/Drink";
         public const string Counter = "Environment/Counter";
+        public const string Washup = "Environment/Washup";
         public const string Player = "Player";
 
         //UI

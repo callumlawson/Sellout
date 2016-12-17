@@ -8,7 +8,7 @@ using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions.Waypoints
 {
-    class GetWaypointWithUserAction : GameAction
+    class WaitForWaypointWithUserAction : GameAction
     {
         private readonly Goal goal;
         private readonly Entity occupant;
@@ -16,7 +16,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         private DateTime startTime;
         private TimeState timeState;
 
-        public GetWaypointWithUserAction(Goal goal, Entity occupant, int timeoutInMins)
+        public WaitForWaypointWithUserAction(Goal goal, Entity occupant, int timeoutInMins)
         {
             this.goal = goal;
             this.occupant = occupant;
@@ -49,7 +49,6 @@ namespace Assets.Scripts.GameActions.Waypoints
             var waypoint = WaypointSystem.Instance.GetWaypointThatSatisfiesGoalWithOcupant(goal, occupant);
             if (waypoint != null)
             {
-                entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
             if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)

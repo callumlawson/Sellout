@@ -29,7 +29,7 @@ namespace Assets.Scripts.Systems.AI
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(entity))
                 {
-                    if (entity.GetState<NameState>().Name == "Tolstoy") //Short term debug!
+                    if (Random.value > 0.8f)
                     {
                         ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink(entity));
                     }
@@ -41,38 +41,56 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private static ConditionalActionSequence OrderDrink(Entity entity)
+        private static ActionSequence OrderDrink(Entity entity)
         {
-            var orderDrink = new ConditionalActionSequence("Order Drink");
-            var drinkDrink = new ActionSequence("Drink Drink");
+            var orderingAndDrinking = new ActionSequence("OrderingAndDrinking");
+            var orderDrink = new ConditionalActionSequence("OrderThenDrink");
 
-            orderDrink.Add(new GetWaypointAction(Goal.PayFor));
-            orderDrink.Add(new GoToWaypointAction());
-            orderDrink.Add(new PauseAction(3.0f));
+            orderingAndDrinking.Add(orderDrink);
+            orderingAndDrinking.Add(new ReleaseWaypointAction());
+
             orderDrink.Add(
             new OnFailureDecorator(
-                new GetWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 20),
+               new GetWaypointAction(Goal.PayFor, true, true, 10),
+               () =>
+               {
+                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
+               }
+            ));
+            orderDrink.Add(new GoToWaypointAction());
+            //There is a bug here where the payfor waypoint can be left reserved.
+            orderDrink.Add(
+            new OnFailureDecorator(
+                new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 20), //Does not reserve wayponit.
                 () =>
                 {
+                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                 })
             );
             orderDrink.Add(new ConversationAction(Dialogues.OrderDrinkDialogue));
-
-            orderDrink.Add(drinkDrink);
-            drinkDrink.Add(new OnFailureDecorator(
+            orderDrink.Add(new OnFailureDecorator(
                new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 20), //TODO: Need to account for the "No drink" case here.
-               () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue)))
+               () =>
+               {
+                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+               })
             );
-            drinkDrink.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
-            drinkDrink.Add(new GoToWaypointAction());
-            drinkDrink.Add(new PauseAction(15.0f));
-            drinkDrink.Add(new DrinkItemInInventory());
-            drinkDrink.Add(new ReleaseWaypointAction());
-            drinkDrink.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
-            drinkDrink.Add(new PutDownInventoryItemAtWaypoint());
-            return orderDrink;
+            orderDrink.Add(new ReleaseWaypointAction());
+            orderDrink.Add(new UpdateMoodAction(Mood.Happy));
+            orderDrink.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
+            orderDrink.Add(new GoToWaypointAction());
+            orderDrink.Add(new PauseAction(15.0f));
+            orderDrink.Add(new DrinkItemInInventory());
+            orderDrink.Add(new ReleaseWaypointAction());
+            orderDrink.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
+            orderDrink.Add(new PutDownInventoryItemAtWaypoint());
+
+            return orderingAndDrinking;
         }
 
         private static ActionSequence Wander()

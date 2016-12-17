@@ -1,4 +1,6 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
@@ -12,14 +14,25 @@ namespace Assets.Scripts.GameActions.Waypoints
         private readonly bool reserve;
         private readonly bool closest;
 
-        public GetWaypointAction(Goal waypointGoal, bool reserve = false, bool closest = false)
+        private TimeState timeState;
+        private readonly int timeoutInMins;
+        private DateTime startTime;
+
+        public GetWaypointAction(Goal waypointGoal, bool reserve = false, bool closest = false, int timeoutInMins = 30)
         {
             goal = waypointGoal;
             this.reserve = reserve;
             this.closest = closest;
+            this.timeoutInMins = timeoutInMins;
         }
 
         public override void OnStart(Entity entity)
+        {
+            timeState = StaticStates.Get<TimeState>();
+            startTime = timeState.time;
+        }
+
+        public override void OnFrame(Entity entity)
         {
             var waypoint = closest ? WaypointSystem.Instance.GetClosestFreeWaypointThatSatisfiesGoal(entity, goal) : WaypointSystem.Instance.GetFreeWaypointThatSatisfiesGoal(goal);
 
@@ -33,15 +46,10 @@ namespace Assets.Scripts.GameActions.Waypoints
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
-            else
+            else if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }
-        }
-
-        public override void OnFrame(Entity entity)
-        {
-            //Do Nothing
         }
 
         public override void Pause()
