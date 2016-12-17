@@ -60,11 +60,11 @@ namespace Assets.Scripts.Systems.AI
                     ActionManagerSystem.Instance.QueueActionForEntity(player, new MakeDrinkAction());
                     break;
                 case Prefabs.Person:
-                    var playerInventory = player.GetState<HierarchyState>();
-                    var childToMove = playerInventory.Child;
-                    if (childToMove != null)
+                    var playerChild = player.GetState<HierarchyState>().Child;
+                    var targetChild = targetEntity.GetState<HierarchyState>().Child;
+                    if (playerChild != null && targetChild == null)
                     {
-                        EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = targetEntity, Mover = childToMove });
+                        EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = targetEntity, Mover = playerChild });
                     }
                     else
                     {
