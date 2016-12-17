@@ -31,7 +31,8 @@ namespace Assets.Scripts.Systems.AI
                 {
                     if (Random.value > 0.8f)
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink(entity));
+                        var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, OrderDrink(entity, drinkRecipe));
                     }
                     else
                     {
@@ -41,7 +42,7 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private static ActionSequence OrderDrink(Entity entity)
+        private static ActionSequence OrderDrink(Entity entity, DrinkRecipe drinkRecipe)
         {
             var orderingAndDrinking = new ActionSequence("OrderingAndDrinking");
             var orderDrink = new ConditionalActionSequence("OrderThenDrink");
@@ -69,9 +70,9 @@ namespace Assets.Scripts.Systems.AI
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                 })
             );
-            orderDrink.Add(new ConversationAction(Dialogues.OrderDrinkDialogue));
+            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
             orderDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(new DrinkState(DrinkUI.screwdriverIngredients), 20), //TODO: Need to account for the "No drink" case here.
+               new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), 20), //TODO: Need to account for the "No drink" case here.
                () =>
                {
                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());

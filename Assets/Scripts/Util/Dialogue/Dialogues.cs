@@ -6,15 +6,21 @@ namespace Assets.Scripts.Util.Dialogue
     {
         public static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
         public static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
-        public static readonly OrderDrinkConverstation OrderDrinkDialogue = new OrderDrinkConverstation();
         public static readonly WrongDrinkConversation WrongDrinkDialogue = new WrongDrinkConversation();
 
         public class OrderDrinkConverstation : Conversation
         {
+            private readonly string drinkName;
+
+            public OrderDrinkConverstation(string drinkName)
+            {
+                this.drinkName = drinkName;
+            }
+
             protected override void StartConversation()
             {
                 DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("Once Space Screwdriver please.");
+                DialogueSystem.Instance.WriteNPCLine("A " + drinkName + " please.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation);
             }
         }

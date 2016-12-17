@@ -99,12 +99,19 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        public static void ReleaseWaypoint(Entity waypoint)
+        public static void ReleaseWaypoint(Entity waypoint, Entity entityToRemove)
         {
             if (waypoint != null && waypoint.HasState<UserState>())
             {
-                waypoint.GetState<UserState>().Reserver = null;
-                waypoint.GetState<UserState>().User = null;
+                var userState = waypoint.GetState<UserState>();
+                if (Equals(userState.Reserver, entityToRemove))
+                {
+                    userState.Reserver = null;
+                }
+                if (Equals(userState.User, entityToRemove))
+                {
+                    userState.User = null;
+                }
             }
         }
 

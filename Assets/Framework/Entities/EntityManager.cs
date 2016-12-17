@@ -31,8 +31,11 @@ namespace Assets.Framework.Entities
                 {
                     var prefabState = state as PrefabState;
                     var go = SimplePool.Spawn(Resources.Load(prefabState.PrefabName) as GameObject);
-                    var entityIdComponent = go.AddComponent<EntityIdComponent>();
-                    entityIdComponent.EntityId = entity.EntityId;
+                    if (go.GetComponent<EntityIdComponent>() == null)
+                    {
+                        go.AddComponent<EntityIdComponent>();
+                    }
+                    go.GetComponent<EntityIdComponent>().EntityId = entity.EntityId;
                     entity.GameObject = go;
                 }
             }
@@ -48,6 +51,7 @@ namespace Assets.Framework.Entities
         {
             if (entity.GameObject != null)
             {
+                entity.GameObject.GetComponent<EntityIdComponent>().EntityId = -1;
                 SimplePool.Despawn(entity.GameObject);
             }
             RemoveStatesForEntity(entity);

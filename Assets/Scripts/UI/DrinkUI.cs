@@ -27,23 +27,7 @@ namespace Assets.Scripts.Systems
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
-        public static readonly Dictionary<Ingredient, int> screwdriverIngredients = new Dictionary<Ingredient, int>
-        {
-            {Ingredient.Alcohol, 1},
-            {Ingredient.OrangeJuice, 1}
-        };
 
-        private static readonly Dictionary<Ingredient, int> rumAndColaIngredients = new Dictionary<Ingredient, int>
-        {
-            {Ingredient.Alcohol, 1},
-            {Ingredient.Cola, 1}
-        };
-
-        private List<DrinkRecipe> recipes = new List<DrinkRecipe>
-        {
-            new DrinkRecipe("Space Screwdriver", new DrinkState(screwdriverIngredients)),
-            new DrinkRecipe("Space Rum and Cola", new DrinkState(rumAndColaIngredients))
-        };
 
         public void Awake()
         {
@@ -56,9 +40,9 @@ namespace Assets.Scripts.Systems
                 ingredientPanels.Add(ingredient, panel);
             }
 
-            for (var i = 0; i < recipes.Count; i++)
+            for (var i = 0; i < DrinkRecipes.Recipes.Count; i++)
             {
-                mixologyBook.AddRecipe(recipes[i]);
+                mixologyBook.AddRecipe(DrinkRecipes.Recipes[i]);
             }
         }
 

@@ -10,7 +10,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void OnStart(Entity entity)
         {
             var targetWaypoint = entity.GetState<ActionBlackboardState>().TargetEntity;
-            WaypointSystem.ReleaseWaypoint(targetWaypoint);
+            WaypointSystem.ReleaseWaypoint(targetWaypoint, entity);
             ActionStatus = ActionStatus.Succeeded;
         }
 
