@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameActions.Waypoints
 {
-    class GoToWaypointAction : GameAction
+    class GoToWaypointAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 2.0f;
         private PathfindingState pathfindingState;
@@ -48,6 +48,16 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void Unpause()
         {
             pathfindingState.Paused = false;
+        }
+
+        public void Cancel()
+        {
+            pathfindingState.TargetPosition = null;
+        }
+
+        public bool IsCancellable()
+        {
+            return true;
         }
     }
 }

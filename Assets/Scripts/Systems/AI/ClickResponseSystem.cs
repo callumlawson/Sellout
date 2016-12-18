@@ -90,7 +90,7 @@ namespace Assets.Scripts.Systems.AI
         {
             var actions = new ActionSequence("Talk to Person");
             actions.Add(new SetTargetEntityAction(targetEntity));
-            actions.Add(new GoToMovingEntityAction(2.0f));
+            actions.Add(new GoToMovingEntityAction());
             actions.Add(new PauseTargetActionSequeunceAction(targetEntity));
             actions.Add(Random.value > 0.4 ? new ConversationAction(Dialogues.DialogueOne) : new ConversationAction(Dialogues.DialogueTwo));
             actions.Add(new UnpauseTargetActionSequeunceAction(targetEntity));

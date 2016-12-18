@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameActions
 {
-    class GoToMovingEntityAction : GameAction
+    class GoToMovingEntityAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 2.0f;
         private PathfindingState pathfindingState;
         private Entity targetWaypoint;
-        private float stoppingDistance;
+        private float stoppingDistance = 2.0f;
 
-        public GoToMovingEntityAction(float stoppingDistance)
+        public GoToMovingEntityAction()
         {
-            this.stoppingDistance = stoppingDistance;
+
         }
 
         public override void OnStart(Entity entity)
@@ -55,6 +55,16 @@ namespace Assets.Scripts.GameActions
         public override void Unpause()
         {
             pathfindingState.Paused = false;
+        }
+
+        public void Cancel()
+        {
+            pathfindingState.TargetPosition = null;
+        }
+
+        public bool IsCancellable()
+        {
+            return true;
         }
     }
 }

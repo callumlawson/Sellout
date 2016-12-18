@@ -7,9 +7,11 @@ namespace Assets.Scripts.States
     class TimeState : IState
     {
         public DateTime time;
+        public readonly DateTime startTime;
 
         public TimeState(DateTime time)
         {
+            startTime = time;
             this.time = time;
         }
     }
