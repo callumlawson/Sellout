@@ -15,6 +15,7 @@ namespace Assets.Scripts.Visualizers
         {
             drinkState = entity.GetState<DrinkState>();
             drinkState.DrinkAmountChanged += OnDrinkChanged;
+            OnDrinkChanged();
         }
 
         private void OnDrinkChanged()
@@ -29,7 +30,7 @@ namespace Assets.Scripts.Visualizers
 
         public void OnStopRendering(Entity entity)
         {
-            //Do nothing
+            drinkState.DrinkAmountChanged -= OnDrinkChanged;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Assets.Scripts.States
         public DrinkState(Dictionary<Ingredient, int> contents)
         {
             this.contents = new Dictionary<Ingredient, int>(contents);
+            DrinkAmountChanged.Invoke();
         }
 
         public DrinkState(DrinkState template)
