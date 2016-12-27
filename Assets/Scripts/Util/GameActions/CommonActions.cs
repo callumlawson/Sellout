@@ -26,7 +26,7 @@ namespace Assets.Scripts.Util.GameActions
 
             return talking;
         }
-
+ 
         public static ActionSequence Wander()
         {
             var wander = new ActionSequence("Wander Around");
@@ -43,13 +43,9 @@ namespace Assets.Scripts.Util.GameActions
             return wander;
         }
 
-        public static ActionSequence OrderDrink(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence OrderDrink(Entity entity, DrinkRecipe drinkRecipe)
         {
-            var orderingAndDrinking = new ActionSequence("OrderingAndDrinking");
-            var orderDrink = new ConditionalActionSequence("OrderThenDrink");
-
-            orderingAndDrinking.Add(orderDrink);
-            orderingAndDrinking.Add(new ReleaseWaypointAction());
+            var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
 
             orderDrink.Add(
             new OnFailureDecorator(
@@ -84,13 +80,27 @@ namespace Assets.Scripts.Util.GameActions
             );
             orderDrink.Add(new ReleaseWaypointAction());
             orderDrink.Add(new UpdateMoodAction(Mood.Happy));
-            orderDrink.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
-            orderDrink.Add(new GoToWaypointAction());
-            orderDrink.Add(new PauseAction(15.0f));
-            orderDrink.Add(new DrinkItemInInventory());
-            orderDrink.Add(new ReleaseWaypointAction());
-            orderDrink.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
-            orderDrink.Add(new PutDownInventoryItemAtWaypoint());
+
+            return orderDrink;
+        }
+
+        public static ActionSequence OrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
+        {
+            var orderingAndDrinking = new ActionSequence("OrderingAndDrinking");
+            var orderDrink = OrderDrink(entity, drinkRecipe);
+            var sitDown = new ActionSequence("Sit down");
+            
+            orderingAndDrinking.Add(orderDrink);
+            orderingAndDrinking.Add(sitDown);
+            orderingAndDrinking.Add(new ReleaseWaypointAction());
+
+            sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
+            sitDown.Add(new GoToWaypointAction());
+            sitDown.Add(new PauseAction(15.0f));
+            sitDown.Add(new DrinkItemInInventory());
+            sitDown.Add(new ReleaseWaypointAction());
+            sitDown.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
+            sitDown.Add(new PutDownInventoryItemAtWaypoint());
 
             return orderingAndDrinking;
         }
