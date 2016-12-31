@@ -12,29 +12,12 @@ namespace Assets.Scripts.Systems.AI
 {
     class PersonDescisionSystem : ITickEntitySystem
     {
-        private delegate ActionSequence StorySequence(Entity entity);
-        private delegate void DoubleStorySequence(Entity main, Entity other, out ActionSequence mainActionSequence, out ActionSequence otherActionSequence);
-
-        private struct DoubleStorySequenceFiller
+        private readonly List<SingleStorySeqenceFiller> singleStoryActions = new List<SingleStorySeqenceFiller>()
         {
-            public readonly string main;
-            public readonly string other;
-            public readonly DoubleStorySequence sequence;
-
-            public DoubleStorySequenceFiller(string main, string other, DoubleStorySequence sequence)
-            {
-                this.main = main;
-                this.other = other;
-                this.sequence = sequence;
-            }
-        }
-
-        private Dictionary<string, StorySequence> storyActions = new Dictionary<string, StorySequence>()
-        {
-
+            new SingleStorySeqenceFiller("McGraw", StoryActions.GettingFrosty)
         };
 
-        private List<DoubleStorySequenceFiller> doubleStoryActions = new List<DoubleStorySequenceFiller>()
+        private readonly List<DoubleStorySequenceFiller> doubleStoryActions = new List<DoubleStorySequenceFiller>()
         {
             new DoubleStorySequenceFiller("Tolstoy", "Ellie", StoryActions.TolstoyRomantic)
         };
@@ -46,16 +29,58 @@ namespace Assets.Scripts.Systems.AI
 
         public void Tick(List<Entity> matchingEntities)
         {
+            ScheduleTwoEntityStories(matchingEntities);
+            ScheduleSingleEntityStories(matchingEntities);
+
+            foreach (var entity in matchingEntities)
+            {
+                if (ActionManagerSystem.Instance.IsEntityIdle(entity))
+                {
+                    if (Random.value > 0.8f)
+                    {
+                        var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.OrderDrinkAndSitDown(entity, drinkRecipe));
+                    }
+                    else
+                    {
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
+                    }
+                }
+            }
+        }
+
+        private void ScheduleSingleEntityStories(List<Entity> matchingEntities)
+        {
+            var toRemove = new List<SingleStorySeqenceFiller>();
+            foreach (var story in singleStoryActions)
+            {
+                var main = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.Main);
+                if (main != null && ActionManagerSystem.Instance.IsEntityIdle(main))
+                {
+                    ActionManagerSystem.Instance.QueueActionForEntity(main, story.StorySequence(main));
+                    toRemove.Add(story);
+                }
+            }
+
+            for (var i = 0; i < toRemove.Count; i++)
+            {
+                singleStoryActions.Remove(toRemove[i]);
+            }
+        }
+
+        private void ScheduleTwoEntityStories(List<Entity> matchingEntities)
+        {
             var toRemove = new List<DoubleStorySequenceFiller>();
             foreach (var story in doubleStoryActions)
             {
-                var main = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.main);
-                var other = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.other);
-                if (main != null && other != null && ActionManagerSystem.Instance.IsEntityIdle(main) && ActionManagerSystem.Instance.IsEntityIdle(other))
+                var main = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.Main);
+                var other = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.Other);
+                if (main != null && other != null && ActionManagerSystem.Instance.IsEntityIdle(main) &&
+                    ActionManagerSystem.Instance.IsEntityIdle(other))
                 {
                     ActionSequence mainSequence;
                     ActionSequence otherSequence;
-                    story.sequence(main, other, out mainSequence, out otherSequence);
+                    story.DoubleStorySequence(main, other, out mainSequence, out otherSequence);
                     ActionManagerSystem.Instance.QueueActionForEntity(main, mainSequence);
                     ActionManagerSystem.Instance.QueueActionForEntity(other, otherSequence);
                     toRemove.Add(story);
@@ -66,27 +91,34 @@ namespace Assets.Scripts.Systems.AI
             {
                 doubleStoryActions.Remove(toRemove[i]);
             }
+        }
 
-            foreach (var entity in matchingEntities)
+        private delegate ActionSequence StorySequence(Entity entity);
+        private delegate void DoubleStorySequence(Entity main, Entity other, out ActionSequence mainActionSequence, out ActionSequence otherActionSequence);
+
+        private struct DoubleStorySequenceFiller
+        {
+            public readonly string Main;
+            public readonly string Other;
+            public readonly DoubleStorySequence DoubleStorySequence;
+
+            public DoubleStorySequenceFiller(string main, string other, DoubleStorySequence doubleStorySequence)
             {
-                if (ActionManagerSystem.Instance.IsEntityIdle(entity))
-                {
-                    var entityName = entity.GetState<NameState>();
-                    if (entityName != null && storyActions.ContainsKey(entityName.Name))
-                    {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, storyActions[entityName.Name](entity));
-                        storyActions.Remove(entityName.Name);
-                    }
-                    else if (Random.value > 0.8f)
-                    {
-                        var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.OrderDrinkAndSitDown(entity, drinkRecipe));
-                    }
-                    else
-                    {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
-                    }
-                }
+                Main = main;
+                Other = other;
+                DoubleStorySequence = doubleStorySequence;
+            }
+        }
+
+        private struct SingleStorySeqenceFiller
+        {
+            public readonly string Main;
+            public readonly StorySequence StorySequence;
+
+            public SingleStorySeqenceFiller(string main, StorySequence sequence)
+            {
+                Main = main;
+                StorySequence = sequence;
             }
         }
     }

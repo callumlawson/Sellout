@@ -13,6 +13,84 @@ namespace Assets.Scripts.Util.GameActions
 {
     class StoryActions
     {
+        #region PickyCustomer
+        public static ActionSequence GettingFrosty(Entity main)
+        {
+            var sequence = new ActionSequence("GettingFrosty");
+            sequence.Add(CommonActions.TalkToPlayer(new WeirdOrderDialogue()));
+
+            sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
+            {
+                    {DialogueOutcome.Bad, () => {
+                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, new UpdateMoodAction(Mood.Angry));
+                    }},
+                    {DialogueOutcome.Default, () => {
+                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, CommonActions.OrderDrink(main, DrinkRecipes.GetDrinkRecipe("Mind Meld")));
+                    }}
+            }));
+
+            return sequence;
+        }
+
+        private class WeirdOrderDialogue : Conversation
+        {
+            protected override void StartConversation()
+            {
+                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.WriteNPCLine("Hey you. I want a Frosted Mind Meld.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("And I want to be treated like a sentient being.", SentientBeing);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Of Course", MakeItQuick);
+                DialogueSystem.Instance.WritePlayerChoiceLine("‘Frosted’? Run that by me.", DrinkClarification);
+            }
+
+            private void SentientBeing()
+            {
+                DialogueSystem.Instance.WriteNPCLine("Umm. Please?");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Better, thanks. Now what was it?", DrinkClarification);
+            }
+
+            private void DrinkClarification()
+            {
+                DialogueSystem.Instance.WriteNPCLine("Mind Meld. Frosted. Don’t you have to take classes or something to sell this stuff?");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Listen buddy. Only thing getting frosted round here is your fracking head.", SpeakToSecurity);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Yeah, but most of the course were useless stuff like ‘Conflict Resolution 401’. Stupid, right?", ConflictResolution);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Ah, just didn’t hear you right the first time.", EndConversation(DialogueOutcome.Default));
+            }
+
+            private void SpeakToSecurity()
+            {
+                DialogueSystem.Instance.WriteNPCLine("I- I- I’m going to speak to security. I’m a big name. I’m important! You’ll see!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Bad));
+            }
+
+            private void ConflictResolution()
+            {
+                DialogueSystem.Instance.WriteNPCLine("Oh yeah. Tell me about it, all those dang classes.");
+                DialogueSystem.Instance.WriteNPCLine("We have to do the same dumb stuff for Market Leadership.");
+                DialogueSystem.Instance.WriteNPCLine("Can you beleive it? Anyhow, it’s just a Mind Meld with SpaceCola.");
+                DialogueSystem.Instance.WriteNPCLine("Oh. But you’ve got to do they Synthol first.");
+                DialogueSystem.Instance.WriteNPCLine("Then a drizzle of Cola. Over ice, of course. Then the Alk. Shaken. Drain the Synth.");
+                DialogueSystem.Instance.WriteNPCLine("Then add fresh Synth.Then stick in the ‘fuge and spin out the Cola.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Uhuh. Sure.", EndConversation(DialogueOutcome.Default));
+            }
+
+            private void MakeItQuick()
+            {
+                DialogueSystem.Instance.WriteNPCLine("And make it quick.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i> sigh </i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class WeirdOrderDialogue2 : Conversation
+        {
+            protected override void StartConversation()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        #region TolstoyRomantic
         public static void TolstoyRomantic(Entity main, Entity other, out ActionSequence mainActionSequence, out ActionSequence otherActionSequence)
         {
             mainActionSequence = new ActionSequence("TolstoyRomanticOneMain");
@@ -41,7 +119,7 @@ namespace Assets.Scripts.Util.GameActions
             otherActionSequence.Add(sync2);
 
             var branchingDialogue = new DialogueBranchAction(
-                onFinishActions: new Dictionary<DialogueOutcome, Action>
+                new Dictionary<DialogueOutcome, Action>
                 {
                     {DialogueOutcome.Romantic, () => {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, new UpdateMoodAction(Mood.Happy));
@@ -52,7 +130,7 @@ namespace Assets.Scripts.Util.GameActions
                     {DialogueOutcome.Nice, () => {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, new UpdateMoodAction(Mood.Happy));
                     }}
-                });
+            });
 
             mainActionSequence.Add(branchingDialogue);
             
@@ -116,4 +194,5 @@ namespace Assets.Scripts.Util.GameActions
             }
         }
     }
+    #endregion
 }

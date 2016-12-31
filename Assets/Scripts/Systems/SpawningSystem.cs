@@ -98,7 +98,8 @@ namespace Assets.Scripts.Systems
                 new PositionState(position),
                 new PathfindingState(null),
                 new ActionBlackboardState(null),
-                new NameState("You")
+                new NameState("You"),
+                new DialogueOutcomeState()
             });
             StaticStates.Add(new PlayerState(player));
         }

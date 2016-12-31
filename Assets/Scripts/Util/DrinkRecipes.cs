@@ -32,5 +32,17 @@ namespace Assets.Scripts.Util
         {
             return Recipes.ElementAt(Random.Next(0, Recipes.Count));
         }
+
+        public static DrinkRecipe GetDrinkRecipe(string drinkName)
+        {
+            foreach (var recipe in Recipes)
+            {
+                if (recipe.DrinkName == drinkName)
+                {
+                    return recipe;
+                }
+            }
+            return null;
+        }
     }
 }
