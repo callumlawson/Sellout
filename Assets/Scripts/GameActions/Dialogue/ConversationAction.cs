@@ -2,7 +2,7 @@
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.Util.Dialogue;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Dialogue
 {
     class ConversationAction : GameAction
     {
@@ -20,7 +20,7 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
-            conversation.Start(ConversationEnded);
+            conversation.Start(ConversationEnded, entity);
         }
 
         private void ConversationEnded()

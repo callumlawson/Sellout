@@ -116,7 +116,8 @@ namespace Assets.Scripts.Systems
                 new VisibleSlotState(),
                 new PersonState(),
                 new ColorState(color),
-                new MoodState(Mood.Happy)
+                new MoodState(Mood.Happy),
+                new DialogueOutcomeState()
             });
         }
     }

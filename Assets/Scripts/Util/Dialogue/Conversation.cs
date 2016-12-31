@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Systems;
+﻿using Assets.Framework.Entities;
+using Assets.Scripts.States;
+using Assets.Scripts.Systems;
 using System;
 
 namespace Assets.Scripts.Util.Dialogue
@@ -6,10 +8,13 @@ namespace Assets.Scripts.Util.Dialogue
     public abstract class Conversation
     {
         private Action onEnd;
+        private Entity entity;
 
-        public void Start(Action onEnd)
+        public void Start(Action onEnd, Entity entity)
         {
             this.onEnd = onEnd;
+            this.entity = entity;
+
             StartConversation();
         }
 
@@ -25,10 +30,14 @@ namespace Assets.Scripts.Util.Dialogue
 
         protected abstract void StartConversation();      
 
-        protected void EndConversation()
+        protected Action EndConversation(DialogueOutcome outcome)
         {
-            onEnd();
-            DialogueSystem.Instance.StopDialogue();
+            return () =>
+            {
+                entity.GetState<DialogueOutcomeState>().Outcome = outcome;
+                onEnd();
+                DialogueSystem.Instance.StopDialogue();
+            };
         }
     }
 }

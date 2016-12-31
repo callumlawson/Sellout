@@ -3,6 +3,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;

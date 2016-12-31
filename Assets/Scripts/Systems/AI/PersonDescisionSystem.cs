@@ -7,7 +7,6 @@ using Assets.Scripts.Util;
 using Random = UnityEngine.Random;
 using Assets.Scripts.Util.GameActions;
 using Assets.Scripts.GameActions.Composite;
-using UnityEngine;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -51,10 +50,9 @@ namespace Assets.Scripts.Systems.AI
             foreach (var story in doubleStoryActions)
             {
                 var main = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.main);
-                var other = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.main);
+                var other = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.other);
                 if (main != null && other != null && ActionManagerSystem.Instance.IsEntityIdle(main) && ActionManagerSystem.Instance.IsEntityIdle(other))
                 {
-                    Debug.Log("Found Tolstoy and Ellie!");
                     ActionSequence mainSequence;
                     ActionSequence otherSequence;
                     story.sequence(main, other, out mainSequence, out otherSequence);
