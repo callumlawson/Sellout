@@ -6,6 +6,6 @@
         Nice,
         Mean,
         Romantic,
-        Bad,
+        Bad
     }
 }
