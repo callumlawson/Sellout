@@ -14,8 +14,8 @@ namespace Assets.Scripts.Systems
     static class EventSystem
     {
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
-        public static Action OpenDrinkMakingEvent = delegate {  };
-        public static Action CloseDrinkMakingEvent = delegate {  };
+        public static Action StartDrinkMakingEvent = delegate {  };
+        public static Action EndDrinkMakingEvent = delegate {  };
 
         public delegate void OnClickEvent(ClickEvent clickEvent);
         public static OnClickEvent onClickInteraction = null;

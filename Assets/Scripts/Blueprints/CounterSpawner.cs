@@ -16,7 +16,8 @@ namespace Assets.Scripts.Blueprints
             {
                 new RotationState(transform.rotation),
                 new PositionState(transform.position),
-                new PrefabState(Prefabs.Counter)
+                new PrefabState(Prefabs.Counter),
+                new CounterState()
             };
         }
     }

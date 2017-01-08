@@ -24,6 +24,7 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
+            SpawnCamera(new Vector3(13.05f, 17.87f, 0.6f), Quaternion.Euler(48, -90, 0));
             SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
             SpawnPeople();
             SpawnEntitiesFromBlueprints();
@@ -102,6 +103,18 @@ namespace Assets.Scripts.Systems
                 new DialogueOutcomeState()
             });
             StaticStates.Add(new PlayerState(player));
+        }
+
+        private void SpawnCamera(Vector3 position, Quaternion rotation)
+        {
+            var camera = entitySystem.CreateEntity(new List<IState>
+            {
+                new RotationState(rotation),
+                new PositionState(position),
+                new PrefabState(Prefabs.Camera),
+                new CounterState()
+            }, false);
+            StaticStates.Add(new CameraState(camera));
         }
 
         private void SpawnNpc(Color color, string name = "Expendable")

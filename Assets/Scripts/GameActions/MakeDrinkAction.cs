@@ -13,8 +13,8 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
-            EventSystem.OpenDrinkMakingEvent.Invoke();
-            EventSystem.CloseDrinkMakingEvent += () =>
+            EventSystem.StartDrinkMakingEvent.Invoke();
+            EventSystem.EndDrinkMakingEvent += () =>
             {
                 ActionStatus = ActionStatus.Succeeded;
             };
@@ -32,7 +32,7 @@ namespace Assets.Scripts.GameActions
 
         public void Cancel()
         {
-            EventSystem.CloseDrinkMakingEvent.Invoke();
+            EventSystem.EndDrinkMakingEvent.Invoke();
             ActionStatus = ActionStatus.Failed;
         }
 

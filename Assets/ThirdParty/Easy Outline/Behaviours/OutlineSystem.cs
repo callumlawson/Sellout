@@ -80,6 +80,10 @@ public class OutlineSystem : MonoBehaviour
 
     void RunCalcs()
     {
+        if (mainCamera == null)
+        {
+            return;
+        }
 
         outlineMaterial.SetColor("_OutlineCol", outlineColor);
         outlineMaterial.SetFloat("_GradientStrengthModifier", outlineStrength);

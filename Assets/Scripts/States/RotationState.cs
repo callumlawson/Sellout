@@ -1,8 +1,10 @@
-﻿using Assets.Framework.States;
+﻿using System;
+using Assets.Framework.States;
 using UnityEngine;
 
 namespace Assets.Scripts.States
 {
+    [Serializable]
     class RotationState : IState
     {
         public readonly Quaternion Rotation;
