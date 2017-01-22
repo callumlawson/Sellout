@@ -100,7 +100,7 @@ namespace Assets.Scripts.Systems
                 new PositionState(position),
                 new PathfindingState(null),
                 new ActionBlackboardState(null),
-                new NameState("You"),
+                new NameState("You", 2.0f),
                 new DialogueOutcomeState(),
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender)
@@ -126,7 +126,7 @@ namespace Assets.Scripts.Systems
             {
                 new ActionBlackboardState(null),
                 new PrefabState(Prefabs.Person),
-                new NameState(name),
+                new NameState(name, 2.0f),
                 new PositionState(new Vector3(5.63f, 0.0f, 16.49f)),
                 new PathfindingState(null),
                 new HierarchyState(),

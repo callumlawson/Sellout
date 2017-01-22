@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Util;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Scripts.Util;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,9 +20,15 @@ namespace Assets.Scripts.UI
         private string ingredientToNamePath = "Panel/Name";
         private string ingredientToAmounttPath = "Panel/Amount";
 
-        public void Close()
+        private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
+
+        [UsedImplicitly]
+        public void Awake()
         {
-            gameObject.SetActive(false);
+            for (var i = 0; i < DrinkRecipes.Recipes.Count; i++)
+            {
+                AddRecipe(DrinkRecipes.Recipes[i]);
+            }
         }
 
         public void AddRecipe(DrinkRecipe recipe)

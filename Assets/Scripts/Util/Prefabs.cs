@@ -9,6 +9,7 @@
         public const string Counter = "Environment/Counter";
         public const string IngredientDispenser = "Environment/BarEquipment/IngredientDispenser";
         public const string GlassStack = "Environment/BarEquipment/GlassStack";
+        public const string MixologyBook = "Environment/BarEquipment/MixologyBook";
         public const string ServeSpot = "Environment/BarEquipment/ServeSpot";
         public const string Camera = "Camera";
         public const string Washup = "Environment/Washup";

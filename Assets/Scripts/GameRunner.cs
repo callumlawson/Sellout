@@ -22,8 +22,8 @@ namespace Assets.Scripts
         {
             entitySystem = new EntityStateSystem();
 
-            StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 9, 0, 0)));
+            StaticStates.Add(new CursorState(null, new SerializableVector3()));
 
             //Debug
             entitySystem.AddSystem(new EntityTooltipSystem());
