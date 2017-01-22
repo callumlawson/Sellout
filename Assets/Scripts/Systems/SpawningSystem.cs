@@ -8,6 +8,7 @@ using Assets.Scripts.Blueprints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using UnityEngine;
+using Assets.Scripts.Util.Clothing;
 
 namespace Assets.Scripts.Systems
 {
@@ -77,15 +78,15 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople()
         {
-            SpawnNpc(Color.red, "Q");
-            SpawnNpc(Color.blue, "Tolstoy");
-            SpawnNpc(Color.yellow, "Jannet");
-            SpawnNpc(Color.cyan, "McGraw");
-            SpawnNpc(Color.green, "Ellie");
+            SpawnNpc(Color.red, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, "Q");
+            SpawnNpc(Color.blue, ClothingTopType.UniformTopBlue, ClothingBottomType.UniformBottom, "Tolstoy");
+            SpawnNpc(Color.yellow, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, "Jannet");
+            SpawnNpc(Color.cyan, ClothingTopType.UniformTopOrange, ClothingBottomType.UniformBottom, "McGraw");
+            SpawnNpc(Color.green, ClothingTopType.UniformTopGreen, ClothingBottomType.UniformBottom, "Ellie");
 
             for (var i = 0; i < NonNamedNpcs; i++)
             {
-                SpawnNpc(Color.white);
+                SpawnNpc(Color.white, ClothingTopType.UniformTopGray, ClothingBottomType.UniformBottom);
             }
         }
 
@@ -117,7 +118,7 @@ namespace Assets.Scripts.Systems
             StaticStates.Add(new CameraState(camera));
         }
 
-        private void SpawnNpc(Color color, string name = "Expendable")
+        private void SpawnNpc(Color color, ClothingTopType top, ClothingBottomType bottom, string name = "Expendable")
         {
             entitySystem.CreateEntity(new List<IState>
             {
@@ -131,7 +132,8 @@ namespace Assets.Scripts.Systems
                 new PersonState(),
                 new ColorState(color),
                 new MoodState(Mood.Happy),
-                new DialogueOutcomeState()
+                new DialogueOutcomeState(),
+                new ClothingState(top, bottom)
             });
         }
     }

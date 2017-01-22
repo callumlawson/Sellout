@@ -11,7 +11,7 @@ namespace Assets.Scripts.Visualizers
         public void OnStartRendering(Entity entity)
         {
             var colorState = entity.GetState<ColorState>();
-            entity.GameObject.GetComponent<Renderer>().material.color = colorState.Color;
+            entity.GameObject.GetComponentInChildren<Renderer>().material.color = colorState.Color;
         }
 
         public void OnFrame()
