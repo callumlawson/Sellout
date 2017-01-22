@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Util.Clothing;
+﻿using Assets.Scripts.Util.NPCVisuals;
 using System.IO;
 using UnityEditor;
 using UnityEngine;

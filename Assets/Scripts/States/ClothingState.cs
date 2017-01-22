@@ -1,5 +1,5 @@
 ﻿using Assets.Framework.States;
-using Assets.Scripts.Util.Clothing;
+using Assets.Scripts.Util.NPCVisuals;
 using System;
 
 namespace Assets.Scripts.States

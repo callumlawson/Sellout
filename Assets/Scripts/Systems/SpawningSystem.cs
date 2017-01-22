@@ -8,7 +8,7 @@ using Assets.Scripts.Blueprints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using UnityEngine;
-using Assets.Scripts.Util.Clothing;
+using Assets.Scripts.Util.NPCVisuals;
 
 namespace Assets.Scripts.Systems
 {
@@ -78,15 +78,15 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople()
         {
-            SpawnNpc(Color.red, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, "Q");
-            SpawnNpc(Color.blue, ClothingTopType.UniformTopBlue, ClothingBottomType.UniformBottom, "Tolstoy");
-            SpawnNpc(Color.yellow, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, "Jannet");
-            SpawnNpc(Color.cyan, ClothingTopType.UniformTopOrange, ClothingBottomType.UniformBottom, "McGraw");
-            SpawnNpc(Color.green, ClothingTopType.UniformTopGreen, ClothingBottomType.UniformBottom, "Ellie");
+            SpawnNpc(Color.red, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, HairType.Q, "Q");
+            SpawnNpc(Color.blue, ClothingTopType.UniformTopBlue, ClothingBottomType.UniformBottom, HairType.Tolstoy, "Tolstoy");
+            SpawnNpc(Color.yellow, ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, HairType.Jannet, "Jannet");
+            SpawnNpc(Color.cyan, ClothingTopType.UniformTopOrange, ClothingBottomType.UniformBottom, HairType.McGraw, "McGraw");
+            SpawnNpc(Color.green, ClothingTopType.UniformTopGreen, ClothingBottomType.UniformBottom, HairType.Ellie, "Ellie");
 
             for (var i = 0; i < NonNamedNpcs; i++)
             {
-                SpawnNpc(Color.white, ClothingTopType.UniformTopGray, ClothingBottomType.UniformBottom);
+                SpawnNpc(Color.white, ClothingTopType.UniformTopGray, ClothingBottomType.UniformBottom, HairType.None);
             }
         }
 
@@ -102,7 +102,8 @@ namespace Assets.Scripts.Systems
                 new ActionBlackboardState(null),
                 new NameState("You"),
                 new DialogueOutcomeState(),
-                new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom)
+                new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
+                new HairState(HairType.Bartender)
             });
             StaticStates.Add(new PlayerState(player));
         }
@@ -119,7 +120,7 @@ namespace Assets.Scripts.Systems
             StaticStates.Add(new CameraState(camera));
         }
 
-        private void SpawnNpc(Color color, ClothingTopType top, ClothingBottomType bottom, string name = "Expendable")
+        private void SpawnNpc(Color color, ClothingTopType top, ClothingBottomType bottom, HairType hair, string name = "Expendable")
         {
             entitySystem.CreateEntity(new List<IState>
             {
@@ -134,7 +135,8 @@ namespace Assets.Scripts.Systems
                 new ColorState(color),
                 new MoodState(Mood.Happy),
                 new DialogueOutcomeState(),
-                new ClothingState(top, bottom)
+                new ClothingState(top, bottom),
+                new HairState(hair)
             });
         }
     }

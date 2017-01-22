@@ -2,7 +2,7 @@
 {
     public static class Prefabs
     {
-        public const string Person = "Person";
+        public const string Person = "NPCs/Person";
         public static string Booth = "Furnature/Booth";
         public const string Waypoint = "Waypoint";
         public const string Drink = "Drinks/Drink";
