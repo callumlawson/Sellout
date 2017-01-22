@@ -30,7 +30,15 @@ namespace Assets.Framework.Entities
                 if (state is PrefabState)
                 {
                     var prefabState = state as PrefabState;
-                    var go = SimplePool.Spawn(Resources.Load(prefabState.PrefabName) as GameObject);
+
+                    var prefabToSpawn = Resources.Load(prefabState.PrefabName) as GameObject;
+                    if (prefabToSpawn == null)
+                    {
+                        throw new Exception("Tried to load prefab named '" + prefabState.PrefabName + "' but failed.");
+                    }
+
+                    var go = SimplePool.Spawn(prefabToSpawn);
+                   
                     if (go.GetComponent<EntityIdComponent>() == null)
                     {
                         go.AddComponent<EntityIdComponent>();
