@@ -5,7 +5,7 @@ using Assets.Scripts.Util.Clothing;
 
 namespace Assets.Scripts.Visualizers.Clothing
 {
-    class NPCInitializer : MonoBehaviour, IEntityVisualizer
+    class ClothingInitializer : MonoBehaviour, IEntityVisualizer
     {
         public void OnStartRendering(Entity entity)
         {

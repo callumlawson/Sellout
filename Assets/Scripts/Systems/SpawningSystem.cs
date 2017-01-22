@@ -101,7 +101,8 @@ namespace Assets.Scripts.Systems
                 new PathfindingState(null),
                 new ActionBlackboardState(null),
                 new NameState("You"),
-                new DialogueOutcomeState()
+                new DialogueOutcomeState(),
+                new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom)
             });
             StaticStates.Add(new PlayerState(player));
         }
