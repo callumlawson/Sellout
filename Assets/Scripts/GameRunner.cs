@@ -39,7 +39,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new TimeSystem());
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
-            entitySystem.AddSystem(new DrinkMakingSystem());
+            entitySystem.AddSystem(new NewDrinkMakingSystem());
             entitySystem.AddSystem(new ClickResponseSystem());
             entitySystem.AddSystem(new DialogueSystem());
             entitySystem.AddSystem(new HierarchyManipulationSystem()); //Must run before VisibleSlotSystem

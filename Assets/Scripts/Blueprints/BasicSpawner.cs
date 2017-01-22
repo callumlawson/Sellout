@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts.Blueprints
 {
     //TODO need nicer system for this other than magic string.
-    class DecorationSpawner : MonoBehaviour, IEntityBlueprint
+    class BasicSpawner : MonoBehaviour, IEntityBlueprint
     { 
         //Should grab this from the game object name probably.
         [UsedImplicitly] public string Prefab;

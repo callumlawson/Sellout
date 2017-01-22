@@ -6,6 +6,7 @@ using Assets.Framework.Systems;
 
 namespace Assets.Scripts.Systems
 {
+    //Updates the position in state from the scene. Move entities by setting their position the normal unity way.
     class PositionSystem : IReactiveEntitySystem, IFrameEntitySystem
     {
         public List<Type> RequiredStates()

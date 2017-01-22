@@ -4,7 +4,7 @@ using Assets.Scripts.Systems;
 
 namespace Assets.Scripts.GameActions
 {
-    class MakeDrinkAction : GameAction, ICancellableAction
+    class MakeDrinkAction : GameAction
     {
         public override void OnFrame(Entity entity)
         {
@@ -28,12 +28,6 @@ namespace Assets.Scripts.GameActions
         public override void Unpause()
         {
             //Do Nothing
-        }
-
-        public void Cancel()
-        {
-            EventSystem.EndDrinkMakingEvent.Invoke();
-            ActionStatus = ActionStatus.Failed;
         }
 
         public bool IsCancellable()
