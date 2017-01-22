@@ -4,7 +4,7 @@
     {
         Synthol,
         Alcohol,
-        OrangeJuice,
+        Orange,
         Cola
     }
 }

@@ -27,6 +27,8 @@ namespace Assets.Scripts.Systems.Drinks
         private bool usingBar;
         private bool makingDrink;
 
+        private Entity mixologyBook;
+
         public void SetEntitySystem(EntityStateSystem ess)
         {
             entitySystem = ess;
@@ -67,6 +69,10 @@ namespace Assets.Scripts.Systems.Drinks
                             {
                                 GiveDrinkToPlayer();
                             }
+                            break;
+                        case Prefabs.MixologyBook:
+                            target.GetState<ActiveState>().IsActive = !target.GetState<ActiveState>().IsActive;
+                            mixologyBook = target;
                             break;
                         default:
                             StopMakingDrink();
@@ -119,7 +125,7 @@ namespace Assets.Scripts.Systems.Drinks
 
         public void OnFrame()
         {
-            if (makingDrink)
+            if (makingDrink && usingBar)
             {
                 var cursorState = StaticStates.Get<CursorState>();
                 if (cursorState.SelectedEntity != null && drink != null && (
@@ -152,9 +158,14 @@ namespace Assets.Scripts.Systems.Drinks
 
         private void StopMakingDrink()
         {
+
             usingBar = false;
             camera.GameObject.transform.DOMove(initCameraPosition, 1.0f);
             camera.GameObject.transform.DORotate(initCameraRotation, 1.0f);
+            if (mixologyBook != null)
+            {
+                mixologyBook.GetState<ActiveState>().IsActive = false;
+            }
             EventSystem.EndDrinkMakingEvent.Invoke();
         }
 

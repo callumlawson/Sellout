@@ -7,10 +7,12 @@ namespace Assets.Scripts.States
     class NameState : IState
     {
         public readonly string Name;
+        public float VerticalOffset;
 
-        public NameState(string name)
+        public NameState(string name, float verticalOffset)
         {
             Name = name;
+            VerticalOffset = verticalOffset;
         }
 
         public override string ToString()

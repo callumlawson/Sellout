@@ -65,7 +65,7 @@ namespace Assets.Scripts.Util.GameActions
                 {
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                    ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
+                    ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                 })
             );
             orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));

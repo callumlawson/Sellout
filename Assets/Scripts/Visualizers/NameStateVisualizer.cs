@@ -16,7 +16,7 @@ namespace Assets.Scripts.Visualizers
         private PositionState positionState;
         private GameObject nameTag;
         private RectTransform nameTagRectTransform;
-        private readonly Vector3 offset = new Vector3(0.0f, 1.5f, 0.0f);
+        private Vector3 offset;
 
         public void OnStartRendering(Entity entity)
         {
@@ -25,6 +25,7 @@ namespace Assets.Scripts.Visualizers
             nameTag.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
             nameTag.GetComponent<Text>().text = entity.GetState<NameState>().Name;
             nameTagRectTransform = nameTag.GetComponent<RectTransform>();
+            offset = new Vector3(0, entity.GetState<NameState>().VerticalOffset, 0);
         }
 
         public void OnFrame()
