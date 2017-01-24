@@ -24,6 +24,14 @@ namespace Assets.Scripts.Visualizers.NPCs
                 var hairVisualizer = GetComponentInChildren<HairVisualizer>();
                 hairVisualizer.SetHair(hair);
             }
+
+            var faceState = entity.GetState<FaceState>();
+            var face = FaceUtil.GetFaceMaterial(faceState.face);
+            if (face != null)
+            {
+                var faceVisualizer = GetComponentInChildren<FaceVisualizer>();
+                faceVisualizer.SetFace(face);
+            }
         }
 
         public void OnFrame()
