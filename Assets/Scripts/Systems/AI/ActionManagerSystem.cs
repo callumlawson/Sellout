@@ -4,6 +4,7 @@ using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Util;
 using UnityEngine.Profiling;
 
 namespace Assets.Scripts.Systems.AI
@@ -30,7 +31,10 @@ namespace Assets.Scripts.Systems.AI
             {
                 entityToActions.Value.OnFrame(entityToActions.Key);
                 Profiler.BeginSample("ActionManagerSystem-OnFrame-Debug");
-                entityToActions.Key.GetState<ActionBlackboardState>().CurrentActions = entityToActions.Value.ToString();
+                if (GameSettings.IsDebugOn)
+                {
+                    entityToActions.Key.GetState<ActionBlackboardState>().CurrentActions = entityToActions.Value.ToString();
+                }
                 Profiler.EndSample();
             }
             Profiler.EndSample();

@@ -17,9 +17,13 @@ namespace Assets.Scripts
         private const float TickPeriodInSeconds = 0.4f;
         private EntityStateSystem entitySystem;
 
+        public bool IsDebugOn;
+
         [UsedImplicitly]
         public void Start()
         {
+            GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
+
             entitySystem = new EntityStateSystem();
 
             StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 9, 0, 0)));

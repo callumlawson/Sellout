@@ -28,6 +28,11 @@ namespace Assets.Scripts.Systems
 
         public void OnFrame()
         {
+            if (!GameSettings.IsDebugOn)
+            {
+                return;
+            }
+
             var selectedEntity = StaticStates.Get<CursorState>().SelectedEntity;
 
             UpdateHoverTime(selectedEntity);

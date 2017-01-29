@@ -61,7 +61,8 @@ namespace Assets.Scripts.Visualizers
 
         public void OnFrame()
         {
-            moodBubbleRectTransform.anchoredPosition = interfaceMonobehaviour.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
+            moodBubbleRectTransform.anchoredPosition =
+                interfaceMonobehaviour.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
         }
 
         public void OnStopRendering(Entity entity)
