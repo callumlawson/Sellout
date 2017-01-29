@@ -26,16 +26,11 @@ namespace Assets.Framework.Entities
                 var genericAdd = addStateMethod.MakeGenericMethod(state.GetType());
                 genericAdd.Invoke(this, new object[] { entity, state });
 
-                //Yuck, special case - might want to reconsider.
                 if (state is PrefabState)
                 {
                     var prefabState = state as PrefabState;
 
-                    var prefabToSpawn = Resources.Load(prefabState.PrefabName) as GameObject;
-                    if (prefabToSpawn == null)
-                    {
-                        throw new Exception("Tried to load prefab named '" + prefabState.PrefabName + "' but failed.");
-                    }
+                    var prefabToSpawn = AssetLoader.LoadAsset(prefabState.PrefabName);
 
                     var go = SimplePool.Spawn(prefabToSpawn);
                    

@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
+using Assets.Framework.Util;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using DG.Tweening;
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Visualizers
         public void OnStartRendering(Entity entity)
         {
             positionState = entity.GetState<PositionState>();
-            moodBubble = Instantiate(Resources.Load(Prefabs.MoodBubbleUI) as GameObject);
+            moodBubble = Instantiate(AssetLoader.LoadAsset(Prefabs.MoodBubbleUI));
             moodBubble.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
             moodBubble.SetActive(false);
             moodBubbleRectTransform = moodBubble.GetComponent<RectTransform>();

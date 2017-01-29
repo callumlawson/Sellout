@@ -5,7 +5,6 @@ namespace Assets.Scripts.Util.NPCVisuals
     public enum HairType
     {
         None,
-
         Bartender,
         Q,
         Tolstoy,
@@ -25,7 +24,7 @@ namespace Assets.Scripts.Util.NPCVisuals
 
             var path = "NPCs/Hair/Hair_" + type;
             var resource = Resources.Load<Hair>(path);
-            return Object.Instantiate(resource) as Hair;
+            return Object.Instantiate(resource);
         }
     }
 }

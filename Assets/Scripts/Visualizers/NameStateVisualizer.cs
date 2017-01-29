@@ -1,5 +1,6 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
+using Assets.Framework.Util;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using JetBrains.Annotations;
@@ -21,7 +22,7 @@ namespace Assets.Scripts.Visualizers
         public void OnStartRendering(Entity entity)
         {
             positionState = entity.GetState<PositionState>();
-            nameTag = Instantiate(Resources.Load(Prefabs.NameTagUI) as GameObject);
+            nameTag = Instantiate(AssetLoader.LoadAsset(Prefabs.NameTagUI));
             nameTag.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
             nameTag.GetComponent<Text>().text = entity.GetState<NameState>().Name;
             nameTagRectTransform = nameTag.GetComponent<RectTransform>();

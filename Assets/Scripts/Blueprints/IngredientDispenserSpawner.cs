@@ -7,11 +7,12 @@ using UnityEngine;
 
 namespace Assets.Scripts.Blueprints
 {
-    //TODO need nicer system for this other than magic string.
     [UsedImplicitly]
     class IngredientDispenserSpawner : MonoBehaviour, IEntityBlueprint
     {
+        // ReSharper disable once MemberCanBePrivate.Global
         public Ingredient Ingredient;
+        // ReSharper disable once MemberCanBePrivate.Global
         public Color Color;
 
         public List<IState> EntityToSpawn()

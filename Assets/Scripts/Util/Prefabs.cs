@@ -2,24 +2,24 @@
 {
     public static class Prefabs
     {
-        public const string Person = "NPCs/Person";
-        public static string Booth = "Furnature/Booth";
+        public const string Person = "Person";
+        public static string Booth = "Booth";
         public const string Waypoint = "Waypoint";
-        public const string Drink = "Drinks/Drink";
-        public const string Counter = "Environment/Counter";
-        public const string IngredientDispenser = "Environment/BarEquipment/IngredientDispenser";
-        public const string GlassStack = "Environment/BarEquipment/GlassStack";
-        public const string MixologyBook = "Environment/BarEquipment/MixologyBook";
-        public const string ServeSpot = "Environment/BarEquipment/ServeSpot";
+        public const string Drink = "Drink";
+        public const string Counter = "Counter";
+        public const string IngredientDispenser = "IngredientDispenser";
+        public const string GlassStack = "GlassStack";
+        public const string MixologyBook = "MixologyBook";
+        public const string ServeSpot = "ServeSpot";
         public const string Camera = "Camera";
-        public const string Washup = "Environment/Washup";
+        public const string Washup = "Washup";
         public const string Player = "Player";
 
         //UI
-        public const string DrinkMixingUI = "UI/DrinkMixing/DrinkMixingUI";
-        public const string DiagloguePanelUI = "UI/DialoguePanel";
-        public const string DialogueLineUI = "UI/DialogueLine";
-        public const string NameTagUI = "UI/NameTag";
-        public const string MoodBubbleUI = "UI/MoodBubble";
+        public const string DrinkMixingUI = "DrinkMixingUI";
+        public const string DiagloguePanelUI = "DialoguePanel";
+        public const string DialogueLineUI = "DialogueLine";
+        public const string NameTagUI = "NameTag";
+        public const string MoodBubbleUI = "MoodBubble";
     }
 }

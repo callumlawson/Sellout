@@ -1,5 +1,4 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Util.NPCVisuals
 {
@@ -10,14 +9,12 @@ namespace Assets.Scripts.Util.NPCVisuals
         UniformTopGray,
         UniformTopGreen,
         UniformTopOrange,
-
         BartenderTop
     }
 
     public enum ClothingBottomType
     {
         UniformBottom,
-
         BartenderBottom
     }
 
@@ -37,7 +34,7 @@ namespace Assets.Scripts.Util.NPCVisuals
         {
             var path = "NPCs/Clothing/" + type;
             var resource = Resources.Load<T>(path);
-            return Object.Instantiate(resource) as T;
+            return Object.Instantiate(resource);
         }
     }
 }

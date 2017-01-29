@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
+using Assets.Framework.Util;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -34,8 +35,8 @@ namespace Assets.Scripts.Systems.Drinks
             
             if (ui == null)
             {
-                var uiResource = Resources.Load(Prefabs.DrinkMixingUI);
-                var uiGameObject = Object.Instantiate(uiResource) as GameObject;
+                var uiResource = AssetLoader.LoadAsset(Prefabs.DrinkMixingUI);
+                var uiGameObject = Object.Instantiate(uiResource);
                 ui = uiGameObject.GetComponent<DrinkUI>();
 
                 ui.onMixEvent += OnMixEvent;

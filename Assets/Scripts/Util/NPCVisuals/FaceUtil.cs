@@ -5,7 +5,6 @@ namespace Assets.Scripts.Util.NPCVisuals
     public enum FaceType
     {
         None,
-
         Bartender,
         Q,
         Tolstoy,

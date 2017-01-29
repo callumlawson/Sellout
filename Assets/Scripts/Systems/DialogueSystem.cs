@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Framework.Systems;
+using Assets.Framework.Util;
 using Assets.Scripts.Util;
 using DG.Tweening;
 using UnityEngine;
@@ -23,10 +24,10 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            dialoguePanelUI = Object.Instantiate(Resources.Load(Prefabs.DiagloguePanelUI) as GameObject);
+            dialoguePanelUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.DiagloguePanelUI));
             dialogueLinesParent = dialoguePanelUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             dialoguePanelUI.SetActive(false);
-            dialogueLineUI = Resources.Load(Prefabs.DialogueLineUI) as GameObject;
+            dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
             Instance = this;
         }
 
