@@ -95,7 +95,7 @@ namespace Assets.Scripts.Systems
         {
             if (waypoint != null)
             {
-                waypoint.GetState<UserState>().User = user;
+                waypoint.GetState<UserState>().Use(user, "Wayponit System");
             }
         }
 
@@ -106,11 +106,11 @@ namespace Assets.Scripts.Systems
                 var userState = waypoint.GetState<UserState>();
                 if (Equals(userState.Reserver, entityToRemove))
                 {
-                    userState.Reserver = null;
+                    userState.ClearReserver();
                 }
                 if (Equals(userState.User, entityToRemove))
                 {
-                    userState.User = null;
+                    userState.ClearUser();
                 }
             }
         }

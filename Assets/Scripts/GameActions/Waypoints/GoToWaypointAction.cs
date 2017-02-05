@@ -24,7 +24,7 @@ namespace Assets.Scripts.GameActions.Waypoints
             }
             else
             {
-                Debug.LogWarning("GotToWaypointAction failed as there was no waypoint. This shouldn't happen");
+                Debug.LogError("GotToWaypointAction failed as there was no waypoint. This shouldn't happen!");
                 ActionStatus = ActionStatus.Failed;
             }
         }

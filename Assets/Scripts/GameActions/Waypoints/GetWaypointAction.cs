@@ -38,7 +38,7 @@ namespace Assets.Scripts.GameActions.Waypoints
 
             if (waypoint != null && reserve)
             {
-                waypoint.GetState<UserState>().Reserver = entity;
+                waypoint.GetState<UserState>().Reserve(entity, "Get waypoint action");
             }
 
             if (waypoint != null)

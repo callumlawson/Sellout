@@ -53,11 +53,11 @@ namespace Assets.Scripts.Util.GameActions
                new GetWaypointAction(Goal.PayFor, true, true, 10),
                () =>
                {
+                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
                }
             ));
             orderDrink.Add(new GoToWaypointAction());
-            //There is a bug here where the payfor waypoint can be left reserved.
             orderDrink.Add(
             new OnFailureDecorator(
                 new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 20), //Does not reserve wayponit.
@@ -85,17 +85,17 @@ namespace Assets.Scripts.Util.GameActions
             return orderDrink;
         }
 
-        public static ActionSequence OrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence OrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
         {
-            var orderingAndDrinking = new ActionSequence("OrderingAndDrinking");
-            var orderDrink = OrderDrink(entity, drinkRecipe);
-            var sitDown = new ActionSequence("Sit down");
+            var orderingAndDrinking = new ConditionalActionSequence("OrderingAndDrinking");
             
+            var orderDrink = OrderDrink(entity, drinkRecipe);
             orderingAndDrinking.Add(orderDrink);
-            orderingAndDrinking.Add(sitDown);
-            orderingAndDrinking.Add(new ReleaseWaypointAction());
 
-            sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true));
+            var sitDown = new ActionSequence("Sit down");
+            orderingAndDrinking.Add(sitDown);
+
+            sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
             sitDown.Add(new PauseAction(15.0f));
             sitDown.Add(new DrinkItemInInventory());
