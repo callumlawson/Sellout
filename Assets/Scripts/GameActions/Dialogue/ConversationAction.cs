@@ -1,5 +1,6 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.Systems;
 using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.GameActions.Dialogue
@@ -7,6 +8,7 @@ namespace Assets.Scripts.GameActions.Dialogue
     class ConversationAction : GameAction
     {
         private Conversation conversation;
+        private bool startedConversation;
 
         public ConversationAction(Conversation conversation)
         {
@@ -15,12 +17,16 @@ namespace Assets.Scripts.GameActions.Dialogue
 
         public override void OnFrame(Entity entity)
         {
-            
+            if (!startedConversation && !DialogueSystem.Instance.ConverstationActive)
+            {
+                conversation.Start(ConversationEnded, entity);
+                startedConversation = true;
+            }
         }
 
         public override void OnStart(Entity entity)
         {
-            conversation.Start(ConversationEnded, entity);
+            //Do nothing.
         }
 
         private void ConversationEnded()

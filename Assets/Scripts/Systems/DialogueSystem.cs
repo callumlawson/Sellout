@@ -13,14 +13,16 @@ namespace Assets.Scripts.Systems
 {
     class DialogueSystem : IInitSystem
     {
-        //TODO: Hmming and Haaing about the best way to do this.
-        //Dependency injection might be the best way to treat a global "manager" going forward.
+        //TODO: (Callum) This stateless static thing is nassssty. Rewrite.
+        //Much better to pass this a conversation data object to run.
         public static DialogueSystem Instance;
 
         private GameObject dialoguePanelUI;
         private GameObject dialogueLinesParent;
         private GameObject dialogueLineUI;
         private readonly List<GameObject> currentChoices = new List<GameObject>();
+
+        public bool ConverstationActive;
 
         public void OnInit()
         {
@@ -38,11 +40,13 @@ namespace Assets.Scripts.Systems
             {
                 Object.Destroy(child.gameObject);
             }
+            ConverstationActive = true;
             ShowDialogue(true);
         }
 
         public void StopDialogue()
         {
+            ConverstationActive = false;
             ShowDialogue(false);
         }
 
@@ -53,7 +57,7 @@ namespace Assets.Scripts.Systems
 
         public void UnpauseDialogue()
         {
-            ShowDialogue(false);
+            ShowDialogue(true);
         }
 
         public void WriteNPCLine(string line)
@@ -104,7 +108,9 @@ namespace Assets.Scripts.Systems
             }
             else
             {
-                dialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(0, 0, 0), 0.3f).SetEase(Ease.InOutCubic).OnComplete(() => dialoguePanelUI.SetActive(false));
+                dialoguePanelUI.SetActive(false);
+                //Closing the new conversation after it has started :(
+                //dialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(0, 0, 0), 0.3f).SetEase(Ease.InOutCubic).OnComplete(() => dialoguePanelUI.SetActive(false));
             }
         }
 

@@ -18,7 +18,6 @@ namespace Assets.Scripts.Util.GameActions
         {
             var sequence = new ActionSequence("GettingFrosty");
             sequence.Add(CommonActions.TalkToPlayer(new WeirdOrderDialogue()));
-
             sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
             {
                     {DialogueOutcome.Bad, () => {

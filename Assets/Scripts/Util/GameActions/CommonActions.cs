@@ -18,13 +18,10 @@ namespace Assets.Scripts.Util.GameActions
         public static ActionSequence TalkToPlayer(Conversation conversation)
         {
             var player = StaticStates.Get<PlayerState>().Player;
-
             var talking = new ActionSequence("TalkToPlayer");
-
             talking.Add(new SetTargetEntityAction(player));
             talking.Add(new GoToMovingEntityAction());
             talking.Add(new ConversationAction(conversation));
-
             return talking;
         }
  

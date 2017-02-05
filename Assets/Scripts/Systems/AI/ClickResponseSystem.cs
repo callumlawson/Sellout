@@ -26,6 +26,11 @@ namespace Assets.Scripts.Systems.AI
 
         private static void OnClickInteraction(ClickEvent clickevent)
         {
+            if (DialogueSystem.Instance.ConverstationActive)
+            {
+                return;
+            }
+
             if (!ActionManagerSystem.Instance.IsEntityIdle(player))
             {
                 ActionManagerSystem.Instance.TryClearActionsForEntity(player);

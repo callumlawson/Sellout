@@ -10,11 +10,10 @@ namespace Assets.Scripts.Util.Dialogue
         private Action onEnd;
         private Entity entity;
 
-        public void Start(Action onEnd, Entity entity)
+        public void Start(Action onEndAction, Entity conversingEntity)
         {
-            this.onEnd = onEnd;
-            this.entity = entity;
-
+            onEnd = onEndAction;
+            entity = conversingEntity;
             StartConversation();
         }
 
