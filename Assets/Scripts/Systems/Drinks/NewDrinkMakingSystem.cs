@@ -169,21 +169,16 @@ namespace Assets.Scripts.Systems.Drinks
             EventSystem.EndDrinkMakingEvent.Invoke();
         }
 
-        
         private Entity MakeDrink()
         {
-            return MakeDrink(new DrinkState());
-        }
-
-        private Entity MakeDrink(DrinkState template)
-        {
-            return entitySystem.CreateEntity(new List<IState>
+            var entity = entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(Prefabs.Drink),
-                new DrinkState(template),
-                new PositionState(new Vector3(-9.68f, 1.27f, -14.27f)),
+                new DrinkState(new DrinkState()),
+                new PositionState(new Vector3(-0.652f, 1.178f, -2.368369f)),
                 new HierarchyState()
             });
+            return entity;
         }
 
         private void DrinkColliderIsEnabled(bool enable)
