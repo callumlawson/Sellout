@@ -14,7 +14,7 @@ namespace Assets.Scripts.Util.Dialogue
         {
             onEnd = onEndAction;
             entity = conversingEntity;
-            StartConversation();
+            StartConversation(entity.GetState<NameState>().Name);
         }
 
         public void Pause()
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Util.Dialogue
             DialogueSystem.Instance.UnpauseDialogue();
         }
 
-        protected abstract void StartConversation();      
+        protected abstract void StartConversation(string nameOfSpeaker);      
 
         protected Action EndConversation(DialogueOutcome outcome)
         {

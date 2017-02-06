@@ -4,8 +4,8 @@ namespace Assets.Scripts.Util.Dialogue
 {
     public static class Dialogues
     {
-        public static readonly DemoDialogueOne DialogueOne = new DemoDialogueOne();
-        public static readonly DemoDialogueTwo DialogueTwo = new DemoDialogueTwo();
+        public static readonly PlayerInitiatedDialogueOne DialogueOne = new PlayerInitiatedDialogueOne();
+        public static readonly PlayerInitiatedDialogueTwo DialogueTwo = new PlayerInitiatedDialogueTwo();
         public static readonly WrongDrinkConversation WrongDrinkDialogue = new WrongDrinkConversation();
 
         public class OrderDrinkConverstation : Conversation
@@ -17,9 +17,9 @@ namespace Assets.Scripts.Util.Dialogue
                 this.drinkName = drinkName;
             }
 
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
                 DialogueSystem.Instance.WriteNPCLine("A " + drinkName + " please.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
@@ -27,23 +27,24 @@ namespace Assets.Scripts.Util.Dialogue
 
         public class WrongDrinkConversation : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
                 DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Figures.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
 
-        public class DemoDialogueOne : Conversation
+        public class PlayerInitiatedDialogueOne : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
-                DialogueSystem.Instance.WriteNPCLine("Hello there, what you up to?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("You're a bit friendly.", BitFriendly);
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'm running the bar now.", RunningBar);
-                DialogueSystem.Instance.WritePlayerChoiceLine("Sorry, gotta wipe this up. Can't talk now.", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WritePlayerDialogueLine("How you doing?");
+                DialogueSystem.Instance.WriteNPCLine("Hmm, not too bad I guess. You?");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Huh. Nice of you to ask. Few do.", BitFriendly);
+                DialogueSystem.Instance.WritePlayerChoiceLine("As of very recently I'm running the bar now.", RunningBar);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Fine, gotta wipe this up.", EndConversation(DialogueOutcome.Default));
             }
 
             private void BitFriendly()
@@ -59,11 +60,12 @@ namespace Assets.Scripts.Util.Dialogue
             }
         }
 
-        public class DemoDialogueTwo : Conversation
+        public class PlayerInitiatedDialogueTwo : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WritePlayerDialogueLine("Hey");
                 DialogueSystem.Instance.WriteNPCLine("What you looking at?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", Whoops);
             }

@@ -33,9 +33,9 @@ namespace Assets.Scripts.Util.GameActions
 
         private class WeirdOrderDialogue : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
                 DialogueSystem.Instance.WriteNPCLine("Hey you. I want a Frosted Mind Meld.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("And I want to be treated like a sentient being.", SentientBeing);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Of Course", MakeItQuick);
@@ -82,7 +82,7 @@ namespace Assets.Scripts.Util.GameActions
 
         private class WeirdOrderDialogue2 : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
                 throw new NotImplementedException();
             }
@@ -145,9 +145,9 @@ namespace Assets.Scripts.Util.GameActions
 
         private class TolstoyOneDialogue : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
                 DialogueSystem.Instance.WriteNPCLine("I need your advice.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Compliment her.", ComplimentHer);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Play hard to get.", PlayHardToGet);
@@ -183,9 +183,9 @@ namespace Assets.Scripts.Util.GameActions
 
         private class TolstoyTwoDialogue : Conversation
         {
-            protected override void StartConversation()
+            protected override void StartConversation(string nameOfSpeaker)
             {
-                DialogueSystem.Instance.StartDialogue();
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
                 DialogueSystem.Instance.WriteNPCLine("She said she had to take an emergency call but I didn't hear her communicator beep.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm sure she had a great time.", EndConversation(DialogueOutcome.Default));
                 DialogueSystem.Instance.WritePlayerChoiceLine("Better luck next time.", EndConversation(DialogueOutcome.Default));

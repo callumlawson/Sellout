@@ -33,7 +33,7 @@ namespace Assets.Scripts.Systems
             Instance = this;
         }
 
-        public void StartDialogue()
+        public void StartDialogue(string nameOfSpeaker)
         {
             currentChoices.Clear();
             foreach (Transform child in dialogueLinesParent.transform)
@@ -41,6 +41,8 @@ namespace Assets.Scripts.Systems
                 Object.Destroy(child.gameObject);
             }
             ConverstationActive = true;
+            WriteSpeakerName(nameOfSpeaker);
+            WritePlayerDialogueLine(" ");
             ShowDialogue(true);
         }
 
@@ -60,9 +62,11 @@ namespace Assets.Scripts.Systems
             ShowDialogue(true);
         }
 
-        public void WriteNPCLine(string line)
+        public void WritePlayerDialogueLine(string line)
         {
-            CreateDialogueLine(line);
+            var textGameObject = CreateDialogueLine(line);
+            var textField = textGameObject.GetComponent<Text>();
+            textField.text = "     " + textField.text;
         }
 
         public void WritePlayerChoiceLine(string line, Action onSelected)
@@ -84,6 +88,29 @@ namespace Assets.Scripts.Systems
                 onSelected();
             });
             clickTrigger.triggers.Add(entry);
+        }
+
+        public void WriteNPCLine(string line)
+        {
+            CreateDialogueLine(line);
+        }
+
+        private void WriteSpeakerName(string line)
+        {
+            var textGameObject = CreateDialogueLine(line);
+            var textField = textGameObject.GetComponent<Text>();
+            textField.alignment = TextAnchor.UpperCenter;
+        }
+
+        private GameObject CreateDialogueLine(string line)
+        {
+            var lineGameObject = Object.Instantiate(dialogueLineUI);
+            lineGameObject.transform.SetParent(dialogueLinesParent.transform);
+            var text = lineGameObject.GetComponent<Text>();
+            text.DOFade(0.0f, 0.0f);
+            text.text = line;
+            text.DOFade(1.0f, 4.0f);
+            return lineGameObject;
         }
 
         private void DisableChoices()
@@ -112,17 +139,6 @@ namespace Assets.Scripts.Systems
                 //Closing the new conversation after it has started :(
                 //dialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(0, 0, 0), 0.3f).SetEase(Ease.InOutCubic).OnComplete(() => dialoguePanelUI.SetActive(false));
             }
-        }
-
-        private GameObject CreateDialogueLine(string line)
-        {
-            var lineGameObject = Object.Instantiate(dialogueLineUI);
-            lineGameObject.transform.SetParent(dialogueLinesParent.transform);
-            var text = lineGameObject.GetComponent<Text>();
-            text.DOFade(0.0f, 0.0f);
-            text.text = line;
-            text.DOFade(1.0f, 4.0f);
-            return lineGameObject;
         }
     }
 }
