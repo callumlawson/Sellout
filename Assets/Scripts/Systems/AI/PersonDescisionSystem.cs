@@ -39,7 +39,7 @@ namespace Assets.Scripts.Systems.AI
                     if (Random.value > 0.8f)
                     {
                         var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.OrderDrinkAndSitDown(entity, drinkRecipe));
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
                     }
                     else
                     {

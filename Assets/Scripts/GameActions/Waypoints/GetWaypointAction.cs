@@ -5,6 +5,7 @@ using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.GameActions.Waypoints
 {
@@ -46,7 +47,7 @@ namespace Assets.Scripts.GameActions.Waypoints
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
-            else if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
+            else if (timeoutInMins > 0 && (timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

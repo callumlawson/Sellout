@@ -51,7 +51,7 @@ namespace Assets.Scripts.GameActions.Waypoints
             {
                 ActionStatus = ActionStatus.Succeeded;
             }
-            if ((timeState.time - startTime).Duration().Minutes > timeoutInMins)
+            if (timeoutInMins > 0 && (timeState.time - startTime).Duration().Minutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

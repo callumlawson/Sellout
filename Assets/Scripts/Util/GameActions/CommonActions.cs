@@ -4,6 +4,7 @@ using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Decorators;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
@@ -41,23 +42,23 @@ namespace Assets.Scripts.Util.GameActions
             return wander;
         }
 
-        public static ConditionalActionSequence OrderDrink(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence QueueForDrinkOrder(Entity entity, int findWaypointTimeout = 0, int getToWaypointTimeout = 0)
         {
-            var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
+            var queueForDrink = new ConditionalActionSequence("QueueForDrink");
 
-            orderDrink.Add(
+            queueForDrink.Add(
             new OnFailureDecorator(
-               new GetWaypointAction(Goal.PayFor, true, true, 10),
+               new GetWaypointAction(Goal.PayFor, true, true, findWaypointTimeout),
                () =>
                {
                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
                }
             ));
-            orderDrink.Add(new GoToWaypointAction());
-            orderDrink.Add(
+            queueForDrink.Add(new GoToWaypointAction());
+            queueForDrink.Add(
             new OnFailureDecorator(
-                new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, 20), //Does not reserve wayponit.
+                new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, getToWaypointTimeout), //Does not reserve wayponit.
                 () =>
                 {
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
@@ -65,28 +66,48 @@ namespace Assets.Scripts.Util.GameActions
                     ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                 })
             );
-            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
-            orderDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), 20), //TODO: Need to account for the "No drink" case here.
-               () =>
-               {
-                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
-                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
-                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
-               })
-            );
-            orderDrink.Add(new ReleaseWaypointAction());
-            orderDrink.Add(new UpdateMoodAction(Mood.Happy));
+            return queueForDrink;
+        }
 
+        public static ConditionalActionSequence OrderDrinkFromPayPoint(Entity entity, DrinkRecipe drinkRecipe, int timeout = 0)
+        {
+            var orderDrink = new ConditionalActionSequence("OrderDrinkFromPaypoint");
+            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
+            orderDrink.Add(WaitForDrink(entity, drinkRecipe, timeout));
             return orderDrink;
         }
 
-        public static ConditionalActionSequence OrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeout)
+        {
+            var waitForDrink = new ConditionalActionSequence("WaitForDrink");
+            waitForDrink.Add(new OnFailureDecorator(
+               new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), timeout), //TODO: Need to account for the "No drink" case here.
+               () =>
+               {
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+               })
+            );
+            waitForDrink.Add(new ReleaseWaypointAction());
+            waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
+            return waitForDrink;
+        }
+
+        public static ConditionalActionSequence GoToPaypointAndOrderDrink(Entity entity, DrinkRecipe drinkRecipe)
+        {
+            var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
+            orderDrink.Add(QueueForDrinkOrder(entity, 10, 20));
+            orderDrink.Add(OrderDrinkFromPayPoint(entity, drinkRecipe, 20));           
+            return orderDrink;
+        }
+
+        public static ConditionalActionSequence GoToPaypointOrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
         {
             var orderingAndDrinking = new ConditionalActionSequence("OrderingAndDrinking");
             
-            var orderDrink = OrderDrink(entity, drinkRecipe);
+            var orderDrink = GoToPaypointAndOrderDrink(entity, drinkRecipe);
             orderingAndDrinking.Add(orderDrink);
 
             var sitDown = new ActionSequence("Sit down");

@@ -2,6 +2,7 @@
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
@@ -17,14 +18,15 @@ namespace Assets.Scripts.Util.GameActions
         public static ActionSequence GettingFrosty(Entity main)
         {
             var sequence = new ActionSequence("GettingFrosty");
-            sequence.Add(CommonActions.TalkToPlayer(new WeirdOrderDialogue()));
+            sequence.Add(CommonActions.QueueForDrinkOrder(main, 0, 0));
+            sequence.Add(new ConversationAction(new WeirdOrderDialogue()));
             sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
             {
                     {DialogueOutcome.Bad, () => {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, new UpdateMoodAction(Mood.Angry));
                     }},
                     {DialogueOutcome.Default, () => {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, CommonActions.OrderDrink(main, DrinkRecipes.GetDrinkRecipe("Mind Meld")));
+                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, CommonActions.WaitForDrink(main, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 10));
                     }}
             }));
 
@@ -95,7 +97,7 @@ namespace Assets.Scripts.Util.GameActions
             mainActionSequence = new ActionSequence("TolstoyRomanticOneMain");
             otherActionSequence = new ActionSequence("TolstoyRomanticOneOther");
 
-            var ordering = CommonActions.OrderDrink(main, DrinkRecipes.GetRandomDrinkRecipe());            
+            var ordering = CommonActions.GoToPaypointAndOrderDrink(main, DrinkRecipes.GetRandomDrinkRecipe());            
             mainActionSequence.Add(ordering);
 
             var talkToPlayer = CommonActions.TalkToPlayer(new TolstoyOneDialogue());
