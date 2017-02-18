@@ -17,6 +17,12 @@ namespace Assets.Scripts.Visualizers
             {
                 childRenderer.material.color = colorState.Color;
             }
+
+            var childLights = entity.GameObject.GetComponentsInChildren<Light>();
+            foreach (var childLight in childLights)
+            {
+                childLight.color = colorState.Color;
+            }
         }
 
         public void OnFrame()
