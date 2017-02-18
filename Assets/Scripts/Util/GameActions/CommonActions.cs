@@ -4,7 +4,6 @@ using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Decorators;
 using Assets.Scripts.GameActions.Dialogue;
-using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
@@ -92,6 +91,7 @@ namespace Assets.Scripts.Util.GameActions
             );
             waitForDrink.Add(new ReleaseWaypointAction());
             waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
+            waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
             return waitForDrink;
         }
 

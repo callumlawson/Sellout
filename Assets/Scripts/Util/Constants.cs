@@ -4,5 +4,6 @@
     {
         public const float TickPeriodInSeconds = 0.4f;
         public const float SecondsPerGameMinute = 1f;
+        public const int DrinkSucsessMoney = 5;
     }
 }

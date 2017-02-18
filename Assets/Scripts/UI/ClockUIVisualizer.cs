@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-    class ClockUI : MonoBehaviour
+    class ClockUIVisualizer : MonoBehaviour
     {
         [UsedImplicitly] public Text Day;
         [UsedImplicitly] public Text Time;
