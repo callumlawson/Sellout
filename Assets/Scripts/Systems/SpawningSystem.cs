@@ -26,9 +26,9 @@ namespace Assets.Scripts.Systems
         public void OnInit()
         {
             SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
-            SpawnPeople();
             SpawnEntitiesFromBlueprints();
             SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0));
+            SpawnPeople();
         }
 
         public void OnEndInit()
