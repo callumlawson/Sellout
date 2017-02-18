@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
@@ -10,8 +12,12 @@ using Assets.Scripts.GameActions.Composite;
 
 namespace Assets.Scripts.Systems.AI
 {
-    class PersonDescisionSystem : ITickEntitySystem
+    class PersonDescisionSystem : ITickEntitySystem, IInitSystem
     {
+        private const int CooldownBetweenStoriesInMins = 30;
+        private TimeState time;
+        private DateTime lastStoryTime;
+
         private readonly List<SingleStorySeqenceFiller> singleStoryActions = new List<SingleStorySeqenceFiller>()
         {
             new SingleStorySeqenceFiller("McGraw", StoryActions.GettingFrosty)
@@ -27,10 +33,15 @@ namespace Assets.Scripts.Systems.AI
             return new List<Type> { typeof(PersonState) };
         }
 
+        public void OnInit()
+        {
+            time = StaticStates.Get<TimeState>();
+            lastStoryTime = time.time;
+        }
+
         public void Tick(List<Entity> matchingEntities)
         {
-            ScheduleTwoEntityStories(matchingEntities);
-            ScheduleSingleEntityStories(matchingEntities);
+            TryScheduleStory(matchingEntities);
 
             foreach (var entity in matchingEntities)
             {
@@ -49,8 +60,26 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private void ScheduleSingleEntityStories(List<Entity> matchingEntities)
+        private void TryScheduleStory(List<Entity> matchingEntities)
         {
+            var timeSinceLastStory = time.time - lastStoryTime;
+            if (timeSinceLastStory.Minutes > CooldownBetweenStoriesInMins)
+            {
+                var storyScheduled = TryScheduleSingleEntityStories(matchingEntities);
+                if (!storyScheduled)
+                {
+                    storyScheduled = TryScheduleTwoEntityStories(matchingEntities);
+                }
+                if (storyScheduled)
+                {
+                    lastStoryTime = time.time;
+                }
+            }
+        }
+
+        private bool TryScheduleSingleEntityStories(List<Entity> matchingEntities)
+        {
+            var storyScheduled = false;
             var toRemove = new List<SingleStorySeqenceFiller>();
             foreach (var story in singleStoryActions)
             {
@@ -59,6 +88,7 @@ namespace Assets.Scripts.Systems.AI
                 {
                     ActionManagerSystem.Instance.QueueActionForEntity(main, story.StorySequence(main));
                     toRemove.Add(story);
+                    storyScheduled = true;
                 }
             }
 
@@ -66,10 +96,13 @@ namespace Assets.Scripts.Systems.AI
             {
                 singleStoryActions.Remove(toRemove[i]);
             }
+
+            return storyScheduled;
         }
 
-        private void ScheduleTwoEntityStories(List<Entity> matchingEntities)
+        private bool TryScheduleTwoEntityStories(List<Entity> matchingEntities)
         {
+            var storyScheduled = false;
             var toRemove = new List<DoubleStorySequenceFiller>();
             foreach (var story in doubleStoryActions)
             {
@@ -84,6 +117,7 @@ namespace Assets.Scripts.Systems.AI
                     ActionManagerSystem.Instance.QueueActionForEntity(main, mainSequence);
                     ActionManagerSystem.Instance.QueueActionForEntity(other, otherSequence);
                     toRemove.Add(story);
+                    storyScheduled = true;
                 }
             }
 
@@ -91,6 +125,8 @@ namespace Assets.Scripts.Systems.AI
             {
                 doubleStoryActions.Remove(toRemove[i]);
             }
+
+            return storyScheduled;
         }
 
         private delegate ActionSequence StorySequence(Entity entity);
@@ -121,5 +157,6 @@ namespace Assets.Scripts.Systems.AI
                 StorySequence = sequence;
             }
         }
+
     }
 }

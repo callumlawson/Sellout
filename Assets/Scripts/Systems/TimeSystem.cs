@@ -3,12 +3,12 @@ using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using UnityEngine;
 using Assets.Framework.States;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.Systems
 {
     class TimeSystem : IFrameSystem, IInitSystem
     {
-        private float secondsPerGameMinute = 1f;
         private float secondsSinceLastMinute;
 
         private TimeState timeState;
@@ -22,11 +22,11 @@ namespace Assets.Scripts.Systems
         {
             var dt = Time.deltaTime;
             secondsSinceLastMinute += dt;
-            if (secondsSinceLastMinute >= secondsPerGameMinute)
+            if (secondsSinceLastMinute >= Constants.SecondsPerGameMinute)
             {
 
                 timeState.time = timeState.time.AddMinutes(1.0f);
-                secondsSinceLastMinute = Math.Max(secondsSinceLastMinute - secondsPerGameMinute, 0f);
+                secondsSinceLastMinute = Math.Max(secondsSinceLastMinute - Constants.SecondsPerGameMinute, 0f);
             }
         }
     }

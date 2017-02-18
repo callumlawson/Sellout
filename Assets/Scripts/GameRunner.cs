@@ -14,7 +14,6 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
-        private const float TickPeriodInSeconds = 0.4f;
         private EntityStateSystem entitySystem;
 
         public bool IsDebugOn;
@@ -69,10 +68,10 @@ namespace Assets.Scripts
 
         private IEnumerator Ticker()
         {
-            while (true)
+            while (Application.isPlaying)
             {
                 entitySystem.Tick();
-                yield return new WaitForSeconds(TickPeriodInSeconds);
+                yield return new WaitForSeconds(Constants.TickPeriodInSeconds);
             }
             // ReSharper disable once IteratorNeverReturns
         }
