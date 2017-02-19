@@ -36,20 +36,49 @@ namespace Assets.Scripts.Systems
             CleanNestedBlueprints();
         }
 
+        private List<Entity> SpawnEntitiesFromBlueprints(Entity parent, GameObject potentialBlueprintGameObject)
+        {
+            var entitiesSpawned = new List<Entity>();
+
+            Entity entity = null;
+
+            var possibleBlueprint = potentialBlueprintGameObject.GetComponent<IEntityBlueprint>();
+            if (possibleBlueprint != null)
+            {
+                entity = entitySystem.CreateEntity(possibleBlueprint.EntityToSpawn(), false, false);
+                var entityGameObject = entity.GameObject;
+                entityGameObject.AddComponent<EntityIdComponent>().EntityId = entity.EntityId;
+
+                if (parent != null)
+                {
+                    entityGameObject.transform.SetParent(parent.GameObject.transform, true);
+                }
+
+                entitiesSpawned.Add(entity);
+            }
+
+            var newParent = entity != null ? entity : parent;
+
+            foreach (Transform child in potentialBlueprintGameObject.transform) {
+                var childEntities = SpawnEntitiesFromBlueprints(newParent, child.gameObject);
+                entitiesSpawned.AddRange(childEntities);
+            }
+
+            return entitiesSpawned;
+        }
+
         private void SpawnEntitiesFromBlueprints()
         {
             var entitiesSpawned = new List<Entity>();
-            var allObjects = Object.FindObjectsOfType<GameObject>();
-            foreach (var go in allObjects)
+
+            var blueprints = GameObject.FindGameObjectWithTag("Blueprints");
+            foreach (Transform blueprint in blueprints.transform)
             {
-                var possibleBlueprint = go.GetComponent<IEntityBlueprint>();
-                if (possibleBlueprint != null)
-                {
-                    var entity = entitySystem.CreateEntity(possibleBlueprint.EntityToSpawn(), false, false);
-                    go.AddComponent<EntityIdComponent>().EntityId = entity.EntityId;
-                    entitiesSpawned.Add(entity);
-                }
+                var go = blueprint.gameObject;
+                var spawned = SpawnEntitiesFromBlueprints(null, go);
+                entitiesSpawned.AddRange(spawned);
             }
+
             foreach (var entity in entitiesSpawned)
             {
                 entitySystem.EntityAdded(entity);
@@ -95,7 +124,7 @@ namespace Assets.Scripts.Systems
             var player = entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(Prefabs.Player),
-                new HierarchyState(),
+                new InventoryState(),
                 new VisibleSlotState(),
                 new PositionState(position),
                 new PathfindingState(null),
@@ -130,7 +159,7 @@ namespace Assets.Scripts.Systems
                 new NameState(name, 2.0f),
                 new PositionState(new Vector3(5.63f, 0.0f, 16.49f)),
                 new PathfindingState(null),
-                new HierarchyState(),
+                new InventoryState(),
                 new VisibleSlotState(),
                 new PersonState(),
                 new MoodState(Mood.Happy),

@@ -9,10 +9,10 @@ namespace Assets.Scripts.GameActions.Inventory
     {
         public override void OnStart(Entity entity)
         {
-            var inventoryItem = entity.GetState<HierarchyState>().Child;
+            var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null)
             {
-                entity.GetState<HierarchyState>().RemoveChild();
+                entity.GetState<InventoryState>().RemoveChild();
                 EntityStateSystem.Instance.RemoveEntity(inventoryItem);
             }
             ActionStatus = ActionStatus.Succeeded;

@@ -10,7 +10,7 @@ namespace Assets.Scripts.GameActions.Inventory
     {
         public override void OnStart(Entity entity)
         {
-            var inventoryItem = entity.GetState<HierarchyState>().Child;
+            var inventoryItem = entity.GetState<InventoryState>().Child;
             var waypointEntity = entity.GetState<ActionBlackboardState>().TargetEntity;
           
             if (inventoryItem != null && waypointEntity != null)

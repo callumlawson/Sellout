@@ -14,15 +14,15 @@ namespace Assets.Scripts.Systems
         {
             var entityTo = parentingRequest.EntityTo;
             var mover = parentingRequest.Mover;
-            var entityToHierarchy = entityTo.GetState<HierarchyState>();
+            var entityToHierarchy = entityTo.GetState<InventoryState>();
             
             if (mover != null && entityToHierarchy.Child == null)
             {
-                var moverHierarchy = mover.GetState<HierarchyState>();
+                var moverHierarchy = mover.GetState<InventoryState>();
 
-                if (mover.GetState<HierarchyState>().Parent != null)
+                if (mover.GetState<InventoryState>().Parent != null)
                 {
-                    var fromInventoryState = mover.GetState<HierarchyState>().Parent.GetState<HierarchyState>();
+                    var fromInventoryState = mover.GetState<InventoryState>().Parent.GetState<InventoryState>();
                     fromInventoryState.RemoveChild();
                 }
                 
