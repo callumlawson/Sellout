@@ -8,10 +8,11 @@ using Assets.Framework.Util;
 using Assets.Scripts.Blueprints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
-    class WaypointSystem : IReactiveEntitySystem, IEntityManager, IInitSystem
+    class WaypointSystem : IInitSystem, IEntityManager, IReactiveEntitySystem
     {
         public static WaypointSystem Instance;
 
@@ -61,6 +62,13 @@ namespace Assets.Scripts.Systems
                 .Where(entity => entity.GetState<UserState>().IsFree());
         }
 
+        private IEnumerable<Entity> GetFreeWaypointGroupThatSatisfiesGoals(List<Goal> goals)
+        {
+            return entitySystem.GetEntitiesWithState<ChildWaypointsState>()
+                .Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Intersect(goals).Count() == goals.Count)
+                .Where(entity => entity.GetState<UserState>().IsFree());
+        }
+
         public Entity GetWaypointThatSatisfiesGoalWithOcupant(Goal goal, Entity occupant)
         {
             return entitySystem
@@ -89,6 +97,54 @@ namespace Assets.Scripts.Systems
                 }
             }
             return closestWaypoint;
+        }
+
+        public IEnumerable<Entity> GetClosestFreeWaypointGroupThatSatisfiesGoals(Entity searcher, List<Goal> goals)
+        {
+            Entity closestWaypoint = null;
+            var closestDistance = 0.0f;
+            var freeWaypoints = GetFreeWaypointGroupThatSatisfiesGoals(goals);
+            foreach (var waypoint in freeWaypoints)
+            {
+                var distance = DistanceBetweenEntities(waypoint, searcher);
+                if (distance < closestDistance || closestWaypoint == null)
+                {
+                    closestWaypoint = waypoint;
+                    closestDistance = distance;
+                }
+            }
+            
+            if (closestWaypoint == null)
+            {
+                return null;
+            }
+
+            var childWaypointsState = closestWaypoint.GetState<ChildWaypointsState>();
+
+            if (childWaypointsState == null)
+            {
+                return new List<Entity> { closestWaypoint };
+            }
+
+            var children = closestWaypoint.GetState<ChildWaypointsState>().Children;
+            var chosenChildren = new List<Entity>();
+            for (var i = 0; i < goals.Count; i++)
+            {
+                var goal = goals[i];
+                var childrenThatSatisfyGoal = children.Where(
+                    satisfierEntity =>
+                        satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(goal))
+                            .Where(entity => !chosenChildren.Contains(entity))
+                            .Where(entity => entity.GetState<UserState>().IsFree());
+                var child = childrenThatSatisfyGoal.FirstOrDefault();
+                if (child == null)
+                {
+                    Debug.LogError("Waypoint parent advertised child waypoints that didn't satisfy the goals!");
+                    return null;
+                }
+                chosenChildren.Add(child);
+            }
+            return chosenChildren;
         }
 
         public static void StartUsingWaypoint(Entity waypoint, Entity user)

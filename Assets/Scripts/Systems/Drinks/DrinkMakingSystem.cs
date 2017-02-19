@@ -115,7 +115,7 @@ namespace Assets.Scripts.Systems.Drinks
 
         private void GiveDrinkToPerson(Entity person)
         {
-            if (person.GetState<HierarchyState>().Child == null)
+            if (person.GetState<InventoryState>().Child == null)
             {
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
                 {
@@ -211,7 +211,7 @@ namespace Assets.Scripts.Systems.Drinks
                 new PrefabState(Prefabs.Drink),
                 new DrinkState(new DrinkState()),
                 new PositionState(drinkSpawnPoint),
-                new HierarchyState()
+                new InventoryState()
             });
             return entity;
         }

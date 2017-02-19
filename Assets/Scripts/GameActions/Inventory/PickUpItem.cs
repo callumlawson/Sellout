@@ -9,7 +9,7 @@ namespace Assets.Scripts.GameActions.Inventory
     {
         public override void OnStart(Entity entity)
         {
-            var inventoryItem = entity.GetState<HierarchyState>().Child;
+            var inventoryItem = entity.GetState<InventoryState>().Child;
             var targetEntity = entity.GetState<ActionBlackboardState>().TargetEntity;
 
             if (inventoryItem == null && targetEntity != null)
@@ -24,7 +24,7 @@ namespace Assets.Scripts.GameActions.Inventory
 
         private static void FreeParentIfUsingIt(Entity targetEntity)
         {
-            var targetHierarchyState = targetEntity.GetState<HierarchyState>();
+            var targetHierarchyState = targetEntity.GetState<InventoryState>();
             if (targetHierarchyState.Parent != null)
             {
                 if (targetHierarchyState.Parent.HasState<UserState>())

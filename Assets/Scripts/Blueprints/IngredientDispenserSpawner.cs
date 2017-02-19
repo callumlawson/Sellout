@@ -11,9 +11,9 @@ namespace Assets.Scripts.Blueprints
     class IngredientDispenserSpawner : MonoBehaviour, IEntityBlueprint
     {
         // ReSharper disable once MemberCanBePrivate.Global
-        public Ingredient Ingredient;
+        [UsedImplicitly] public Ingredient Ingredient;
         // ReSharper disable once MemberCanBePrivate.Global
-        public Color Color;
+        [UsedImplicitly] public Color Color;
 
         public List<IState> EntityToSpawn()
         {

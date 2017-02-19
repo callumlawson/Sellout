@@ -5,14 +5,14 @@ using System;
 namespace Assets.Scripts.States
 {
     [Serializable]
-    class HierarchyState : IState
+    class InventoryState : IState
     {
         public Entity Parent { get; private set; }
         public Entity Child { get; private set; }
 
-        public Action<HierarchyState> HierarchyUpdated = delegate {  };
+        public Action<InventoryState> HierarchyUpdated = delegate {  };
 
-        public HierarchyState()
+        public InventoryState()
         {
             Child = null;
             Parent = null;

@@ -29,7 +29,7 @@ namespace Assets.Scripts.GameActions.Inventory
 
         public override void OnFrame(Entity entity)
         {
-            var inventoryItem = entity.GetState<HierarchyState>().Child;
+            var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator

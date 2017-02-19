@@ -8,7 +8,7 @@ namespace Assets.Scripts.GameActions.Inventory
     {
         public override void OnStart(Entity entity)
         {
-            var inventoryItem = entity.GetState<HierarchyState>().Child;
+            var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null)
             {
                 var drinkState = inventoryItem.GetState<DrinkState>();
