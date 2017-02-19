@@ -40,7 +40,7 @@ namespace Assets.Scripts.Systems
             var components = entity.GameObject.GetComponents<IEntityVisualizer>();
             foreach (var component in components)
             {
-                component.OnStartRendering(entity);
+                component.OnStopRendering(entity);
             }
         }
     }
