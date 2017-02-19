@@ -6,11 +6,13 @@ namespace Assets.Scripts.Util.Events
     {
         public readonly Entity Target;
         public SerializableVector3 ClickPosition;
+        public readonly int MouseButton;
 
-        public ClickEvent(Entity target, SerializableVector3 clickPosition)
+        public ClickEvent(Entity target, SerializableVector3 clickPosition, int mouseButton)
         {
             Target = target;
             ClickPosition = clickPosition;
+            MouseButton = mouseButton;
         }
     }
 }

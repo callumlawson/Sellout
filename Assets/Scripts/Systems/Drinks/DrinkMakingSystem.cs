@@ -25,12 +25,12 @@ namespace Assets.Scripts.Systems.Drinks
         //TODO: Need a better way of doing this! Will break when we update the level.
         private readonly Vector3 barCameraPosition = new Vector3(9.5f, 4f, 0);
         private readonly Vector3 barCameraRotation = new Vector3(20, -90, 0);
-        private readonly Vector3 drinkSpawnPoint = new Vector3(-0.652f, 1.178f, -2.368369f);
+        private readonly Vector3 drinkSpawnPoint = new Vector3(6.161f, 0.983f, 1.214f);
 
         private bool usingBar;
-        private bool makingDrink;
 
         private Entity mixologyBook;
+        private Entity glassStack;
 
         public void SetEntitySystem(EntityStateSystem ess)
         {
@@ -52,14 +52,15 @@ namespace Assets.Scripts.Systems.Drinks
             if (usingBar)
             {
                 var target = clickevent.Target;
-                if (target != null && target.HasState<PrefabState>())
+                if (clickevent.MouseButton == 0 && target != null && target.HasState<PrefabState>())
                 {
                     var targetPrefab = target.GetState<PrefabState>();
 
                     switch (targetPrefab.PrefabName)
                     {
                         case Prefabs.GlassStack:
-                            if (!makingDrink)
+                            glassStack = target;
+                            if (drink == null)
                             {
                                 PickUpGlass();
                             }
@@ -89,23 +90,27 @@ namespace Assets.Scripts.Systems.Drinks
                                 GiveDrinkToPerson(target);
                             }
                             break;
-                        default:
-                            StopMakingDrink();
-                            break;
                     }
                 }
-                else
+                else if (clickevent.MouseButton == 1)
                 {
                     StopMakingDrink();
                 }
             }
         }
 
+        private void PickUpGlass()
+        {
+            drink = MakeDrink();
+            DrinkColliderIsEnabled(false);
+            glassStack.GameObject.SetActive(false);
+        }
+
         private void WashUpGlass()
         {
-            makingDrink = false;
             entitySystem.RemoveEntity(drink);
             drink = null;
+            glassStack.GameObject.SetActive(true);
         }
 
         private void GiveDrinkToPerson(Entity person)
@@ -120,20 +125,13 @@ namespace Assets.Scripts.Systems.Drinks
                 });
                 DrinkColliderIsEnabled(true);
                 drink = null;
-                makingDrink = false;
+                glassStack.GameObject.SetActive(true);
             }
         }
 
-        private void PickUpGlass()
-        {
-            makingDrink = true;
-            drink = MakeDrink();
-            DrinkColliderIsEnabled(false);
-        }   
-
         public void OnFrame()
         {
-            if (makingDrink && usingBar)
+            if (usingBar && drink != null)
             {
                 var cursorState = StaticStates.Get<CursorState>();
                 var selectedEntity = cursorState.SelectedEntity;
@@ -166,11 +164,15 @@ namespace Assets.Scripts.Systems.Drinks
                     drink.GameObject.transform.position = Vector3.Lerp(drink.GameObject.transform.position, drinkPosition, Time.deltaTime * 20);
                 }
             }
+            else if (!usingBar && drink != null)
+            {
+                drink.GameObject.transform.position = Vector3.Lerp(drink.GameObject.transform.position, drinkSpawnPoint, Time.deltaTime * 20);
+            }
         }
 
         private void AddIngredientToDrink(Entity dispenser)
         {
-            if (drink != null)
+            if (drink != null && drink.GetState<DrinkState>().GetTotalDrinkSize() < Constants.MaxUnitsInDrink)
             {
                 var ingredient = dispenser.GetState<DrinkState>().GetContents().Keys.First();
                 drink.GetState<DrinkState>().ChangeIngredientAmount(ingredient, 1);
@@ -181,23 +183,25 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (!usingBar)
             {
-                usingBar = true;
                 camera.GameObject.transform.DOMove(barCameraPosition, 1.0f);
                 camera.GameObject.transform.DORotate(barCameraRotation, 1.0f);
+                usingBar = true;
             }
         }
 
         private void StopMakingDrink()
         {
-
-            usingBar = false;
-            camera.GameObject.transform.DOMove(initCameraPosition, 1.0f);
-            camera.GameObject.transform.DORotate(initCameraRotation, 1.0f);
-            if (mixologyBook != null)
+            if (usingBar)
             {
-                mixologyBook.GetState<ActiveState>().IsActive = false;
+                camera.GameObject.transform.DOMove(initCameraPosition, 1.0f);
+                camera.GameObject.transform.DORotate(initCameraRotation, 1.0f);
+                if (mixologyBook != null)
+                {
+                    mixologyBook.GetState<ActiveState>().IsActive = false;
+                }
+                EventSystem.EndDrinkMakingEvent.Invoke();
+                usingBar = false;
             }
-            EventSystem.EndDrinkMakingEvent.Invoke();
         }
 
         private Entity MakeDrink()

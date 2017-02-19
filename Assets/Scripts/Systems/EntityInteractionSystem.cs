@@ -13,7 +13,13 @@ namespace Assets.Scripts.Systems
             if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 var cursorState = StaticStates.Get<CursorState>();
-                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition));
+                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition, 0));
+            }
+
+            if (Input.GetMouseButtonDown(1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                var cursorState = StaticStates.Get<CursorState>();
+                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition, 1));
             }
         }
     }
