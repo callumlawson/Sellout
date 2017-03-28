@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -12,6 +11,7 @@ using Assets.Scripts.GameActions.Composite;
 
 namespace Assets.Scripts.Systems.AI
 {
+    //Currently disabled in favour of "DayDirectorSystem".
     class PersonDescisionSystem : ITickEntitySystem, IInitSystem
     {
         private const int CooldownBetweenStoriesInMins = 30;
@@ -41,23 +41,11 @@ namespace Assets.Scripts.Systems.AI
 
         public void Tick(List<Entity> matchingEntities)
         {
-            TryScheduleStory(matchingEntities);
+            //TODO: Not used right now in favour of the Day scripts 
+            //- but we might want to do this in the future
+            //TryScheduleStory(matchingEntities);
 
-            foreach (var entity in matchingEntities)
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(entity))
-                {
-                    if (Random.value > 0.8f)
-                    {
-                        var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
-                    }
-                    else
-                    {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
-                    }
-                }
-            }
+            CommonActions.DrinkOrWanderAroundIfIdle(matchingEntities);
         }
 
         private void TryScheduleStory(List<Entity> matchingEntities)

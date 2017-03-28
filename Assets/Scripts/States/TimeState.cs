@@ -4,7 +4,7 @@ using System;
 namespace Assets.Scripts.States
 {
     [Serializable]
-    class TimeState : IState
+    public class TimeState : IState
     {
         public DateTime time;
         public readonly DateTime startTime;

@@ -4,7 +4,7 @@
     {
         //Time
         public const float TickPeriodInSeconds = 0.4f;
-        public const float SecondsPerGameMinute = 1f;
+        public const float SecondsPerGameMinute = 0.8f;
 
         //Economy
         public const int DrinkSucsessMoney = 5;

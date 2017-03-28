@@ -41,6 +41,7 @@ namespace Assets.Scripts
 
             //Game
             entitySystem.AddSystem(new TimeSystem());
+          
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
@@ -51,7 +52,8 @@ namespace Assets.Scripts
 
             //NPC/AI
             entitySystem.AddSystem(new ActionManagerSystem());
-            entitySystem.AddSystem(new PersonDescisionSystem());
+            entitySystem.AddSystem(new DayDirectorSystem());
+            //entitySystem.AddSystem(new PersonDescisionSystem());
 
             //Player
             entitySystem.AddSystem(new EntityInteractionSystem());

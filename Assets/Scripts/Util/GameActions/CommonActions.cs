@@ -1,4 +1,5 @@
-﻿using Assets.Framework.Entities;
+﻿using System.Collections.Generic;
+using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
@@ -15,6 +16,27 @@ namespace Assets.Scripts.Util.GameActions
 {
     class CommonActions
     {
+        public static void DrinkOrWanderAroundIfIdle(List<Entity> matchingEntities)
+        {
+            foreach (var entity in matchingEntities)
+            {
+                if (ActionManagerSystem.Instance.IsEntityIdle(entity))
+                {
+                    if (Random.value > 0.8f)
+                    {
+                        var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity,
+                            CommonActions.GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
+                    }
+                    else
+                    {
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
+                    }
+                }
+            }
+        }
+
+
         public static ActionSequence TalkToPlayer(Conversation conversation)
         {
             var player = StaticStates.Get<PlayerState>().Player;
@@ -35,7 +57,7 @@ namespace Assets.Scripts.Util.GameActions
             {
                 wander.Add(new GetWaypointAction(Goal.Sit, reserve: true));
                 wander.Add(new GoToWaypointAction());
-                wander.Add(new PauseAction(40.0f));
+                wander.Add(new PauseAction(20.0f));
                 wander.Add(new ReleaseWaypointAction());
             }
             return wander;

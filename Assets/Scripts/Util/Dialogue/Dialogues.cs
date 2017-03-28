@@ -8,6 +8,23 @@ namespace Assets.Scripts.Util.Dialogue
         public static readonly PlayerInitiatedDialogueTwo DialogueTwo = new PlayerInitiatedDialogueTwo();
         public static readonly WrongDrinkConversation WrongDrinkDialogue = new WrongDrinkConversation();
 
+        public class TellTheTimeConverstation : Conversation
+        {
+            private readonly string time;
+
+            public TellTheTimeConverstation(string time)
+            {
+                this.time = time;
+            }
+
+            protected override void StartConversation(string nameOfSpeaker)
+            {
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WriteNPCLine("The time is: " + time);
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Errrr, Thanks.</i>", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
         public class OrderDrinkConverstation : Conversation
         {
             private readonly string drinkName;
