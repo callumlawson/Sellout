@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Util.NPCVisuals;
+using UnityEngine;
 
-namespace Assets.Scripts.Util.NPCVisuals
+namespace Assets.Scripts.Util.NPC
 {
     public enum ClothingTopType
     {

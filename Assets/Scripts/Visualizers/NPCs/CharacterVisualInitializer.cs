@@ -1,6 +1,7 @@
 ﻿using Assets.Framework.Entities;
 using UnityEngine;
 using Assets.Scripts.States;
+using Assets.Scripts.Util.NPC;
 using Assets.Scripts.Util.NPCVisuals;
 
 namespace Assets.Scripts.Visualizers.NPCs

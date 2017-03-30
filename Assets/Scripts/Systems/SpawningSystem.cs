@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -7,15 +6,13 @@ using Assets.Framework.Util;
 using Assets.Scripts.Blueprints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using Assets.Scripts.Util.NPC;
 using UnityEngine;
-using Assets.Scripts.Util.NPCVisuals;
 
 namespace Assets.Scripts.Systems
 {
     class SpawningSystem : IInitSystem, IEndInitSystem, IEntityManager
     {
-        private const int NonNamedNpcs = 0;
-
         private EntityStateSystem entitySystem;
 
         public void SetEntitySystem(EntityStateSystem ess)
@@ -28,7 +25,7 @@ namespace Assets.Scripts.Systems
             SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
             SpawnEntitiesFromBlueprints();
             SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0));
-            SpawnPeople();
+            SpawnPeople(entitySystem);
         }
 
         public void OnEndInit()
@@ -57,7 +54,7 @@ namespace Assets.Scripts.Systems
                 entitiesSpawned.Add(entity);
             }
 
-            var newParent = entity != null ? entity : parent;
+            var newParent = entity ?? parent;
 
             foreach (Transform child in potentialBlueprintGameObject.transform) {
                 var childEntities = SpawnEntitiesFromBlueprints(newParent, child.gameObject);
@@ -105,18 +102,13 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void SpawnPeople()
+        private void SpawnPeople(EntityStateSystem entityStateSystem)
         {
-            SpawnNpc(ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, HairType.Q, FaceType.Q, "Q");
-            SpawnNpc(ClothingTopType.UniformTopBlue, ClothingBottomType.UniformBottom, HairType.Tolstoy, FaceType.Tolstoy, "Tolstoy");
-            SpawnNpc(ClothingTopType.UniformTopRed, ClothingBottomType.UniformBottom, HairType.Jannet, FaceType.Jannet, "Jannet");
-            SpawnNpc(ClothingTopType.UniformTopOrange, ClothingBottomType.UniformBottom, HairType.McGraw, FaceType.McGraw, "McGraw");
-            SpawnNpc(ClothingTopType.UniformTopGreen, ClothingBottomType.UniformBottom, HairType.Ellie, FaceType.Ellie, "Ellie");
-
-            for (var i = 0; i < NonNamedNpcs; i++)
-            {
-                SpawnNpc(ClothingTopType.UniformTopGray, ClothingBottomType.UniformBottom, HairType.None, FaceType.None);
-            }
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Q);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie);
         }
 
         private void SpawnPlayer(Vector3 position)
@@ -148,26 +140,6 @@ namespace Assets.Scripts.Systems
                 new CounterState()
             }, false);
             StaticStates.Add(new CameraState(camera));
-        }
-
-        private void SpawnNpc(ClothingTopType top, ClothingBottomType bottom, HairType hair, FaceType face, string name = "Expendable")
-        {
-            entitySystem.CreateEntity(new List<IState>
-            {
-                new ActionBlackboardState(null),
-                new PrefabState(Prefabs.Person),
-                new NameState(name, 2.0f),
-                new PositionState(new Vector3(5.63f, 0.0f, 16.49f)),
-                new PathfindingState(null),
-                new InventoryState(),
-                new VisibleSlotState(),
-                new PersonState(),
-                new MoodState(Mood.Happy),
-                new DialogueOutcomeState(),
-                new ClothingState(top, bottom),
-                new HairState(hair),
-                new FaceState(face)
-            });
         }
     }
 }

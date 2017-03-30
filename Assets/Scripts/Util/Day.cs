@@ -8,6 +8,9 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.GameActions;
 
+//We assume that at the start of each day there is no one in the bar. 
+//
+//
 namespace Assets.Scripts.Util
 {
     public abstract class Day

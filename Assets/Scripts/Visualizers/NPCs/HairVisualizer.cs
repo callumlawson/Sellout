@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Util.NPCVisuals;
+﻿using Assets.Scripts.Util.NPC;
+using Assets.Scripts.Util.NPCVisuals;
 using JetBrains.Annotations;
 using UnityEngine;
 

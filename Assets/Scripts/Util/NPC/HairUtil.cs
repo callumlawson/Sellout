@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Util.NPCVisuals
+namespace Assets.Scripts.Util.NPC
 {
     public enum HairType
     {
