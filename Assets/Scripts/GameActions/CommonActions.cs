@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
-using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Decorators;
 using Assets.Scripts.GameActions.Dialogue;
@@ -9,12 +8,13 @@ using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
+using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
 
-namespace Assets.Scripts.Util.GameActions
+namespace Assets.Scripts.GameActions
 {
-    class CommonActions
+    static class CommonActions
     {
         public static void DrinkOrWanderAroundIfIdle(List<Entity> matchingEntities)
         {
@@ -26,16 +26,15 @@ namespace Assets.Scripts.Util.GameActions
                     {
                         var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
                         ActionManagerSystem.Instance.QueueActionForEntity(entity,
-                            CommonActions.GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
+                            GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
                     }
                     else
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, CommonActions.Wander());
+                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
                     }
                 }
             }
         }
-
 
         public static ActionSequence TalkToPlayer(Conversation conversation)
         {
@@ -98,11 +97,11 @@ namespace Assets.Scripts.Util.GameActions
             return orderDrink;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeout)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeoutInGameMins)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), timeout), //TODO: Need to account for the "No drink" case here.
+               new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), timeoutInGameMins), //TODO: Need to account for the "No drink" case here.
                () =>
                {
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());

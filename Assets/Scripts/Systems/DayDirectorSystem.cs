@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -29,7 +28,7 @@ namespace Assets.Scripts.Systems
         public void Tick(List<Entity> matchingEntities)
         {
             var currentTime = time.time;
-            if (currentTime != lastTime)
+            if (currentTime != lastTime && (currentTime.Day < InGameDays.Count));
             {
                 currentDay = InGameDays[currentTime.Day - 1];
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;

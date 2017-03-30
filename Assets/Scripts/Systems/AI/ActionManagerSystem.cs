@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
@@ -27,6 +28,7 @@ namespace Assets.Scripts.Systems.AI
         public void OnFrame()
         {
             Profiler.BeginSample("ActionManagerSystem-OnFrame");
+
             foreach (var entityToActions in entityActions)
             {
                 entityToActions.Value.OnFrame(entityToActions.Key);

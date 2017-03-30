@@ -1,18 +1,17 @@
-﻿using Assets.Framework.Entities;
-using Assets.Scripts.GameActions;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
-using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
+using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
-using System;
-using System.Collections.Generic;
 
-namespace Assets.Scripts.Util.GameActions
+namespace Assets.Scripts.GameActions
 {
-    class StoryActions
+    static class StoryActions
     {
         #region PickyCustomer
         public static ActionSequence GettingFrosty(Entity main)
