@@ -3,12 +3,13 @@ using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Assets.Scripts.GameActions.Waypoints
 {
     class GoToWaypointAction : GameAction, ICancellableAction
     {
-        private const float PositionTolerance = 2.0f;
+        private const float PositionTolerance = 0.5f;
         private PathfindingState pathfindingState;
         private Vector3 targetPosition;
 
@@ -31,14 +32,14 @@ namespace Assets.Scripts.GameActions.Waypoints
 
         public override void OnFrame(Entity entity)
         {
-            if (Vector3.Distance(entity.GetState<PositionState>().Position, pathfindingState.TargetPosition.GetValueOrDefault()) < PositionTolerance)
+            if (Vector3.Distance(entity.GetState<PositionState>().Position, pathfindingState.TargetPosition.GetValueOrDefault()) <= PositionTolerance)
             {
                 pathfindingState = entity.GetState<PathfindingState>();
                 pathfindingState.TargetPosition = null;
                 ActionStatus = ActionStatus.Succeeded;
             }
             //TODO: Add timeout => Failure.
-        }
+        }        
 
         public override void Pause()
         {
