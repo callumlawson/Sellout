@@ -9,6 +9,8 @@ using Assets.Framework.Entities;
 using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
 using DG.Tweening;
+using Assets.Scripts.Systems.Cameras;
+using System;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -16,15 +18,8 @@ namespace Assets.Scripts.Systems.Drinks
     {
         private EntityStateSystem entitySystem;
 
-        private Entity camera;
         private Entity drink;
-
-        private Vector3 initCameraPosition;
-        private Vector3 initCameraRotation;
-
-        //TODO: Need a better way of doing this! Will break when we update the level.
-        private readonly Vector3 barCameraPosition = new Vector3(9.5f, 4f, 0);
-        private readonly Vector3 barCameraRotation = new Vector3(20, -90, 0);
+        
         private readonly Vector3 drinkSpawnPoint = new Vector3(6.161f, 0.983f, 1.214f);
 
         private bool usingBar;
@@ -39,10 +34,6 @@ namespace Assets.Scripts.Systems.Drinks
 
         public void OnInit()
         {
-            camera = StaticStates.Get<CameraState>().Camera;
-            initCameraPosition = camera.GameObject.transform.position;
-            initCameraRotation = camera.GameObject.transform.rotation.eulerAngles;
-
             EventSystem.StartDrinkMakingEvent += OnStartMakingDrink;
             EventSystem.onClickInteraction += OnClickInteraction;
         }
@@ -183,8 +174,7 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (!usingBar)
             {
-                camera.GameObject.transform.DOMove(barCameraPosition, 1.0f);
-                camera.GameObject.transform.DORotate(barCameraRotation, 1.0f);
+                CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Bar);
                 usingBar = true;
             }
         }
@@ -193,8 +183,7 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (usingBar)
             {
-                camera.GameObject.transform.DOMove(initCameraPosition, 1.0f);
-                camera.GameObject.transform.DORotate(initCameraRotation, 1.0f);
+                CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Following);
                 if (mixologyBook != null)
                 {
                     mixologyBook.GetState<ActiveState>().IsActive = false;

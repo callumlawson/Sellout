@@ -8,6 +8,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
 using UnityEngine;
+using Assets.Scripts.States.Cameras;
 
 namespace Assets.Scripts.Systems
 {
@@ -22,9 +23,9 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
+            var player = SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
             SpawnEntitiesFromBlueprints();
-            SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0));
+            SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);
             SpawnPeople(entitySystem);
         }
 
@@ -111,7 +112,7 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie);
         }
 
-        private void SpawnPlayer(Vector3 position)
+        private Entity SpawnPlayer(Vector3 position)
         {
             var player = entitySystem.CreateEntity(new List<IState>
             {
@@ -128,16 +129,18 @@ namespace Assets.Scripts.Systems
                 new FaceState(FaceType.Bartender)
             });
             StaticStates.Add(new PlayerState(player));
+            return player;
         }
 
-        private void SpawnCamera(Vector3 position, Quaternion rotation)
+        private void SpawnCamera(Vector3 position, Quaternion rotation, Entity player)
         {
             var camera = entitySystem.CreateEntity(new List<IState>
             {
                 new RotationState(rotation),
                 new PositionState(position),
                 new PrefabState(Prefabs.Camera),
-                new CounterState()
+                new CounterState(),
+                new CameraFollowState(player)
             }, false);
             StaticStates.Add(new CameraState(camera));
         }

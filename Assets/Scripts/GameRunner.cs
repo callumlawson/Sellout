@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Assets.Scripts.Systems.Drinks;
 using Assets.Scripts.Util;
+using Assets.Scripts.Systems.Cameras;
 
 namespace Assets.Scripts
 {
@@ -38,6 +39,9 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new SpawningSystem());
             entitySystem.AddSystem(new RotationInitSystem());
             entitySystem.AddSystem(new InitVisualizersSystem());
+
+            //Camera
+            entitySystem.AddSystem(new CameraSystem());
 
             //Game
             entitySystem.AddSystem(new TimeSystem());
