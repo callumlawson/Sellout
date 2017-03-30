@@ -117,3 +117,10 @@ class SecondDay : Day
         CommonActions.DrinkOrWanderAroundIfIdle(people);
     }
 }
+
+class ZeroDay : Day
+{
+    public override void UpdateDay(DateTime timeState, List<Entity> people)
+    {
+    }
+}

@@ -12,9 +12,12 @@ namespace Assets.Scripts.Systems
     {
         private TimeState time;
         private Day currentDay;
+        private Day previousTicksDay;
         private DateTime lastTime;
 
-        private List<Day> InGameDays = new List<Day> { new FirstDay(), new SecondDay() };
+        private List<Day> InGameDays = new List<Day> { new ZeroDay(), new FirstDay(), new SecondDay() };
+
+        private const int DayEndHour = 21; //9pm
 
         public List<Type> RequiredStates()
         {
@@ -31,6 +34,13 @@ namespace Assets.Scripts.Systems
             if (currentTime != lastTime && (currentTime.Day < InGameDays.Count))
             {
                 currentDay = InGameDays[currentTime.Day - 1];
+
+                if (!Equals(currentDay, previousTicksDay))
+                {
+                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(currentTime.Day);
+                    previousTicksDay = currentDay;
+                }
+
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;
                 for (int elapsedMin = 1; elapsedMin <= timeDifferenceInMin; elapsedMin++)
                 {

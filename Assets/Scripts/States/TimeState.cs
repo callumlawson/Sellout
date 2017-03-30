@@ -8,6 +8,7 @@ namespace Assets.Scripts.States
     {
         public DateTime time;
         public readonly DateTime startTime;
+        public Action<int> TriggerDayTransition;
 
         public TimeState(DateTime time)
         {

@@ -26,7 +26,8 @@ namespace Assets.Scripts
 
             entitySystem = new EntityStateSystem();
 
-            StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 10, 45, 0)));
+            //Will want to start right at the end of "Day zero" (So we transition to first scripted day).
+            StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 20, 50, 0)));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
 
