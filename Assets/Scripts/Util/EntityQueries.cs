@@ -10,5 +10,10 @@ namespace Assets.Scripts.Util
         {
             return entities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == name);
         }
+
+        public static List<Entity> GetNPCSWithName(List<Entity> entities, string name)
+        {
+            return entities.FindAll(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == name);
+        }
     }
 }

@@ -51,15 +51,22 @@ namespace Assets.Scripts.GameActions
             var wander = new ActionSequence("Wander Around");
             var xyPos = Random.insideUnitCircle * 6;
             wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
-            wander.Add(new PauseAction(4.0f));
-            if (Random.value > 0.80)
-            {
-                wander.Add(new GetWaypointAction(Goal.Sit, reserve: true));
-                wander.Add(new GoToWaypointAction());
-                wander.Add(new PauseAction(20.0f));
-                wander.Add(new ReleaseWaypointAction());
-            }
+            wander.Add(new PauseAction(2.0f));
+//            if (Random.value > 0.80)
+//            {
+//                wander.Add(new GetWaypointAction(Goal.Sit, reserve: true));
+//                wander.Add(new GoToWaypointAction());
+//                wander.Add(new PauseAction(20.0f));
+//                wander.Add(new ReleaseWaypointAction());
+//            }
             return wander;
+        }
+
+        public static ActionSequence LeaveBar()
+        {
+            var leave = new ActionSequence("Leaving");
+            leave.Add(new GoToPositionAction(Constants.OffstagePostion));
+            return leave;
         }
 
         public static ConditionalActionSequence QueueForDrinkOrder(Entity entity, int findWaypointTimeout = 0, int getToWaypointTimeout = 0)

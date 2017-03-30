@@ -28,7 +28,7 @@ namespace Assets.Scripts.Systems
         public void Tick(List<Entity> matchingEntities)
         {
             var currentTime = time.time;
-            if (currentTime != lastTime && (currentTime.Day < InGameDays.Count));
+            if (currentTime != lastTime && (currentTime.Day < InGameDays.Count))
             {
                 currentDay = InGameDays[currentTime.Day - 1];
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;

@@ -9,7 +9,7 @@ namespace Assets.Scripts.Util.NPC
 {
     public static class NPCS
     {
-        private static readonly SerializableVector3 DefaultSpawnPosition = new Vector3(5.63f, 0.0f, 16.49f);
+        
 
         public static NPC Q = new NPC
         {
@@ -56,9 +56,18 @@ namespace Assets.Scripts.Util.NPC
             Bottom = ClothingBottomType.UniformBottom
         };
 
+        public static NPC SomeGuy = new NPC
+        {
+            Name = "SomeGuy",
+            Face = FaceType.McGraw,
+            Hair = HairType.None,
+            Top = ClothingTopType.UniformTopGray,
+            Bottom = ClothingBottomType.UniformBottom
+        };
+
         public static Entity SpawnNpc(EntityStateSystem entitySystem, NPC npc, SerializableVector3? position = null)
         {
-            position = position ?? DefaultSpawnPosition;
+            position = position ?? Constants.OffstagePostion;
 
             return entitySystem.CreateEntity(new List<IState>
             {

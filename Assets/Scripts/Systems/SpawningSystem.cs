@@ -109,6 +109,10 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet);
             NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
         }
 
         private void SpawnPlayer(Vector3 position)
