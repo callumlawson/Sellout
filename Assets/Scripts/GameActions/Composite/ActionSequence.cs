@@ -8,9 +8,12 @@ namespace Assets.Scripts.GameActions.Composite
 {
     abstract class ActionSequenceBase : CompositeAction, ICancellableAction
     {
-        public ActionSequenceBase(string name = "Unnamed")
+        private bool SequenceIsCancellable;
+
+        public ActionSequenceBase(string name = "Unnamed", bool isCancellable = true)
         {
             CompositeActionName = name;
+            SequenceIsCancellable = isCancellable;
         }
 
         protected bool Paused;
@@ -76,28 +79,35 @@ namespace Assets.Scripts.GameActions.Composite
             {
                 Actions.ForEach(action =>
                 {
-                    var cancellableAction = (ICancellableAction)action;
-                    cancellableAction.Cancel();
+                    var cancellableAction = action as ICancellableAction;
+                    if (cancellableAction != null) cancellableAction.Cancel();
                 });
                 Actions.Clear();
                 ActionStatus = ActionStatus.Succeeded;
             }
         }
-
+        
         public bool IsCancellable()
         {
-            return Actions.TrueForAll(action =>
+            if (!SequenceIsCancellable)
             {
-                var cancellable = action as ICancellableAction;
-                return cancellable != null && cancellable.IsCancellable();
-            });
+                return false;
+            }
+
+            if (Actions.Count == 0)
+            {
+                return true;
+            }
+
+            var cancellable = Actions[0] as ICancellableAction;
+            return cancellable != null && cancellable.IsCancellable();
         }
     }
 
     //Run actions in sequence. Failure prevent remaining actions being run.
     class ConditionalActionSequence : ActionSequenceBase
     {
-        public ConditionalActionSequence(string name = "Unnamed") : base(name)
+        public ConditionalActionSequence(string name = "Unnamed", bool isCancellable = true) : base(name, isCancellable)
         {
         }
 
@@ -153,7 +163,7 @@ namespace Assets.Scripts.GameActions.Composite
     //Run actions in sequence. Continues after failure.
     class ActionSequence : ActionSequenceBase
     {
-        public ActionSequence(string name = "Unnamed") : base(name)
+        public ActionSequence(string name = "Unnamed", bool isCancellable = true) : base(name, isCancellable)
         {
         }
 
