@@ -110,10 +110,10 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet);
             NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.SomeGuy);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon);
         }
 
         private Entity SpawnPlayer(Vector3 position)

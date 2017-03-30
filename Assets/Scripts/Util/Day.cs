@@ -29,7 +29,7 @@ class FirstDay : Day
         var tolstoy = EntityQueries.GetNPCWithName(people, NPCS.Tolstoy.Name);
         var ellie = EntityQueries.GetNPCWithName(people, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPCWithName(people, NPCS.McGraw.Name);
-        var someGuys = EntityQueries.GetNPCSWithName(people, NPCS.SomeGuy.Name);
+        var someGuys = EntityQueries.GetNPCSWithName(people, NPCS.Annon.Name);
 
         if (timeState.Hour == 10 && timeState.Minute == 50)
         {

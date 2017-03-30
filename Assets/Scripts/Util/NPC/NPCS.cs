@@ -56,10 +56,10 @@ namespace Assets.Scripts.Util.NPC
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC SomeGuy = new NPC
+        public static NPC Annon = new NPC
         {
-            Name = "SomeGuy",
-            Face = FaceType.McGraw,
+            Name = "Annon",
+            Face = FaceType.Tolstoy,
             Hair = HairType.None,
             Top = ClothingTopType.UniformTopGray,
             Bottom = ClothingBottomType.UniformBottom
