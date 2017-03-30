@@ -6,7 +6,7 @@ namespace Assets.Scripts.Util
     {
         //Time
         public const float TickPeriodInSeconds = 0.4f;
-        public const float SecondsPerGameMinute = 0.3f;
+        public const float SecondsPerGameMinute = 0.6f;
 
         //Economy
         public const int DrinkSucsessMoney = 5;
