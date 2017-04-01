@@ -15,12 +15,13 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
-        private EntityStateSystem entitySystem;
+        [UsedImplicitly] public bool IsDebugOn;
 
-        public bool IsDebugOn;
+        private EntityStateSystem entitySystem;
+        private bool tickingStarted;
 
         [UsedImplicitly]
-        public void Start()
+        public void Awake()
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
 
@@ -65,12 +66,17 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new EntitySelectorSystem());
 
             entitySystem.Init();
-            StartCoroutine(Ticker());
+            
         }
 
         [UsedImplicitly]
         public void Update()
         {
+            if (!tickingStarted)
+            {
+                StartCoroutine(Ticker());
+                tickingStarted = true;
+            }
             entitySystem.Update();
         }
 
