@@ -22,13 +22,14 @@ namespace Assets.Scripts.UI
             Debug.Log("Registered callback");
         }
 
-        public void VisualizeDayTransition(int nextDay)
+        private void VisualizeDayTransition(int nextDay)
         {
             Day.text = string.Format(DayText, nextDay);
             Day.DOFade(1.0f, FadeDuration/4);
             Day.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration/4);
-            Background.DOFade(1.0f, FadeDuration/4);
-            Background.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration / 4);
+            Background.raycastTarget = true;
+            Background.DOFade(1.0f, FadeDuration/3);
+            Background.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration / 4).OnComplete(() => Background.raycastTarget = false);
         }
     }
 }
