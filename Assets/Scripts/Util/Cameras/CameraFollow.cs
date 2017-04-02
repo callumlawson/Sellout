@@ -25,6 +25,14 @@ namespace Assets.Scripts.Util.Cameras
 
         private Vector3 followCameraRotation;
 
+        void OnValidate()
+        {
+            if (target != null)
+            {
+                SetTarget(target);
+            }
+        }
+
         public void SetTarget(Transform target)
         {
             this.target = target;

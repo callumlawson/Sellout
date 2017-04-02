@@ -64,12 +64,12 @@ namespace Assets.Scripts.Systems
             defaultDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.DiagloguePanelUI));
             defaultDialogueLinesParent = defaultDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             defaultDialogueUI.SetActive(false);
-            defaultSpeakerNameText = defaultDialogueUI.transform.Find("NamePanel").GetComponentInChildren<Text>();
+            defaultSpeakerNameText = defaultDialogueUI.transform.Find("DiagloguePanelOuter/NamePanel").GetComponentInChildren<Text>();
 
             barDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.BarDiagloguePanelUI));
             barDialogueLinesParent = barDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             barDialogueUI.SetActive(false);
-            barSpeakerNameText = barDialogueUI.transform.Find("NamePanel").GetComponentInChildren<Text>();
+            barSpeakerNameText = barDialogueUI.transform.Find("DiagloguePanelOuter/NamePanel").GetComponentInChildren<Text>();
 
             dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
 
