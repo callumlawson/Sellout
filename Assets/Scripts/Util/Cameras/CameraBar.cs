@@ -2,6 +2,7 @@
 using DG.Tweening;
 using Assets.Framework.States;
 using Assets.Scripts.States;
+using System.Linq;
 
 namespace Assets.Scripts.Util.Cameras
 {
@@ -13,13 +14,13 @@ namespace Assets.Scripts.Util.Cameras
         private bool MoveFinished;
         private bool RotateFinished;
         
-        private Renderer[] playerRenderers;
+        private Material[] playerMaterials;
         private Collider[] playerColliders;
 
         void Start()
         {
             var player = StaticStates.Get<PlayerState>().Player.GameObject;
-            playerRenderers = player.GetComponentsInChildren<Renderer>();
+            playerMaterials = player.GetComponentsInChildren<Renderer>().Select(renderer => renderer.material).ToArray();
             playerColliders = player.GetComponentsInChildren<Collider>();
         }
 
@@ -42,10 +43,10 @@ namespace Assets.Scripts.Util.Cameras
             transform.DOMove(TargetCameraPosition.position, 1.0f);
             transform.DORotate(TargetCameraPosition.rotation.eulerAngles, 1.0f);
             
-            foreach (var renderer in playerRenderers)
+            foreach (var material in playerMaterials)
             {
-                SetMaterialaToTransparent(renderer);
-                renderer.sharedMaterial.DOFade(0.0f, 1.0f);
+                SetMaterialaToTransparent(material);
+                material.DOFade(0.0f, 1.0f);
             }
 
             foreach (var collider in playerColliders)
@@ -63,9 +64,9 @@ namespace Assets.Scripts.Util.Cameras
             transform.DOMove(cameraFollowPosition, 1.0f).OnComplete(OnMoveComplete);
             transform.DORotate(cameraFollowRotation, 1.0f).OnComplete(OnRotateComplete);
 
-            foreach (var renderer in playerRenderers)
+            foreach (var material in playerMaterials)
             {
-                renderer.sharedMaterial.DOFade(1.0f, 1.0f);
+                material.DOFade(1.0f, 1.0f);
             }
 
             foreach (var collider in playerColliders)
@@ -85,34 +86,34 @@ namespace Assets.Scripts.Util.Cameras
             MoveFinished = true;
             Finished = RotateFinished && MoveFinished;
 
-            foreach (var renderer in playerRenderers)
+            foreach (var material in playerMaterials)
             {
-                SetMaterialToOpaque(renderer);
+                SetMaterialToOpaque(material);
             }
         }
 
-        private void SetMaterialaToTransparent(Renderer renderer)
+        private void SetMaterialaToTransparent(Material material)
         {
-            renderer.sharedMaterial.SetFloat("_Mode", 3);
-            renderer.sharedMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-            renderer.sharedMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            renderer.sharedMaterial.SetInt("_ZWrite", 0);
-            renderer.sharedMaterial.DisableKeyword("_ALPHATEST_ON");
-            renderer.sharedMaterial.DisableKeyword("_ALPHABLEND_ON");
-            renderer.sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            renderer.sharedMaterial.renderQueue = 3000;
+            material.SetFloat("_Mode", 3);
+            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetInt("_ZWrite", 0);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.DisableKeyword("_ALPHABLEND_ON");
+            material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = 3000;
         }
 
-        private void SetMaterialToOpaque(Renderer renderer)
+        private void SetMaterialToOpaque(Material material)
         {
-            renderer.sharedMaterial.SetFloat("_Mode", 0);
-            renderer.sharedMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-            renderer.sharedMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-            renderer.sharedMaterial.SetInt("_ZWrite", 1);
-            renderer.sharedMaterial.DisableKeyword("_ALPHATEST_ON");
-            renderer.sharedMaterial.DisableKeyword("_ALPHABLEND_ON");
-            renderer.sharedMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            renderer.sharedMaterial.renderQueue = -1;
+            material.SetFloat("_Mode", 0);
+            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+            material.SetInt("_ZWrite", 1);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.DisableKeyword("_ALPHABLEND_ON");
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = -1;
         }
     }
 }
