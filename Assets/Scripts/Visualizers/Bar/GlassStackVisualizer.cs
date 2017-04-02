@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Scripts.States;
 using UnityEngine;
 using Assets.Scripts.Systems;
@@ -13,7 +12,6 @@ namespace Assets.Scripts.Visualizers.Bar
         [UsedImplicitly] public Transform slot;
 
         private Entity entity;
-        private InventoryState inventory;
 
         public void Awake()
         {
@@ -23,7 +21,6 @@ namespace Assets.Scripts.Visualizers.Bar
         public void OnStartRendering(Entity entity)
         {
             this.entity = entity;
-            inventory = entity.GetState<InventoryState>();
             EventSystem.TakeGlass += OnTakeGlass;
         }
 

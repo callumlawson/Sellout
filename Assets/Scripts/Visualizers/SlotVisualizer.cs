@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Scripts.Visualizers
 {
     class SlotVisualizer : MonoBehaviour
     {
-        public bool canHoldDrinks;
+        [UsedImplicitly] public bool canHoldDrinks;
 
         public bool CanHoldDrinks()
         {
