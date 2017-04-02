@@ -19,7 +19,6 @@ namespace Assets.Scripts.UI
         public void OnEnable()
         {
             StaticStates.Get<TimeState>().TriggerDayTransition += VisualizeDayTransition;
-            Debug.Log("Registered callback");
         }
 
         private void VisualizeDayTransition(int nextDay)
