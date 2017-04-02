@@ -25,6 +25,13 @@ namespace Assets.Scripts.Util.Cameras
 
         private Vector3 followCameraRotation;
 
+        private Collider cameraBounds;
+        
+        void Start()
+        {
+            cameraBounds = GameObject.FindGameObjectWithTag("CameraBounds").GetComponent<Collider>();
+        }
+
         void OnValidate()
         {
             if (target != null)
@@ -88,7 +95,6 @@ namespace Assets.Scripts.Util.Cameras
                 newPos.z = target.position.z;
             }
 
-            #region Locks
             if (LockX)
             {
                 newPos.x = thisTransform.position.x;
@@ -102,6 +108,27 @@ namespace Assets.Scripts.Util.Cameras
             if (LockZ)
             {
                 newPos.z = thisTransform.position.z;
+            }
+
+            var bounds = cameraBounds.bounds;
+            var extents = cameraBounds.bounds.extents;
+
+            if (newPos.x < bounds.center.x - extents.x * 0.5f)
+            {
+                newPos.x = bounds.center.x - extents.x * 0.5f;
+            }
+            else if(newPos.x > bounds.center.x + extents.x * 0.5f)
+            {
+                newPos.x = bounds.center.x + extents.x * 0.5f;
+            }
+
+            if (newPos.z < bounds.center.z - extents.z * 0.5f)
+            {
+                newPos.z = bounds.center.z - extents.z * 0.5f;
+            }
+            if (newPos.z > bounds.center.z + extents.z * 0.5f)
+            {
+                newPos.z = bounds.center.z + extents.z * 0.5f;
             }
 
             return newPos;
@@ -130,4 +157,3 @@ namespace Assets.Scripts.Util.Cameras
         }
     }
 }
-#endregion

@@ -17,11 +17,46 @@ namespace Assets.Scripts.Util.Cameras
         private Material[] playerMaterials;
         private Collider[] playerColliders;
 
+        private float ceilingHeight;
+        private Renderer ceilingRenderer;
+
+        private bool waitingToTurnOnCeiling;
+        private bool waitingToturnOffCeiling;
+
         void Start()
         {
             var player = StaticStates.Get<PlayerState>().Player.GameObject;
             playerMaterials = player.GetComponentsInChildren<Renderer>().Select(renderer => renderer.material).ToArray();
             playerColliders = player.GetComponentsInChildren<Collider>();
+
+            var ceiling = GameObject.FindGameObjectWithTag("Ceiling");
+            ceilingRenderer = ceiling.GetComponent<Renderer>();
+            var ceilingMesh = ceiling.GetComponent<MeshFilter>().sharedMesh;
+            var bounds = ceilingMesh.bounds;
+            ceilingHeight = ceiling.transform.position.y - bounds.extents.y * 0.5f;
+
+            ceilingRenderer.enabled = false;
+        }
+
+        void Update()
+        {
+            if (waitingToTurnOnCeiling)
+            {
+                if (Camera.main.transform.position.y < ceilingHeight)
+                {
+                    ceilingRenderer.enabled = true;
+                    waitingToTurnOnCeiling = false;
+                }
+            }
+
+            if (waitingToturnOffCeiling)
+            {
+                if (Camera.main.transform.position.y > ceilingHeight)
+                {
+                    ceilingRenderer.enabled = false;
+                    waitingToturnOffCeiling = false;
+                }
+            }
         }
 
         public bool IsFinished()
@@ -53,6 +88,8 @@ namespace Assets.Scripts.Util.Cameras
             {
                 collider.enabled = false;
             }
+
+            waitingToTurnOnCeiling = true;           
         }
 
         public void StopCameraBehaviour()
@@ -73,6 +110,8 @@ namespace Assets.Scripts.Util.Cameras
             {
                 collider.enabled = true;
             }
+
+            waitingToturnOffCeiling = true;
         }
 
         private void OnRotateComplete()
