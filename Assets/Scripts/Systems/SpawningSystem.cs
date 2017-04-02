@@ -124,7 +124,7 @@ namespace Assets.Scripts.Systems
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PositionState(position),
-                new PathfindingState(null),
+                new PathfindingState(null, null),
                 new ActionBlackboardState(null),
                 new NameState("You", 2.0f),
                 new DialogueOutcomeState(),

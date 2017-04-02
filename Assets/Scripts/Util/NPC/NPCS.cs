@@ -75,7 +75,7 @@ namespace Assets.Scripts.Util.NPC
                 new PrefabState(Prefabs.Person),
                 new NameState(npc.Name, 2.0f),
                 new PositionState(position.Value),
-                new PathfindingState(null),
+                new PathfindingState(null, null),
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PersonState(),

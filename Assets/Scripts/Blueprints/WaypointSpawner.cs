@@ -17,6 +17,7 @@ namespace Assets.Scripts.Blueprints
             return new List<IState>
             {
                 new PositionState(transform.position),
+                new RotationState(transform.rotation),
                 new BlueprintGameObjectState(gameObject),
                 new WaypointState(),
                 new PrefabState(Prefabs.Waypoint),

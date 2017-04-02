@@ -19,9 +19,9 @@ namespace Assets.Scripts.Systems
             foreach (var entity in matchingEntities)
             {
                 var pathfindingState = entity.GetState<PathfindingState>();
-                var goal = pathfindingState.TargetPosition;
-                var paused = pathfindingState.Paused;
-                var stoppingDistance = pathfindingState.StoppingDistance;
+                var goal = pathfindingState.GetTargetPosition();
+                var paused = pathfindingState.GetPaused();
+                var stoppingDistance = pathfindingState.GetStoppingDistance();
 
                 var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
                 if (goal.HasValue)

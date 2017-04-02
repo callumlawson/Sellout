@@ -8,13 +8,11 @@ namespace Assets.Scripts.UI
         [UsedImplicitly] public bool maxHeight;
         [UsedImplicitly] public bool maxWidth;
 
-        [Range(0, 1)]
-        public float maxScreenHeightPercentage;
-        public float maxScreenHeightPixels;
+        [UsedImplicitly] [Range(0, 1)] public float maxScreenHeightPercentage;
+        [UsedImplicitly] public float maxScreenHeightPixels;
 
-        [Range(0, 1)]
-        public float maxScreennWidthPercentage;
-        public float maxScreenWidthPixels;
+        [UsedImplicitly] [Range(0, 1)] public float maxScreennWidthPercentage;
+        [UsedImplicitly] public float maxScreenWidthPixels;
 
         void Start()
         {

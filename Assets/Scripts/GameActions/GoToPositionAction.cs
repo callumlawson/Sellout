@@ -20,8 +20,8 @@ namespace Assets.Scripts.GameActions
         public override void OnStart(Entity entity)
         {
             pathfindingState = entity.GetState<PathfindingState>();
-            pathfindingState.TargetPosition = targetPosition;
-            pathfindingState.StoppingDistance = 0f;
+            pathfindingState.SetNewTarget(targetPosition);
+            pathfindingState.SetStoppingDistance(0f);
         }
 
         public override void OnFrame(Entity entity)
@@ -29,7 +29,7 @@ namespace Assets.Scripts.GameActions
             if (Vector3.Distance(entity.GetState<PositionState>().Position, targetPosition) < PositionTolerance)
             {
                 pathfindingState = entity.GetState<PathfindingState>();
-                pathfindingState.TargetPosition = null;
+                pathfindingState.ClearTarget();
                 ActionStatus = ActionStatus.Succeeded;
             }
             //TODO: Add timeout.
@@ -37,17 +37,17 @@ namespace Assets.Scripts.GameActions
 
         public override void Pause()
         {
-            pathfindingState.Paused = true;
+            pathfindingState.SetPaused(true);
         }
 
         public override void Unpause()
         {
-            pathfindingState.Paused = false;
+            pathfindingState.SetPaused(false);
         }
 
         public void Cancel()
         {
-            pathfindingState.TargetPosition = null;
+            pathfindingState.ClearTarget();
         }
 
         public bool IsCancellable()
