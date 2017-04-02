@@ -13,6 +13,12 @@ namespace Assets.Scripts.Systems
 {
     class DialogueSystem : IInitSystem
     {
+        private enum LineType
+        {
+            Dialogue,
+            Response
+        };
+
         //TODO: (Callum) This stateless static thing is nassssty. Rewrite.
         //Much better to pass this a conversation data object to run.
         public static DialogueSystem Instance;
@@ -26,6 +32,7 @@ namespace Assets.Scripts.Systems
         private Text barSpeakerNameText;
 
         private GameObject dialogueLineUI;
+        private GameObject responseLineUI;
 
         private GameObject currentDialogueUI;
         private GameObject currentDialogueLinesParent;
@@ -72,6 +79,7 @@ namespace Assets.Scripts.Systems
             barSpeakerNameText = barDialogueUI.transform.Find("DiagloguePanelOuter/NamePanel").GetComponentInChildren<Text>();
 
             dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
+            responseLineUI = AssetLoader.LoadAsset(Prefabs.ResponseLineUI);
 
             currentDialogueUI = defaultDialogueUI;
             currentDialogueLinesParent = defaultDialogueLinesParent;
@@ -109,19 +117,18 @@ namespace Assets.Scripts.Systems
 
         public void WritePlayerDialogueLine(string line)
         {
-            var textGameObject = CreateDialogueLine(line);
+            var textGameObject = CreateDialogueLine(line, LineType.Dialogue);
             var textField = textGameObject.GetComponent<Text>();
             textField.text = "     " + textField.text;
         }
 
         public void WritePlayerChoiceLine(string line, Action onSelected)
         {
-            var textGameObject = CreateDialogueLine(line);
+            var textGameObject = CreateDialogueLine(line, LineType.Response);
             currentChoices.Add(textGameObject);
 
-            var textField = textGameObject.GetComponent<Text>();
-            textField.text = "     " + textField.text;
-            textField.color = Color.yellow;
+            var textField = textGameObject.GetComponentInChildren<Text>();
+            textField.text = textField.text;
 
             var clickTrigger = textGameObject.GetComponent<EventTrigger>();
             var entry = new EventTrigger.Entry {eventID = EventTriggerType.PointerClick};
@@ -137,7 +144,7 @@ namespace Assets.Scripts.Systems
 
         public void WriteNPCLine(string line)
         {
-            CreateDialogueLine(line);
+            CreateDialogueLine(line, LineType.Dialogue);
         }
 
         private void WriteSpeakerName(string line)
@@ -145,14 +152,15 @@ namespace Assets.Scripts.Systems
             currentSpeakerNameText.text = line;
         }
 
-        private GameObject CreateDialogueLine(string line)
+        private GameObject CreateDialogueLine(string line, LineType lineType)
         {
-            var lineGameObject = Object.Instantiate(dialogueLineUI);
+            var lineTemplate = lineType == LineType.Dialogue ? dialogueLineUI : responseLineUI;
+            var lineGameObject = Object.Instantiate(lineTemplate);
             lineGameObject.transform.SetParent(currentDialogueLinesParent.transform);
-            var text = lineGameObject.GetComponent<Text>();
+            var text = lineGameObject.GetComponentInChildren<Text>();
             text.DOFade(0.0f, 0.0f);
             text.text = line;
-            text.DOFade(1.0f, 4.0f);
+            text.DOFade(1.0f, 0.5f);
             return lineGameObject;
         }
 

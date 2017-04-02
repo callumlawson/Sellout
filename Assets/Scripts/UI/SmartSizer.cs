@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
     class SmartSizer : MonoBehaviour
     {
-        public bool maxHeight;
-        public bool maxWidth;
+        [UsedImplicitly] public bool maxHeight;
+        [UsedImplicitly] public bool maxWidth;
 
         [Range(0, 1)]
         public float maxScreenHeightPercentage;
