@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
@@ -16,6 +15,9 @@ namespace Assets.Scripts
     public class GameRunner : MonoBehaviour
     {
         [UsedImplicitly] public bool IsDebugOn;
+        [UsedImplicitly] public bool SkipFirstDayFadein;
+        [UsedImplicitly] public bool DisablePeople;
+        [UsedImplicitly] public bool DisableTalkingToPlayer;
 
         private EntityStateSystem entitySystem;
         private bool tickingStarted;
@@ -24,11 +26,14 @@ namespace Assets.Scripts
         public void Awake()
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
+            GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
+            GameSettings.DisableStory = DisablePeople;
+            GameSettings.DisableTalkingToPlayer = DisableTalkingToPlayer;
 
             entitySystem = new EntityStateSystem();
 
             //Will want to start right at the end of "Day zero" (So we transition to first scripted day).
-            StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 20, 50, 0)));
+            StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
 

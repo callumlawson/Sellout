@@ -21,14 +21,26 @@ namespace Assets.Scripts.UI
             StaticStates.Get<TimeState>().TriggerDayTransition += VisualizeDayTransition;
         }
 
-        private void VisualizeDayTransition(int nextDay)
+        private void VisualizeDayTransition(int nextDay, bool fadeIn)
         {
             Day.text = string.Format(DayText, nextDay);
-            Day.DOFade(1.0f, FadeDuration/4);
-            Day.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration/4);
+
+            if (fadeIn)
+            {
+                Day.DOFade(1.0f, FadeDuration/4);
+                Background.DOFade(1.0f, FadeDuration/3);
+            }
+            else
+            {
+                Day.DOFade(1.0f, 0.0f);
+                Background.DOFade(1.0f, 0.0f);
+            }
+
             Background.raycastTarget = true;
-            Background.DOFade(1.0f, FadeDuration/3);
-            Background.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration / 4).OnComplete(() => Background.raycastTarget = false);
+            DOTween.Sequence().SetDelay(FadeDuration - FadeDuration / 4).OnComplete(() => Background.raycastTarget = false);
+
+            Day.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration/4);
+            Background.DOFade(0.0f, FadeDuration/4).SetDelay(FadeDuration - FadeDuration/4);
         }
     }
 }
