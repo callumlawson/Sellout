@@ -31,7 +31,7 @@ class FirstDay : Day
         var mcGraw = EntityQueries.GetNPCWithName(people, NPCS.McGraw.Name);
         var someGuys = EntityQueries.GetNPCSWithName(people, NPCS.Annon.Name);
 
-        if (timeState.Hour == 10 && timeState.Minute == 50)
+        if (timeState.Hour == 11 && timeState.Minute == 10 && !GameSettings.DisableTalkingToPlayer)
         {
             ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, TutorialAction.Tutorial(mcGraw));
         }
@@ -51,7 +51,7 @@ class FirstDay : Day
             ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, CommonActions.LeaveBar());
         }
 
-        if (timeState.Hour == 13 && timeState.Minute == 20)
+        if (timeState.Hour == 13 && timeState.Minute == 20 && !GameSettings.DisableTalkingToPlayer)
         {
             ActionSequence mainSequence;
             ActionSequence otherSequence;
@@ -105,10 +105,9 @@ class SecondDay : Day
 {
     public override void UpdateDay(DateTime timeState, List<Entity> people)
     {
-        var tolstoy =
-            people.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == "Tolstoy");
+        var tolstoy = people.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == "Tolstoy");
 
-        if (timeState.Hour == 9 && timeState.Minute == 7)
+        if (timeState.Hour == 9 && timeState.Minute == 7 && !GameSettings.DisableTalkingToPlayer)
         {
             ActionManagerSystem.Instance.QueueActionForEntity(tolstoy,
                 CommonActions.TalkToPlayer(new Dialogues.TellTheTimeConverstation(timeState.ToString())));

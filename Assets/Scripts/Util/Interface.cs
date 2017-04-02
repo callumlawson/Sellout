@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Scripts.Util
 {
@@ -6,9 +7,11 @@ namespace Assets.Scripts.Util
     {
         public static Interface Instance;
 
-        public GameObject TooltipRoot;
-        public GameObject TooltipWindow;
+        [UsedImplicitly] public GameObject TooltipRoot;
+        [UsedImplicitly] public GameObject TooltipWindow;
+        [UsedImplicitly] public GameObject DyanmicUIRoot;
 
+        [UsedImplicitly]
         void Awake()
         {
             Instance = this;

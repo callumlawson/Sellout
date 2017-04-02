@@ -23,7 +23,7 @@ namespace Assets.Scripts.Visualizers
         {
             positionState = entity.GetState<PositionState>();
             nameTag = Instantiate(AssetLoader.LoadAsset(Prefabs.NameTagUI));
-            nameTag.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
+            nameTag.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
             nameTag.GetComponent<Text>().text = entity.GetState<NameState>().Name;
             nameTagRectTransform = nameTag.GetComponent<RectTransform>();
             offset = new Vector3(0, entity.GetState<NameState>().VerticalOffset, 0);

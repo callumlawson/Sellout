@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
@@ -15,18 +14,26 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
-        private EntityStateSystem entitySystem;
+        [UsedImplicitly] public bool IsDebugOn;
+        [UsedImplicitly] public bool SkipFirstDayFadein;
+        [UsedImplicitly] public bool DisablePeople;
+        [UsedImplicitly] public bool DisableTalkingToPlayer;
 
-        public bool IsDebugOn;
+        private EntityStateSystem entitySystem;
+        private bool tickingStarted;
 
         [UsedImplicitly]
-        public void Start()
+        public void Awake()
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
+            GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
+            GameSettings.DisableStory = DisablePeople;
+            GameSettings.DisableTalkingToPlayer = DisableTalkingToPlayer;
 
             entitySystem = new EntityStateSystem();
 
-            StaticStates.Add(new TimeState(new DateTime(2050, 1, 1, 10, 45, 0)));
+            //Will want to start right at the end of "Day zero" (So we transition to first scripted day).
+            StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
 
@@ -64,12 +71,16 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new EntitySelectorSystem());
 
             entitySystem.Init();
-            StartCoroutine(Ticker());
         }
 
         [UsedImplicitly]
         public void Update()
         {
+            if (!tickingStarted)
+            {
+                StartCoroutine(Ticker());
+                tickingStarted = true;
+            }
             entitySystem.Update();
         }
 
