@@ -32,7 +32,7 @@ namespace Assets.Scripts.GameActions
                     }
                 }
             }));
-            sequence.Add(CommonActions.GoToPaypointOrderDrinkAndSitDown(tutorialGiver, DrinkRecipes.GetDrinkRecipe("Mind Meld")));
+            sequence.Add(CommonActions.GoToPaypointOrderDrinkAndSitDown(tutorialGiver, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 60));
             return sequence;
         }
 

@@ -123,19 +123,19 @@ namespace Assets.Scripts.GameActions
             return waitForDrink;
         }
 
-        public static ConditionalActionSequence GoToPaypointAndOrderDrink(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence GoToPaypointAndOrderDrink(Entity entity, DrinkRecipe drinkRecipe, int orderTimeoutInMins = 20)
         {
             var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
             orderDrink.Add(QueueForDrinkOrder(entity, 10, 20));
-            orderDrink.Add(OrderDrinkFromPayPoint(entity, drinkRecipe, 20));           
+            orderDrink.Add(OrderDrinkFromPayPoint(entity, drinkRecipe, orderTimeoutInMins));           
             return orderDrink;
         }
 
-        public static ConditionalActionSequence GoToPaypointOrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe)
+        public static ConditionalActionSequence GoToPaypointOrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe, int orderTimeoutInMins = 20)
         {
             var orderingAndDrinking = new ConditionalActionSequence("OrderingAndDrinking");
             
-            var orderDrink = GoToPaypointAndOrderDrink(entity, drinkRecipe);
+            var orderDrink = GoToPaypointAndOrderDrink(entity, drinkRecipe, orderTimeoutInMins);
             orderingAndDrinking.Add(orderDrink);
 
             var sitDown = new ActionSequence("Sit down");
