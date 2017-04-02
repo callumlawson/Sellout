@@ -4,6 +4,11 @@ namespace Assets.Scripts.Visualizers
 {
     class SlotVisualizer : MonoBehaviour
     {
-        //Used as marker.
+        public bool canHoldDrinks;
+
+        public bool CanHoldDrinks()
+        {
+            return canHoldDrinks;
+        }
     }
 }

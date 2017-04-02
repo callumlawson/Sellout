@@ -19,8 +19,8 @@ namespace Assets.Scripts.Systems.Drinks
         private EntityStateSystem entitySystem;
 
         private Entity drink;
-        
-        private readonly Vector3 drinkSpawnPoint = new Vector3(6.161f, 0.983f, 1.214f);
+
+        private float drinkZValue = 0f;
 
         private bool usingBar;
 
@@ -53,6 +53,7 @@ namespace Assets.Scripts.Systems.Drinks
                             glassStack = target;
                             if (drink == null)
                             {
+                                drinkZValue = glassStack.GameObject.transform.position.z;
                                 PickUpGlass();
                             }
                             break;
@@ -128,6 +129,7 @@ namespace Assets.Scripts.Systems.Drinks
                 var selectedEntity = cursorState.SelectedEntity;
                 if (selectedEntity == null)
                 {
+                    LerpDrinkPosition(GetNewHeldDrinkPosition());
                     return;
                 }
                 var selectedPrefabType = selectedEntity.GetState<PrefabState>().PrefabName;
@@ -140,24 +142,24 @@ namespace Assets.Scripts.Systems.Drinks
                 {
                     var possibleSlot = selectedEntity.GameObject.GetComponentInChildren<SlotVisualizer>();
                     Vector3 drinkPosition;
-                    if (possibleSlot != null)
+                    if (possibleSlot != null && possibleSlot.CanHoldDrinks())
                     {
                         drinkPosition = possibleSlot.transform.position;
                     }
                     else
                     {
-                        drinkPosition = cursorState.MousedOverPosition;
+                        drinkPosition = GetNewHeldDrinkPosition();
                     }
-                    if (Vector3.Distance(drink.GameObject.transform.position, drinkPosition) > 5)
-                    {
-                        drink.GameObject.transform.position = drinkPosition;
-                    }
-                    drink.GameObject.transform.position = Vector3.Lerp(drink.GameObject.transform.position, drinkPosition, Time.deltaTime * 20);
+                    LerpDrinkPosition(drinkPosition);
+                }
+                else if (drink != null)
+                {
+                    LerpDrinkPosition(GetNewHeldDrinkPosition());
                 }
             }
             else if (!usingBar && drink != null)
             {
-                drink.GameObject.transform.position = Vector3.Lerp(drink.GameObject.transform.position, drinkSpawnPoint, Time.deltaTime * 20);
+                LerpDrinkPosition(GetNewHeldDrinkPosition());
             }
         }
 
@@ -199,7 +201,7 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 new PrefabState(Prefabs.Drink),
                 new DrinkState(new DrinkState()),
-                new PositionState(drinkSpawnPoint),
+                new PositionState(GetNewHeldDrinkPosition()),
                 new InventoryState()
             });
             return entity;
@@ -208,6 +210,24 @@ namespace Assets.Scripts.Systems.Drinks
         private void DrinkColliderIsEnabled(bool enable)
         {
             drink.GameObject.GetComponent<Collider>().enabled = enable;
+        }
+
+        private void LerpDrinkPosition(Vector3 newDrinkPosition)
+        {
+            if (Vector3.Distance(drink.GameObject.transform.position, newDrinkPosition) > 5)
+            {
+                drink.GameObject.transform.position = newDrinkPosition;
+            }
+            drink.GameObject.transform.position = Vector3.Lerp(drink.GameObject.transform.position, newDrinkPosition, Time.deltaTime * 20);
+        }
+
+        private Vector3 GetNewHeldDrinkPosition()
+        {
+            var mousePosition = Input.mousePosition;
+            var camera = Camera.main;
+            var distanceFromCamera = drinkZValue - camera.transform.position.z;
+            var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distanceFromCamera));
+            return worldPoint;
         }
     }
 }
