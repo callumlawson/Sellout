@@ -9,6 +9,7 @@ using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
 using Assets.Scripts.Systems.Cameras;
 using Assets.Scripts.Visualizers.Bar;
+using Assets.Scripts.States.Bar;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -56,6 +57,18 @@ namespace Assets.Scripts.Systems.Drinks
                             {
                                 drinkZValue = glassStack.GameObject.transform.position.z;
                                 PickUpGlass(player, glassStack);
+                            }
+                            break;
+                        case Prefabs.Drink:
+                            if (drink == null)
+                            {
+                                var drinkParent = drink.GetState<InventoryState>().Parent;
+                                if (drinkParent.HasState<GlassStackState>())
+                                {
+                                    glassStack = drinkParent;
+                                    drinkZValue = glassStack.GameObject.transform.position.z;
+                                    PickUpGlass(player, glassStack);
+                                }
                             }
                             break;
                         case Prefabs.IngredientDispenser:
