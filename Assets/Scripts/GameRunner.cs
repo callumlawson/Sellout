@@ -9,6 +9,7 @@ using UnityEngine;
 using Assets.Scripts.Systems.Drinks;
 using Assets.Scripts.Util;
 using Assets.Scripts.Systems.Cameras;
+using Assets.Scripts.Systems.Bar;
 
 namespace Assets.Scripts
 {
@@ -60,6 +61,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DialogueSystem());
             entitySystem.AddSystem(new HierarchyManipulationSystem()); //Must run before VisibleSlotSystem
             entitySystem.AddSystem(new VisibleSlotSystem());
+            entitySystem.AddSystem(new GlassStackSystem());
 
             //NPC/AI
             entitySystem.AddSystem(new ActionManagerSystem());

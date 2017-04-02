@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Assets.Scripts.Util.Cameras
 {
@@ -6,12 +7,12 @@ namespace Assets.Scripts.Util.Cameras
     {
         private const float SMOOTH_TIME = 0.3f;
 
-        public bool LockX;
-        public float offSetX;
-        public float offsetY;
-        public bool LockY;
-        public bool LockZ;
-        public bool UseSmoothing;
+        [UsedImplicitly] public bool LockX;
+        [UsedImplicitly] public float offSetX;
+        [UsedImplicitly] public float offsetY;
+        [UsedImplicitly] public bool LockY;
+        [UsedImplicitly] public bool LockZ;
+        [UsedImplicitly] public bool UseSmoothing;
 
         private Transform target;
 

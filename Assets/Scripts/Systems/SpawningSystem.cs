@@ -23,14 +23,14 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
-            var player = SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));
-            SpawnEntitiesFromBlueprints();
-            SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);
-            SpawnPeople(entitySystem);
+            var player = SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));            
+            SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);            
         }
 
         public void OnEndInit()
         {
+            SpawnPeople(entitySystem);
+            SpawnEntitiesFromBlueprints();
             CleanNestedBlueprints();
         }
 

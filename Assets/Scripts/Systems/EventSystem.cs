@@ -11,6 +11,12 @@ namespace Assets.Scripts.Systems
         public Entity Mover;
     }
 
+    public struct TakeGlassRequest
+    {
+        public Entity Requester;
+        public Entity stack;       
+    }
+
     static class EventSystem
     {
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
@@ -19,6 +25,8 @@ namespace Assets.Scripts.Systems
 
         public delegate void OnClickEvent(ClickEvent clickEvent);
         public static OnClickEvent onClickInteraction = null;
+
+        public static Action<TakeGlassRequest> TakeGlass = delegate { };
 
         public static void BroadcastEvent(ClickEvent clickEvent)
         {

@@ -107,7 +107,7 @@ namespace Assets.Framework.Util
             var pm = obj.GetComponent<PoolMember>();
             if (pm == null)
             {
-                UnityEngine.Debug.Log("Object '" + obj.name + "' wasn't spawned from a pool. Destroying it instead.");
+                UnityEngine.Debug.LogWarning("Object '" + obj.name + "' wasn't spawned from a pool. Destroying it instead.");
                 Object.Destroy(obj);
             }
             else

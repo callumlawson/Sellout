@@ -1,16 +1,14 @@
 ﻿using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
-using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Framework.Entities;
 using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
-using DG.Tweening;
 using Assets.Scripts.Systems.Cameras;
-using System;
+using Assets.Scripts.Visualizers.Bar;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -26,6 +24,7 @@ namespace Assets.Scripts.Systems.Drinks
 
         private Entity mixologyBook;
         private Entity glassStack;
+        private Entity player;
 
         public void SetEntitySystem(EntityStateSystem ess)
         {
@@ -36,6 +35,8 @@ namespace Assets.Scripts.Systems.Drinks
         {
             EventSystem.StartDrinkMakingEvent += OnStartMakingDrink;
             EventSystem.onClickInteraction += OnClickInteraction;
+
+            player = StaticStates.Get<PlayerState>().Player;
         }
 
         private void OnClickInteraction(ClickEvent clickevent)
@@ -54,7 +55,7 @@ namespace Assets.Scripts.Systems.Drinks
                             if (drink == null)
                             {
                                 drinkZValue = glassStack.GameObject.transform.position.z;
-                                PickUpGlass();
+                                PickUpGlass(player, glassStack);
                             }
                             break;
                         case Prefabs.IngredientDispenser:
@@ -63,7 +64,7 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.Washup:
                             if (drink != null)
                             {
-                                WashUpGlass();
+                                WashUpGlass(player);
                             }
                             break;
                         case Prefabs.Player:
@@ -91,18 +92,34 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void PickUpGlass()
+        private void PickUpGlass(Entity requester, Entity stack)
         {
-            drink = MakeDrink();
+            if (!requester.HasState<InventoryState>())
+            {
+                Debug.LogError("Requester tried to pick up a glass but has no inventory state!");
+            }
+
+            if (requester.GetState<InventoryState>().Child != null)
+            {
+                return;
+            }
+
+            EventSystem.TakeGlass(new TakeGlassRequest { Requester = requester, stack = stack });
+            
+            if (requester.GetState<InventoryState>().Child == null || requester.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName != Prefabs.Drink)
+            {
+                Debug.LogErrorFormat("Tried to take glass, but came up with {0} instead!", requester.GetState<InventoryState>().Child);
+            }
+
+            drink = requester.GetState<InventoryState>().Child;
             DrinkColliderIsEnabled(false);
-            glassStack.GameObject.SetActive(false);
         }
 
-        private void WashUpGlass()
+        private void WashUpGlass(Entity requester)
         {
+            EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = requester, EntityTo = null, Mover = drink });
             entitySystem.RemoveEntity(drink);
             drink = null;
-            glassStack.GameObject.SetActive(true);
         }
 
         private void GiveDrinkToPerson(Entity person)
@@ -194,19 +211,7 @@ namespace Assets.Scripts.Systems.Drinks
                 usingBar = false;
             }
         }
-
-        private Entity MakeDrink()
-        {
-            var entity = entitySystem.CreateEntity(new List<IState>
-            {
-                new PrefabState(Prefabs.Drink),
-                new DrinkState(new DrinkState()),
-                new PositionState(GetNewHeldDrinkPosition()),
-                new InventoryState()
-            });
-            return entity;
-        }
-
+        
         private void DrinkColliderIsEnabled(bool enable)
         {
             drink.GameObject.GetComponent<Collider>().enabled = enable;
