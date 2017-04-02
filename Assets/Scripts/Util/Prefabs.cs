@@ -18,6 +18,7 @@
         //UI
         public const string DrinkMixingUI = "DrinkMixingUI";
         public const string DiagloguePanelUI = "DialoguePanel";
+        public const string BarDiagloguePanelUI = "BarDialoguePanel";
         public const string DialogueLineUI = "DialogueLine";
         public const string NameTagUI = "NameTag";
         public const string MoodBubbleUI = "MoodBubble";

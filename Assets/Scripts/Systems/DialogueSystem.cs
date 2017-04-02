@@ -17,32 +17,72 @@ namespace Assets.Scripts.Systems
         //Much better to pass this a conversation data object to run.
         public static DialogueSystem Instance;
 
-        private GameObject dialoguePanelUI;
-        private GameObject dialogueLinesParent;
+        private GameObject defaultDialogueUI;
+        private GameObject defaultDialogueLinesParent;
+        private Text defaultSpeakerNameText;
+
+        private GameObject barDialogueUI;
+        private GameObject barDialogueLinesParent;
+        private Text barSpeakerNameText;
+
         private GameObject dialogueLineUI;
+
+        private GameObject currentDialogueUI;
+        private GameObject currentDialogueLinesParent;
+        private Text currentSpeakerNameText;
+        
         private readonly List<GameObject> currentChoices = new List<GameObject>();
 
         public bool ConverstationActive;
-
+        
         public void OnInit()
         {
-            dialoguePanelUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.DiagloguePanelUI));
-            dialogueLinesParent = dialoguePanelUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
-            dialoguePanelUI.SetActive(false);
-            dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
+            InitUI();
+            
             Instance = this;
+
+            EventSystem.StartDrinkMakingEvent += OnStartMakingDrink;
+            EventSystem.EndDrinkMakingEvent += OnEndMakingDrink;
+        }
+
+        private void OnEndMakingDrink()
+        {
+            currentDialogueUI = defaultDialogueUI;
+            currentDialogueLinesParent = defaultDialogueLinesParent;
+            currentSpeakerNameText = defaultSpeakerNameText;
+        }
+
+        private void OnStartMakingDrink()
+        {
+            currentDialogueUI = barDialogueUI;
+            currentDialogueLinesParent = barDialogueLinesParent;
+            currentSpeakerNameText = barSpeakerNameText;
+        }
+
+        private void InitUI()
+        {
+            defaultDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.DiagloguePanelUI));
+            defaultDialogueLinesParent = defaultDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
+            defaultDialogueUI.SetActive(false);
+            defaultSpeakerNameText = defaultDialogueUI.transform.Find("NamePanel").GetComponentInChildren<Text>();
+
+            barDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.BarDiagloguePanelUI));
+            barDialogueLinesParent = barDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
+            barDialogueUI.SetActive(false);
+            barSpeakerNameText = barDialogueUI.transform.Find("NamePanel").GetComponentInChildren<Text>();
+
+            dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
+
+            currentDialogueUI = defaultDialogueUI;
+            currentDialogueLinesParent = defaultDialogueLinesParent;
+            currentSpeakerNameText = defaultSpeakerNameText;
         }
 
         public void StartDialogue(string nameOfSpeaker)
         {
-            currentChoices.Clear();
-            foreach (Transform child in dialogueLinesParent.transform)
-            {
-                Object.Destroy(child.gameObject);
-            }
+            CleanUpDialogueLines();
             ConverstationActive = true;
             WriteSpeakerName(nameOfSpeaker);
-            WritePlayerDialogueLine(" ");
             ShowDialogue(true);
         }
 
@@ -60,6 +100,11 @@ namespace Assets.Scripts.Systems
         public void UnpauseDialogue()
         {
             ShowDialogue(true);
+        }
+
+        public void NextPanel()
+        {
+            CleanUpDialogueLines();
         }
 
         public void WritePlayerDialogueLine(string line)
@@ -97,15 +142,13 @@ namespace Assets.Scripts.Systems
 
         private void WriteSpeakerName(string line)
         {
-            var textGameObject = CreateDialogueLine(line);
-            var textField = textGameObject.GetComponent<Text>();
-            textField.alignment = TextAnchor.UpperCenter;
+            currentSpeakerNameText.text = line;
         }
 
         private GameObject CreateDialogueLine(string line)
         {
             var lineGameObject = Object.Instantiate(dialogueLineUI);
-            lineGameObject.transform.SetParent(dialogueLinesParent.transform);
+            lineGameObject.transform.SetParent(currentDialogueLinesParent.transform);
             var text = lineGameObject.GetComponent<Text>();
             text.DOFade(0.0f, 0.0f);
             text.text = line;
@@ -129,15 +172,24 @@ namespace Assets.Scripts.Systems
         {
             if (show)
             {
-                dialoguePanelUI.SetActive(true);
-                dialogueLinesParent.GetComponent<RectTransform>().localScale = new Vector3(0f, 0f, 0f);
-                dialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(1, 1, 1), 0.3f).SetEase(Ease.InOutCubic);
+                currentDialogueUI.SetActive(true);
+                currentDialogueLinesParent.GetComponent<RectTransform>().localScale = new Vector3(0f, 0f, 0f);
+                currentDialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(1, 1, 1), 0.3f).SetEase(Ease.InOutCubic);
             }
             else
             {
-                dialoguePanelUI.SetActive(false);
+                currentDialogueUI.SetActive(false);
                 //Closing the new conversation after it has started :(
                 //dialogueLinesParent.GetComponent<RectTransform>().DOScale(new Vector3(0, 0, 0), 0.3f).SetEase(Ease.InOutCubic).OnComplete(() => dialoguePanelUI.SetActive(false));
+            }
+        }
+
+        private void CleanUpDialogueLines()
+        {
+            currentChoices.Clear();
+            foreach (Transform child in currentDialogueLinesParent.transform)
+            {
+                Object.Destroy(child.gameObject);
             }
         }
     }

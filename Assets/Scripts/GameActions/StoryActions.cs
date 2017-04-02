@@ -45,12 +45,14 @@ namespace Assets.Scripts.GameActions
 
             private void SentientBeing()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Umm. Please?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Better, thanks. Now what was it?", DrinkClarification);
             }
 
             private void DrinkClarification()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Mind Meld. Frosted. Don’t you have to take classes or something to sell this stuff?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Listen buddy. Only thing getting frosted round here is your fracking head.", SpeakToSecurity);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Yeah, but most of the course were useless stuff like ‘Conflict Resolution 401’. Stupid, right?", ConflictResolution);
@@ -59,12 +61,14 @@ namespace Assets.Scripts.GameActions
 
             private void SpeakToSecurity()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("I- I- I’m going to speak to security. I’m a big name. I’m important! You’ll see!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Bad));
             }
 
             private void ConflictResolution()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Oh yeah. Tell me about it, all those dang classes.");
                 DialogueSystem.Instance.WriteNPCLine("We have to do the same dumb stuff for Market Leadership.");
                 DialogueSystem.Instance.WriteNPCLine("Can you beleive it? Anyhow, it’s just a Mind Meld with SpaceCola.");
@@ -76,6 +80,7 @@ namespace Assets.Scripts.GameActions
 
             private void MakeItQuick()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("And make it quick.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i> sigh </i>", EndConversation(DialogueOutcome.Default));
             }
@@ -157,6 +162,7 @@ namespace Assets.Scripts.GameActions
 
             private void ComplimentHer()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("What should I say?! I never know what do tell women..");
                 DialogueSystem.Instance.WritePlayerChoiceLine("You are the most beautiful woman in the galaxy.", Thanks);
                 DialogueSystem.Instance.WritePlayerChoiceLine("I dream of a galaxy where your eyes are the stars and the universe worships the night.", Thanks);
@@ -165,18 +171,21 @@ namespace Assets.Scripts.GameActions
 
             private void Thanks()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Wow! Thanks!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Good luck.", EndConversation(DialogueOutcome.Romantic));
             }
 
             private void PlayHardToGet()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Good idea! I read on the Spacenet that women love it when you ignore them.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Good luck.", EndConversation(DialogueOutcome.Mean));
             }
 
             private void BeYourself()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("That's what everyone tells me but it never seems to work... Well, here is goes.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Good luck.", EndConversation(DialogueOutcome.Nice));
             }

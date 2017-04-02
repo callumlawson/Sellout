@@ -66,12 +66,14 @@ namespace Assets.Scripts.Util.Dialogue
 
             private void BitFriendly()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("It's a small boat. Friendly will get you far.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Fair point - thanks.", EndConversation(DialogueOutcome.Default));
             }
 
             private void RunningBar()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Ah, shame about poor Fred... still, glad you'll have the taps flowing again.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'll do my best.", EndConversation(DialogueOutcome.Default));
             }
@@ -89,6 +91,7 @@ namespace Assets.Scripts.Util.Dialogue
 
             private void Whoops()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("What you looking at <b>me</b> for?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I, err, don't know.", DiggingHole);
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk away</i>", EndConversation(DialogueOutcome.Default));
@@ -96,6 +99,7 @@ namespace Assets.Scripts.Util.Dialogue
 
             private void DiggingHole()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Well sod off then.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>walk quickly away</i>", EndConversation(DialogueOutcome.Default));
             }

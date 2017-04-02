@@ -49,6 +49,7 @@ namespace Assets.Scripts.GameActions
 
             private void SoItBegings()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Ahhhr, now I'm going to have to train you up as well.");
                 DialogueSystem.Instance.WriteNPCLine("Don't worry, my tipple is easy.");
                 DialogueSystem.Instance.WriteNPCLine("Can't get the brain going without a morning Mind Meld.");
@@ -58,6 +59,7 @@ namespace Assets.Scripts.GameActions
 
             private void Problem()
             {
+                DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Problem with that?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I guess not. Err, coming right up", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("It's your liver.", EndConversation(DialogueOutcome.Mean));
