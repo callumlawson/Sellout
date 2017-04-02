@@ -66,7 +66,6 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new EntitySelectorSystem());
 
             entitySystem.Init();
-            
         }
 
         [UsedImplicitly]
