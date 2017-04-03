@@ -1,8 +1,10 @@
-﻿using Assets.Framework.States;
+﻿using System;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using cakeslice;
 using UnityEngine;
 
 namespace Assets.Scripts.Systems
@@ -27,12 +29,13 @@ namespace Assets.Scripts.Systems
 
                 if (selectedEntity != null)
                 {
-                    Recursive.SetLayerRecursively(selectedEntity.GameObject.transform, LayerMask.NameToLayer("Default"));
+                    Recursive.ApplyActionRecursively(selectedEntity.GameObject.transform, ResetOutline);
                 }
 
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
-                    Recursive.SetLayerRecursively(objectHit.GetEntityObject().transform, LayerMask.NameToLayer("Outline"));
+                    Recursive.ApplyActionRecursively(objectHit.GetEntityObject().transform, AddOutline);
+
                     StaticStates.Get<CursorState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
                 }
                 else
@@ -41,6 +44,27 @@ namespace Assets.Scripts.Systems
                 }
                 StaticStates.Get<CursorState>().MousedOverPosition = hit.point;
             }
+        }
+
+        private static void ResetOutline(Transform transform)
+        {
+            var objectHit = transform.gameObject;
+            var outline = objectHit.GetComponent<Outline>();
+            if (outline)
+            {
+                outline.enabled = false;
+            }
+        }
+
+        private static void AddOutline(Transform transform)
+        {
+            var objectHit = transform.gameObject;
+            if (!objectHit.GetComponent<Renderer>() || objectHit.GetComponent<TextMesh>())
+            {
+                return;
+            }
+            var outline = objectHit.GetComponent<Outline>() ?? objectHit.AddComponent<Outline>();
+            outline.enabled = true;
         }
     }
 }

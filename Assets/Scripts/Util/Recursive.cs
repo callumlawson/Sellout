@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.Util
 {
@@ -10,6 +11,15 @@ namespace Assets.Scripts.Util
             foreach (Transform child in transform)
             {
                 SetLayerRecursively(child, layer);
+            }
+        }
+
+        public static void ApplyActionRecursively(Transform transform, Action<Transform> function)
+        {
+            function(transform);
+            foreach (Transform child in transform)
+            {
+                ApplyActionRecursively(child, function);
             }
         }
     }
