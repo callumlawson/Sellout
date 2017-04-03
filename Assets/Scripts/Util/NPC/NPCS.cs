@@ -9,8 +9,6 @@ namespace Assets.Scripts.Util.NPC
 {
     public static class NPCS
     {
-        
-
         public static NPC Q = new NPC
         {
             Name = "Q",
@@ -56,23 +54,29 @@ namespace Assets.Scripts.Util.NPC
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC Annon = new NPC
+        public static NPC GenerateAnnon()
         {
-            Name = "Annon",
-            Face = FaceType.Bartender,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGray,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+            return new NPC
+            {
+                Name = "Crewperson",
+                Face = EnumExtensions.RandomEnumValue<FaceType>(),
+                Hair = EnumExtensions.RandomEnumValue<HairType>(),
+                Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
+                Bottom = EnumExtensions.RandomEnumValue<ClothingBottomType>()
+            };
+        }
 
-        public static NPC HallwayWalker = new NPC
+        public static NPC GenerateHallwayWalker()
         {
-            Name = "HallwayWalker",
-            Face = FaceType.Bartender,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGray,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+            return new NPC
+            {
+                Name = "Expendable",
+                Face = EnumExtensions.RandomEnumValue<FaceType>(),
+                Hair = EnumExtensions.RandomEnumValue<HairType>(),
+                Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
+                Bottom = EnumExtensions.RandomEnumValue<ClothingBottomType>()
+            };
+        }
 
         public static Entity SpawnNpc(EntityStateSystem entitySystem, NPC npc, Vector3 position)
         {

@@ -111,16 +111,16 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Annon, spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
 
             var waypointPosition = GameObject.FindGameObjectWithTag("Waypoint").transform.position;
-            NPCS.SpawnNpc(entityStateSystem, NPCS.HallwayWalker, waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.HallwayWalker, waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.HallwayWalker, waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.HallwayWalker, waypointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
         }
 
         private Entity SpawnPlayer(Vector3 position)

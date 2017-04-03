@@ -31,8 +31,8 @@ class FirstDay : Day
         var tolstoy = EntityQueries.GetNPCWithName(people, NPCS.Tolstoy.Name);
         var ellie = EntityQueries.GetNPCWithName(people, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPCWithName(people, NPCS.McGraw.Name);
-        var someGuys = EntityQueries.GetNPCSWithName(people, NPCS.Annon.Name);
-        var hallwayWalkers = EntityQueries.GetNPCSWithName(people, NPCS.HallwayWalker.Name);
+        var someGuys = EntityQueries.GetNPCSWithName(people, "Crewperson");
+        var hallwayWalkers = EntityQueries.GetNPCSWithName(people, "Expendable");
 
         if (timeState.Hour == 11 && timeState.Minute == 10 && !GameSettings.DisableTalkingToPlayer)
         {
