@@ -32,12 +32,12 @@ namespace Assets.Scripts.Systems
 
                 if (paused)
                 {
-                    navAgent.Stop();
+                    navAgent.isStopped = true;
                     navAgent.velocity = Vector3.zero;
                 }
                 else
                 {
-                    navAgent.Resume();
+                    navAgent.isStopped = false;
                 }
             }
         }
