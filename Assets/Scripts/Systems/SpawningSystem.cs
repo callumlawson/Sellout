@@ -108,8 +108,6 @@ namespace Assets.Scripts.Systems
             var spawnPointPosition = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
             NPCS.SpawnNpc(entityStateSystem, NPCS.Q, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie, spawnPointPosition);
