@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -116,11 +117,11 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
 
-            var waypointPosition = GameObject.FindGameObjectWithTag("Waypoint").transform.position;
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPosition);
+            var waypointPositions = GameObject.FindGameObjectsWithTag("Waypoint").Select(go => go.transform.position).ToList();
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
         }
 
         private Entity SpawnPlayer(Vector3 position)

@@ -61,7 +61,7 @@ namespace Assets.Scripts.GameActions
             var waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
             var waypointPositions = waypoints.Select(go => go.transform.position).ToList();
             var targetPosition = waypointPositions[Random.Range(0, waypointPositions.Count)];
-            walk.Add(new PauseAction(Random.Range(0, 12)));
+            walk.Add(new PauseAction(Random.Range(0, 10)));
             walk.Add(new GoToPositionAction(targetPosition));
             return walk;
         }
