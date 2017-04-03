@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Composite;
@@ -51,15 +52,18 @@ namespace Assets.Scripts.GameActions
             var wander = new ActionSequence("Wander Around");
             var xyPos = Random.insideUnitCircle * 6;
             wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
-            wander.Add(new PauseAction(2.0f));
-//            if (Random.value > 0.80)
-//            {
-//                wander.Add(new GetWaypointAction(Goal.Sit, reserve: true));
-//                wander.Add(new GoToWaypointAction());
-//                wander.Add(new PauseAction(20.0f));
-//                wander.Add(new ReleaseWaypointAction());
-//            }
             return wander;
+        }
+
+        public static ActionSequence WalkToWaypoint()
+        {
+            var walk = new ActionSequence("Walk to Random Waypoint");
+            var waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+            var waypointPositions = waypoints.Select(go => go.transform.position).ToList();
+            var targetPosition = waypointPositions[Random.Range(0, waypointPositions.Count)];
+            walk.Add(new PauseAction(Random.Range(0, 12)));
+            walk.Add(new GoToPositionAction(targetPosition));
+            return walk;
         }
 
         public static ActionSequence LeaveBar()

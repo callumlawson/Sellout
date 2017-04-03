@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
@@ -8,6 +9,7 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
+using Debug = UnityEngine.Debug;
 
 //We assume that at the start of each day there is no one in the bar. 
 //Def want to replace with with something much more data driven.
@@ -30,6 +32,7 @@ class FirstDay : Day
         var ellie = EntityQueries.GetNPCWithName(people, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPCWithName(people, NPCS.McGraw.Name);
         var someGuys = EntityQueries.GetNPCSWithName(people, NPCS.Annon.Name);
+        var hallwayWalkers = EntityQueries.GetNPCSWithName(people, NPCS.HallwayWalker.Name);
 
         if (timeState.Hour == 11 && timeState.Minute == 10 && !GameSettings.DisableTalkingToPlayer)
         {
@@ -96,6 +99,14 @@ class FirstDay : Day
                 {
                     ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
                 }
+            }
+        }
+
+        foreach (var walker in hallwayWalkers)
+        {
+            if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+            {
+                ActionManagerSystem.Instance.QueueActionForEntity(walker, CommonActions.WalkToWaypoint());
             }
         }
     }

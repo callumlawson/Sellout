@@ -44,8 +44,7 @@ namespace Assets.Scripts.Systems.AI
             //TODO: Not used right now in favour of the Day scripts 
             //- but we might want to do this in the future
             //TryScheduleStory(matchingEntities);
-
-            CommonActions.DrinkOrWanderAroundIfIdle(matchingEntities);
+            //CommonActions.DrinkOrWanderAroundIfIdle(matchingEntities);
         }
 
         private void TryScheduleStory(List<Entity> matchingEntities)

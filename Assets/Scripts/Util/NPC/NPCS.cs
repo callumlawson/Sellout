@@ -59,23 +59,30 @@ namespace Assets.Scripts.Util.NPC
         public static NPC Annon = new NPC
         {
             Name = "Annon",
-            Face = FaceType.Tolstoy,
+            Face = FaceType.Bartender,
             Hair = HairType.None,
             Top = ClothingTopType.UniformTopGray,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static Entity SpawnNpc(EntityStateSystem entitySystem, NPC npc, SerializableVector3? position = null)
+        public static NPC HallwayWalker = new NPC
         {
-            position = position ?? Constants.OffstagePostion;
+            Name = "HallwayWalker",
+            Face = FaceType.Bartender,
+            Hair = HairType.None,
+            Top = ClothingTopType.UniformTopGray,
+            Bottom = ClothingBottomType.UniformBottom
+        };
 
+        public static Entity SpawnNpc(EntityStateSystem entitySystem, NPC npc, Vector3 position)
+        {
             return entitySystem.CreateEntity(new List<IState>
             {
                 new ActionBlackboardState(null),
                 new PrefabState(Prefabs.Person),
                 new NameState(npc.Name, 2.0f),
-                new PositionState(position.Value),
-                new PathfindingState(null, null),
+                new PositionState(position),
+                new PathfindingState(position, null),
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PersonState(),
