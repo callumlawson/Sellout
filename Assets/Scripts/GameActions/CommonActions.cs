@@ -100,6 +100,7 @@ namespace Assets.Scripts.GameActions
         {
             var orderDrink = new ConditionalActionSequence("OrderDrinkFromPaypoint");
             orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
+            orderDrink.Add(new StartDrinkOrderAction(drinkRecipe));
             orderDrink.Add(WaitForDrink(entity, drinkRecipe, timeout));
             return orderDrink;
         }
@@ -111,12 +112,14 @@ namespace Assets.Scripts.GameActions
                new DrinkIsInInventoryAction(new DrinkState(drinkRecipe.Contents), timeoutInGameMins), //TODO: Need to account for the "No drink" case here.
                () =>
                {
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
                })
             );
+            waitForDrink.Add(new EndDrinkOrderAction());
             waitForDrink.Add(new ReleaseWaypointAction());
             waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
             waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
