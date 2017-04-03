@@ -62,7 +62,7 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.Drink:
                             if (drink == null)
                             {
-                                var drinkParent = drink.GetState<InventoryState>().Parent;
+                                var drinkParent = target.GetState<InventoryState>().Parent;
                                 if (drinkParent.HasState<GlassStackState>())
                                 {
                                     glassStack = drinkParent;
