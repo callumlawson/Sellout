@@ -29,8 +29,8 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            Day.text = string.Format(DayText, timeState.time.Day);
-            Time.text = string.Format(TimeText, timeState.time.Hour, timeState.time.Minute);
+            Day.text = string.Format(DayText, timeState.Time.Day);
+            Time.text = string.Format(TimeText, timeState.Time.Hour, timeState.Time.Minute);
         }
     }
 }

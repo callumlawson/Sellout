@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -27,8 +28,13 @@ namespace Assets.Scripts.Systems
 
         public void Tick(List<Entity> matchingEntities)
         {
-            var currentTime = time.time;
-            if (currentTime != lastTime && (currentTime.Day < inGameDays.Count))
+            if (time.GameEnded)
+            {
+                return;
+            }
+
+            var currentTime = time.Time;
+            if (currentTime != lastTime)
             {
                 currentDay = CheckForTimeSkip(currentTime);
 
@@ -49,15 +55,29 @@ namespace Assets.Scripts.Systems
         {
             if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein)
             {
-                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(currentTime.Day, false);
+                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.Day), false, true);
+               
             }
             if (currentTime.Hour >= Constants.DayEndHour)
             {
                 currentTime = currentTime.AddHours(Constants.NightLengthInHours);
-                time.time = currentTime;
+                time.Time = currentTime;
                 lastTime = currentTime;
-                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(currentTime.Day, true);
+
+                if (currentTime.Day < inGameDays.Count)
+                {
+                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.Day), true, true);
+                }
+
+                if (currentTime.Day >= inGameDays.Count)
+                {
+                    StaticStates.Get<TimeState>().TriggerEndOfGame.Invoke();
+                    StaticStates.Get<TimeState>().GameEnded = true;
+                    UnityEngine.Debug.Log("Reached the end of the last day!");
+                    return inGameDays[0];
+                }
             }
+            
             return inGameDays[currentTime.Day - 1];
         }
     }

@@ -36,7 +36,7 @@ namespace Assets.Scripts.Systems.AI
         public void OnInit()
         {
             time = StaticStates.Get<TimeState>();
-            lastStoryTime = time.time;
+            lastStoryTime = time.Time;
         }
 
         public void Tick(List<Entity> matchingEntities)
@@ -50,7 +50,7 @@ namespace Assets.Scripts.Systems.AI
 
         private void TryScheduleStory(List<Entity> matchingEntities)
         {
-            var timeSinceLastStory = time.time - lastStoryTime;
+            var timeSinceLastStory = time.Time - lastStoryTime;
             if (timeSinceLastStory.Minutes > CooldownBetweenStoriesInMins)
             {
                 var storyScheduled = TryScheduleSingleEntityStories(matchingEntities);
@@ -60,7 +60,7 @@ namespace Assets.Scripts.Systems.AI
                 }
                 if (storyScheduled)
                 {
-                    lastStoryTime = time.time;
+                    lastStoryTime = time.Time;
                 }
             }
         }

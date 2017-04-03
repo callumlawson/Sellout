@@ -26,7 +26,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.time;
+            startTime = timeState.Time;
         }
 
         public override void OnFrame(Entity entity)
@@ -51,7 +51,7 @@ namespace Assets.Scripts.GameActions.Waypoints
             {
                 ActionStatus = ActionStatus.Succeeded;
             }
-            if (timeoutInMins > 0 && (timeState.time - startTime).Duration().Minutes > timeoutInMins)
+            if (timeoutInMins > 0 && (timeState.Time - startTime).Duration().Minutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

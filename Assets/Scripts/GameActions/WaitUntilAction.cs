@@ -18,7 +18,7 @@ namespace Assets.Scripts.GameActions
 
         public override void OnFrame(Entity entity)
         {
-            var currentTime = timeState.time;
+            var currentTime = timeState.Time;
             if (currentTime >= goalTime)
             {
                 ActionStatus = ActionStatus.Succeeded;
