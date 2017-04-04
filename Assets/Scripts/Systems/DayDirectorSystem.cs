@@ -64,12 +64,12 @@ namespace Assets.Scripts.Systems
                 time.Time = currentTime;
                 lastTime = currentTime;
 
-                if (currentTime.Day < inGameDays.Count)
+                if (currentTime.Day - 1 < inGameDays.Count)
                 {
                     StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.Day), true, true);
                 }
 
-                if (currentTime.Day >= inGameDays.Count)
+                if (currentTime.Day - 1 >= inGameDays.Count)
                 {
                     StaticStates.Get<TimeState>().TriggerEndOfGame.Invoke();
                     StaticStates.Get<TimeState>().GameEnded = true;
