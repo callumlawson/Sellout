@@ -15,7 +15,6 @@ public class StartDrinkOrderAction : GameAction
 
     public override void OnStart(Entity entity)
     {
-        Debug.Log("Starting drink order for " + drink);
         EventSystem.StartDrinkOrderEvent.Invoke(drink);
         ActionStatus = ActionStatus.Succeeded;
     }
