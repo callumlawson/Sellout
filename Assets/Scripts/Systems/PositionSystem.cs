@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Scripts.States;
+using Assets.Scripts.Util;
+using UnityEngine.AI;
 
 namespace Assets.Scripts.Systems
 {
@@ -18,6 +21,7 @@ namespace Assets.Scripts.Systems
         {
             var position = entity.GetState<PositionState>().Position;
             entity.GameObject.transform.position = position;
+            FixupNavmeshSnapping(entity, position);
         }
 
         public void OnFrame(List<Entity> matchingEntities)
@@ -31,6 +35,14 @@ namespace Assets.Scripts.Systems
         public void OnEntityRemoved(Entity entity)
         {
             //Do nothing.
+        }
+
+        private static void FixupNavmeshSnapping(Entity entity, SerializableVector3 position)
+        {
+            if (entity.HasState<PathfindingState>())
+            {
+                entity.GameObject.GetComponent<NavMeshAgent>().Warp(position);
+            }
         }
     }
 }
