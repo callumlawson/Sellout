@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
@@ -9,30 +8,29 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
-using Debug = UnityEngine.Debug;
 
 //We assume that at the start of each day there is no one in the bar. 
 //Def want to replace with with something much more data driven.
-
 namespace Assets.Scripts.Util
 {
     public abstract class Day
     {
-        public abstract void UpdateDay(DateTime timeState, List<Entity> people);
+        public abstract void UpdateDay(DateTime timeState, List<Entity> allPeople);
+        public abstract void EndDay(List<Entity> allPeople);
     }
 }
 
-class FirstDay : Day
+internal class FirstDay : Day
 {
-    public override void UpdateDay(DateTime timeState, List<Entity> people)
+    public override void UpdateDay(DateTime timeState, List<Entity> allPeople)
     {
         //TODO: Cache this.
-        var q = EntityQueries.GetNPCWithName(people, NPCS.Q.Name);
-        var tolstoy = EntityQueries.GetNPCWithName(people, NPCS.Tolstoy.Name);
-        var ellie = EntityQueries.GetNPCWithName(people, NPCS.Ellie.Name);
-        var mcGraw = EntityQueries.GetNPCWithName(people, NPCS.McGraw.Name);
-        var someGuys = EntityQueries.GetNPCSWithName(people, "Crewperson");
-        var hallwayWalkers = EntityQueries.GetNPCSWithName(people, "Expendable");
+        var q = EntityQueries.GetNPCWithName(allPeople, NPCS.Q.Name);
+        var tolstoy = EntityQueries.GetNPCWithName(allPeople, NPCS.Tolstoy.Name);
+        var ellie = EntityQueries.GetNPCWithName(allPeople, NPCS.Ellie.Name);
+        var mcGraw = EntityQueries.GetNPCWithName(allPeople, NPCS.McGraw.Name);
+        var randomPeople = EntityQueries.GetNPCSWithName(allPeople, "Crewperson");
+        var hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
 
         if (timeState.Hour == 11 && timeState.Minute == 10 && !GameSettings.DisableTalkingToPlayer)
         {
@@ -73,7 +71,7 @@ class FirstDay : Day
             ActionManagerSystem.Instance.QueueActionForEntity(ellie, CommonActions.Wander());
         }
 
-        foreach (var person in someGuys)
+        foreach (var person in randomPeople)
         {
             if ((timeState.Hour > 12 && timeState.Hour < 14) || (timeState.Hour > 17 && timeState.Hour < 20))
             {
@@ -93,7 +91,7 @@ class FirstDay : Day
 
         if (timeState.Hour > 20)
         {
-            foreach (var person in people)
+            foreach (var person in randomPeople)
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
@@ -110,20 +108,29 @@ class FirstDay : Day
             }
         }
     }
+
+    public override void EndDay(List<Entity> allPeople)
+    {
+        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
+    }
 }
 
-class SecondDay : Day
+internal class SecondDay : Day
 {
-    public override void UpdateDay(DateTime timeState, List<Entity> people)
+    public override void UpdateDay(DateTime timeState, List<Entity> allPeople)
     {
-        var tolstoy = people.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == "Tolstoy");
+        var tolstoy = allPeople.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == "Tolstoy");
 
         if (timeState.Hour == 9 && timeState.Minute == 7 && !GameSettings.DisableTalkingToPlayer)
         {
             ActionManagerSystem.Instance.QueueActionForEntity(tolstoy,
                 CommonActions.TalkToPlayer(new Dialogues.TellTheTimeConverstation(timeState.ToString())));
         }
+    }
 
-        CommonActions.DrinkOrWanderAroundIfIdle(people);
+    public override void EndDay(List<Entity> allPeople)
+    {
+        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
     }
 }
+

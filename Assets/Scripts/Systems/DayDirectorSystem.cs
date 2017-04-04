@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using DG.Tweening;
 
 namespace Assets.Scripts.Systems
 {
@@ -36,7 +36,12 @@ namespace Assets.Scripts.Systems
             var currentTime = time.Time;
             if (currentTime != lastTime)
             {
-                currentDay = CheckForTimeSkip(currentTime);
+                if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein)
+                {
+                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
+                }
+
+                currentDay = UpdateDay(currentTime, matchingEntities);
 
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;
                 for (int elapsedMin = 1; elapsedMin <= timeDifferenceInMin; elapsedMin++)
@@ -51,15 +56,12 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private Day CheckForTimeSkip(DateTime currentTime)
+        private Day UpdateDay(DateTime currentTime, List<Entity> matchingEntities)
         {
-            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein)
-            {
-                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.Day), false, true);
-               
-            }
             if (currentTime.Hour >= Constants.DayEndHour)
             {
+                TriggerEndOfDayAfterDelay(currentTime, matchingEntities);
+
                 currentTime = currentTime.AddHours(Constants.NightLengthInHours);
                 time.Time = currentTime;
                 lastTime = currentTime;
@@ -77,8 +79,14 @@ namespace Assets.Scripts.Systems
                     return inGameDays[0];
                 }
             }
-            
+
             return inGameDays[currentTime.Day - 1];
+        }
+
+        private void TriggerEndOfDayAfterDelay(DateTime currentTime, List<Entity> matchingEntities)
+        {
+            var dayToEnd = inGameDays[currentTime.Day - 1];
+            DOTween.Sequence().SetDelay(3.0f).OnComplete(() => dayToEnd.EndDay(matchingEntities)); //HAX
         }
     }
 }

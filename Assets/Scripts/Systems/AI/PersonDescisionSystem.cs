@@ -5,8 +5,6 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.States;
-using Assets.Scripts.Util;
-using Random = UnityEngine.Random;
 using Assets.Scripts.GameActions.Composite;
 
 namespace Assets.Scripts.Systems.AI

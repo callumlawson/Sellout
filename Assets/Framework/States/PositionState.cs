@@ -9,6 +9,8 @@ namespace Assets.Framework.States
     {
         public SerializableVector3 Position;
 
+        public Action<Vector3> Teleport;
+
         public PositionState(SerializableVector3 position)
         {
             Position = position;

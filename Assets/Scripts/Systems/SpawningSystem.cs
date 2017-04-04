@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -106,7 +105,7 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople(EntityStateSystem entityStateSystem)
         {
-            var spawnPointPosition = GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
+            var spawnPointPosition = SpawnPoints.BarVisitorSpawnPoint();
             NPCS.SpawnNpc(entityStateSystem, NPCS.Q, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet, spawnPointPosition);
@@ -116,12 +115,10 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
-
-            var waypointPositions = GameObject.FindGameObjectsWithTag("Waypoint").Select(go => go.transform.position).ToList();
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), waypointPositions[Random.Range(0, waypointPositions.Count)]);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
         }
 
         private Entity SpawnPlayer(Vector3 position)
@@ -138,7 +135,8 @@ namespace Assets.Scripts.Systems
                 new DialogueOutcomeState(),
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender),
-                new FaceState(FaceType.Bartender)
+                new FaceState(FaceType.Bartender),
+                new PersonState()
             });
             StaticStates.Add(new PlayerState(player));
             return player;

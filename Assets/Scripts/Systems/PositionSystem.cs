@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
@@ -12,19 +11,19 @@ namespace Assets.Scripts.Systems
     //Updates the position in state from the scene. Move entities by setting their position the normal unity way.
     class PositionSystem : IReactiveEntitySystem, IFrameEntitySystem
     {
-        public List<Type> RequiredStates()
+        public System.Collections.Generic.List<Type> RequiredStates()
         {
-            return new List<Type> {typeof(PositionState), typeof(PrefabState)};
+            return new System.Collections.Generic.List<Type> {typeof(PositionState), typeof(PrefabState)};
         }
 
         public void OnEntityAdded(Entity entity)
         {
-            var position = entity.GetState<PositionState>().Position;
-            entity.GameObject.transform.position = position;
-            FixupNavmeshSnapping(entity, position);
+            var positionState = entity.GetState<PositionState>();
+            Teleport(entity, positionState.Position);
+            positionState.Teleport += pos => Teleport(entity, pos);
         }
 
-        public void OnFrame(List<Entity> matchingEntities)
+        public void OnFrame(System.Collections.Generic.List<Entity> matchingEntities)
         {
             foreach (var entity in matchingEntities)
             {
@@ -37,8 +36,9 @@ namespace Assets.Scripts.Systems
             //Do nothing.
         }
 
-        private static void FixupNavmeshSnapping(Entity entity, SerializableVector3 position)
+        private static void Teleport(Entity entity, SerializableVector3 position)
         {
+            entity.GameObject.transform.position = position;
             if (entity.HasState<PathfindingState>())
             {
                 entity.GameObject.GetComponent<NavMeshAgent>().Warp(position);
