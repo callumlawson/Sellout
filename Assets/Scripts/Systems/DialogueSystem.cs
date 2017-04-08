@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.Util;
+using Assets.Scripts.Visualizers;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -137,6 +138,7 @@ namespace Assets.Scripts.Systems
                 currentChoices.Remove(textGameObject);
                 clickTrigger.triggers.Clear();
                 DisableChoices();
+                StandardSoundPlayer.Instance.PlayClick();
                 onSelected();
             });
             clickTrigger.triggers.Add(entry);
