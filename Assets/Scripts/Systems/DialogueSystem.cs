@@ -93,6 +93,7 @@ namespace Assets.Scripts.Systems
             ConverstationActive = true;
             WriteSpeakerName(nameOfSpeaker);
             ShowDialogue(true);
+            StandardSoundPlayer.Instance.PlayPop();
         }
 
         public void StopDialogue()
