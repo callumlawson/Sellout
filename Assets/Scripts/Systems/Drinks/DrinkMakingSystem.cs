@@ -198,6 +198,7 @@ namespace Assets.Scripts.Systems.Drinks
             if (drink != null && drink.GetState<DrinkState>().GetTotalDrinkSize() < Constants.MaxUnitsInDrink)
             {
                 var ingredient = dispenser.GetState<DrinkState>().GetContents().Keys.First();
+                dispenser.GameObject.GetComponent<OneShotAudioPlayer>().PlayOneShot();
                 drink.GetState<DrinkState>().ChangeIngredientAmount(ingredient, 1);
             }
         }
