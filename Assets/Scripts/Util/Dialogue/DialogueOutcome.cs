@@ -6,6 +6,8 @@
         Nice,
         Mean,
         Romantic,
-        Bad
+        Bad,
+        Agree,
+        Disagree
     }
 }

@@ -37,6 +37,7 @@ namespace Assets.Scripts
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
+            StaticStates.Add(new PlayerDecisions());
 
             //Debug
             entitySystem.AddSystem(new EntityTooltipSystem());

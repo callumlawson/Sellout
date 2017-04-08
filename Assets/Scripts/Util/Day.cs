@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
-using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
-using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
 
 //We assume that at the start of each day there is no one in the bar. 
@@ -66,11 +64,6 @@ internal class FirstDay : Day
             ActionManagerSystem.Instance.QueueActionForEntity(ellie, CommonActions.LeaveBar());
         }
 
-        if (ActionManagerSystem.Instance.IsEntityIdle(q) && timeState.Hour > 17)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(ellie, CommonActions.Wander());
-        }
-
         foreach (var person in randomPeople)
         {
             if ((timeState.Hour > 12 && timeState.Hour < 14) || (timeState.Hour > 17 && timeState.Hour < 20))
@@ -87,6 +80,16 @@ internal class FirstDay : Day
                     ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
                 }
             }
+        }
+
+        if (timeState.Hour == 13 && timeState.Minute == 30)
+        {
+            ActionManagerSystem.Instance.QueueActionForEntity(q, DrugStory.DrugPusherIntro(q));
+        }
+
+        if (timeState.Hour == 18 && timeState.Minute == 30)
+        {
+            ActionManagerSystem.Instance.QueueActionForEntity(q, DrugStory.DrugPusherPaysYou(q));
         }
 
         if (timeState.Hour > 20)
@@ -119,12 +122,45 @@ internal class SecondDay : Day
 {
     public override void UpdateDay(DateTime timeState, List<Entity> allPeople)
     {
-        var tolstoy = allPeople.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == "Tolstoy");
+        var q = EntityQueries.GetNPCWithName(allPeople, NPCS.Q.Name);
+        var mcGraw = EntityQueries.GetNPCWithName(allPeople, NPCS.McGraw.Name);
+        var hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
+        var randomPeople = EntityQueries.GetNPCSWithName(allPeople, "Crewperson");
 
-        if (timeState.Hour == 9 && timeState.Minute == 7 && !GameSettings.DisableTalkingToPlayer)
+        if (timeState.Hour == 11 && timeState.Minute == 12 && !GameSettings.DisableTalkingToPlayer)
         {
-            ActionManagerSystem.Instance.QueueActionForEntity(tolstoy,
-                CommonActions.TalkToPlayer(new Dialogues.TellTheTimeConverstation(timeState.ToString())));
+            ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, DrugStory.InspectorQuestions(mcGraw));
+        }
+
+        if (timeState.Hour == 17 && timeState.Minute == 3 && !GameSettings.DisableTalkingToPlayer)
+        {
+            DrugStory.DrugPusherInspectorShowdown(mcGraw, q);
+        }
+
+        foreach (var person in randomPeople)
+        {
+            if ((timeState.Hour > 12 && timeState.Hour < 14) || (timeState.Hour > 17 && timeState.Hour < 20))
+            {
+                if (ActionManagerSystem.Instance.IsEntityIdle(person))
+                {
+                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.Wander());
+                }
+            }
+            else
+            {
+                if (ActionManagerSystem.Instance.IsEntityIdle(person))
+                {
+                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
+                }
+            }
+        }
+
+        foreach (var walker in hallwayWalkers)
+        {
+            if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+            {
+                ActionManagerSystem.Instance.QueueActionForEntity(walker, CommonActions.WalkToWaypoint());
+            }
         }
     }
 

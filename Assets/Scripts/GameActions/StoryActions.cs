@@ -154,7 +154,7 @@ namespace Assets.Scripts.GameActions
             protected override void StartConversation(string nameOfSpeaker)
             {
                 DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
-                DialogueSystem.Instance.WriteNPCLine("I need your advice.");
+                DialogueSystem.Instance.WriteNPCLine("I need some dating advice!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Compliment her.", ComplimentHer);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Play hard to get.", PlayHardToGet);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Just be yourself.", BeYourself);
