@@ -199,8 +199,8 @@ namespace Assets.Scripts.GameActions
             showdownInspector.Add(CommonActions.LeaveBar());
             showdownPusher.Add(CommonActions.LeaveBar());
 
-            ActionManagerSystem.Instance.QueueActionForEntity(drugPusher, showdownPusher);
-            ActionManagerSystem.Instance.QueueActionForEntity(inspector, showdownInspector);
+            ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
+            ActionManagerSystem.Instance.QueueAction(inspector, showdownInspector);
         }
 
         private class InspectorResolution : Conversation

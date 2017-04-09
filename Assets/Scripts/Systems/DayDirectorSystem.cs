@@ -9,21 +9,24 @@ using DG.Tweening;
 
 namespace Assets.Scripts.Systems
 {
-    class DayDirectorSystem : ITickEntitySystem, IInitSystem
+    class DayDirectorSystem : ITickEntitySystem, IEndInitEntitySystem
     {
         private TimeState time;
         private Day currentDay;
         private DateTime lastTime;
 
-        private readonly List<Day> inGameDays = new List<Day> { new FirstDay(), new SecondDay() };
+        private readonly List<Day> inGameDays = new List<Day> ();
 
         public List<Type> RequiredStates()
         {
             return new List<Type> { typeof(PersonState) };
         }
-        public void OnInit()
+
+        public void OnEndInit(List<Entity> matchingEntities)
         {
             time = StaticStates.Get<TimeState>();
+            inGameDays.Add(new FirstDay(matchingEntities));
+            inGameDays.Add(new SecondDay(matchingEntities));
         }
 
         public void Tick(List<Entity> matchingEntities)
@@ -86,7 +89,7 @@ namespace Assets.Scripts.Systems
         private void TriggerEndOfDayAfterDelay(DateTime currentTime, List<Entity> matchingEntities)
         {
             var dayToEnd = inGameDays[currentTime.Day - 1];
-            DOTween.Sequence().SetDelay(3.0f).OnComplete(() => dayToEnd.EndDay(matchingEntities)); //HAX
+            DOTween.Sequence().SetDelay(3.0f).OnComplete(() => dayToEnd.OnEndOfDay(matchingEntities)); //HAX
         }
     }
 }

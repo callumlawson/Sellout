@@ -7,112 +7,73 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
 
-//We assume that at the start of each day there is no one in the bar. 
-//Def want to replace with with something much more data driven.
-namespace Assets.Scripts.Util
-{
-    public abstract class Day
-    {
-        public abstract void UpdateDay(DateTime timeState, List<Entity> allPeople);
-        public abstract void EndDay(List<Entity> allPeople);
-    }
-}
-
 internal class FirstDay : Day
 {
-    public override void UpdateDay(DateTime timeState, List<Entity> allPeople)
+    public FirstDay(List<Entity> allPeople)
     {
-        //TODO: Cache this.
-        var q = EntityQueries.GetNPCWithName(allPeople, NPCS.Q.Name);
-        var tolstoy = EntityQueries.GetNPCWithName(allPeople, NPCS.Tolstoy.Name);
-        var ellie = EntityQueries.GetNPCWithName(allPeople, NPCS.Ellie.Name);
-        var mcGraw = EntityQueries.GetNPCWithName(allPeople, NPCS.McGraw.Name);
-        var randomPeople = EntityQueries.GetNPCSWithName(allPeople, "Crewperson");
-        var hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
+        var q = EntityQueries.GetNPC(allPeople, NPCS.Q.Name);
+        var tolstoy = EntityQueries.GetNPC(allPeople, NPCS.Tolstoy.Name);
+        var ellie = EntityQueries.GetNPC(allPeople, NPCS.Ellie.Name);
+        var mcGraw = EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name);
 
-        if (timeState.Hour == 11 && timeState.Minute == 10 && !GameSettings.DisableTalkingToPlayer)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, TutorialAction.Tutorial(mcGraw));
-        }
+        ScheduleEvent(11, 10, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
-        if (ActionManagerSystem.Instance.IsEntityIdle(tolstoy) && timeState.Hour > 12)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(tolstoy, CommonActions.Wander());
-        }
+        ScheduleEvent(12, 0, () => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
 
-        if (ActionManagerSystem.Instance.IsEntityIdle(ellie) && timeState.Hour > 13)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(ellie, CommonActions.Wander());
-        }
+        ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
 
-        if (timeState.Hour == 12 && timeState.Minute == 1)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, CommonActions.LeaveBar());
-        }
+        ScheduleEvent(13, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.Wander()); });
 
-        if (timeState.Hour == 13 && timeState.Minute == 20 && !GameSettings.DisableTalkingToPlayer)
+        ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
+
+        ScheduleEvent(13, 20, () =>
         {
             ActionSequence mainSequence;
             ActionSequence otherSequence;
             StoryActions.TolstoyRomantic(tolstoy, ellie, out mainSequence, out otherSequence);
-            ActionManagerSystem.Instance.QueueActionForEntity(tolstoy, mainSequence);
-            ActionManagerSystem.Instance.QueueActionForEntity(ellie, otherSequence);
-        }
+            ActionManagerSystem.Instance.QueueAction(tolstoy, mainSequence);
+            ActionManagerSystem.Instance.QueueAction(ellie, otherSequence);
+        });
 
-        if (ActionManagerSystem.Instance.IsEntityIdle(ellie) && timeState.Hour > 15)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(ellie, CommonActions.LeaveBar());
-        }
+        ScheduleEvent(15, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.LeaveBar()); });
 
-        foreach (var person in randomPeople)
+        ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
+
+        SchedualEventDuringInterval(12, 0, 14, 0, () =>
         {
-            if ((timeState.Hour > 12 && timeState.Hour < 14) || (timeState.Hour > 17 && timeState.Hour < 20))
+            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.Wander());
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
                 }
             }
-            else
+        });
+
+        SchedualEventDuringInterval(17, 0, 20, 0, () =>
+        {
+            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
                 }
             }
-        }
+        });
 
-        if (timeState.Hour == 13 && timeState.Minute == 30)
+        SchedualEventDuringInterval(11, 0, 21, 0, () =>
         {
-            ActionManagerSystem.Instance.QueueActionForEntity(q, DrugStory.DrugPusherIntro(q));
-        }
-
-        if (timeState.Hour == 18 && timeState.Minute == 30)
-        {
-            ActionManagerSystem.Instance.QueueActionForEntity(q, DrugStory.DrugPusherPaysYou(q));
-        }
-
-        if (timeState.Hour > 20)
-        {
-            foreach (var person in randomPeople)
+            foreach (var walker in EntityQueries.GetNPCSWithName(allPeople, "Expendable"))
             {
-                if (ActionManagerSystem.Instance.IsEntityIdle(person))
+                if (ActionManagerSystem.Instance.IsEntityIdle(walker))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
+                    ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
                 }
             }
-        }
-
-        foreach (var walker in hallwayWalkers)
-        {
-            if (ActionManagerSystem.Instance.IsEntityIdle(walker))
-            {
-                ActionManagerSystem.Instance.QueueActionForEntity(walker, CommonActions.WalkToWaypoint());
-            }
-        }
+        });
     }
 
-    public override void EndDay(List<Entity> allPeople)
+    public override void OnEndOfDay(List<Entity> allPeople)
     {
         SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
     }
@@ -120,53 +81,126 @@ internal class FirstDay : Day
 
 internal class SecondDay : Day
 {
-    public override void UpdateDay(DateTime timeState, List<Entity> allPeople)
+    public SecondDay(List<Entity> allPeople)
     {
-        var q = EntityQueries.GetNPCWithName(allPeople, NPCS.Q.Name);
-        var mcGraw = EntityQueries.GetNPCWithName(allPeople, NPCS.McGraw.Name);
-        var hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
-        var randomPeople = EntityQueries.GetNPCSWithName(allPeople, "Crewperson");
-
-        if (timeState.Hour == 11 && timeState.Minute == 12 && !GameSettings.DisableTalkingToPlayer)
+        ScheduleEvent(11, 13, () =>
         {
-            ActionManagerSystem.Instance.QueueActionForEntity(mcGraw, DrugStory.InspectorQuestions(mcGraw));
-        }
+            ActionManagerSystem.Instance.QueueAction(
+                EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name),
+                DrugStory.InspectorQuestions(EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name))
+            );
+        });
 
-        if (timeState.Hour == 17 && timeState.Minute == 3 && !GameSettings.DisableTalkingToPlayer)
+        ScheduleEvent(17, 3, () =>
         {
-            DrugStory.DrugPusherInspectorShowdown(mcGraw, q);
-        }
+            DrugStory.DrugPusherInspectorShowdown(
+                EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name),
+                EntityQueries.GetNPC(allPeople, NPCS.Q.Name)
+            );
+        });
 
-        foreach (var person in randomPeople)
+        SchedualEventDuringInterval(12, 0, 14, 0, () =>
         {
-            if ((timeState.Hour > 12 && timeState.Hour < 14) || (timeState.Hour > 17 && timeState.Hour < 20))
+            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.Wander());
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
                 }
             }
-            else
+        });
+
+        SchedualEventDuringInterval(17, 0, 20, 0, () =>
+        {
+            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(person, CommonActions.LeaveBar());
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
                 }
             }
-        }
+        });
 
-        foreach (var walker in hallwayWalkers)
+        SchedualEventDuringInterval(11, 0, 21, 0, () =>
         {
-            if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+            foreach (var walker in EntityQueries.GetNPCSWithName(allPeople, "Expendable"))
             {
-                ActionManagerSystem.Instance.QueueActionForEntity(walker, CommonActions.WalkToWaypoint());
+                if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+                {
+                    ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
+                }
             }
+        });
+    }
+
+    public override void OnEndOfDay(List<Entity> allPeople)
+    {
+        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
+    }
+}
+
+
+//We assume that at the start of each day there is no one in the bar. 
+//Def want to replace with with something much more data driven.
+
+namespace Assets.Scripts.Util
+{
+    public struct DayTime
+    {
+        public int Hour;
+        public int Min;
+
+        public DayTime(int hour, int min)
+        {
+            Hour = hour;
+            Min = min;
         }
     }
 
-    public override void EndDay(List<Entity> allPeople)
+    public struct DayTimeSpan
     {
-        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
+        public DayTime Start;
+        public DayTime End;
+
+        public DayTimeSpan(DayTime start, DayTime end)
+        {
+            Start = start;
+            End = end;
+        }
+    }
+
+    public abstract class Day
+    {
+        private readonly Dictionary<DayTimeSpan, Action> dayEvents = new Dictionary<DayTimeSpan, Action>();
+
+        public void UpdateDay(DateTime currentTime, List<Entity> allPeople)
+        {
+            var possibleActions = new List<Action>();
+            foreach (var timeSpan in dayEvents.Keys)
+            {
+                if ((currentTime.Hour >= timeSpan.Start.Hour && currentTime.Hour <= timeSpan.End.Hour) &&
+                    (currentTime.Minute >= timeSpan.Start.Min && currentTime.Minute <= timeSpan.End.Min))
+                {
+                    possibleActions.Add(dayEvents[timeSpan]);
+                }
+            }
+            possibleActions.ForEach(action => action());
+        }
+
+        public void ScheduleEvent(int hour, int min, Action gameEvent)
+        {
+            var dayTime = new DayTime(hour, min);
+            dayEvents.Add(new DayTimeSpan(dayTime, dayTime), gameEvent);
+        }
+
+        public void SchedualEventDuringInterval(int hourStart, int minStart, int hourEnd, int minEnd, Action gameEvent)
+        {
+            var startTime = new DayTime(hourStart, minStart);
+            var endTime = new DayTime(hourEnd, minEnd);
+            dayEvents.Add(new DayTimeSpan(startTime, endTime), gameEvent);
+        }
+
+        public abstract void OnEndOfDay(List<Entity> allPeople);
     }
 }
 

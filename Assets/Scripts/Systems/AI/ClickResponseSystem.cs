@@ -44,14 +44,14 @@ namespace Assets.Scripts.Systems.AI
             var targetEntity = clickevent.Target;
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
-                ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
+                ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                 var prefab = targetEntity.GetState<PrefabState>();
                 QueueActionsForPrefab(targetEntity, prefab.PrefabName);
             }
             else
             {
-                ActionManagerSystem.Instance.QueueActionForEntity(player, new ReleaseWaypointAction());
-                ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(clickevent.ClickPosition));
+                ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
+                ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(clickevent.ClickPosition));
             }
         }
 
@@ -60,10 +60,10 @@ namespace Assets.Scripts.Systems.AI
             switch (prefab)
             {
                 case Prefabs.Counter:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GetWaypointAction(Goal.RingUp, reserve: true));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToWaypointAction());
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new StartUsingWaypointAction()); //TODO: Need to release this.
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new MakeDrinkAction());
+                    ActionManagerSystem.Instance.QueueAction(player, new GetWaypointAction(Goal.RingUp, reserve: true));
+                    ActionManagerSystem.Instance.QueueAction(player, new GoToWaypointAction());
+                    ActionManagerSystem.Instance.QueueAction(player, new StartUsingWaypointAction()); //TODO: Need to release this.
+                    ActionManagerSystem.Instance.QueueAction(player, new MakeDrinkAction());
                     break;
                 case Prefabs.Person:
                     var playerChild = player.GetState<InventoryState>().Child;
@@ -74,18 +74,18 @@ namespace Assets.Scripts.Systems.AI
                     }
                     else
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(player, TalkToPerson(targetEntity, isCancellable: true));
+                        ActionManagerSystem.Instance.QueueAction(player, TalkToPerson(targetEntity, isCancellable: true));
                     }
                     break;
                 case Prefabs.Drink:
                     //TODO replace with GOTO entity
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new SetTargetEntityAction(targetEntity));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new PickUpItem());
+                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
+                    ActionManagerSystem.Instance.QueueAction(player, new SetTargetEntityAction(targetEntity));
+                    ActionManagerSystem.Instance.QueueAction(player, new PickUpItem());
                     break;
                 case Prefabs.Washup:
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
-                    ActionManagerSystem.Instance.QueueActionForEntity(player, new DestoryEntityInInventoryAction()); 
+                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
+                    ActionManagerSystem.Instance.QueueAction(player, new DestoryEntityInInventoryAction()); 
                     break;
                 default:
                     break;

@@ -10,9 +10,11 @@ using Assets.Scripts.States.Bar;
 
 namespace Assets.Scripts.Systems.Bar
 {
-    class GlassStackSystem : IInitSystem, IEntityManager, IReactiveEntitySystem
+    class GlassStackSystem : IInitSystem, IEntityManager, IReactiveEntitySystem, IEndInitSystem
     {
         private EntityStateSystem entitySystem;
+
+        private Entity glassStack;
 
         public void OnInit()
         {
@@ -25,12 +27,17 @@ namespace Assets.Scripts.Systems.Bar
         }
         public void OnEntityAdded(Entity stack)
         {
-            CreateNewGlassInStack(stack);
+            glassStack = stack;
+        }
+
+        public void OnEndInit()
+        {
+            CreateNewGlassInStack(glassStack);
         }
 
         public void OnEntityRemoved(Entity entity)
         {
-            // do nothing
+           //Do Nothing
         }
 
         public List<Type> RequiredStates()
@@ -89,5 +96,6 @@ namespace Assets.Scripts.Systems.Bar
                 EntityStateSystem.Instance.RemoveEntity(glass);
             }
         }
+
     }
 }

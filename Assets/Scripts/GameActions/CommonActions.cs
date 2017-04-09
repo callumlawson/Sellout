@@ -26,12 +26,12 @@ namespace Assets.Scripts.GameActions
                     if (Random.value > 0.8f)
                     {
                         var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity,
+                        ActionManagerSystem.Instance.QueueAction(entity,
                             GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
                     }
                     else
                     {
-                        ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
+                        ActionManagerSystem.Instance.QueueAction(entity, Wander());
                     }
                 }
             }
@@ -82,8 +82,8 @@ namespace Assets.Scripts.GameActions
                new GetWaypointAction(Goal.PayFor, true, true, findWaypointTimeout),
                () =>
                {
-                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
-                   ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
+                   ActionManagerSystem.Instance.QueueAction(entity, new ReleaseWaypointAction());
+                   ActionManagerSystem.Instance.QueueAction(entity, new UpdateMoodAction(Mood.Angry));
                }
             ));
             queueForDrink.Add(new GoToWaypointAction());
@@ -92,9 +92,9 @@ namespace Assets.Scripts.GameActions
                 new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, getToWaypointTimeout), //Does not reserve wayponit.
                 () =>
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new ReleaseWaypointAction());
-                    ActionManagerSystem.Instance.QueueActionForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                    ActionManagerSystem.Instance.QueueActionForEntity(entity, Wander());
+                    ActionManagerSystem.Instance.QueueAction(entity, new ReleaseWaypointAction());
+                    ActionManagerSystem.Instance.QueueAction(entity, new UpdateMoodAction(Mood.Angry));
+                    ActionManagerSystem.Instance.QueueAction(entity, Wander());
                 })
             );
             return queueForDrink;

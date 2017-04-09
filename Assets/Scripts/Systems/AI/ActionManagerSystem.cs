@@ -42,7 +42,7 @@ namespace Assets.Scripts.Systems.AI
             Profiler.EndSample();
         }
 
-        public void QueueActionForEntity(Entity entity, GameAction action)
+        public void QueueAction(Entity entity, GameAction action)
         {
             InitActionsIfNone(entity);
             entityActions[entity].Add(action);

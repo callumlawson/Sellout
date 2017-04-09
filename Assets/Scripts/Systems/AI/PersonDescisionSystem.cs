@@ -71,7 +71,7 @@ namespace Assets.Scripts.Systems.AI
                 var main = matchingEntities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == story.Main);
                 if (main != null && ActionManagerSystem.Instance.IsEntityIdle(main))
                 {
-                    ActionManagerSystem.Instance.QueueActionForEntity(main, story.StorySequence(main));
+                    ActionManagerSystem.Instance.QueueAction(main, story.StorySequence(main));
                     toRemove.Add(story);
                     storyScheduled = true;
                 }
@@ -99,8 +99,8 @@ namespace Assets.Scripts.Systems.AI
                     ActionSequence mainSequence;
                     ActionSequence otherSequence;
                     story.DoubleStorySequence(main, other, out mainSequence, out otherSequence);
-                    ActionManagerSystem.Instance.QueueActionForEntity(main, mainSequence);
-                    ActionManagerSystem.Instance.QueueActionForEntity(other, otherSequence);
+                    ActionManagerSystem.Instance.QueueAction(main, mainSequence);
+                    ActionManagerSystem.Instance.QueueAction(other, otherSequence);
                     toRemove.Add(story);
                     storyScheduled = true;
                 }
