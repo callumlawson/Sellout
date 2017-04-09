@@ -18,12 +18,22 @@ namespace Assets.Scripts.Systems
         public Entity stack;       
     }
 
+    public struct DrinkOrder
+    {
+        public DrinkRecipe Recipe;
+        public string OrdererName;
+        public string OrdererSpecies;
+    }
+
     static class EventSystem
     {
+        public static Action PauseEvent = delegate { };
+        public static Action ResumeEvent = delegate { };
+
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
         public static Action StartDrinkMakingEvent = delegate {  };
         public static Action EndDrinkMakingEvent = delegate {  };
-        public static Action<DrinkRecipe> StartDrinkOrderEvent = delegate {  };
+        public static Action<DrinkOrder> StartDrinkOrderEvent = delegate {  };
         public static Action EndDrinkOrderEvent = delegate {  };
 
         public delegate void OnClickEvent(ClickEvent clickEvent);

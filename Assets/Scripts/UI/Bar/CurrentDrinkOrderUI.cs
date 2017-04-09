@@ -7,6 +7,8 @@ public class CurrentDrinkOrderUI : MonoBehaviour
 {
     GameObject panel;
     Text CurrentDrinkText;
+
+    private readonly string DefaultDrinkOrderName = "????";
     
     void Awake()
     {
@@ -21,9 +23,9 @@ public class CurrentDrinkOrderUI : MonoBehaviour
         EventSystem.EndDrinkOrderEvent += OnEndDrinkOrderEvent;
     }
 
-    private void OnStartDrinkOrder(DrinkRecipe drink)
+    private void OnStartDrinkOrder(DrinkOrder drink)
     {
-        var name = drink.DrinkName;
+        var name = drink.Recipe != null ? drink.Recipe.DrinkName : DefaultDrinkOrderName;
         CurrentDrinkText.text = name;
         panel.SetActive(true);
     }

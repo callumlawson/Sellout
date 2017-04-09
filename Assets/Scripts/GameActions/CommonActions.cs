@@ -12,6 +12,7 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
+using Assets.Scripts.Systems;
 
 namespace Assets.Scripts.GameActions
 {
@@ -104,7 +105,10 @@ namespace Assets.Scripts.GameActions
         {
             var orderDrink = new ConditionalActionSequence("OrderDrinkFromPaypoint");
             orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
-            orderDrink.Add(new StartDrinkOrderAction(drinkRecipe));
+            orderDrink.Add(new StartDrinkOrderAction(new DrinkOrder {
+                OrdererName = entity.GetState<NameState>().Name,
+                OrdererSpecies = "Human",
+                Recipe = drinkRecipe }));
             orderDrink.Add(WaitForDrink(entity, drinkRecipe, timeout));
             return orderDrink;
         }

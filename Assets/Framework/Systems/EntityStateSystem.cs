@@ -18,8 +18,11 @@ namespace Assets.Framework.Systems
         private readonly List<IFrameSystem> updateSytems = new List<IFrameSystem>();
         private readonly List<IInitSystem> initSystems = new List<IInitSystem>();
         private readonly List<IEndInitSystem> endInitSystems = new List<IEndInitSystem>();
+        private readonly List<IPausableSystem> pausableSystems = new List<IPausableSystem>();
         private readonly List<Entity> entitiesToRemove = new List<Entity>();
         private readonly EntityManager entityManager;
+
+        private bool paused;
 
         public EntityStateSystem()
         {
@@ -37,6 +40,7 @@ namespace Assets.Framework.Systems
             var entityManagerSystem = system as IEntityManager;
             var initSystem = system as IInitSystem;
             var endInitSystem = system as IEndInitSystem;
+            var pausableSystem = system as IPausableSystem;
 
             if (entityManagerSystem != null)
             {
@@ -77,6 +81,11 @@ namespace Assets.Framework.Systems
             {
                 endInitSystems.Add(endInitSystem);
             }
+
+            if (pausableSystem != null)
+            {
+                pausableSystems.Add(pausableSystem);
+            }
         }
 
         public void Init()
@@ -94,6 +103,11 @@ namespace Assets.Framework.Systems
 
         public void Update()
         {
+            if (paused)
+            {
+                return;
+            }
+
             foreach (var system in updateEntitySystems)
             {
                 system.OnFrame(activeEntitiesPerSystem[system]);
@@ -107,6 +121,11 @@ namespace Assets.Framework.Systems
 
         public void Tick()
         {
+            if (paused)
+            {
+                return;
+            }
+
             foreach (var system in tickEntitySystems)
             {
                 system.Tick(activeEntitiesPerSystem[system]);
@@ -116,6 +135,26 @@ namespace Assets.Framework.Systems
                 system.Tick();
             }
             DeleteMarkedEntities();
+        }
+
+        public void Pause()
+        {
+            paused = true;
+
+            foreach (var system in pausableSystems)
+            {
+                system.Pause(activeEntitiesPerSystem[system]);
+            }
+        }
+
+        public void Resume()
+        {
+            foreach (var system in pausableSystems)
+            {
+                system.Resume(activeEntitiesPerSystem[system]);
+            }
+
+            paused = false;
         }
 
         public Entity CreateEntity(List<IState> states, bool copyStates = true, bool fireEntityAdded = true)

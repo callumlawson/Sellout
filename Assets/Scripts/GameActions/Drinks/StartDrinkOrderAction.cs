@@ -1,14 +1,12 @@
 ﻿using Assets.Scripts.GameActions.Framework;
 using Assets.Framework.Entities;
-using Assets.Scripts.Util;
 using Assets.Scripts.Systems;
-using UnityEngine;
 
 public class StartDrinkOrderAction : GameAction
 {
-    private DrinkRecipe drink;
+    private DrinkOrder drink;
 
-    public StartDrinkOrderAction(DrinkRecipe drink)
+    public StartDrinkOrderAction(DrinkOrder drink)
     {
         this.drink = drink;
     }
