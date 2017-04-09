@@ -54,7 +54,8 @@ namespace Assets.Scripts
 
             //Game
             entitySystem.AddSystem(new TimeSystem());
-          
+
+            entitySystem.AddSystem(new PausingSystem());
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new HealthSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());

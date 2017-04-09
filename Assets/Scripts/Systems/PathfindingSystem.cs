@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
-    class PathfindingSystem : IFrameEntitySystem
+    class PathfindingSystem : IFrameEntitySystem, IPausableSystem
     {
         public List<Type> RequiredStates()
         {
@@ -39,6 +39,24 @@ namespace Assets.Scripts.Systems
                 {
                     navAgent.isStopped = false;
                 }
+            }
+        }
+
+        public void Pause(List<Entity> matchingEntities)
+        {
+            foreach (var entity in matchingEntities)
+            {
+                var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                navAgent.isStopped = true;
+            }
+        }
+
+        public void Resume(List<Entity> matchingEntities)
+        {
+            foreach (var entity in matchingEntities)
+            {
+                var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                navAgent.isStopped = false;
             }
         }
     }
