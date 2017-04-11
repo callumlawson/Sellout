@@ -31,7 +31,16 @@ namespace Assets.Scripts.Visualizers
 
         public void OnFrame()
         {
-            nameTagRectTransform.anchoredPosition = interfaceMonobehaviour.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
+            if (BoundsLookup.Instance.GetBarBounds().Contains(positionState.Position))
+            {
+                nameTag.SetActive(true);
+                nameTagRectTransform.anchoredPosition =
+                    interfaceMonobehaviour.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
+            }
+            else
+            {
+                nameTag.SetActive(false);
+            }
         }
 
         public void OnStopRendering(Entity entity)
