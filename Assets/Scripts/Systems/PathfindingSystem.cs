@@ -19,15 +19,20 @@ namespace Assets.Scripts.Systems
             foreach (var entity in matchingEntities)
             {
                 var pathfindingState = entity.GetState<PathfindingState>();
-                var goal = pathfindingState.GetTargetPosition();
+                var positionGoal = pathfindingState.GetTargetPosition();
                 var paused = pathfindingState.GetPaused();
                 var stoppingDistance = pathfindingState.GetStoppingDistance();
-
                 var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
-                if (goal.HasValue)
+
+                if (positionGoal.HasValue)
                 {
-                    navAgent.destination = goal.Value;
+                    navAgent.updateRotation = true;
+                    navAgent.destination = positionGoal.Value;
                     navAgent.stoppingDistance = stoppingDistance;
+                }
+                else
+                {
+                    navAgent.updateRotation = false;
                 }
 
                 if (paused)

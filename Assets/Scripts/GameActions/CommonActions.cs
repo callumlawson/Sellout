@@ -13,6 +13,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
 using Assets.Scripts.Systems;
+using UnityEditor.IMGUI.Controls;
 
 namespace Assets.Scripts.GameActions
 {
@@ -51,8 +52,12 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence Wander()
         {
             var wander = new ActionSequence("Wander Around");
-            var xyPos = Random.insideUnitCircle * 10;
-            wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
+            var barBounds = BoundsLookup.Instance.GetBarBounds();
+            var widthHeight = barBounds.size * 0.8f;
+            var offset = new Vector3(widthHeight.x / 2.0f - Random.value * widthHeight.x, 0.0f, widthHeight.z / 2.0f - Random.value * widthHeight.z);
+            var target = barBounds.center + offset;
+            target.y = 0;
+            wander.Add(new GoToPositionAction(target));
             return wander;
         }
 
@@ -76,13 +81,11 @@ namespace Assets.Scripts.GameActions
 
         public static ActionSequence ShortSitDown(Entity entity)
         {
-            var sitDown = new ActionSequence("Sit down");
-
+            var sitDown = new ActionSequence("Short Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
             sitDown.Add(new PauseAction(20.0f));
             sitDown.Add(new ReleaseWaypointAction());
-
             return sitDown;
         }
 

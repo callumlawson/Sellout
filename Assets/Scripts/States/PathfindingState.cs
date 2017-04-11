@@ -8,62 +8,67 @@ namespace Assets.Scripts.States
     [Serializable]
     class PathfindingState : IState
     {
-        private SerializableVector3? TargetPosition;
-        private float? TargetRotation;
-        private bool Paused;
-        private float StoppingDistance;
+        private SerializableVector3? targetPosition;
+        private float? targetRotation;
+        private bool paused;
+        private float stoppingDistance;
 
         public PathfindingState(Vector3? targetPosition, float? targetRotation)
         {
-            TargetPosition = targetPosition;
-            TargetRotation = targetRotation;
+            this.targetPosition = targetPosition;
+            this.targetRotation = targetRotation;
         }
 
         public void SetNewTarget(Vector3 targetPosition, float? targetRotation = null)
         {
-            TargetPosition = targetPosition;
-            TargetRotation = targetRotation;
+            this.targetPosition = targetPosition;
+            this.targetRotation = targetRotation;
         }
 
         public void ClearTarget()
         {
-            TargetPosition = null;
-            TargetRotation = null;
+            targetPosition = null;
+            targetRotation = null;
+        }
+
+        public void ClearPosition()
+        {
+            targetPosition = null;
         }
 
         public bool GetPaused()
         {
-            return Paused;
+            return paused;
         }
 
         public void SetPaused(bool paused)
         {
-            Paused = paused;
+            this.paused = paused;
         }
 
         public float GetStoppingDistance()
         {
-            return StoppingDistance;
+            return stoppingDistance;
         }
 
         public void SetStoppingDistance(float stoppingDistance)
         {
-            StoppingDistance = stoppingDistance;
+            this.stoppingDistance = stoppingDistance;
         }
 
         public SerializableVector3? GetTargetPosition()
         {
-            return TargetPosition;
+            return targetPosition;
         }
 
         public float? GetTargetRotation()
         {
-            return TargetRotation;
+            return targetRotation;
         }
 
         public override string ToString()
         {
-            return string.Format("Pathfinding target: {0}", TargetPosition);
+            return string.Format("Pathfinding target: {0}, Angle: {1}", targetPosition, targetRotation);
         }
     }
 }

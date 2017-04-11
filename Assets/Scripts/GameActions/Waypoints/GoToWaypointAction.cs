@@ -14,8 +14,8 @@ namespace Assets.Scripts.GameActions.Waypoints
         private Vector3 targetPosition;
         private float targetRotation;
 
-        private bool destinationReached = false;
-        private bool rotationStarted = false;
+        private bool destinationReached;
+        private bool rotationStarted;
 
         public override void OnStart(Entity entity)
         {
@@ -52,6 +52,7 @@ namespace Assets.Scripts.GameActions.Waypoints
                 }
                 else
                 {
+                    pathfindingState.ClearPosition();
                     var rotationTime = GetRotationTime(entity.GameObject.transform.rotation.eulerAngles.y, pathfindingState.GetTargetRotation().Value);
                     entity.GameObject.transform.DORotate(new Vector3(0, pathfindingState.GetTargetRotation().Value, 0), rotationTime).OnComplete(RotationFinished);
                 }
@@ -61,7 +62,7 @@ namespace Assets.Scripts.GameActions.Waypoints
 
         private float GetRotationTime(float start, float end)
         {
-            var maxTime = 1.0f;
+            var maxTime = 1.5f;
             if (start < 0) start += 360.0f;
             if (end < 0) end += 360.0f;
 
