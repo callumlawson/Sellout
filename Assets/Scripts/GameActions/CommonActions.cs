@@ -74,6 +74,18 @@ namespace Assets.Scripts.GameActions
             return leave;
         }
 
+        public static ActionSequence ShortSitDown(Entity entity)
+        {
+            var sitDown = new ActionSequence("Sit down");
+
+            sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
+            sitDown.Add(new GoToWaypointAction());
+            sitDown.Add(new PauseAction(15.0f));
+            sitDown.Add(new ReleaseWaypointAction());
+
+            return sitDown;
+        }
+
         public static ConditionalActionSequence QueueForDrinkOrder(Entity entity, int findWaypointTimeout = 0, int getToWaypointTimeout = 0)
         {
             var queueForDrink = new ConditionalActionSequence("QueueForDrink");
@@ -162,5 +174,6 @@ namespace Assets.Scripts.GameActions
 
             return orderingAndDrinking;
         }
+
     }
 }

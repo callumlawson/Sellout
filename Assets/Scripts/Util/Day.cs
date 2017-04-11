@@ -18,15 +18,15 @@ internal class FirstDay : Day
 
         ScheduleEvent(11, 10, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
-        ScheduleEvent(12, 0, () => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
+        SchedualEventDuringInterval(12, 0, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
 
         ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
 
-        ScheduleEvent(13, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.Wander()); });
+        SchedualEventDuringInterval(13, 0, 15, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.Wander()); });
 
         ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
 
-        ScheduleEvent(13, 20, () =>
+        ScheduleEvent(15, 20, () =>
         {
             ActionSequence mainSequence;
             ActionSequence otherSequence;
@@ -35,52 +35,12 @@ internal class FirstDay : Day
             ActionManagerSystem.Instance.QueueAction(ellie, otherSequence);
         });
 
-        ScheduleEvent(15, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.LeaveBar()); });
+        ScheduleEvent(18, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.LeaveBar()); });
 
         ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
 
-        //Lunch Rush
-        SchedualEventDuringInterval(12, 0, 14, 0, () =>
-        {
-            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(person))
-                {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-                }
-            }
-        });
-
-        ScheduleEvent(14, 1, () =>
-        {
-            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
-            {
-                ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
-            }
-        });
-
-        //Evening Rush
-        SchedualEventDuringInterval(17, 0, 20, 0, () =>
-        {
-            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(person))
-                {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-                }
-            }
-        });
-
-        SchedualEventDuringInterval(11, 0, 21, 0, () =>
-        {
-            foreach (var walker in EntityQueries.GetNPCSWithName(allPeople, "Expendable"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(walker))
-                {
-                    ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
-                }
-            }
-        });
+        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
+        SchedualRushHours(this, allPeople);
     }
 
     public override void OnEndOfDay(List<Entity> allPeople)
@@ -101,6 +61,14 @@ internal class SecondDay : Day
             );
         });
 
+        ScheduleEvent(13, 40, () =>
+        {
+            ActionManagerSystem.Instance.QueueAction(
+                EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name),
+                StoryActions.GettingFrosty(EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name))
+            );
+        });
+
         ScheduleEvent(17, 3, () =>
         {
             DrugStory.DrugPusherInspectorShowdown(
@@ -109,38 +77,8 @@ internal class SecondDay : Day
             );
         });
 
-        SchedualEventDuringInterval(12, 0, 14, 0, () =>
-        {
-            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(person))
-                {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-                }
-            }
-        });
-
-        SchedualEventDuringInterval(17, 0, 20, 0, () =>
-        {
-            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(person))
-                {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
-                }
-            }
-        });
-
-        SchedualEventDuringInterval(11, 0, 21, 0, () =>
-        {
-            foreach (var walker in EntityQueries.GetNPCSWithName(allPeople, "Expendable"))
-            {
-                if (ActionManagerSystem.Instance.IsEntityIdle(walker))
-                {
-                    ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
-                }
-            }
-        });
+        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
+        SchedualRushHours(this, allPeople);
     }
 
     public override void OnEndOfDay(List<Entity> allPeople)
@@ -221,6 +159,69 @@ namespace Assets.Scripts.Util
         }
 
         public abstract void OnEndOfDay(List<Entity> allPeople);
+
+        public static void SchedualRushHours(Day day, List<Entity> allPeople)
+        {
+            //Lunch Rush
+            day.SchedualEventDuringInterval(12, 0, 14, 0, () =>
+            {
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                {
+                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.95f) //Mean time to happen 25min
+                    {
+                        if (UnityEngine.Random.value > 0.9f)
+                        {
+                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
+                        }
+                        else
+                        {
+                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
+                        }
+                        
+                    }
+                }
+            });
+
+            day.ScheduleEvent(14, 1, () =>
+            {
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                {
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
+                }
+            });
+
+            //Evening Rush
+            day.SchedualEventDuringInterval(17, 0, 20, 0, () =>
+            {
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                {
+                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.95f) //Mean time to happen 25min
+                    {
+                        if (UnityEngine.Random.value > 0.9f)
+                        {
+                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
+                        }
+                        else
+                        {
+                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
+                        }
+                    }
+                }
+            });
+        }
+        public static void SchedualWalkHallway(Day day, List<Entity> entities)
+        {
+            day.SchedualEventDuringInterval(11, 0, 21, 0, () =>
+            {
+                foreach (var walker in entities)
+                {
+                    if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+                    {
+                        ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
+                    }
+                }
+            });
+        }
     }
 }
 
