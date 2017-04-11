@@ -49,15 +49,12 @@ namespace Assets.Scripts.UI
 
         public void OnStartRendering(Entity entity)
         {
-            Debug.Log("Start rendering");
             EventSystem.StartDrinkOrderEvent += OnStartDrinkOrder;
             EventSystem.EndDrinkOrderEvent += OnEndDrinkOrder;
         }
 
         public void OnStartDrinkOrder(DrinkOrder order)
         {
-            Debug.Log("Drink order started.");
-
             nameText.text = order.OrdererName != null ? order.OrdererName : DefaultNameText;
             orderText.text = order.Recipe != null ? order.Recipe.DrinkName : DefaultOrderText;
             speciesText.text = order.OrdererSpecies != null ? order.OrdererSpecies : DefaultSpeciesText;

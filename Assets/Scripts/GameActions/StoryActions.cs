@@ -147,6 +147,9 @@ namespace Assets.Scripts.GameActions
             otherActionSequence.Add(sync3);
 
             mainActionSequence.Add(CommonActions.TalkToPlayer(new TolstoyTwoDialogue()));
+
+            mainActionSequence.Add(CommonActions.LeaveBar());
+            otherActionSequence.Add(CommonActions.LeaveBar());
         }
 
         private class TolstoyOneDialogue : Conversation

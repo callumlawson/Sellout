@@ -47,7 +47,7 @@ namespace Assets.Scripts.Systems
                 currentDay = UpdateDay(currentTime, matchingEntities);
 
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;
-                for (int elapsedMin = 1; elapsedMin <= timeDifferenceInMin; elapsedMin++)
+                for (var elapsedMin = 1; elapsedMin <= timeDifferenceInMin; elapsedMin++)
                 {
                     lastTime = lastTime.AddMinutes(1);
                     if (!GameSettings.DisableStory)

@@ -39,6 +39,7 @@ internal class FirstDay : Day
 
         ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
 
+        //Lunch Rush
         SchedualEventDuringInterval(12, 0, 14, 0, () =>
         {
             foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
@@ -50,13 +51,22 @@ internal class FirstDay : Day
             }
         });
 
+        ScheduleEvent(14, 1, () =>
+        {
+            foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+            {
+                ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
+            }
+        });
+
+        //Evening Rush
         SchedualEventDuringInterval(17, 0, 20, 0, () =>
         {
             foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
             {
                 if (ActionManagerSystem.Instance.IsEntityIdle(person))
                 {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
+                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
                 }
             }
         });
@@ -142,7 +152,6 @@ internal class SecondDay : Day
 
 //We assume that at the start of each day there is no one in the bar. 
 //Def want to replace with with something much more data driven.
-
 namespace Assets.Scripts.Util
 {
     public struct DayTime
@@ -154,6 +163,11 @@ namespace Assets.Scripts.Util
         {
             Hour = hour;
             Min = min;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Hour {0}, Min {1}", Hour, Min);
         }
     }
 
@@ -167,6 +181,10 @@ namespace Assets.Scripts.Util
             Start = start;
             End = end;
         }
+        public override string ToString()
+        {
+            return string.Format("Start time: {0}, End time: {1}", Start, End);
+        }
     }
 
     public abstract class Day
@@ -178,8 +196,10 @@ namespace Assets.Scripts.Util
             var possibleActions = new List<Action>();
             foreach (var timeSpan in dayEvents.Keys)
             {
-                if ((currentTime.Hour >= timeSpan.Start.Hour && currentTime.Hour <= timeSpan.End.Hour) &&
-                    (currentTime.Minute >= timeSpan.Start.Min && currentTime.Minute <= timeSpan.End.Min))
+                if (currentTime.Hour < timeSpan.Start.Hour || currentTime.Hour > timeSpan.End.Hour) continue;
+                if(currentTime.Hour != timeSpan.End.Hour || 
+                   currentTime.Minute >= timeSpan.Start.Min &&
+                   currentTime.Minute <= timeSpan.End.Min)
                 {
                     possibleActions.Add(dayEvents[timeSpan]);
                 }
