@@ -51,7 +51,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence Wander()
         {
             var wander = new ActionSequence("Wander Around");
-            var xyPos = Random.insideUnitCircle * 6;
+            var xyPos = Random.insideUnitCircle * 10;
             wander.Add(new GoToPositionAction(new Vector3(xyPos.x, 0.0f, xyPos.y)));
             return wander;
         }
@@ -80,7 +80,7 @@ namespace Assets.Scripts.GameActions
 
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new PauseAction(15.0f));
+            sitDown.Add(new PauseAction(20.0f));
             sitDown.Add(new ReleaseWaypointAction());
 
             return sitDown;

@@ -167,17 +167,9 @@ namespace Assets.Scripts.Util
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
-                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.95f) //Mean time to happen 25min
+                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
                     {
-                        if (UnityEngine.Random.value > 0.9f)
-                        {
-                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
-                        }
-                        else
-                        {
-                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-                        }
-                        
+                        PickNpcAction(person);
                     }
                 }
             });
@@ -195,20 +187,31 @@ namespace Assets.Scripts.Util
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
-                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.95f) //Mean time to happen 25min
+                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
                     {
-                        if (UnityEngine.Random.value > 0.9f)
-                        {
-                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
-                        }
-                        else
-                        {
-                            ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-                        }
+                        PickNpcAction(person);
                     }
                 }
             });
         }
+
+        private static void PickNpcAction(Entity person)
+        {
+            if (UnityEngine.Random.value > 0.9f)
+            {
+                ActionManagerSystem.Instance.QueueAction(person,
+                    CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
+            }
+            else if (UnityEngine.Random.value > 0.4f)
+            {
+                ActionManagerSystem.Instance.QueueAction(person, CommonActions.ShortSitDown(person));
+            }
+            else
+            {
+                ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
+            }
+        }
+
         public static void SchedualWalkHallway(Day day, List<Entity> entities)
         {
             day.SchedualEventDuringInterval(11, 0, 21, 0, () =>
