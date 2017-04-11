@@ -8,7 +8,6 @@ using Assets.Framework.Entities;
 using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
 using Assets.Scripts.Systems.Cameras;
-using Assets.Scripts.Visualizers.Bar;
 using Assets.Scripts.States.Bar;
 
 namespace Assets.Scripts.Systems.Drinks
@@ -19,7 +18,7 @@ namespace Assets.Scripts.Systems.Drinks
 
         private Entity drink;
 
-        private float drinkZValue = 0f;
+        private float drinkDistanceFromCamera = 2.5f;
 
         private bool usingBar;
 
@@ -55,7 +54,6 @@ namespace Assets.Scripts.Systems.Drinks
                             glassStack = target;
                             if (drink == null)
                             {
-                                drinkZValue = glassStack.GameObject.transform.position.z;
                                 PickUpGlass(player, glassStack);
                             }
                             break;
@@ -66,7 +64,6 @@ namespace Assets.Scripts.Systems.Drinks
                                 if (drinkParent.HasState<GlassStackState>())
                                 {
                                     glassStack = drinkParent;
-                                    drinkZValue = glassStack.GameObject.transform.position.z;
                                     PickUpGlass(player, glassStack);
                                 }
                             }
@@ -125,7 +122,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
 
             drink = requester.GetState<InventoryState>().Child;
-            DrinkColliderIsEnabled(false);
+DrinkColliderIsEnabled(false);
         }
 
         private void WashUpGlass(Entity requester)
@@ -189,7 +186,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
             else if (!usingBar && drink != null)
             {
-                LerpDrinkPosition(GetNewHeldDrinkPosition());
+                drink.GameObject.transform.localPosition = Vector3.zero;
             }
         }
 
@@ -209,6 +206,7 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Bar);
                 usingBar = true;
+                drink = player.GetState<InventoryState>().Child;
             }
         }
 
@@ -222,6 +220,12 @@ namespace Assets.Scripts.Systems.Drinks
                     mixologyBook.GetState<ActiveState>().IsActive = false;
                 }
                 EventSystem.EndDrinkMakingEvent.Invoke();
+
+                if (drink != null)
+                {
+                    drink.GameObject.transform.localPosition = Vector3.zero;
+                }
+
                 usingBar = false;
             }
         }
@@ -244,8 +248,7 @@ namespace Assets.Scripts.Systems.Drinks
         {
             var mousePosition = Input.mousePosition;
             var camera = Camera.main;
-            var distanceFromCamera = drinkZValue - camera.transform.position.z;
-            var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distanceFromCamera));
+            var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
             return worldPoint;
         }
     }
