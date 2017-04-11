@@ -1,5 +1,4 @@
 ﻿using Assets.Framework.Entities;
-using Assets.Scripts.States;
 using UnityEngine;
 using Assets.Scripts.Systems;
 using JetBrains.Annotations;
@@ -9,7 +8,7 @@ namespace Assets.Scripts.Visualizers.Bar
 {
     class GlassStackVisualizer : MonoBehaviour, IEntityVisualizer
     {
-        [UsedImplicitly] public Transform slot;
+        [UsedImplicitly] private Transform slot;
 
         private Entity entity;
 
