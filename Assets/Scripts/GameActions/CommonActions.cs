@@ -85,7 +85,11 @@ namespace Assets.Scripts.GameActions
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
             sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
-            sitDown.Add(new PauseAction(20.0f));
+            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new PauseAction(4.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new PauseAction(3.0f));
             sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new ReleaseWaypointAction());
@@ -173,7 +177,11 @@ namespace Assets.Scripts.GameActions
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
             sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
-            sitDown.Add(new PauseAction(15.0f));
+            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new PauseAction(4.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new PauseAction(3.0f));
             sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new DrinkItemInInventory());
