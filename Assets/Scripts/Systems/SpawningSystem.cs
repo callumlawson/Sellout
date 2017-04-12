@@ -27,7 +27,6 @@ namespace Assets.Scripts.Systems
             SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);
             SpawnPeople(entitySystem);
             SpawnEntitiesFromBlueprints();
-            
         }
 
         public void OnEndInit()
@@ -134,6 +133,7 @@ namespace Assets.Scripts.Systems
                 new ActionBlackboardState(null),
                 new NameState("You", 2.0f),
                 new DialogueOutcomeState(),
+                new PersonAnimationState(AnimationStatus.Moving),
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender),
                 new FaceState(FaceType.Bartender),

@@ -84,8 +84,12 @@ namespace Assets.Scripts.GameActions
             var sitDown = new ActionSequence("Short Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
+            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Sitting));
             sitDown.Add(new PauseAction(20.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Moving));
+            sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new ReleaseWaypointAction());
+            sitDown.Add(Wander());
             return sitDown;
         }
 
@@ -166,14 +170,17 @@ namespace Assets.Scripts.GameActions
 
             var sitDown = new ActionSequence("Sit down");
             orderingAndDrinking.Add(sitDown);
-
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
+            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Sitting));
             sitDown.Add(new PauseAction(15.0f));
+            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Moving));
+            sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new DrinkItemInInventory());
             sitDown.Add(new ReleaseWaypointAction());
             sitDown.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
             sitDown.Add(new PutDownInventoryItemAtWaypoint());
+            sitDown.Add(Wander());
 
             return orderingAndDrinking;
         }

@@ -20,6 +20,7 @@ namespace Assets.Scripts.Systems
             {
                 var pathfindingState = entity.GetState<PathfindingState>();
                 var positionGoal = pathfindingState.GetTargetPosition();
+                var rotationGoal = pathfindingState.GetTargetRotation();
                 var paused = pathfindingState.GetPaused();
                 var stoppingDistance = pathfindingState.GetStoppingDistance();
                 var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Systems
                     navAgent.destination = positionGoal.Value;
                     navAgent.stoppingDistance = stoppingDistance;
                 }
-                else
+                else if (rotationGoal.HasValue)
                 {
                     navAgent.updateRotation = false;
                 }

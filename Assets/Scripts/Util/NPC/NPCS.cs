@@ -92,6 +92,7 @@ namespace Assets.Scripts.Util.NPC
                 new PersonState(),
                 new MoodState(Mood.Happy),
                 new DialogueOutcomeState(),
+                new PersonAnimationState(AnimationStatus.Moving),
                 new ClothingState(npc.Top, npc.Bottom),
                 new HairState(npc.Hair),
                 new FaceState(npc.Face)
