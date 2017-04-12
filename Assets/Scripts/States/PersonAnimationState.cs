@@ -1,27 +1,30 @@
 ﻿using System;
 using Assets.Framework.States;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.States
 {
-    public enum AnimationStatus
-    {
-        Moving, 
-        Sitting
-    }
-
     [Serializable]
     class PersonAnimationState : IState
     {
-        public AnimationStatus CurrentStatus;
+        public Action<AnimationEvent> TriggerAnimation;
+        public Action<AnimationEvent> AnimationComplete;
 
-        public PersonAnimationState(AnimationStatus initStatus)
+        private AnimationEvent lastAnimationEvent;
+
+        public PersonAnimationState()
         {
-            CurrentStatus = initStatus;
+            TriggerAnimation += OnAnimationTriggered;
+        }
+
+        private void OnAnimationTriggered(AnimationEvent animationEvent)
+        {
+            lastAnimationEvent = animationEvent;
         }
 
         public override string ToString()
         {
-            return string.Format("Animation Status: {0}", CurrentStatus);
+            return string.Format("Last animation triggered: {0}", lastAnimationEvent);
         }
     }
 }

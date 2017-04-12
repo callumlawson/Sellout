@@ -2,6 +2,7 @@
 using Assets.Scripts.States;
 using UnityEngine;
 using UnityEngine.AI;
+using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 
 namespace Assets.Scripts.Visualizers
 {
@@ -9,29 +10,27 @@ namespace Assets.Scripts.Visualizers
     {
         private NavMeshAgent agent;
         private Animator animator;
-        private States.PersonAnimationState personAnimationState;
+
+        private PersonAnimationState personAnimationState;
 
         public void OnStartRendering(Entity entity)
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponentInChildren<Animator>();
-            personAnimationState = entity.GetState<States.PersonAnimationState>();
+            personAnimationState = entity.GetState<PersonAnimationState>();
+            personAnimationState.TriggerAnimation += OnTriggerAnimation;
+        }
+
+        private void OnTriggerAnimation(AnimationEvent animationEvent)
+        {
+            animator.SetTrigger(animationEvent.ToString());
         }
 
         public void OnFrame()
         {
-            animator.SetBool("Sitting", personAnimationState.CurrentStatus == AnimationStatus.Sitting);
-            if (personAnimationState.CurrentStatus == AnimationStatus.Moving)
-            {
-                var currentSpeed = agent.velocity.sqrMagnitude;
-                animator.SetFloat("Velocity", currentSpeed);
-                animator.SetBool("Moving", currentSpeed > 0.1f);
-            }
-            else
-            {
-                animator.SetFloat("Velocity", 0.0f);
-                animator.SetBool("Moving", false);
-            }
+            var currentSpeed = agent.velocity.sqrMagnitude;
+            animator.SetFloat("Velocity", currentSpeed);
+            animator.SetBool("Moving", currentSpeed > 0.1f);
         }
 
         public void OnStopRendering(Entity entity)

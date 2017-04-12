@@ -1,6 +1,8 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions
 {
@@ -8,16 +10,16 @@ namespace Assets.Scripts.GameActions
     //have the action succeed when the animation completes.
     class SetAnimationStateAction : GameAction
     {
-        private readonly AnimationStatus animationStatus;
+        private readonly AnimationEvent animationEvent;
 
-        public SetAnimationStateAction(AnimationStatus animationStatus)
+        public SetAnimationStateAction(AnimationEvent animationEvent)
         {
-            this.animationStatus = animationStatus;
+            this.animationEvent = animationEvent;
         }
 
         public override void OnStart(Entity entity)
         {
-            entity.GetState<PersonAnimationState>().CurrentStatus = animationStatus;
+            entity.GetState<PersonAnimationState>().TriggerAnimation(animationEvent);
             ActionStatus = ActionStatus.Succeeded;
         }
 

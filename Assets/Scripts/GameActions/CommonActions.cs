@@ -13,6 +13,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
 using Assets.Scripts.Systems;
+using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 
 namespace Assets.Scripts.GameActions
 {
@@ -83,9 +84,9 @@ namespace Assets.Scripts.GameActions
             var sitDown = new ActionSequence("Short Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Sitting));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(20.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Moving));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new ReleaseWaypointAction());
             sitDown.Add(Wander());
@@ -171,9 +172,9 @@ namespace Assets.Scripts.GameActions
             orderingAndDrinking.Add(sitDown);
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Sitting));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(15.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationStatus.Moving));
+            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new DrinkItemInInventory());
             sitDown.Add(new ReleaseWaypointAction());

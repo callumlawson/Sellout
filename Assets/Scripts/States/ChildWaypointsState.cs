@@ -32,7 +32,7 @@ namespace Assets.Scripts.States
 
         public override string ToString()
         {
-            return "Children: { " + String.Join(",", Children.Select(entity => entity.EntityId.ToString()).ToArray()) + " }";
+            return "Children: { " + string.Join(",", Children.Select(entity => entity.EntityId.ToString()).ToArray()) + " }";
         }
     }
 }

@@ -133,7 +133,7 @@ namespace Assets.Scripts.Systems
                 new ActionBlackboardState(null),
                 new NameState("You", 2.0f),
                 new DialogueOutcomeState(),
-                new PersonAnimationState(AnimationStatus.Moving),
+                new PersonAnimationState(),
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender),
                 new FaceState(FaceType.Bartender),
