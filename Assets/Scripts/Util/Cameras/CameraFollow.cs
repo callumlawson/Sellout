@@ -1,15 +1,17 @@
-﻿using JetBrains.Annotations;
+﻿using DG.Tweening;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts.Util.Cameras
 {
     class CameraFollow : MonoBehaviour, ICameraBehaviour
     {
-        private const float SMOOTH_TIME = 0.3f;
+        private const float SMOOTH_TIME = 0.1f;
 
         [UsedImplicitly] public bool LockX;
         [UsedImplicitly] public float offSetX;
-        [UsedImplicitly] public float offsetY;
+        [UsedImplicitly] public float offSetY;
+        [UsedImplicitly] public float forwardShift;
         [UsedImplicitly] public bool LockY;
         [UsedImplicitly] public bool LockZ;
         [UsedImplicitly] public bool UseSmoothing;
@@ -27,11 +29,13 @@ namespace Assets.Scripts.Util.Cameras
 
         private Collider cameraBounds;
         
+        [UsedImplicitly]
         void Start()
         {
             cameraBounds = GameObject.FindGameObjectWithTag("CameraBounds").GetComponent<Collider>();
         }
 
+        [UsedImplicitly]
         void OnValidate()
         {
             if (target != null)
@@ -47,20 +51,20 @@ namespace Assets.Scripts.Util.Cameras
             var newPos = Vector3.zero;
 
             newPos.x = target.position.x + offSetX;
-            newPos.y = target.position.y + offsetY;
+            newPos.y = target.position.y + offSetY;
             newPos.z = target.position.z;
 
             transform.position = newPos;
 
-            transform.LookAt(target);
+            transform.LookAt(target.position);
 
             followCameraRotation = transform.rotation.eulerAngles;
         }
 
+        [UsedImplicitly]
         private void Awake()
         {
             thisTransform = transform;
-
             velocity = new Vector3(0.5f, 0.5f, 0.5f);
         }
 
@@ -84,14 +88,14 @@ namespace Assets.Scripts.Util.Cameras
 
             if (useSmoothing)
             {
-                newPos.x = Mathf.SmoothDamp(thisTransform.position.x, target.position.x + offSetX, ref velocity.x, SMOOTH_TIME);
-                newPos.y = Mathf.SmoothDamp(thisTransform.position.y, target.position.y + offsetY, ref velocity.y, SMOOTH_TIME);
+                newPos.x = Mathf.SmoothDamp(thisTransform.position.x, target.position.x + offSetX, ref velocity.x, SMOOTH_TIME) - forwardShift;
+                newPos.y = Mathf.SmoothDamp(thisTransform.position.y, target.position.y + offSetY, ref velocity.y, SMOOTH_TIME);
                 newPos.z = Mathf.SmoothDamp(thisTransform.position.z, target.position.z, ref velocity.z, SMOOTH_TIME);
             }
             else
             {
-                newPos.x = target.position.x + offSetX;
-                newPos.y = target.position.y + offsetY;
+                newPos.x = target.position.x + offSetX - forwardShift;
+                newPos.y = target.position.y + offSetY;
                 newPos.z = target.position.z;
             }
 
