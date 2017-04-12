@@ -15,7 +15,7 @@ namespace Assets.Scripts.Systems
     public struct TakeGlassRequest
     {
         public Entity Requester;
-        public Entity stack;       
+        public Entity Stack;       
     }
 
     public struct DrinkOrder

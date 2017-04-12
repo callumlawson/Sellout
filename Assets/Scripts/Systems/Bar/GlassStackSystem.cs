@@ -48,7 +48,7 @@ namespace Assets.Scripts.Systems.Bar
         private void OnTakeGlass(TakeGlassRequest request)
         {
             var requester = request.Requester;
-            var stack = request.stack;
+            var stack = request.Stack;
 
             if (!stack.HasState<InventoryState>())
             {

@@ -25,7 +25,7 @@ namespace Assets.Scripts.Visualizers.Bar
 
         private void OnTakeGlass(TakeGlassRequest request)
         {
-            if (request.stack == entity)
+            if (request.Stack == entity)
             {
                 var originalY = slot.position.y;
                 slot.localPosition = new Vector3(slot.localPosition.x, -0.6f, slot.localPosition.z);

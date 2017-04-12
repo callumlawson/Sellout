@@ -114,7 +114,7 @@ namespace Assets.Scripts.Systems.Drinks
                 return;
             }
 
-            EventSystem.TakeGlass(new TakeGlassRequest { Requester = requester, stack = stack });
+            EventSystem.TakeGlass(new TakeGlassRequest { Requester = requester, Stack = stack });
             
             if (requester.GetState<InventoryState>().Child == null || requester.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName != Prefabs.Drink)
             {

@@ -33,7 +33,6 @@ namespace Assets.Scripts
 
             entitySystem = new EntityStateSystem();
 
-            //Will want to start right at the end of "Day zero" (So we transition to first scripted day).
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
