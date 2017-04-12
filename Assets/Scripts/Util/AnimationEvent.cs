@@ -4,6 +4,8 @@
     {
         SittingStartTrigger,
         SittingFinishTrigger,
-        ChairTalk1Trigger
+        ChairTalk1Trigger,
+        ItemTakeTrigger,
+        ItemRecieveTrigger
     }
 }

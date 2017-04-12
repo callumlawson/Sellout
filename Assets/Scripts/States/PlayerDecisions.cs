@@ -6,7 +6,7 @@ namespace Assets.Scripts.States
     [Serializable]
     public class PlayerDecisions : IState
     {
-        public bool AcceptedDrugPushersOffer;
-        public bool ToldInspectorAboutDrugPusher;
+        public bool AcceptedDrugPushersOffer = true;
+        public bool ToldInspectorAboutDrugPusher = false;
     }
 }

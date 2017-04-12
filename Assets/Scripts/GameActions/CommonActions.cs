@@ -78,19 +78,19 @@ namespace Assets.Scripts.GameActions
             leave.Add(new GoToPositionAction(Constants.OffstagePostion));
             return leave;
         }
-
+        
         public static ActionSequence ShortSitDown(Entity entity)
         {
             var sitDown = new ActionSequence("Short Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(6.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(4.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(3.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new ReleaseWaypointAction());
             sitDown.Add(Wander());
@@ -150,6 +150,8 @@ namespace Assets.Scripts.GameActions
                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
                })
             );
+            waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
+            waitForDrink.Add(new PauseAction(0.8f));
             waitForDrink.Add(new EndDrinkOrderAction());
             waitForDrink.Add(new ReleaseWaypointAction());
             waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
@@ -176,13 +178,13 @@ namespace Assets.Scripts.GameActions
             orderingAndDrinking.Add(sitDown);
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingStartTrigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(6.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(4.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(3.0f));
-            sitDown.Add(new SetAnimationStateAction(AnimationEvent.SittingFinishTrigger));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
             sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
             sitDown.Add(new DrinkItemInInventory());
             sitDown.Add(new ReleaseWaypointAction());

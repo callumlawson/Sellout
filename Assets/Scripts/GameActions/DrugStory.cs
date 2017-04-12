@@ -7,6 +7,7 @@ using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
+using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.GameActions
@@ -53,6 +54,7 @@ namespace Assets.Scripts.GameActions
             }
         }
 
+        //TODO: Sync with player for receive action.
         public static ActionSequence DrugPusherPaysYou(Entity drugPusher)
         {
             var getPayed = new ActionSequence("DrugPusherPaysYou");
@@ -60,8 +62,9 @@ namespace Assets.Scripts.GameActions
             {
                 return getPayed;
             }
-
             getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
+            getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
+            getPayed.Add(new PauseAction(1.0f));
             getPayed.Add(new ModifyMoneyAction(100));
             getPayed.Add(CommonActions.LeaveBar());
             return getPayed;

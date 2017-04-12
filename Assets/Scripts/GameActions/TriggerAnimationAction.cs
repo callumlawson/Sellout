@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
@@ -8,11 +7,11 @@ namespace Assets.Scripts.GameActions
 {
     //TODO: Realised when making this it would be better to trigger animation events and
     //have the action succeed when the animation completes.
-    class SetAnimationStateAction : GameAction
+    class TriggerAnimationAction : GameAction
     {
         private readonly AnimationEvent animationEvent;
 
-        public SetAnimationStateAction(AnimationEvent animationEvent)
+        public TriggerAnimationAction(AnimationEvent animationEvent)
         {
             this.animationEvent = animationEvent;
         }
