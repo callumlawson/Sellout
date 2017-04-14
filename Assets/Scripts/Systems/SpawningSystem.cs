@@ -115,6 +115,8 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());

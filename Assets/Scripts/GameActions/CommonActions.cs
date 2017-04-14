@@ -107,24 +107,28 @@ namespace Assets.Scripts.GameActions
                    {
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
+                           new ConversationAction(Dialogues.WrongDrinkDialogue));
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
+                           new UpdateMoodAction(Mood.Angry));
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
+                           new DestoryEntityInInventoryAction());
                    }
                    else
                    {
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
+                           new UpdateMoodAction(Mood.Angry));
                    }
                })
             );
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
+            waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
             waitForDrink.Add(new PauseAction(0.8f));
             waitForDrink.Add(new EndDrinkOrderAction());
             waitForDrink.Add(new ReleaseWaypointAction());
             waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
-            waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
             return waitForDrink;
         }
 
