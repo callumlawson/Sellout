@@ -14,7 +14,8 @@ namespace Assets.Scripts.Blueprints
             {
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
-                new PrefabState(Prefabs.Washup)
+                new PrefabState(Prefabs.Washup),
+                new TooltipState("Insert glasses to recycle them.")
             };
         }
     }
