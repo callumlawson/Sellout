@@ -65,10 +65,10 @@ internal class SecondDay : Day
 
         ScheduleEvent(13, 40, () =>
         {
-            ActionManagerSystem.Instance.QueueAction(
-                EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name),
-                StoryActions.GettingFrosty(EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name))
-            );
+            var jannet = EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name);
+
+            ActionManagerSystem.Instance.QueueAction(jannet, StoryActions.GettingFrosty(EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name)));
+            ActionManagerSystem.Instance.QueueAction(jannet, CommonActions.LeaveBar());
         });
 
         ScheduleEvent(17, 3, () =>

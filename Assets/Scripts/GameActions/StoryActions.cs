@@ -17,8 +17,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence GettingFrosty(Entity main)
         {
             var sequence = new ActionSequence("GettingFrosty");
-            sequence.Add(CommonActions.QueueForDrinkOrder(main, 0, 0));
-            sequence.Add(new ConversationAction(new WeirdOrderDialogue()));
+            sequence.Add(CommonActions.TalkToPlayer(new WeirdOrderDialogue()));
             sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
             {
                     {DialogueOutcome.Bad, () => {
@@ -83,14 +82,6 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("And make it quick.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i> sigh </i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class WeirdOrderDialogue2 : Conversation
-        {
-            protected override void StartConversation(string nameOfSpeaker)
-            {
-                throw new NotImplementedException();
             }
         }
         #endregion
