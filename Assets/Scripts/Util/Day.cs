@@ -16,9 +16,11 @@ internal class FirstDay : Day
         var ellie = EntityQueries.GetNPC(allPeople, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name);
 
-        ScheduleEvent(11, 10, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
+        ScheduleEvent(11, 02, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
-        SchedualEventDuringInterval(12, 0, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe())); });
+        ScheduleEvent(12, 00, () => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe())); });
+
+        SchedualEventDuringInterval(12, 0, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
 
         ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
 
@@ -163,7 +165,7 @@ namespace Assets.Scripts.Util
         public static void SchedualRushHours(Day day, List<Entity> allPeople)
         {
             //Lunch Rush
-            day.SchedualEventDuringInterval(12, 0, 14, 0, () =>
+            day.SchedualEventDuringInterval(12, 0, 15, 0, () =>
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
@@ -183,7 +185,7 @@ namespace Assets.Scripts.Util
             });
 
             //Evening Rush
-            day.SchedualEventDuringInterval(17, 0, 20, 0, () =>
+            day.SchedualEventDuringInterval(16, 0, 21, 0, () =>
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
