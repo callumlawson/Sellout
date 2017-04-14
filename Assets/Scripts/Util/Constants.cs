@@ -17,8 +17,5 @@ namespace Assets.Scripts.Util
 
         //Drinks
         public const int MaxUnitsInDrink = 6;
-
-        //Position
-        public static readonly SerializableVector3 OffstagePostion = new Vector3(5.63f, 0.0f, 16.49f);
     }
 }

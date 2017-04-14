@@ -18,7 +18,7 @@ internal class FirstDay : Day
 
         ScheduleEvent(11, 10, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
-        SchedualEventDuringInterval(12, 0, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
+        SchedualEventDuringInterval(12, 0, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe())); });
 
         ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
 

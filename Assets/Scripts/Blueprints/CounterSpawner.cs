@@ -17,7 +17,8 @@ namespace Assets.Scripts.Blueprints
                 new RotationState(transform.rotation),
                 new PositionState(transform.position),
                 new PrefabState(Prefabs.Counter),
-                new CounterState()
+                new CounterState(),
+                new TooltipState("Make drinks for customers.")
             };
         }
     }

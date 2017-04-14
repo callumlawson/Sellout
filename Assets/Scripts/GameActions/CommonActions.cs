@@ -75,7 +75,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence LeaveBar()
         {
             var leave = new ActionSequence("Leaving");
-            leave.Add(new GoToPositionAction(Constants.OffstagePostion));
+            leave.Add(new GoToPositionAction(SpawnPoints.BarVisitorSpawnPoint()));
             return leave;
         }
         

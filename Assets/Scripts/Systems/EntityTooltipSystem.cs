@@ -12,7 +12,7 @@ namespace Assets.Scripts.Systems
 {
     class EntityTooltipSystem : IFrameSystem, IInitSystem
     {
-        private const float TooltipTime = 0.2f;
+        private const float TooltipTime = 0.5f;
         private float hoverTime;
         private Entity lastSelectedEntity;
 
@@ -28,11 +28,6 @@ namespace Assets.Scripts.Systems
 
         public void OnFrame()
         {
-            if (!GameSettings.IsDebugOn)
-            {
-                return;
-            }
-
             var selectedEntity = StaticStates.Get<CursorState>().SelectedEntity;
 
             UpdateHoverTime(selectedEntity);
@@ -42,6 +37,11 @@ namespace Assets.Scripts.Systems
 
             if (hoverTime > TooltipTime && selectedEntity != null)
             {
+                if (!GameSettings.IsDebugOn && !selectedEntity.HasState<TooltipState>())
+                {
+                    return;
+                }
+
                 var tooltip = UnityEngine.Object.Instantiate(tooltipWindow);
                 tooltip.GetComponent<RectTransform>().SetParent(tooltipRoot.transform);
                 var textComponent = tooltip.GetComponentInChildren<Text>();
@@ -58,14 +58,18 @@ namespace Assets.Scripts.Systems
 
         private static string TooltipMessage(Entity entity)
         {
-            var message = new StringBuilder();
-            message.Append(string.Format("<b>Entity ID</b>: {0}", entity.EntityId));
-            foreach (var state in entity.DebugStates)
+            if (GameSettings.IsDebugOn)
             {
-                message.Append(Environment.NewLine);
-                message.Append(string.Format("<b>{0}</b> {1}", state.GetType().Name, state));
+                var message = new StringBuilder();
+                message.Append(string.Format("<b>Entity ID</b>: {0}", entity.EntityId));
+                foreach (var state in entity.DebugStates)
+                {
+                    message.Append(Environment.NewLine);
+                    message.Append(string.Format("<b>{0}</b> {1}", state.GetType().Name, state));
+                }
+                return message.ToString();
             }
-            return message.ToString();
+            return entity.GetState<TooltipState>().Tooltip;
         }
 
         private void UpdateHoverTime(Entity entity)
