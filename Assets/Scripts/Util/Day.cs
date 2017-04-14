@@ -199,7 +199,7 @@ namespace Assets.Scripts.Util
 
         private static void PickNpcAction(Entity person)
         {
-            if (UnityEngine.Random.value > 0.85f)
+            if (UnityEngine.Random.value > 0.80f)
             {
                 ActionManagerSystem.Instance.QueueAction(person,
                     CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));

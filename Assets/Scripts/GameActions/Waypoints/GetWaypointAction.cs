@@ -47,7 +47,7 @@ namespace Assets.Scripts.GameActions.Waypoints
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
-            else if (timeoutInMins > 0 && (timeState.Time - startTime).Duration().Minutes > timeoutInMins)
+            else if (timeoutInMins > 0 && (timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

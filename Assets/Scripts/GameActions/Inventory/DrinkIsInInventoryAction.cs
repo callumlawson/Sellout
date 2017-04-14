@@ -35,7 +35,7 @@ namespace Assets.Scripts.GameActions.Inventory
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkState) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
-            if ((timeState.Time - startTime).Duration().Minutes > timeoutInMins)
+            if ((timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }
