@@ -18,7 +18,10 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
-            StandardSoundPlayer.Instance.PlaySfx(SFXEvent.Kaching);
+            if (moneyDelta > 0)
+            {
+                StandardSoundPlayer.Instance.PlaySfx(SFXEvent.Kaching);
+            }
             StaticStates.Get<MoneyState>().ModifyMoney(moneyDelta);
             ActionStatus = ActionStatus.Succeeded;
         }
