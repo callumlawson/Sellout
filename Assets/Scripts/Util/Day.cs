@@ -18,13 +18,13 @@ internal class FirstDay : Day
 
         ScheduleEvent(11, 02, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
-        ScheduleEvent(12, 0, () => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe())); });
-
-        SchedualEventDuringInterval(12, 1, 15, 0,() => { ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.Wander()); });
+        ScheduleEvent(12, 0, () =>
+        {
+            ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe()));
+            ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.LeaveBar());
+        });
 
         ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
-
-        SchedualEventDuringInterval(13, 0, 15, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.Wander()); });
 
         ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
 
@@ -185,7 +185,7 @@ namespace Assets.Scripts.Util
             });
 
             //Evening Rush
-            day.SchedualEventDuringInterval(16, 0, 21, 0, () =>
+            day.SchedualEventDuringInterval(16, 0, 20, 55, () =>
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
@@ -199,12 +199,12 @@ namespace Assets.Scripts.Util
 
         private static void PickNpcAction(Entity person)
         {
-            if (UnityEngine.Random.value > 0.9f)
+            if (UnityEngine.Random.value > 0.85f)
             {
                 ActionManagerSystem.Instance.QueueAction(person,
                     CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
             }
-            else if (UnityEngine.Random.value > 0.4f)
+            else if (UnityEngine.Random.value > 0.3f)
             {
                 ActionManagerSystem.Instance.QueueAction(person, CommonActions.ShortSitDown(person));
             }
