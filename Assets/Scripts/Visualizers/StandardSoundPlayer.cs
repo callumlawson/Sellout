@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Assets.Scripts.Util;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts.Visualizers
@@ -11,6 +12,7 @@ namespace Assets.Scripts.Visualizers
 
         [UsedImplicitly] public AudioClip Click;
         [UsedImplicitly] public AudioClip Pop;
+        [UsedImplicitly] public AudioClip Kaching;
 
         [UsedImplicitly]
         public void Awake()
@@ -26,6 +28,16 @@ namespace Assets.Scripts.Visualizers
         public void PlayPop()
         {
             AudioSource.PlayOneShot(Pop);
+        }
+
+        public void PlaySfx(SFXEvent sfx)
+        {
+            switch (sfx)
+            {
+                case SFXEvent.Kaching: 
+                    AudioSource.PlayOneShot(Kaching);
+                    break;
+            }
         }
     }
 }

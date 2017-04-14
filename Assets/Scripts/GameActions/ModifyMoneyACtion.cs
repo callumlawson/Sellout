@@ -2,6 +2,8 @@
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Util;
+using Assets.Scripts.Visualizers;
 
 namespace Assets.Scripts.GameActions
 {
@@ -16,6 +18,7 @@ namespace Assets.Scripts.GameActions
 
         public override void OnStart(Entity entity)
         {
+            StandardSoundPlayer.Instance.PlaySfx(SFXEvent.Kaching);
             StaticStates.Get<MoneyState>().ModifyMoney(moneyDelta);
             ActionStatus = ActionStatus.Succeeded;
         }
