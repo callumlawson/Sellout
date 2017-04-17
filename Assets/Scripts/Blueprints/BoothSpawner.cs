@@ -17,7 +17,8 @@ namespace Assets.Scripts.Blueprints
                 new BlueprintGameObjectState(gameObject),
                 new PrefabState(Prefabs.Booth),
                 new GoalSatisfierState(new List<Goal> {Goal.Nothing}),
-                new ChildWaypointsState()
+                new ChildWaypointsState(),
+                new InteractiveState(false)
             };
         }
     }

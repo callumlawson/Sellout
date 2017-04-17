@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.States;
+﻿using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.States;
@@ -34,9 +33,14 @@ namespace Assets.Scripts.Systems
 
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
+                    var nowSelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
+                    if (nowSelectedEntity.HasState<InteractiveState>() &&
+                        !nowSelectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
+                    {
+                        return;
+                    }
                     Recursive.ApplyActionRecursively(objectHit.GetEntityObject().transform, AddOutline);
-
-                    StaticStates.Get<CursorState>().SelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
+                    StaticStates.Get<CursorState>().SelectedEntity = nowSelectedEntity;
                 }
                 else
                 {
