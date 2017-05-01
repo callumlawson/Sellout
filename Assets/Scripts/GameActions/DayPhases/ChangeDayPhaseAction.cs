@@ -3,7 +3,7 @@ using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.DayPhases
 {
     public class ChangeDayPhaseAction : GameAction
     {

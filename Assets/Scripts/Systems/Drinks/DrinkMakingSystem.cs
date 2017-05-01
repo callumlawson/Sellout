@@ -15,6 +15,7 @@ namespace Assets.Scripts.Systems.Drinks
     class DrinkMakingSystem : IEntityManager, IInitSystem, IFrameSystem
     {
         private EntityStateSystem entitySystem;
+        private DayPhaseState dayPhase;
 
         private Entity drink;
 
@@ -35,8 +36,10 @@ namespace Assets.Scripts.Systems.Drinks
         {
             EventSystem.StartDrinkMakingEvent += OnStartMakingDrink;
             EventSystem.onClickInteraction += OnClickInteraction;
+            EventSystem.EndDrinkMakingEvent += StopMakingDrink;
 
             player = StaticStates.Get<PlayerState>().Player;
+            dayPhase = StaticStates.Get<DayPhaseState>();
         }
 
         private void OnClickInteraction(ClickEvent clickevent)
@@ -95,9 +98,9 @@ namespace Assets.Scripts.Systems.Drinks
                             break;
                     }
                 }
-                else if (clickevent.MouseButton == 1)
+                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open)
                 {
-                    StopMakingDrink();
+                    EventSystem.EndDrinkMakingEvent.Invoke();
                 }
             }
         }
@@ -212,14 +215,14 @@ DrinkColliderIsEnabled(false);
 
         private void StopMakingDrink()
         {
+            Debug.Log("Stop making drinks!");
             if (usingBar)
             {
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Following);
                 if (mixologyBook != null)
                 {
                     mixologyBook.GetState<ActiveState>().IsActive = false;
-                }
-                EventSystem.EndDrinkMakingEvent.Invoke();
+                }                
 
                 if (drink != null)
                 {

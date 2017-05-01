@@ -44,9 +44,11 @@ namespace Assets.Scripts.Systems
                     break;
                 case DayPhase.Open:
                     SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    EventSystem.StartDrinkMakingEvent.Invoke();
                     break;
                 case DayPhase.Night:
                     SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    EventSystem.EndDrinkMakingEvent.Invoke();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("dayPhase", dayPhase, null);

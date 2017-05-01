@@ -3,6 +3,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.DayPhases;
 using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
@@ -90,6 +91,9 @@ namespace Assets.Scripts.Systems.AI
                 case Prefabs.Console:
                     ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
                     ActionManagerSystem.Instance.QueueAction(player, new ChangeDayPhaseAction());
+                    break;
+                case Prefabs.BarConsole:
+                    ActionManagerSystem.Instance.QueueAction(player, new CloseBarIfOpenAction());
                     break;
             }
         }
