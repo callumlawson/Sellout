@@ -14,6 +14,7 @@
         public const string Camera = "Camera";
         public const string Washup = "Washup";
         public const string Player = "Player";
+        public const string Console = "Console";
 
         //UI
         public const string DrinkMixingUI = "DrinkMixingUI";

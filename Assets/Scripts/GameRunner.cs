@@ -33,6 +33,7 @@ namespace Assets.Scripts
 
             entitySystem = new EntityStateSystem();
 
+            StaticStates.Add(new DayPhaseState(DayPhase.Morning));
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));

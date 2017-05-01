@@ -247,7 +247,6 @@ DrinkColliderIsEnabled(false);
         private Vector3 GetNewHeldDrinkPosition()
         {
             var mousePosition = Input.mousePosition;
-            var camera = Camera.main;
             var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
             return worldPoint;
         }

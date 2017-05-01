@@ -14,7 +14,10 @@ namespace Assets.Scripts.Systems
         private TimeState time;
         private Day currentDay;
         private DateTime lastTime;
+        private DayPhaseState dayPhase;
+        private List<Entity> initPeople;
 
+        private bool DoneFirstDayFadeIn;
         private readonly List<Day> inGameDays = new List<Day> ();
 
         public List<Type> RequiredStates()
@@ -24,26 +27,48 @@ namespace Assets.Scripts.Systems
 
         public void OnEndInit(List<Entity> matchingEntities)
         {
+            initPeople = matchingEntities;
+            dayPhase = StaticStates.Get<DayPhaseState>();
+            dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
             time = StaticStates.Get<TimeState>();
             inGameDays.Add(new FirstDay(matchingEntities));
             inGameDays.Add(new SecondDay(matchingEntities));
         }
 
+        private void OnDayPhaseChanged(DayPhase dayPhase)
+        {
+            switch (dayPhase)
+            {
+                case DayPhase.Morning:
+                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    break;
+                case DayPhase.Open:
+                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    break;
+                case DayPhase.Night:
+                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("dayPhase", dayPhase, null);
+            }
+        }
+
         public void Tick(List<Entity> matchingEntities)
         {
-            if (time.GameEnded)
+            var currentTime = time.Time;
+            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !DoneFirstDayFadeIn)
+            {
+                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
+                DoneFirstDayFadeIn = true;
+            }
+
+            if (time.GameEnded || dayPhase.CurrentDayPhase != DayPhase.Open)
             {
                 return;
             }
 
-            var currentTime = time.Time;
             if (currentTime != lastTime)
             {
-                if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein)
-                {
-                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
-                }
-
                 currentDay = UpdateDay(currentTime, matchingEntities);
 
                 var timeDifferenceInMin = (currentTime - lastTime).Minutes;
@@ -64,7 +89,6 @@ namespace Assets.Scripts.Systems
             if (currentTime.Hour >= Constants.DayEndHour)
             {
                 TriggerEndOfDayAfterDelay(currentTime, matchingEntities);
-
                 currentTime = currentTime.AddHours(Constants.NightLengthInHours);
                 time.Time = currentTime;
                 lastTime = currentTime;

@@ -12,14 +12,21 @@ namespace Assets.Scripts.Systems
         private float secondsSinceLastMinute;
 
         private TimeState timeState;
+        private DayPhaseState dayPhase;
 
         public void OnInit()
         {
+            dayPhase = StaticStates.Get<DayPhaseState>();
             timeState = StaticStates.Get<TimeState>();
         }
 
         public void OnFrame()
         {
+            if (dayPhase.CurrentDayPhase != DayPhase.Open)
+            {
+                return;
+            }
+
             var dt = Time.deltaTime;
             secondsSinceLastMinute += dt;
             if (secondsSinceLastMinute >= Constants.SecondsPerGameMinute)
