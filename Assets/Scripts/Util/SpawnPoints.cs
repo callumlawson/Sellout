@@ -21,10 +21,9 @@ namespace Assets.Scripts.Util
             return waypointPositions[Random.Range(0, waypointPositions.Count)];
         }
 
-        public static Vector3 BehindBarSpawnPoint()
+        private static Vector3 BehindBarSpawnPoint()
         {
-            var waypointPositions = GameObject.FindGameObjectsWithTag("BarSpawnPoint").Select(go => go.transform.position).ToList();
-            return waypointPositions[Random.Range(0, waypointPositions.Count)];
+            return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
         }
 
         public static void ResetPeopleToSpawnPoints(List<Entity> people)

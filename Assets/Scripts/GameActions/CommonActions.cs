@@ -208,5 +208,14 @@ namespace Assets.Scripts.GameActions
             return orderingAndDrinking;
         }
 
+        public static ActionSequence PlayerUseBar()
+        {
+            var useBar = new ActionSequence("Use bar");
+            useBar.Add(new GetWaypointAction(Goal.RingUp, reserve: true));
+            useBar.Add(new GoToWaypointAction());
+            useBar.Add(new StartUsingWaypointAction()); //TODO: Need to release this.
+            useBar.Add(new MakeDrinkAction());
+            return useBar;
+        }
     }
 }

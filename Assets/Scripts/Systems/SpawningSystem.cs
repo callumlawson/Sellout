@@ -133,6 +133,7 @@ namespace Assets.Scripts.Systems
                 new PositionState(position),
                 new PathfindingState(null, null),
                 new ActionBlackboardState(null),
+                //Warning: Changing 'You' to something else will break stuff. 
                 new NameState("You", 2.0f),
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
@@ -141,7 +142,7 @@ namespace Assets.Scripts.Systems
                 new FaceState(FaceType.Bartender),
                 new PersonState()
             });
-            StaticStates.Add(new PlayerState(player));
+            StaticStates.Add(new PlayerState(player, !GameSettings.DisableStory));
             return player;
         }
 

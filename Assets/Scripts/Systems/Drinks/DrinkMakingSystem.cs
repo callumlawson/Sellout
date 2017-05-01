@@ -25,7 +25,7 @@ namespace Assets.Scripts.Systems.Drinks
 
         private Entity mixologyBook;
         private Entity glassStack;
-        private Entity player;
+        private PlayerState playerState;
 
         public void SetEntitySystem(EntityStateSystem ess)
         {
@@ -38,7 +38,7 @@ namespace Assets.Scripts.Systems.Drinks
             EventSystem.onClickInteraction += OnClickInteraction;
             EventSystem.EndDrinkMakingEvent += StopMakingDrink;
 
-            player = StaticStates.Get<PlayerState>().Player;
+            playerState = StaticStates.Get<PlayerState>();
             dayPhase = StaticStates.Get<DayPhaseState>();
         }
 
@@ -57,7 +57,7 @@ namespace Assets.Scripts.Systems.Drinks
                             glassStack = target;
                             if (drink == null)
                             {
-                                PickUpGlass(player, glassStack);
+                                PickUpGlass(playerState.Player, glassStack);
                             }
                             break;
                         case Prefabs.Drink:
@@ -67,7 +67,7 @@ namespace Assets.Scripts.Systems.Drinks
                                 if (drinkParent.HasState<GlassStackState>())
                                 {
                                     glassStack = drinkParent;
-                                    PickUpGlass(player, glassStack);
+                                    PickUpGlass(playerState.Player, glassStack);
                                 }
                             }
                             break;
@@ -77,7 +77,7 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.Washup:
                             if (drink != null)
                             {
-                                WashUpGlass(player);
+                                WashUpGlass(playerState.Player);
                             }
                             break;
                         case Prefabs.Player:
@@ -98,7 +98,7 @@ namespace Assets.Scripts.Systems.Drinks
                             break;
                     }
                 }
-                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open)
+                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.TutorialControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
                 }
@@ -125,7 +125,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
 
             drink = requester.GetState<InventoryState>().Child;
-DrinkColliderIsEnabled(false);
+            DrinkColliderIsEnabled(false);
         }
 
         private void WashUpGlass(Entity requester)
@@ -209,13 +209,12 @@ DrinkColliderIsEnabled(false);
             {
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Bar);
                 usingBar = true;
-                drink = player.GetState<InventoryState>().Child;
+                drink = playerState.Player.GetState<InventoryState>().Child;
             }
         }
 
         private void StopMakingDrink()
         {
-            Debug.Log("Stop making drinks!");
             if (usingBar)
             {
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Following);

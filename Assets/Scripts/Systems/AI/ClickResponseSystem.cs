@@ -17,15 +17,18 @@ namespace Assets.Scripts.Systems.AI
 {
     class ClickResponseSystem : IInitSystem
     {
-        private static Entity player; 
+        private static Entity player;
+
+        private PlayerState playerState;
 
         public void OnInit()
         {
             EventSystem.onClickInteraction += OnClickInteraction;
             player = StaticStates.Get<PlayerState>().Player;
+            playerState = StaticStates.Get<PlayerState>();
         }
 
-        private static void OnClickInteraction(ClickEvent clickevent)
+        private void OnClickInteraction(ClickEvent clickevent)
         {
             if (DialogueSystem.Instance.ConverstationActive)
             {
@@ -47,9 +50,12 @@ namespace Assets.Scripts.Systems.AI
             {
                 ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                 var prefab = targetEntity.GetState<PrefabState>();
-                QueueActionsForPrefab(targetEntity, prefab.PrefabName);
+                if (!playerState.TutorialControlLock || (playerState.TutorialControlLock && prefab.PrefabName == Prefabs.Counter))
+                {
+                    QueueActionsForPrefab(targetEntity, prefab.PrefabName);
+                }
             }
-            else
+            else if (!playerState.TutorialControlLock)
             {
                 ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                 ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(clickevent.ClickPosition));
@@ -61,10 +67,7 @@ namespace Assets.Scripts.Systems.AI
             switch (prefab)
             {
                 case Prefabs.Counter:
-                    ActionManagerSystem.Instance.QueueAction(player, new GetWaypointAction(Goal.RingUp, reserve: true));
-                    ActionManagerSystem.Instance.QueueAction(player, new GoToWaypointAction());
-                    ActionManagerSystem.Instance.QueueAction(player, new StartUsingWaypointAction()); //TODO: Need to release this.
-                    ActionManagerSystem.Instance.QueueAction(player, new MakeDrinkAction());
+                    ActionManagerSystem.Instance.QueueAction(player, CommonActions.PlayerUseBar());
                     break;
                 case Prefabs.Person:
                     var playerChild = player.GetState<InventoryState>().Child;

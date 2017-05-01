@@ -13,7 +13,7 @@ namespace Assets.Scripts.GameActions
 {
     static class TutorialAction
     {
-        public static ActionSequence Tutorial(Entity tutorialGiver)
+        public static ActionSequence Tutorial(Entity tutorialGiver, Entity player)
         {
             var sequence = new ActionSequence("Tutorial");
             sequence.Add(CommonActions.TalkToPlayer(new TutorialDiaglogue()));
@@ -32,7 +32,10 @@ namespace Assets.Scripts.GameActions
                     }
                 }
             }));
-            sequence.Add(CommonActions.GoToPaypointOrderDrinkAndSitDown(tutorialGiver, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 90));
+            //TODO custom drink ordering. 
+            sequence.Add(CommonActions.GoToPaypointAndOrderDrink(tutorialGiver, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 90));
+            sequence.Add(new RemoveTutorialControlLockAction());
+            sequence.Add(CommonActions.ShortSitDown(tutorialGiver));
             return sequence;
         }
 

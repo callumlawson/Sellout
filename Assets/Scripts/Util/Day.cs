@@ -16,8 +16,6 @@ internal class FirstDay : Day
         var ellie = EntityQueries.GetNPC(allPeople, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name);
 
-        ScheduleEvent(11, 02, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
-
         ScheduleEvent(12, 0, () =>
         {
             ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe()));
