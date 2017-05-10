@@ -40,14 +40,14 @@ namespace Assets.Scripts.Systems
             switch (dayPhase)
             {
                 case DayPhase.Morning:
-                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    Locations.ResetPeopleToSpawnPoints(initPeople);
                     break;
                 case DayPhase.Open:
-                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    Locations.ResetPeopleToSpawnPoints(initPeople);
                     EventSystem.StartDrinkMakingEvent.Invoke();
                     break;
                 case DayPhase.Night:
-                    SpawnPoints.ResetPeopleToSpawnPoints(initPeople);
+                    Locations.ResetPeopleToSpawnPoints(initPeople);
                     EventSystem.EndDrinkMakingEvent.Invoke();
                     break;
                 default:

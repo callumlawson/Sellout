@@ -4,7 +4,6 @@
     {
         void StartCameraBehaviour();
         void StopCameraBehaviour();
-
         bool IsFinished();
     }
 }

@@ -8,20 +8,20 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Util
 {
-    public static class SpawnPoints
+    public static class Locations
     {
-        public static Vector3 BarVisitorSpawnPoint()
+        public static Vector3 OutsideDoorLocation()
         {
-            return GameObject.FindGameObjectWithTag("SpawnPoint").transform.position;
+            return GameObject.FindGameObjectWithTag("SpawnPoint").transform.position + (Vector3) Random.insideUnitCircle;
         }
 
-        public static Vector3 RandomHallwaySpawnPoint()
+        public static Vector3 RandomHallwayEndLocation()
         {
             var waypointPositions = GameObject.FindGameObjectsWithTag("Waypoint").Select(go => go.transform.position).ToList();
             return waypointPositions[Random.Range(0, waypointPositions.Count)];
         }
 
-        private static Vector3 BehindBarSpawnPoint()
+        private static Vector3 BehindBarLocation()
         {
             return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
         }
@@ -32,15 +32,15 @@ namespace Assets.Scripts.Util
             {
                 if (person.HasState<NameState>() && person.GetState<NameState>().Name == "You")
                 {
-                    person.GetState<PositionState>().Teleport(BehindBarSpawnPoint());
+                    person.GetState<PositionState>().Teleport(BehindBarLocation());
                 }
                 else if (person.HasState<NameState>() && person.GetState<NameState>().Name == "Expendable")
                 {
-                    person.GetState<PositionState>().Teleport(RandomHallwaySpawnPoint());
+                    person.GetState<PositionState>().Teleport(RandomHallwayEndLocation());
                 }
                 else
                 {
-                    person.GetState<PositionState>().Teleport(BarVisitorSpawnPoint());
+                    person.GetState<PositionState>().Teleport(OutsideDoorLocation());
                 }
             }
         }

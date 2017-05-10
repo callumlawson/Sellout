@@ -3,40 +3,56 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
+using Assets.Scripts.Util.NPC;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Cutscenes
 {
-    static class TutorialAction
+    static class TutorialCutscene
     {
-        public static ActionSequence Tutorial(Entity tutorialGiver, Entity player)
-        {
-            var sequence = new ActionSequence("Tutorial");
-            sequence.Add(CommonActions.TalkToPlayer(new TutorialDiaglogue()));
-            sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
+        public static void Start(List<Entity> matchingEntities) {
+           
+            var mcGraw = EntityQueries.GetNPC(matchingEntities, NPCS.McGraw.Name);
+            var player = EntityQueries.GetNPC(matchingEntities, "You");
+            //var camera = todo
+
+            var mcGrawSequence = new ActionSequence("McGrawTutorial");
+            mcGrawSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
+            mcGrawSequence.Add(new GetWaypointAction(Goal.PayFor));
+            mcGrawSequence.Add(new GoToWaypointAction());
+            mcGrawSequence.Add(new ConversationAction(new TutorialDiaglogue()));
+            mcGrawSequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
             {
                 {
                     DialogueOutcome.Nice, () =>
                     {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(tutorialGiver, new UpdateMoodAction(Mood.Happy));
+                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Happy));
                     }
                 },
                 {
                     DialogueOutcome.Mean, () =>
                     {
-                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(tutorialGiver, new UpdateMoodAction(Mood.Angry));
+                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Angry));
                     }
                 }
             }));
             //TODO custom drink ordering. 
-            sequence.Add(CommonActions.GoToPaypointAndOrderDrink(tutorialGiver, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 90));
-            sequence.Add(new RemoveTutorialControlLockAction());
-            sequence.Add(CommonActions.ShortSitDown(tutorialGiver));
-            return sequence;
+            mcGrawSequence.Add(CommonActions.GoToPaypointAndOrderDrink(mcGraw, DrinkRecipes.GetDrinkRecipe("Mind Meld"), 90));
+            mcGrawSequence.Add(new RemoveTutorialControlLockAction());
+            mcGrawSequence.Add(CommonActions.ShortSitDown(mcGraw));
+
+            var playerSequence = new ActionSequence("PlayerTutorial");
+            playerSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
+            playerSequence.Add(new GetWaypointAction(Goal.RingUp));
+            playerSequence.Add(new GoToWaypointAction());
+
+            ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+            ActionManagerSystem.Instance.QueueAction(player, playerSequence);
         }
 
         private class TutorialDiaglogue : Conversation

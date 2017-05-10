@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
-using Assets.Scripts.GameActions;
+using Assets.Scripts.GameActions.Cutscenes;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
-using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.Systems
 {
@@ -27,17 +25,14 @@ namespace Assets.Scripts.Systems
                 return;
             }
 
-            SpawnPoints.ResetPeopleToSpawnPoints(matchingEntities);
+            Locations.ResetPeopleToSpawnPoints(matchingEntities);
         }
 
         public void Tick(List<Entity> matchingEntities)
         {
             if (!setup)
             {
-                var mcGraw = EntityQueries.GetNPC(matchingEntities, NPCS.McGraw.Name);
-                var player = EntityQueries.GetNPC(matchingEntities, "You");
-              
-                ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw, player));
+                TutorialCutscene.Start(matchingEntities);
                 setup = true;
             }
         }

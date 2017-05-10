@@ -9,14 +9,9 @@ namespace Assets.Scripts.GameActions
     class GoToMovingEntityAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 0.1f;
+        private const float StoppingDistance = 3f;
         private PathfindingState pathfindingState;
         private Entity targetWaypoint;
-        private float stoppingDistance = 2.0f;
-
-        public GoToMovingEntityAction()
-        {
-
-        }
 
         public override void OnStart(Entity entity)
         {
@@ -25,7 +20,7 @@ namespace Assets.Scripts.GameActions
             if (targetWaypoint != null)
             {
                 pathfindingState.SetNewTarget(targetWaypoint.GetState<PositionState>().Position);
-                pathfindingState.SetStoppingDistance(stoppingDistance);
+                pathfindingState.SetStoppingDistance(StoppingDistance);
             }
             else
             {
