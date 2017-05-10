@@ -9,7 +9,7 @@ namespace Assets.Scripts.GameActions
     class GoToMovingEntityAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 0.1f;
-        private const float StoppingDistance = 3f;
+        private const float StoppingDistance = 2f;
         private PathfindingState pathfindingState;
         private Entity targetWaypoint;
 
