@@ -32,7 +32,10 @@ namespace Assets.Scripts.Systems
         {
             if (!setup)
             {
-                TutorialCutscene.Start(matchingEntities);
+                if (!GameSettings.DisableStory)
+                {
+                    TutorialCutscene.Start(matchingEntities);
+                }
                 setup = true;
             }
         }
