@@ -69,6 +69,17 @@ namespace Assets.Scripts.Systems
                 .Where(entity => entity.GetState<UserState>().IsFree());
         }
 
+        public Entity GetWaypointThatSatisfiesGoal(Goal goal)
+        {
+            var satisfiers = entitySystem.GetEntitiesWithState<GoalSatisfierState>().Where(satisfierEntity => satisfierEntity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(goal));
+            if (satisfiers.Count() == 0)
+            {
+                return null;
+            }
+
+            return satisfiers.First();
+        }
+
         public Entity GetWaypointThatSatisfiesGoalWithOcupant(Goal goal, Entity occupant)
         {
             return entitySystem

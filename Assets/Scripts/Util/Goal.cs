@@ -8,6 +8,7 @@
         Wander,
         PayFor,
         RingUp,
-        Storage
+        Storage,
+        WaitForPurchaseWaypoint,
     }
 }
