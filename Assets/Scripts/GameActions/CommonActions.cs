@@ -28,8 +28,7 @@ namespace Assets.Scripts.GameActions
                     if (Random.value > 0.8f)
                     {
                         var drinkRecipe = DrinkRecipes.GetRandomDrinkRecipe();
-                        ActionManagerSystem.Instance.QueueAction(entity,
-                            GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
+                        ActionManagerSystem.Instance.QueueAction(entity, GoToPaypointOrderDrinkAndSitDown(entity, drinkRecipe));
                     }
                     else
                     {
@@ -75,7 +74,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence LeaveBar()
         {
             var leave = new ActionSequence("Leaving");
-            leave.Add(new GoToPositionAction(SpawnPoints.BarVisitorSpawnPoint()));
+            leave.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
             return leave;
         }
         
@@ -97,7 +96,7 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeoutInGameMins)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeoutInGameMins, bool retry = false)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
@@ -105,24 +104,29 @@ namespace Assets.Scripts.GameActions
                () => {
                    if (entity.GetState<InventoryState>().Child != null)
                    {
+                       if (retry) //If retry is true then you are stuck until you don't fail.
+                       {
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkRecipe, 90, true));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation(drinkRecipe.DrinkName)));
+                       }
+                       else
+                       {
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                       }
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
-                           new ConversationAction(Dialogues.WrongDrinkDialogue));
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
-                           new UpdateMoodAction(Mood.Angry));
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
-                           new DestoryEntityInInventoryAction());
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
                    }
                    else
                    {
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity,
-                           new UpdateMoodAction(Mood.Angry));
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
                    }
                })
             );
+            //Only if not failed
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
             waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
             waitForDrink.Add(new PauseAction(0.8f));
@@ -212,5 +216,14 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
+        public static ActionSequence PlayerUseBar()
+        {
+            var useBar = new ActionSequence("Use bar");
+            useBar.Add(new GetWaypointAction(Goal.RingUp, reserve: true));
+            useBar.Add(new GoToWaypointAction());
+            useBar.Add(new StartUsingWaypointAction()); //TODO: Need to release this.
+            useBar.Add(new MakeDrinkAction());
+            return useBar;
+        }
     }
 }

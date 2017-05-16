@@ -9,15 +9,15 @@ namespace Assets.Scripts.GameActions.Inventory
 {
     public class DrinkIsInInventoryAction : GameAction
     {
-        private readonly DrinkState drinkState;
+        private readonly DrinkState drinkToCheckFor;
 
         private readonly int timeoutInMins;
         private DateTime startTime;
         private TimeState timeState;
 
-        public DrinkIsInInventoryAction(DrinkState drinkState, int timeoutInMins)
+        public DrinkIsInInventoryAction(DrinkState drinkToCheckFor, int timeoutInMins)
         {
-            this.drinkState = drinkState;
+            this.drinkToCheckFor = drinkToCheckFor;
             this.timeoutInMins = timeoutInMins;
         }
 
@@ -33,10 +33,11 @@ namespace Assets.Scripts.GameActions.Inventory
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkState) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
+                ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
             if ((timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
             {
+                UnityEngine.Debug.Log("Timedout!");
                 ActionStatus = ActionStatus.Failed;
             }
         }

@@ -1,7 +1,6 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
-using Assets.Scripts.UI;
 using JetBrains.Annotations;
 using UnityEngine;
 

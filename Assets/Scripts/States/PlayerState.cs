@@ -7,10 +7,12 @@ namespace Assets.Scripts.States
     class PlayerState : IState
     {
         public readonly Entity Player;
+        public bool TutorialControlLock;
 
-        public PlayerState(Entity player)
+        public PlayerState(Entity player, bool tutorialControlLock)
         {
             Player = player;
+            TutorialControlLock = tutorialControlLock;
         }
 
         public override string ToString()

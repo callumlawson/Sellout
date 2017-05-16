@@ -105,7 +105,7 @@ namespace Assets.Scripts.Systems
 
         private void SpawnPeople(EntityStateSystem entityStateSystem)
         {
-            var spawnPointPosition = SpawnPoints.BarVisitorSpawnPoint();
+            var spawnPointPosition = Locations.OutsideDoorLocation();
             NPCS.SpawnNpc(entityStateSystem, NPCS.Q, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet, spawnPointPosition);
@@ -117,10 +117,10 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnon(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), SpawnPoints.RandomHallwaySpawnPoint());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
         }
 
         private Entity SpawnPlayer(Vector3 position)
@@ -133,6 +133,7 @@ namespace Assets.Scripts.Systems
                 new PositionState(position),
                 new PathfindingState(null, null),
                 new ActionBlackboardState(null),
+                //Warning: Changing 'You' to something else will break stuff. 
                 new NameState("You", 2.0f),
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
@@ -141,7 +142,7 @@ namespace Assets.Scripts.Systems
                 new FaceState(FaceType.Bartender),
                 new PersonState()
             });
-            StaticStates.Add(new PlayerState(player));
+            StaticStates.Add(new PlayerState(player, !GameSettings.DisableStory));
             return player;
         }
 

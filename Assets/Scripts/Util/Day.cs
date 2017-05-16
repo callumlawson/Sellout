@@ -9,14 +9,17 @@ using Assets.Scripts.Util.NPC;
 
 internal class FirstDay : Day
 {
+    public override void OnMorningStart(List<Entity> allEntities)
+    {
+        //Do nothing.
+    }
+
     public FirstDay(List<Entity> allPeople)
     {
         var q = EntityQueries.GetNPC(allPeople, NPCS.Q.Name);
         var tolstoy = EntityQueries.GetNPC(allPeople, NPCS.Tolstoy.Name);
         var ellie = EntityQueries.GetNPC(allPeople, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name);
-
-        ScheduleEvent(11, 02, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, TutorialAction.Tutorial(mcGraw)); });
 
         ScheduleEvent(12, 0, () =>
         {
@@ -47,12 +50,17 @@ internal class FirstDay : Day
 
     public override void OnEndOfDay(List<Entity> allPeople)
     {
-        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
+        Locations.ResetPeopleToSpawnPoints(allPeople);
     }
 }
 
 internal class SecondDay : Day
 {
+    public override void OnMorningStart(List<Entity> allEntities)
+    {
+        //Do nothing.
+    }
+
     public SecondDay(List<Entity> allPeople)
     {
         ScheduleEvent(11, 13, () =>
@@ -85,7 +93,7 @@ internal class SecondDay : Day
 
     public override void OnEndOfDay(List<Entity> allPeople)
     {
-        SpawnPoints.ResetPeopleToSpawnPoints(allPeople);
+        Locations.ResetPeopleToSpawnPoints(allPeople);
     }
 }
 
@@ -129,6 +137,10 @@ namespace Assets.Scripts.Util
 
     public abstract class Day
     {
+        public abstract void OnMorningStart(List<Entity> allEntities);
+
+        public abstract void OnEndOfDay(List<Entity> allPeople);
+
         private readonly Dictionary<DayTimeSpan, Action> dayEvents = new Dictionary<DayTimeSpan, Action>();
 
         public void UpdateDay(DateTime currentTime, List<Entity> allPeople)
@@ -159,8 +171,6 @@ namespace Assets.Scripts.Util
             var endTime = new DayTime(hourEnd, minEnd);
             dayEvents.Add(new DayTimeSpan(startTime, endTime), gameEvent);
         }
-
-        public abstract void OnEndOfDay(List<Entity> allPeople);
 
         public static void SchedualRushHours(Day day, List<Entity> allPeople)
         {

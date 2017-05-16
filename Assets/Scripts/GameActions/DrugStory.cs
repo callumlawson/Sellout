@@ -25,7 +25,7 @@ namespace Assets.Scripts.GameActions
                     {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher,
                             new UpdateMoodAction(Mood.Happy));
-                        StaticStates.Get<PlayerDecisions>().AcceptedDrugPushersOffer = true;
+                        StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
                     }
                 },
                 {
@@ -33,7 +33,7 @@ namespace Assets.Scripts.GameActions
                     {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher,
                             new UpdateMoodAction(Mood.Angry));
-                        StaticStates.Get<PlayerDecisions>().AcceptedDrugPushersOffer = false;
+                        StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
                     }
                 }
             }));
@@ -58,7 +58,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence DrugPusherPaysYou(Entity drugPusher)
         {
             var getPayed = new ActionSequence("DrugPusherPaysYou");
-            if (!StaticStates.Get<PlayerDecisions>().AcceptedDrugPushersOffer)
+            if (!StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
             {
                 return getPayed;
             }
@@ -83,7 +83,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence InspectorQuestions(Entity security)
         {
             var questionTime = new ActionSequence("InspectorQuestions");
-            questionTime.Add(StaticStates.Get<PlayerDecisions>().AcceptedDrugPushersOffer
+            questionTime.Add(StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer
                 ? CommonActions.TalkToPlayer(new InspectorSuspicious())
                 : CommonActions.TalkToPlayer(new InspectorNice()));
             questionTime.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
@@ -93,7 +93,7 @@ namespace Assets.Scripts.GameActions
                     {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(security,
                             new UpdateMoodAction(Mood.Happy));
-                        StaticStates.Get<PlayerDecisions>().ToldInspectorAboutDrugPusher = true;
+                        StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher = true;
                     }
                 },
                 {
@@ -101,7 +101,7 @@ namespace Assets.Scripts.GameActions
                     {
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(security,
                             new UpdateMoodAction(Mood.Angry));
-                        StaticStates.Get<PlayerDecisions>().ToldInspectorAboutDrugPusher = false;
+                        StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher = false;
                     }
                 }
             }));
@@ -136,8 +136,8 @@ namespace Assets.Scripts.GameActions
         {
             var showdownPusher = new ActionSequence("ShowdownPusher");
             var showdownInspector = new ActionSequence("ShowdownInspector");
-            var tookDrugMoney = StaticStates.Get<PlayerDecisions>().AcceptedDrugPushersOffer;
-            var helpedInspector = StaticStates.Get<PlayerDecisions>().ToldInspectorAboutDrugPusher;
+            var tookDrugMoney = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer;
+            var helpedInspector = StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher;
 
             showdownPusher.Add(CommonActions.Wander());
             showdownInspector.Add(CommonActions.Wander());

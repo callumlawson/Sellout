@@ -17,7 +17,7 @@ namespace Assets.Scripts
     {
         [UsedImplicitly] public bool IsDebugOn;
         [UsedImplicitly] public bool SkipFirstDayFadein;
-        [UsedImplicitly] public bool DisablePeople;
+        [UsedImplicitly] public bool DisableStory;
         [UsedImplicitly] public bool DisableTalkingToPlayer;
 
         private EntityStateSystem entitySystem;
@@ -28,7 +28,7 @@ namespace Assets.Scripts
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
             GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
-            GameSettings.DisableStory = DisablePeople;
+            GameSettings.DisableStory = DisableStory;
             GameSettings.DisableTalkingToPlayer = DisableTalkingToPlayer;
 
             entitySystem = new EntityStateSystem();
@@ -37,7 +37,7 @@ namespace Assets.Scripts
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
-            StaticStates.Add(new PlayerDecisions());
+            StaticStates.Add(new PlayerDecisionsState());
 
             //Debug
             entitySystem.AddSystem(new EntityTooltipSystem());
@@ -74,6 +74,9 @@ namespace Assets.Scripts
             //Player
             entitySystem.AddSystem(new EntityInteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
+
+            //GameStart
+            entitySystem.AddSystem(new GameSetupSystem());
 
             entitySystem.Init();
         }
