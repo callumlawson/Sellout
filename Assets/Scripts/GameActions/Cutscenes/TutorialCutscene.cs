@@ -21,9 +21,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
-            //var director = EntityQueries.GetEntityWithName(matchingEntities, "Director");
 
-            var endOfTutorialSyncPoint = new SyncedAction(new List<Entity> { ellie, tolstoy} );
+            var endOfTutorialSyncPoint = new SyncedAction(new List<Entity> { mcGraw, ellie, tolstoy} );
 
             //McGraw
             var mcGrawSequence = new ActionSequence("McGrawTutorial");
@@ -54,8 +53,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(orderSequence);
             orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkRecipe, 90, true, new DrinkSucsessDialogue()));
             mcGrawSequence.Add(new RemoveTutorialControlLockAction());
+            mcGrawSequence.Add(new FadeToBlackAction());
+            mcGrawSequence.Add(new PauseAction(3.0f));
             mcGrawSequence.Add(endOfTutorialSyncPoint);
-            mcGrawSequence.Add(new TeleportAction(Locations.RandomSeatLocation()));
+            mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
             mcGrawSequence.Add(CommonActions.SitDown());
             ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
@@ -70,7 +71,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var ellieSequence = new ActionSequence("Ellie morning");
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(endOfTutorialSyncPoint);
-            ellieSequence.Add(new TeleportAction(Locations.RandomSeatLocation()));
+            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -78,7 +79,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var tolstoySequence = new ActionSequence("Tolstoy morning");
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(endOfTutorialSyncPoint);
-            tolstoySequence.Add(new TeleportAction(Locations.RandomSeatLocation()));
+            tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }

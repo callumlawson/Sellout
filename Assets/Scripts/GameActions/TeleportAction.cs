@@ -3,29 +3,35 @@ using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.GameActions
 {
     public class TeleportAction : GameAction
     {
         private SerializableVector3 position;
-        private float rotation;
+        private Quaternion? rotation;
 
         public TeleportAction(SerializableVector3 position)
         {
             this.position = position;
         }
 
-        public TeleportAction(SerializableVector3 position, float rotation)
+        public TeleportAction(Transform transform)
         {
-            this.position = position;
-            this.rotation = rotation;
+            position = transform.position;
+            rotation = transform.rotation;
         }
 
         public override void OnStart(Entity entity)
         {
             var positionState = entity.GetState<PositionState>();
             positionState.Teleport(position);
+
+            if (rotation.HasValue)
+            {
+                entity.GameObject.transform.rotation = rotation.Value;
+            }
 
             if (entity.HasState<PathfindingState>())
             {

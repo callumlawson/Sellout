@@ -28,9 +28,24 @@ namespace Assets.Scripts.Util
             return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
         }
 
-        public static Vector3 RandomSeatLocation()
+        public static Transform RandomSeatLocation()
         {
-            return WaypointSystem.Instance.GetFreeWaypointThatSatisfyGoal(Goal.Sit).GetState<PositionState>().Position;
+            return WaypointSystem.Instance.GetFreeWaypointThatSatisfyGoal(Goal.Sit).GameObject.transform;
+        }
+
+        public static Transform SitDownPoint1()
+        {
+            return GameObject.FindGameObjectWithTag("SitDownPoint1").transform;
+        }
+
+        public static Transform SitDownPoint2()
+        {
+            return GameObject.FindGameObjectWithTag("SitDownPoint2").transform;
+        }
+
+        public static Transform SitDownPoint3()
+        {
+            return GameObject.FindGameObjectWithTag("SitDownPoint3").transform;
         }
 
         public static void ResetPeopleToSpawnPoints(List<Entity> people)

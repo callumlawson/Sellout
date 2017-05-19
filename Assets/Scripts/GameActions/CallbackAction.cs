@@ -24,6 +24,7 @@ namespace Assets.Scripts.GameActions
             {
                 action.Invoke();
             }
+            ActionStatus = ActionStatus.Succeeded;
         }
 
         public override void Pause()

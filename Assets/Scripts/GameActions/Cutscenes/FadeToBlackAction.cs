@@ -7,22 +7,23 @@ namespace Assets.Scripts.GameActions.Cutscenes
     {
         public override void OnStart(Entity entity)
         {
-            //TODO
+            UnityEngine.Debug.Log("[Placeholder] Fading to black...");
+            ActionStatus = ActionStatus.Succeeded;
         }
 
         public override void OnFrame(Entity entity)
         {
-            //TODO
+            //Do nothing
         }
 
         public override void Pause()
         {
-            //TODO
+            //Do nothing
         }
 
         public override void Unpause()
         {
-            //TODO
+            //Do nothing
         }
     }
 }

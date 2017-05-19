@@ -22,13 +22,11 @@ namespace Assets.Scripts.GameActions
 
         public override void OnFrame(Entity entity)
         {
-//            UnityEngine.Debug.Log("Entity: " + entity + " on Frame");
+            //Do nothing
         }
 
         public override void OnStart(Entity entity)
         {
-            UnityEngine.Debug.Log("Entity: " + entity + " " + entityToReady.Count);
-
             if (!entityToReady.ContainsKey(entity))
             {
                 UnityEngine.Debug.LogError("Synced action started by entity: " + entity +  " not in synced action.");
@@ -40,7 +38,6 @@ namespace Assets.Scripts.GameActions
 
             if (entityToReady.All(keyvalue => keyvalue.Value))
             {
-                UnityEngine.Debug.Log("Synced action done");
                 ActionStatus = ActionStatus.Succeeded;
             }
         }

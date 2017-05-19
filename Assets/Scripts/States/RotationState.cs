@@ -7,7 +7,7 @@ namespace Assets.Scripts.States
     [Serializable]
     class RotationState : IState
     {
-        public readonly Quaternion Rotation;
+        public Quaternion Rotation;
 
         public RotationState(Quaternion rotation)
         {
