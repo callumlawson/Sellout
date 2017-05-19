@@ -6,7 +6,7 @@ namespace Assets.Scripts.Util
 {
     public static class EntityQueries
     {
-        public static Entity GetNPC(List<Entity> entities, string name)
+        public static Entity GetEntityWithName(List<Entity> entities, string name)
         {
             return entities.Find(entity => entity.HasState<NameState>() && entity.GetState<NameState>().Name == name);
         }

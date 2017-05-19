@@ -16,10 +16,10 @@ internal class FirstDay : Day
 
     public FirstDay(List<Entity> allPeople)
     {
-        var q = EntityQueries.GetNPC(allPeople, NPCS.Q.Name);
-        var tolstoy = EntityQueries.GetNPC(allPeople, NPCS.Tolstoy.Name);
-        var ellie = EntityQueries.GetNPC(allPeople, NPCS.Ellie.Name);
-        var mcGraw = EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name);
+        var q = EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name);
+        var tolstoy = EntityQueries.GetEntityWithName(allPeople, NPCS.Tolstoy.Name);
+        var ellie = EntityQueries.GetEntityWithName(allPeople, NPCS.Ellie.Name);
+        var mcGraw = EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name);
 
         ScheduleEvent(12, 0, () =>
         {
@@ -66,24 +66,24 @@ internal class SecondDay : Day
         ScheduleEvent(11, 13, () =>
         {
             ActionManagerSystem.Instance.QueueAction(
-                EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name),
-                DrugStory.InspectorQuestions(EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name))
+                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
+                DrugStory.InspectorQuestions(EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name))
             );
         });
 
         ScheduleEvent(13, 40, () =>
         {
-            var jannet = EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name);
+            var jannet = EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name);
 
-            ActionManagerSystem.Instance.QueueAction(jannet, StoryActions.GettingFrosty(EntityQueries.GetNPC(allPeople, NPCS.Jannet.Name)));
+            ActionManagerSystem.Instance.QueueAction(jannet, StoryActions.GettingFrosty(EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name)));
             ActionManagerSystem.Instance.QueueAction(jannet, CommonActions.LeaveBar());
         });
 
         ScheduleEvent(17, 3, () =>
         {
             DrugStory.DrugPusherInspectorShowdown(
-                EntityQueries.GetNPC(allPeople, NPCS.McGraw.Name),
-                EntityQueries.GetNPC(allPeople, NPCS.Q.Name)
+                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
+                EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name)
             );
         });
 

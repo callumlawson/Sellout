@@ -96,7 +96,7 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeoutInGameMins, bool retry = false)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, DrinkRecipe drinkRecipe, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
@@ -127,6 +127,10 @@ namespace Assets.Scripts.GameActions
                })
             );
             //Only if not failed
+            if (correctDrinkConversation != null)
+            {
+                waitForDrink.Add(new ConversationAction(correctDrinkConversation));
+            }
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
             waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
             waitForDrink.Add(new PauseAction(0.8f));
@@ -213,6 +217,17 @@ namespace Assets.Scripts.GameActions
             sitDown.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
             sitDown.Add(new PutDownInventoryItemAtWaypoint());
             sitDown.Add(Wander());
+            return sitDown;
+        }
+
+        public static ActionSequence SitDownLoop()
+        {
+            var sitDown = new ActionSequence("Sit down");
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
+            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
+            sitDown.Add(new PauseAction(4.0f));
+            sitDown.Add(new CallbackAction(() => sitDown.Add(SitDownLoop()))); //Lol
             return sitDown;
         }
 

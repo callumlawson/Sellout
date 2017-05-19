@@ -18,7 +18,8 @@ namespace Assets.Scripts.Blueprints
                 new PrefabState(Prefabs.GlassStack),
                 new GlassStackState(),
                 new InventoryState(),
-                new VisibleSlotState()
+                new VisibleSlotState(),
+                new TooltipState("Dispenses glasses for making drinks.")
             };
         }
     }

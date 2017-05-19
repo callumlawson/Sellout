@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;

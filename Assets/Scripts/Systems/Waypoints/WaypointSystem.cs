@@ -62,6 +62,11 @@ namespace Assets.Scripts.Systems
                 .Where(entity => entity.GetState<UserState>().IsFree());
         }
 
+        public Entity GetFreeWaypointThatSatisfyGoal(Goal goal)
+        {
+            return GetFreeWaypointsThatSatisfyGoal(goal).First();
+        }
+
         private IEnumerable<Entity> GetFreeWaypointGroupThatSatisfiesGoals(List<Goal> goals)
         {
             return entitySystem.GetEntitiesWithState<ChildWaypointsState>()

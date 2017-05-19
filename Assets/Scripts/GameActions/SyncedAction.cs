@@ -1,53 +1,58 @@
-﻿using Assets.Framework.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
 
 namespace Assets.Scripts.GameActions
 {
     class SyncedAction : GameAction
     {
-        private Entity one;
-        private Entity two;
-
-        private bool oneReady;
-        private bool twoReady;
+        private readonly Dictionary<Entity, bool> entityToReady = new Dictionary<Entity, bool>();
 
         public SyncedAction(Entity one, Entity two)
         {
-            this.one = one;
-            this.two = two;
+            entityToReady.Add(one, false);
+            entityToReady.Add(two, false);
+        }
+
+        public SyncedAction(List<Entity> entities)
+        {
+            entities.ForEach(entity => entityToReady.Add(entity, false));
         }
 
         public override void OnFrame(Entity entity)
         {
-            
+//            UnityEngine.Debug.Log("Entity: " + entity + " on Frame");
         }
 
         public override void OnStart(Entity entity)
         {
-            if (entity == one)
+            UnityEngine.Debug.Log("Entity: " + entity + " " + entityToReady.Count);
+
+            if (!entityToReady.ContainsKey(entity))
             {
-                oneReady = true;
+                UnityEngine.Debug.LogError("Synced action started by entity: " + entity +  " not in synced action.");
+            }
+            else
+            {
+                entityToReady[entity] = true;
             }
 
-            if (entity == two)
+            if (entityToReady.All(keyvalue => keyvalue.Value))
             {
-                twoReady = true;
-            }
-
-            if (oneReady && twoReady)
-            {
+                UnityEngine.Debug.Log("Synced action done");
                 ActionStatus = ActionStatus.Succeeded;
             }
         }
 
         public override void Pause()
         {
-            
+            //Do nothing
         }
 
         public override void Unpause()
         {
-            
+            //Do nothing
         }
     }
 }

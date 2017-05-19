@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.States;
+using Assets.Scripts.Systems;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,6 +26,11 @@ namespace Assets.Scripts.Util
         private static Vector3 BehindBarLocation()
         {
             return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
+        }
+
+        public static Vector3 RandomSeatLocation()
+        {
+            return WaypointSystem.Instance.GetFreeWaypointThatSatisfyGoal(Goal.Sit).GetState<PositionState>().Position;
         }
 
         public static void ResetPeopleToSpawnPoints(List<Entity> people)
