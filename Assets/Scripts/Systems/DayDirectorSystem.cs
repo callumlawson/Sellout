@@ -4,6 +4,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
+using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using DG.Tweening;
 
@@ -40,13 +41,16 @@ namespace Assets.Scripts.Systems
             switch (dayPhase)
             {
                 case DayPhase.Morning:
+                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
                     Locations.ResetPeopleToSpawnPoints(initPeople);
                     break;
                 case DayPhase.Open:
+                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
                     Locations.ResetPeopleToSpawnPoints(initPeople);
                     EventSystem.StartDrinkMakingEvent.Invoke();
                     break;
                 case DayPhase.Night:
+                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
                     Locations.ResetPeopleToSpawnPoints(initPeople);
                     EventSystem.EndDrinkMakingEvent.Invoke();
                     break;

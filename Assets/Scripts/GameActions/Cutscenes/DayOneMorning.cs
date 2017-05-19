@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
@@ -13,7 +14,7 @@ using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
-    static class TutorialCutscene
+    static class DayOneMorning
     {
         public static void Start(List<Entity> matchingEntities) {
            
@@ -56,8 +57,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(new FadeToBlackAction());
             mcGrawSequence.Add(new PauseAction(3.0f));
             mcGrawSequence.Add(endOfTutorialSyncPoint);
+            mcGrawSequence.Add(new DestoryEntityInInventoryAction());
             mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            mcGrawSequence.Add(CommonActions.SitDown());
+            mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
+            mcGrawSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
             //Player
@@ -72,14 +75,16 @@ namespace Assets.Scripts.GameActions.Cutscenes
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(endOfTutorialSyncPoint);
             ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
+            ellieSequence.Add(new SetConversationAction(new EllieMorningOne()));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
             //Tolstoy
             var tolstoySequence = new ActionSequence("Tolstoy morning");
-            ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
+            tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(endOfTutorialSyncPoint);
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne()));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }
@@ -126,6 +131,44 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("Till later!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("See you!", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i> Say nothing </i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class TolstoyMorningOne : Conversation
+        {
+            protected override void StartConversation(string nameOfSpeaker)
+            {
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WriteNPCLine("Hey, how you doing? Fine? Good.");
+                DialogueSystem.Instance.WriteNPCLine("Don't you think Ellie's great?");
+                DialogueSystem.Instance.WriteNPCLine("You should talk to her.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure. I want to meet everyone.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Perhaps some other time. Got to get the bar ready!", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class EllieMorningOne : Conversation
+        {
+            protected override void StartConversation(string nameOfSpeaker)
+            {
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WriteNPCLine("Hi. Good luck with your new post. I'm sure you'll do fine.");
+                DialogueSystem.Instance.WriteNPCLine("Hmm, Tolstoy really looks like he needs a drink.");
+                DialogueSystem.Instance.WriteNPCLine("He's been all wierd and agitated recently.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Luckily serving drinks is my forte!", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Sure.", EndConversation(DialogueOutcome.Mean));
+            }
+        }
+
+        private class McGrawMorningOne : Conversation
+        {
+            protected override void StartConversation(string nameOfSpeaker)
+            {
+                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.WriteNPCLine("When it's time to open the bar you need to let the crew know.");
+                DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right to let the computer know you are ready.");
+                DialogueSystem.Instance.WriteNPCLine("Good luck!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
         }
     }

@@ -78,7 +78,7 @@ namespace Assets.Scripts.Systems.AI
                     }
                     else
                     {
-                        ActionManagerSystem.Instance.QueueAction(player, TalkToPerson(targetEntity, isCancellable: true));
+                        ActionManagerSystem.Instance.QueueAction(player, TalkToNPC(targetEntity, isCancellable: true));
                     }
                     break;
                 case Prefabs.Drink:
@@ -101,13 +101,24 @@ namespace Assets.Scripts.Systems.AI
             }
         }
 
-        private static ActionSequence TalkToPerson(Entity targetEntity, bool isCancellable = true)
+        private static ActionSequence TalkToNPC(Entity targetEntity, bool isCancellable = true)
         {
             var actions = new ActionSequence("Talk to Person", isCancellable);
             actions.Add(new SetTargetEntityAction(targetEntity));
             actions.Add(new GoToMovingEntityAction());
             actions.Add(new PauseTargetActionSequeunceAction(targetEntity));
-            actions.Add(Random.value > 0.4 ? new ConversationAction(Dialogues.DialogueOne) : new ConversationAction(Dialogues.DialogueTwo));
+            if (targetEntity.HasState<ConversationState>())
+            {
+                var convo = targetEntity.GetState<ConversationState>().Conversation;
+                if (convo != null)
+                {
+                    actions.Add(new ConversationAction(convo));
+                }
+            }
+            else
+            {
+                actions.Add(Random.value > 0.4 ? new ConversationAction(Dialogues.DialogueOne) : new ConversationAction(Dialogues.DialogueTwo));
+            }
             actions.Add(new UnpauseTargetActionSequeunceAction(targetEntity));
             return actions;
         }

@@ -34,7 +34,7 @@ namespace Assets.Scripts.Systems
             {
                 if (!GameSettings.DisableStory)
                 {
-                    TutorialCutscene.Start(matchingEntities);
+                    DayOneMorning.Start(matchingEntities);
                 }
                 setup = true;
             }

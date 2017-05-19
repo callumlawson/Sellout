@@ -91,6 +91,7 @@ namespace Assets.Scripts.Util.NPC
                 new VisibleSlotState(),
                 new PersonState(),
                 new MoodState(Mood.Happy),
+                new ConversationState(null),
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
                 new ClothingState(npc.Top, npc.Bottom),

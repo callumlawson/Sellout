@@ -5,6 +5,7 @@ using System;
 
 namespace Assets.Scripts.Util.Dialogue
 {
+    [Serializable]
     public abstract class Conversation
     {
         private Action onEnd;
