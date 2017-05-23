@@ -1,5 +1,6 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
@@ -7,7 +8,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
     {
         public override void OnStart(Entity entity)
         {
-            UnityEngine.Debug.Log("[Placeholder] Fading to black...");
+            Interface.Instance.BlackFader.FadeToBlack(4.5f);
             ActionStatus = ActionStatus.Succeeded;
         }
 

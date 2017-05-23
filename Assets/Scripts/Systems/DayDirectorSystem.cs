@@ -41,22 +41,26 @@ namespace Assets.Scripts.Systems
             switch (dayPhase)
             {
                 case DayPhase.Morning:
-                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-                    Locations.ResetPeopleToSpawnPoints(initPeople);
+                    ResetNPCs();
                     break;
                 case DayPhase.Open:
-                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-                    Locations.ResetPeopleToSpawnPoints(initPeople);
+                    ResetNPCs();
                     EventSystem.StartDrinkMakingEvent.Invoke();
                     break;
                 case DayPhase.Night:
-                    initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-                    Locations.ResetPeopleToSpawnPoints(initPeople);
+                    ResetNPCs();
                     EventSystem.EndDrinkMakingEvent.Invoke();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("dayPhase", dayPhase, null);
             }
+        }
+
+        private void ResetNPCs()
+        {
+            initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
+            initPeople.ForEach(person => person.GetState<PersonAnimationState>().TriggerAnimation(AnimationEvent.SittingFinishTrigger));
+            Locations.ResetPeopleToSpawnPoints(initPeople);
         }
 
         public void Tick(List<Entity> matchingEntities)

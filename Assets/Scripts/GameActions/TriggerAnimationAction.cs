@@ -7,7 +7,7 @@ namespace Assets.Scripts.GameActions
 {
     //TODO: Realised when making this it would be better to trigger animation events and
     //have the action succeed when the animation completes.
-    class TriggerAnimationAction : GameAction
+    class TriggerAnimationAction : GameAction, ICancellableAction
     {
         private readonly AnimationEvent animationEvent;
 
@@ -35,6 +35,16 @@ namespace Assets.Scripts.GameActions
         public override void Unpause()
         {
             //Do nothing.
+        }
+
+        public void Cancel()
+        {
+            //Do nothing.
+        }
+
+        public bool IsCancellable()
+        {
+            return true;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Assets.Scripts.Visualizers
         {
             positionState = entity.GetState<PositionState>();
             moodBubble = Instantiate(AssetLoader.LoadAsset(Prefabs.MoodBubbleUI));
-            moodBubble.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
+            moodBubble.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
             moodBubble.SetActive(false);
             moodBubbleRectTransform = moodBubble.GetComponent<RectTransform>();
             entity.GetState<MoodState>().MoodEvent += OnMoodUpdated;
@@ -53,9 +53,9 @@ namespace Assets.Scripts.Visualizers
 
             moodBubble.SetActive(true);
             var tweenSequence = DOTween.Sequence();
-            tweenSequence.Append(imageComponent.DOFade(1.0f, 1.0f));
-            tweenSequence.AppendInterval(2.5f);
-            tweenSequence.Append(imageComponent.DOFade(0.0f, 1.0f));
+            tweenSequence.Append(imageComponent.DOFade(1.0f, 0.7f));
+            tweenSequence.AppendInterval(1.8f);
+            tweenSequence.Append(imageComponent.DOFade(0.0f, 0.7f));
             tweenSequence.AppendCallback(() => moodBubble.SetActive(false));
         }
 

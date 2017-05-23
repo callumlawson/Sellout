@@ -106,7 +106,7 @@ namespace Assets.Scripts.GameActions
                    {
                        if (retry) //If retry is true then you are stuck until you don't fail.
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkRecipe, 90, true));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkRecipe, 90, true, correctDrinkConversation));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation(drinkRecipe.DrinkName)));
                        }
                        else
@@ -220,7 +220,7 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ActionSequence SitDown()
+        public static ActionSequence SitDown()        
         {
             var sitDown = new ActionSequence("Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
@@ -228,9 +228,9 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ActionSequence SitDownLoop()
+        public static ConditionalActionSequence SitDownLoop()
         {
-            var sitDown = new ActionSequence("Sit down");
+            var sitDown = new ConditionalActionSequence("Sit down", true);
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(6.0f));
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));

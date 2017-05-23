@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameActions
 {
-    class PauseAction : GameAction
+    class PauseAction : GameAction, ICancellableAction
     {
         private float pauseDuration;
         private float secondsPaused;
@@ -37,6 +37,16 @@ namespace Assets.Scripts.GameActions
         public override void Unpause()
         {
             //Do Nothing;
+        }
+
+        public void Cancel()
+        {
+            //Do Nothing;
+        }
+
+        public bool IsCancellable()
+        {
+            return true;
         }
     }
 }
