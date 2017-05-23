@@ -28,7 +28,7 @@ namespace Assets.Scripts.Visualizers
         {
             positionState = entity.GetState<PositionState>();
             moodBubble = Instantiate(AssetLoader.LoadAsset(Prefabs.MoodBubbleUI));
-            moodBubble.transform.SetParent(interfaceMonobehaviour.gameObject.transform);
+            moodBubble.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
             moodBubble.SetActive(false);
             moodBubbleRectTransform = moodBubble.GetComponent<RectTransform>();
             entity.GetState<MoodState>().MoodEvent += OnMoodUpdated;
