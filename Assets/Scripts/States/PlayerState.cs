@@ -8,11 +8,13 @@ namespace Assets.Scripts.States
     {
         public readonly Entity Player;
         public bool TutorialControlLock;
+        public bool IsUsingBar;
 
-        public PlayerState(Entity player, bool tutorialControlLock)
+        public PlayerState(Entity player, bool tutorialControlLock, bool isUsingBar)
         {
             Player = player;
             TutorialControlLock = tutorialControlLock;
+            IsUsingBar = isUsingBar;
         }
 
         public override string ToString()

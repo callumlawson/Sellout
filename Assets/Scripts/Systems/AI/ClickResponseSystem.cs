@@ -44,6 +44,11 @@ namespace Assets.Scripts.Systems.AI
             {
                 return;
             }
+
+            if (playerState.IsUsingBar)
+            {
+                return;
+            }
             
             var targetEntity = clickevent.Target;
             if (targetEntity != null && targetEntity.HasState<PrefabState>())

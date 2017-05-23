@@ -194,12 +194,12 @@ namespace Assets.Scripts.GameActions
             var orderingAndDrinking = new ConditionalActionSequence("OrderingAndDrinking");
             
             orderingAndDrinking.Add(GoToPaypointAndOrderDrink(entity, drinkRecipe, orderTimeoutInMins));            
-            orderingAndDrinking.Add(SitDown());
+            orderingAndDrinking.Add(SitDownAndDrink());
 
             return orderingAndDrinking;
         }
 
-        public static ActionSequence SitDown()
+        public static ActionSequence SitDownAndDrink()
         {
             var sitDown = new ActionSequence("Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
@@ -217,6 +217,14 @@ namespace Assets.Scripts.GameActions
             sitDown.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
             sitDown.Add(new PutDownInventoryItemAtWaypoint());
             sitDown.Add(Wander());
+            return sitDown;
+        }
+
+        public static ActionSequence SitDown()        
+        {
+            var sitDown = new ActionSequence("Sit down");
+            sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
+            sitDown.Add(new GoToWaypointAction());
             return sitDown;
         }
 

@@ -10,18 +10,26 @@ using Assets.Scripts.GameActions;
 using System.Collections.Generic;
 using System;
 using Assets.Framework.States;
+using System.Linq;
 
-public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
+public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 {
     private Entity purchaseWaypoint;
     private Entity waitForPurchaseWaypoint;
 
+    private GameObject SpawnPoint;
+
     private HashSet<Entity> AllCharacters = new HashSet<Entity>();
     private HashSet<Entity> InUseCharacters = new HashSet<Entity>();
 
+    public void OnInit()
+    {
+        SpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+    }
+
     public void OnEntityAdded(Entity entity)
     {
-        if (entity.GetState<PrefabState>().PrefabName != Prefabs.Player)
+        if (entity.GetState<PrefabState>().PrefabName != Prefabs.Player && entity.GetState<NameState>().Name != "Expendable")
         {
             AllCharacters.Add(entity);
         }
@@ -49,7 +57,7 @@ public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
         {
             purchaseWaypoint = WaypointSystem.Instance.GetWaypointThatSatisfiesGoal(Goal.PayFor);
         }
-        
+
         if (waitForPurchaseWaypoint == null)
         {
             waitForPurchaseWaypoint = WaypointSystem.Instance.GetWaypointThatSatisfiesGoal(Goal.WaitForPurchaseWaypoint);
@@ -61,12 +69,15 @@ public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
             return;
         }
 
-        if (purchaseWaypoint.GetState<UserState>().IsFree())
+        bool purchaseWaypointIsFree = purchaseWaypoint.GetState<UserState>().IsFree();
+        bool waitForPurchaseWaypointIsFree = waitForPurchaseWaypoint.GetState<UserState>().IsFree();
+
+        if (purchaseWaypointIsFree)
         {
             OnPurchaseWaypointFree();
         }
 
-        if (waitForPurchaseWaypoint.GetState<UserState>().IsFree())
+        if (waitForPurchaseWaypointIsFree)
         {
             OnWaitForPurchaseWaypointFree();
         }
@@ -81,6 +92,11 @@ public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
             return;
         }
 
+        if (!ActionManagerSystem.Instance.IsEntityIdle(waitingCharacter))
+        {
+            return;
+        }
+
         waitForPurchaseWaypoint.GetState<UserState>().ClearReserver();
         waitForPurchaseWaypoint.GetState<UserState>().ClearUser();
 
@@ -91,18 +107,26 @@ public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
         ActionManagerSystem.Instance.QueueAction(waitingCharacter, new GoToWaypointAction());
         ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.OrderDrinkFromPayPoint(waitingCharacter, DrinkRecipes.GetRandomDrinkRecipe()));
         ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDown());
+        ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDownLoop());
     }
 
     private void OnWaitForPurchaseWaypointFree()
     {
         var nextCharacter = GetNextCharacter();
 
+        if (nextCharacter == null)
+        {
+            return;
+        }
+
+        //ActionManagerSystem.Instance.QueueAction(nextCharacter, new TeleportAction(SpawnPoint.transform));
+
         InUseCharacters.Add(nextCharacter);
 
         nextCharacter.GetState<ActionBlackboardState>().TargetEntity = waitForPurchaseWaypoint;
         waitForPurchaseWaypoint.GetState<UserState>().Reserve(nextCharacter, "Bar Queue System");
         waitForPurchaseWaypoint.GetState<UserState>().Use(nextCharacter, "Bar Queue System");
-        
+
         ActionManagerSystem.Instance.QueueAction(nextCharacter, new GoToWaypointAction());
     }
 
@@ -110,13 +134,14 @@ public class BarQueueSystem : ITickSystem, IReactiveEntitySystem
     {
         var freeCharacters = new HashSet<Entity>(AllCharacters);
         freeCharacters.ExceptWith(InUseCharacters);
+        var idleCharacters = freeCharacters.Where(entity => ActionManagerSystem.Instance.IsEntityIdle(entity)).ToList();
 
-        if (freeCharacters.Count == 0)
+        if (idleCharacters.Count == 0)
         {
             return null;
         }
 
-        var randomChoice = UnityEngine.Random.Range(0, freeCharacters.Count - 1);
-        return new List<Entity>(freeCharacters)[randomChoice];
+        var randomChoice = UnityEngine.Random.Range(0, idleCharacters.Count - 1);
+        return idleCharacters[randomChoice];
     }
 }

@@ -210,6 +210,7 @@ namespace Assets.Scripts.Systems.Drinks
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Bar);
                 usingBar = true;
                 drink = playerState.Player.GetState<InventoryState>().Child;
+                playerState.IsUsingBar = true;
             }
         }
 
@@ -229,6 +230,7 @@ namespace Assets.Scripts.Systems.Drinks
                 }
 
                 usingBar = false;
+                playerState.IsUsingBar = false;
             }
         }
         

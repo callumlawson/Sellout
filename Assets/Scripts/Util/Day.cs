@@ -21,12 +21,6 @@ internal class FirstDay : Day
         var ellie = EntityQueries.GetEntityWithName(allPeople, NPCS.Ellie.Name);
         var mcGraw = EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name);
 
-        ScheduleEvent(12, 0, () =>
-        {
-            ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.GoToPaypointOrderDrinkAndSitDown(tolstoy, DrinkRecipes.GetRandomDrinkRecipe()));
-            ActionManagerSystem.Instance.QueueAction(tolstoy, CommonActions.LeaveBar());
-        });
-
         ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
 
         ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
@@ -45,7 +39,6 @@ internal class FirstDay : Day
         ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
 
         SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
-        SchedualRushHours(this, allPeople);
     }
 
     public override void OnEndOfDay(List<Entity> allPeople)
