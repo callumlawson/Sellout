@@ -80,7 +80,7 @@ namespace Assets.Scripts.GameActions.Composite
                 Actions.ForEach(action =>
                 {
                     var cancellableAction = action as ICancellableAction;
-                    if (cancellableAction != null) cancellableAction.Cancel();
+                    if (cancellableAction != null && action.IsStarted()) cancellableAction.Cancel();
                 });
                 Actions.Clear();
                 ActionStatus = ActionStatus.Succeeded;

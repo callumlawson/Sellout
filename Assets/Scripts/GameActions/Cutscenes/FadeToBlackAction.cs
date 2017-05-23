@@ -6,9 +6,18 @@ namespace Assets.Scripts.GameActions.Cutscenes
 {
     public class FadeToBlackAction : GameAction
     {
+        private readonly float fadeTimeInSeconds;
+        private readonly string message;
+
+        public FadeToBlackAction(float fadeTimeInSeconds = 5.0f, string message = "")
+        {
+            this.fadeTimeInSeconds = fadeTimeInSeconds;
+            this.message = message;
+        }
+
         public override void OnStart(Entity entity)
         {
-            Interface.Instance.BlackFader.FadeToBlack(4.5f);
+            Interface.Instance.BlackFader.FadeToBlack(fadeTimeInSeconds, message);
             ActionStatus = ActionStatus.Succeeded;
         }
 

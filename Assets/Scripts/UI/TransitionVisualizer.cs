@@ -36,7 +36,7 @@ namespace Assets.Scripts.UI
 
             if (fadeIn)
             {
-                Text.DOFade(1.0f, FadeDuration/4);
+                Text.DOFade(1.0f, FadeDuration/3);
                 Background.DOFade(1.0f, FadeDuration/3);
             }
             else

@@ -42,13 +42,18 @@ namespace Assets.Scripts.Systems
             {
                 case DayPhase.Morning:
                     ResetNPCs();
+                    //Fade handled by the new day flow. 
                     break;
                 case DayPhase.Open:
-                    ResetNPCs();
-                    EventSystem.StartDrinkMakingEvent.Invoke();
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Opening Time", () =>
+                    {
+                        ResetNPCs();
+                        EventSystem.StartDrinkMakingEvent.Invoke();
+                    });
                     break;
                 case DayPhase.Night:
                     ResetNPCs();
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "After Hours");
                     EventSystem.EndDrinkMakingEvent.Invoke();
                     break;
                 default:

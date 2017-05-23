@@ -54,7 +54,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(orderSequence);
             orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkRecipe, 90, true, new DrinkSucsessDialogue()));
             mcGrawSequence.Add(new RemoveTutorialControlLockAction());
-            mcGrawSequence.Add(new FadeToBlackAction());
+            mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright. First day. Just serve the right drinks."));
             mcGrawSequence.Add(new PauseAction(3.0f));
             mcGrawSequence.Add(endOfTutorialSyncPoint);
             mcGrawSequence.Add(new DestoryEntityInInventoryAction());
