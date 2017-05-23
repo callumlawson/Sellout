@@ -220,9 +220,9 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ActionSequence SitDownLoop()
+        public static ConditionalActionSequence SitDownLoop()
         {
-            var sitDown = new ActionSequence("Sit down");
+            var sitDown = new ConditionalActionSequence("Sit down", true);
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             sitDown.Add(new PauseAction(6.0f));
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
