@@ -35,7 +35,7 @@ namespace Assets.Scripts.Systems.AI
                 return;
             }
 
-            if (!ActionManagerSystem.Instance.IsEntityIdle(player))
+            if (!ActionManagerSystem.Instance.IsEntityIdle(player) && !playerState.TutorialControlLock)
             {
                 ActionManagerSystem.Instance.TryClearActionsForEntity(player);
             }
@@ -48,10 +48,10 @@ namespace Assets.Scripts.Systems.AI
             var targetEntity = clickevent.Target;
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
-                ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                 var prefab = targetEntity.GetState<PrefabState>();
                 if (!playerState.TutorialControlLock || (playerState.TutorialControlLock && prefab.PrefabName == Prefabs.Counter))
                 {
+                    ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                     QueueActionsForPrefab(targetEntity, prefab.PrefabName);
                 }
             }
