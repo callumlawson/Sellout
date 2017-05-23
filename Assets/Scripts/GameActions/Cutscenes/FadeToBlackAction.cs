@@ -8,7 +8,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
     {
         public override void OnStart(Entity entity)
         {
-            Interface.Instance.BlackFader.FadeToBlack(5.0f);
+            Interface.Instance.BlackFader.FadeToBlack(4.5f);
             ActionStatus = ActionStatus.Succeeded;
         }
 

@@ -106,7 +106,7 @@ namespace Assets.Scripts.GameActions
                    {
                        if (retry) //If retry is true then you are stuck until you don't fail.
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkRecipe, 90, true));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkRecipe, 90, true, correctDrinkConversation));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation(drinkRecipe.DrinkName)));
                        }
                        else

@@ -53,9 +53,9 @@ namespace Assets.Scripts.Visualizers
 
             moodBubble.SetActive(true);
             var tweenSequence = DOTween.Sequence();
-            tweenSequence.Append(imageComponent.DOFade(1.0f, 1.0f));
-            tweenSequence.AppendInterval(2.5f);
-            tweenSequence.Append(imageComponent.DOFade(0.0f, 1.0f));
+            tweenSequence.Append(imageComponent.DOFade(1.0f, 0.7f));
+            tweenSequence.AppendInterval(1.8f);
+            tweenSequence.Append(imageComponent.DOFade(0.0f, 0.7f));
             tweenSequence.AppendCallback(() => moodBubble.SetActive(false));
         }
 
