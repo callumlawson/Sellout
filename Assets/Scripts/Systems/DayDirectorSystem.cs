@@ -64,7 +64,7 @@ namespace Assets.Scripts.Systems
         private void ResetNPCs()
         {
             initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-            initPeople.ForEach(person => person.GetState<PersonAnimationState>().TriggerAnimation(AnimationEvent.SittingFinishTrigger));
+            initPeople.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
             Locations.ResetPeopleToSpawnPoints(initPeople);
         }
 

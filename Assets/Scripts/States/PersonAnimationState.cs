@@ -8,7 +8,8 @@ namespace Assets.Scripts.States
     class PersonAnimationState : IState
     {
         public Action<AnimationEvent> TriggerAnimation;
-
+        public Action ResetAnimationState = null;
+            
         private AnimationEvent lastAnimationEvent;
 
         public PersonAnimationState()

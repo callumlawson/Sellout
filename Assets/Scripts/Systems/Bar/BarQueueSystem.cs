@@ -17,28 +17,28 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
     private Entity purchaseWaypoint;
     private Entity waitForPurchaseWaypoint;
 
-    private GameObject SpawnPoint;
+    private GameObject spawnPoint;
 
-    private HashSet<Entity> AllCharacters = new HashSet<Entity>();
-    private HashSet<Entity> InUseCharacters = new HashSet<Entity>();
+    private readonly HashSet<Entity> allCharacters = new HashSet<Entity>();
+    private readonly HashSet<Entity> inUseCharacters = new HashSet<Entity>();
 
     public void OnInit()
     {
-        SpawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
     }
 
     public void OnEntityAdded(Entity entity)
     {
         if (entity.GetState<PrefabState>().PrefabName != Prefabs.Player && entity.GetState<NameState>().Name != "Expendable")
         {
-            AllCharacters.Add(entity);
+            allCharacters.Add(entity);
         }
     }
 
     public void OnEntityRemoved(Entity entity)
     {
-        AllCharacters.Remove(entity);
-        InUseCharacters.Remove(entity);
+        allCharacters.Remove(entity);
+        inUseCharacters.Remove(entity);
     }
 
     public List<Type> RequiredStates()
@@ -121,7 +121,7 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 
         //ActionManagerSystem.Instance.QueueAction(nextCharacter, new TeleportAction(SpawnPoint.transform));
 
-        InUseCharacters.Add(nextCharacter);
+        inUseCharacters.Add(nextCharacter);
 
         nextCharacter.GetState<ActionBlackboardState>().TargetEntity = waitForPurchaseWaypoint;
         waitForPurchaseWaypoint.GetState<UserState>().Reserve(nextCharacter, "Bar Queue System");
@@ -132,8 +132,8 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 
     private Entity GetNextCharacter()
     {
-        var freeCharacters = new HashSet<Entity>(AllCharacters);
-        freeCharacters.ExceptWith(InUseCharacters);
+        var freeCharacters = new HashSet<Entity>(allCharacters);
+        freeCharacters.ExceptWith(inUseCharacters);
         var idleCharacters = freeCharacters.Where(entity => ActionManagerSystem.Instance.IsEntityIdle(entity)).ToList();
 
         if (idleCharacters.Count == 0)
