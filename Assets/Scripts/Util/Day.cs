@@ -16,27 +16,27 @@ internal class FirstDay : Day
 
     public FirstDay(List<Entity> allPeople)
     {
-        var q = EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name);
-        var tolstoy = EntityQueries.GetEntityWithName(allPeople, NPCS.Tolstoy.Name);
-        var ellie = EntityQueries.GetEntityWithName(allPeople, NPCS.Ellie.Name);
-        var mcGraw = EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name);
-
-        ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
-
-        ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
-
-        ScheduleEvent(15, 20, () =>
-        {
-            ActionSequence mainSequence;
-            ActionSequence otherSequence;
-            StoryActions.TolstoyRomantic(tolstoy, ellie, out mainSequence, out otherSequence);
-            ActionManagerSystem.Instance.QueueAction(tolstoy, mainSequence);
-            ActionManagerSystem.Instance.QueueAction(ellie, otherSequence);
-        });
-
-        ScheduleEvent(18, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.LeaveBar()); });
-
-        ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
+//        var q = EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name);
+//        var tolstoy = EntityQueries.GetEntityWithName(allPeople, NPCS.Tolstoy.Name);
+//        var ellie = EntityQueries.GetEntityWithName(allPeople, NPCS.Ellie.Name);
+//        var mcGraw = EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name);
+//
+//        ScheduleEvent(12, 1, () => { ActionManagerSystem.Instance.QueueAction(mcGraw, CommonActions.LeaveBar()); });
+//
+//        ScheduleEvent(13, 15, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherIntro(q)); });
+//
+//        ScheduleEvent(15, 20, () =>
+//        {
+//            ActionSequence mainSequence;
+//            ActionSequence otherSequence;
+//            StoryActions.TolstoyRomantic(tolstoy, ellie, out mainSequence, out otherSequence);
+//            ActionManagerSystem.Instance.QueueAction(tolstoy, mainSequence);
+//            ActionManagerSystem.Instance.QueueAction(ellie, otherSequence);
+//        });
+//
+//        ScheduleEvent(18, 0, () => { ActionManagerSystem.Instance.QueueAction(ellie, CommonActions.LeaveBar()); });
+//
+//        ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
 
         SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
     }
@@ -56,32 +56,32 @@ internal class SecondDay : Day
 
     public SecondDay(List<Entity> allPeople)
     {
-        ScheduleEvent(11, 13, () =>
-        {
-            ActionManagerSystem.Instance.QueueAction(
-                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
-                DrugStory.InspectorQuestions(EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name))
-            );
-        });
-
-        ScheduleEvent(13, 40, () =>
-        {
-            var jannet = EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name);
-
-            ActionManagerSystem.Instance.QueueAction(jannet, StoryActions.GettingFrosty(EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name)));
-            ActionManagerSystem.Instance.QueueAction(jannet, CommonActions.LeaveBar());
-        });
-
-        ScheduleEvent(17, 3, () =>
-        {
-            DrugStory.DrugPusherInspectorShowdown(
-                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
-                EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name)
-            );
-        });
-
+//        ScheduleEvent(11, 13, () =>
+//        {
+//            ActionManagerSystem.Instance.QueueAction(
+//                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
+//                DrugStory.InspectorQuestions(EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name))
+//            );
+//        });
+//
+//        ScheduleEvent(13, 40, () =>
+//        {
+//            var jannet = EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name);
+//
+//            ActionManagerSystem.Instance.QueueAction(jannet, StoryActions.GettingFrosty(EntityQueries.GetEntityWithName(allPeople, NPCS.Jannet.Name)));
+//            ActionManagerSystem.Instance.QueueAction(jannet, CommonActions.LeaveBar());
+//        });
+//
+//        ScheduleEvent(17, 3, () =>
+//        {
+//            DrugStory.DrugPusherInspectorShowdown(
+//                EntityQueries.GetEntityWithName(allPeople, NPCS.McGraw.Name),
+//                EntityQueries.GetEntityWithName(allPeople, NPCS.Q.Name)
+//            );
+//        });
+//
         SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
-        SchedualRushHours(this, allPeople);
+//        SchedualRushHours(this, allPeople);
     }
 
     public override void OnEndOfDay(List<Entity> allPeople)
