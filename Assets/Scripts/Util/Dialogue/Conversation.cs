@@ -28,7 +28,7 @@ namespace Assets.Scripts.Util.Dialogue
             DialogueSystem.Instance.UnpauseDialogue();
         }
 
-        protected abstract void StartConversation(string nameOfSpeaker);      
+        protected abstract void StartConversation(string converstationInitiator);      
 
         protected Action EndConversation(DialogueOutcome outcome)
         {

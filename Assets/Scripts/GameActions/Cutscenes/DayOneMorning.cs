@@ -97,9 +97,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class TutorialIntroDiaglogue : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("<i>Looks at you expectantly</i>");
                 DialogueSystem.Instance.WriteNPCLine("Wait, you arn't Dave...");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Nope, I'm new. Poor Dave had to jump ship. What can I get you this morning?", SoItBegings);
@@ -127,9 +127,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class DrinkSucsessDialogue : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That's... actually pretty good.");
                 DialogueSystem.Instance.WriteNPCLine("As you're new I'll give you some advice. Watch out for Q.");
                 DialogueSystem.Instance.WriteNPCLine("Q and Dave got up to all sorts of trouble. Ship security were loitering here all the time.");
@@ -142,9 +142,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class TolstoyMorningOne : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
                 DialogueSystem.Instance.WriteNPCLine("Hey, how you doing? Fine? Good.");
                 DialogueSystem.Instance.WriteNPCLine("Don't you think Ellie's great?");
                 DialogueSystem.Instance.WriteNPCLine("You should talk to her.");
@@ -155,9 +155,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class EllieMorningOne : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue("Ellie");
                 DialogueSystem.Instance.WriteNPCLine("Hi. Good luck with your new post. I'm sure you'll do fine.");
                 DialogueSystem.Instance.WriteNPCLine("Hmm, Tolstoy really looks like he needs a drink.");
                 DialogueSystem.Instance.WriteNPCLine("He's been all wierd and agitated recently.");
@@ -168,11 +168,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class McGrawMorningOne : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue("McGraw");
                 DialogueSystem.Instance.WriteNPCLine("When it's time to open the bar you need to let the crew know.");
-                DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right to let the computer know you are ready.");
+                DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right inform the ship's computer you are ready.");
                 DialogueSystem.Instance.WriteNPCLine("Good luck!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }

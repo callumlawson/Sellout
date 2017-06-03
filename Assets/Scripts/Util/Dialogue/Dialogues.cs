@@ -17,9 +17,9 @@ namespace Assets.Scripts.Util.Dialogue
                 this.time = time;
             }
 
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("The time is: " + time);
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Errrr, Thanks.</i>", EndConversation(DialogueOutcome.Nice));
             }
@@ -34,9 +34,9 @@ namespace Assets.Scripts.Util.Dialogue
                 this.drinkName = drinkName;
             }
 
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I'd like a " + drinkName + " please.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
@@ -51,9 +51,9 @@ namespace Assets.Scripts.Util.Dialogue
                 this.drinkName = drinkName;
             }
 
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That's not right! I ordered a " + drinkName + ". Use the menu to your left.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
@@ -61,9 +61,9 @@ namespace Assets.Scripts.Util.Dialogue
 
         public class WrongDrinkConversation : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Figures.</i>", EndConversation(DialogueOutcome.Default));
             }
@@ -71,9 +71,9 @@ namespace Assets.Scripts.Util.Dialogue
 
         public class PlayerInitiatedDialogueOne : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WritePlayerDialogueLine("How you doing?");
                 DialogueSystem.Instance.WriteNPCLine("Hmm, not too bad I guess. You?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Huh. Nice of you to ask. Few do.", BitFriendly);
@@ -98,9 +98,9 @@ namespace Assets.Scripts.Util.Dialogue
 
         public class PlayerInitiatedDialogueTwo : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WritePlayerDialogueLine("Hey");
                 DialogueSystem.Instance.WriteNPCLine("What you looking at?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm looking at you.", Whoops);

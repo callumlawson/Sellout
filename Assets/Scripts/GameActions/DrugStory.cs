@@ -43,9 +43,9 @@ namespace Assets.Scripts.GameActions
 
         private class DrugPusherOffer : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I want to sell Space Weed in your bar.");
                 DialogueSystem.Instance.WriteNPCLine("If you turn a blind eye I'll give you some product and a cut of the money");
                 DialogueSystem.Instance.WriteNPCLine("You in?");
@@ -72,9 +72,9 @@ namespace Assets.Scripts.GameActions
 
         private class DrugPusherPayment : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
@@ -111,9 +111,9 @@ namespace Assets.Scripts.GameActions
 
         private class InspectorNice : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Had any shifty looking types approach you of late?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Yeah. 'Q' came and asked if he could sell drugs in the bar! I said no.", EndConversation(DialogueOutcome.Agree));
                 DialogueSystem.Instance.WritePlayerChoiceLine("Afraid not, business as usual.", EndConversation(DialogueOutcome.Disagree));
@@ -122,9 +122,9 @@ namespace Assets.Scripts.GameActions
 
         private class InspectorSuspicious : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I've head that 'Q' has been flagrantly pushing Space Weed here.");
                 DialogueSystem.Instance.WriteNPCLine("What do you know about it?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Yeah, 'Q' has been less than discreet. He's worst on the evening shift. Can you do something about it?", EndConversation(DialogueOutcome.Agree));
@@ -217,9 +217,9 @@ namespace Assets.Scripts.GameActions
                 this.helpedInspector = helpedInspector;
             }
 
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I've got him red handed - drugs and cash.");
 
                 if (helpedInspector && !tookDrugMoney)

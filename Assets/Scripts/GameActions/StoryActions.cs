@@ -33,9 +33,9 @@ namespace Assets.Scripts.GameActions
 
         private class WeirdOrderDialogue : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Hey you. I want a Frosted Mind Meld.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("And I want to be treated like a sentient being.", SentientBeing);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Of Course", MakeItQuick);
@@ -145,9 +145,9 @@ namespace Assets.Scripts.GameActions
 
         private class TolstoyOneDialogue : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I need some dating advice!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Compliment her.", ComplimentHer);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Play hard to get.", PlayHardToGet);
@@ -187,9 +187,9 @@ namespace Assets.Scripts.GameActions
 
         private class TolstoyTwoDialogue : Conversation
         {
-            protected override void StartConversation(string nameOfSpeaker)
+            protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(nameOfSpeaker);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("She said she had to take an emergency call but I didn't hear her communicator beep.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'm sure she had a great time.", EndConversation(DialogueOutcome.Default));
                 DialogueSystem.Instance.WritePlayerChoiceLine("Better luck next time.", EndConversation(DialogueOutcome.Default));
