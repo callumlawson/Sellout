@@ -97,7 +97,7 @@ namespace Assets.Scripts.Systems.AI
                     ActionManagerSystem.Instance.QueueAction(player, new DestoryEntityInInventoryAction());
                     break;
                 case Prefabs.Console:
-                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
+                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position, 1.0f));
                     ActionManagerSystem.Instance.QueueAction(player, new ChangeDayPhaseAction());
                     break;
                 case Prefabs.BarConsole:

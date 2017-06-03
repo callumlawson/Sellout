@@ -48,6 +48,11 @@ namespace Assets.Scripts.Util
             return GameObject.FindGameObjectWithTag("SitDownPoint3").transform;
         }
 
+        public static Transform CenterOfBar()
+        {
+            return GameObject.FindGameObjectWithTag("CenterOfBarPoint").transform;
+        }
+
         public static void ResetPeopleToSpawnPoints(List<Entity> people)
         {
             foreach (var person in people)

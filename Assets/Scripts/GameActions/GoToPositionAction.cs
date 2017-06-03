@@ -9,19 +9,21 @@ namespace Assets.Scripts.GameActions
     class GoToPositionAction : GameAction, ICancellableAction
     {
         private const float PositionTolerance = 2.0f;
+        private readonly float stoppingDistance;
         private readonly Vector3 targetPosition;
         private PathfindingState pathfindingState;
 
-        public GoToPositionAction(Vector3 position)
+        public GoToPositionAction(Vector3 position, float stoppingDistance = 0.0f)
         {
             targetPosition = position;
+            this.stoppingDistance = stoppingDistance;
         }
 
         public override void OnStart(Entity entity)
         {
             pathfindingState = entity.GetState<PathfindingState>();
             pathfindingState.SetNewTarget(targetPosition);
-            pathfindingState.SetStoppingDistance(0f);
+            pathfindingState.SetStoppingDistance(stoppingDistance);
         }
 
         public override void OnFrame(Entity entity)

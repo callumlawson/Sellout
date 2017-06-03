@@ -54,9 +54,15 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(orderSequence);
             orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkRecipe, 90, true, new DrinkSucsessDialogue()));
             mcGrawSequence.Add(new RemoveTutorialControlLockAction());
-            mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright. First day. Just serve the right drinks."));
+            mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
             mcGrawSequence.Add(new PauseAction(3.0f));
             mcGrawSequence.Add(endOfTutorialSyncPoint);
+            mcGrawSequence.Add(new CallbackAction(() =>
+            {
+                EventSystem.EndDrinkMakingEvent.Invoke();
+                ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
+                    new TeleportAction(Locations.CenterOfBar()));
+            })); //This is kind of dirty - but demo!
             mcGrawSequence.Add(new DestoryEntityInInventoryAction());
             mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
             mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
@@ -130,7 +136,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("Now that you are here, perhaps we can have some peace and quiet!");
                 DialogueSystem.Instance.WriteNPCLine("Till later!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("See you!", EndConversation(DialogueOutcome.Nice));
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i> Say nothing </i>", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Say nothing</i>", EndConversation(DialogueOutcome.Default));
             }
         }
 
