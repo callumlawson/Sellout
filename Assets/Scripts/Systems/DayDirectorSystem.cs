@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Scripts.GameActions.Cutscenes;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -16,9 +17,9 @@ namespace Assets.Scripts.Systems
         private Day currentDay;
         private DateTime lastTime;
         private DayPhaseState dayPhase;
-        private List<Entity> initPeople;
+        private List<Entity> people;
 
-        private bool DoneFirstDayFadeIn;
+        private bool doneFirstDayFadeIn;
         private readonly List<Day> inGameDays = new List<Day> ();
 
         public List<Type> RequiredStates()
@@ -28,7 +29,7 @@ namespace Assets.Scripts.Systems
 
         public void OnEndInit(List<Entity> matchingEntities)
         {
-            initPeople = matchingEntities;
+            people = matchingEntities;
             dayPhase = StaticStates.Get<DayPhaseState>();
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
             time = StaticStates.Get<TimeState>();
@@ -53,11 +54,12 @@ namespace Assets.Scripts.Systems
                     });
                     break;
                 case DayPhase.Night:
-                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "After Hours", () =>
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Always some stragglers. Use the console near the door to turf them out.", () =>
                     {
                         ResetNPCs();
                         EventSystem.EndDrinkMakingEvent.Invoke();
                         SetLighting(newDayPhase);
+                        DayOneNight.Start(people); //TODO support more than one day
                     });
                     break;
                 default:
@@ -67,9 +69,9 @@ namespace Assets.Scripts.Systems
 
         private void ResetNPCs()
         {
-            initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-            initPeople.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
-            Locations.ResetPeopleToSpawnPoints(initPeople);
+            people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
+            people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
+            Locations.ResetPeopleToSpawnPoints(people);
         }
 
         private static void SetLighting(DayPhase newDayPhase)
@@ -80,10 +82,10 @@ namespace Assets.Scripts.Systems
         public void Tick(List<Entity> matchingEntities)
         {
             var currentTime = time.Time;
-            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !DoneFirstDayFadeIn)
+            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !doneFirstDayFadeIn)
             {
                 StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
-                DoneFirstDayFadeIn = true;
+                doneFirstDayFadeIn = true;
             }
 
             if (time.GameEnded || dayPhase.CurrentDayPhase != DayPhase.Open)
