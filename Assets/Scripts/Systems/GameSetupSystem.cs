@@ -18,14 +18,14 @@ namespace Assets.Scripts.Systems
             return new List<Type> { typeof(PersonState) };
         }
 
-        public void OnEndInit(List<Entity> matchingEntities)
+        public void OnEndInit(List<Entity> allPeople)
         {
             if (GameSettings.DisableStory)
             {
                 return;
             }
 
-            Locations.ResetPeopleToSpawnPoints(matchingEntities);
+            Locations.ResetPeopleToSpawnPoints(allPeople);
         }
 
         public void Tick(List<Entity> matchingEntities)

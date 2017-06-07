@@ -7,7 +7,6 @@ using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
-using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.GameActions
@@ -51,32 +50,6 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WriteNPCLine("You in?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("No. Not my thing. Don't come back.", EndConversation(DialogueOutcome.Disagree));
                 DialogueSystem.Instance.WritePlayerChoiceLine("Sure, if the money is right.", EndConversation(DialogueOutcome.Agree));
-            }
-        }
-
-        //TODO: Sync with player for receive action.
-        public static ActionSequence DrugPusherPaysYou(Entity drugPusher)
-        {
-            var getPayed = new ActionSequence("DrugPusherPaysYou");
-            if (!StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
-            {
-                return getPayed;
-            }
-            getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
-            getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
-            getPayed.Add(new PauseAction(1.0f));
-            getPayed.Add(new ModifyMoneyAction(100));
-            getPayed.Add(CommonActions.LeaveBar());
-            return getPayed;
-        }
-
-        private class DrugPusherPayment : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
         }
 
