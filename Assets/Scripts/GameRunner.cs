@@ -40,6 +40,7 @@ namespace Assets.Scripts
             StaticStates.Add(new PlayerDecisionsState());
 
             //Debug
+            entitySystem.AddSystem(new DebugControlsSystem());
             entitySystem.AddSystem(new EntityTooltipSystem());
 
             //Init
