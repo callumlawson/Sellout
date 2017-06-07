@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -41,11 +43,24 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
             //Q
             var qSequence = new ActionSequence("Q night");
-            qSequence.Add(new PauseAction(0.2f)); //WORKAROUND FOR SYNC ACTION BUG
-            qSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            qSequence.Add(new SetConversationAction(new QNightOne()));
-            qSequence.Add(CommonActions.SitDownLoop());
+            qSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
+            qSequence.Add(DrugPusherPaysYou());
             ActionManagerSystem.Instance.QueueAction(q, qSequence);
+        }
+
+        private static ActionSequence DrugPusherPaysYou()
+        {
+            var getPayed = new ActionSequence("DrugPusherPaysYou");
+            if (!StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+            {
+                return getPayed;
+            }
+            getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
+            getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
+            getPayed.Add(new PauseAction(0.5f));
+            getPayed.Add(new ModifyMoneyAction(100));
+            getPayed.Add(CommonActions.LeaveBar());
+            return getPayed;
         }
 
         private class QNightOne : Conversation
@@ -75,6 +90,16 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.StartDialogue("Jannet");
                 DialogueSystem.Instance.WriteNPCLine("Placeholder.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class DrugPusherPayment : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
         }
     }
