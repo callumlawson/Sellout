@@ -36,28 +36,32 @@ namespace Assets.Scripts.Systems
             inGameDays.Add(new SecondDay(matchingEntities));
         }
 
-        private void OnDayPhaseChanged(DayPhase dayPhase)
+        private void OnDayPhaseChanged(DayPhase newDayPhase)
         {
-            switch (dayPhase)
+            switch (newDayPhase)
             {
                 case DayPhase.Morning:
+                    SetLighting(newDayPhase);
                     ResetNPCs();
-                    //Fade handled by the new day flow. 
                     break;
                 case DayPhase.Open:
                     Interface.Instance.BlackFader.FadeToBlack(4.0f, "Opening Time", () =>
                     {
                         ResetNPCs();
                         EventSystem.StartDrinkMakingEvent.Invoke();
+                        SetLighting(newDayPhase);
                     });
                     break;
                 case DayPhase.Night:
-                    ResetNPCs();
-                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "After Hours");
-                    EventSystem.EndDrinkMakingEvent.Invoke();
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "After Hours", () =>
+                    {
+                        ResetNPCs();
+                        EventSystem.EndDrinkMakingEvent.Invoke();
+                        SetLighting(newDayPhase);
+                    });
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("dayPhase", dayPhase, null);
+                    throw new ArgumentOutOfRangeException("newDayPhase", newDayPhase, null);
             }
         }
 
@@ -66,6 +70,11 @@ namespace Assets.Scripts.Systems
             initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
             initPeople.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
             Locations.ResetPeopleToSpawnPoints(initPeople);
+        }
+
+        private static void SetLighting(DayPhase newDayPhase)
+        {
+            LightControllerVisualizer.Instance.SetLighting(newDayPhase);
         }
 
         public void Tick(List<Entity> matchingEntities)
