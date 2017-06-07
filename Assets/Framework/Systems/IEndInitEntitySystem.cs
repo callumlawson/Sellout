@@ -5,6 +5,6 @@ namespace Assets.Framework.Systems
 {
     public interface IEndInitEntitySystem : IFilteredSystem
     {
-        void OnEndInit(List<Entity> matchingEntities);
+        void OnEndInit(List<Entity> allPeople);
     }
 }

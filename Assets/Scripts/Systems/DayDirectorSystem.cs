@@ -3,38 +3,37 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Cutscenes;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
-using DG.Tweening;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Systems
 {
     class DayDirectorSystem : ITickEntitySystem, IEndInitEntitySystem
     {
         private TimeState time;
-        private GameTime lastTime;
         private DayPhaseState dayPhase;
         private List<Entity> people;
+        private List<Entity> hallwayWalkers;
 
         private bool doneFirstDayFadeIn;
-        private readonly List<Day> inGameDays = new List<Day> ();
 
         public List<Type> RequiredStates()
         {
             return new List<Type> { typeof(PersonState) };
         }
 
-        public void OnEndInit(List<Entity> matchingEntities)
+        public void OnEndInit(List<Entity> allPeople)
         {
-            people = matchingEntities;
+            people = allPeople;
             dayPhase = StaticStates.Get<DayPhaseState>();
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
             time = StaticStates.Get<TimeState>();
-            inGameDays.Add(new FirstDay(matchingEntities));
-            inGameDays.Add(new SecondDay(matchingEntities));
+            hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
         }
 
         private void OnDayPhaseChanged(DayPhase newDayPhase)
@@ -100,6 +99,17 @@ namespace Assets.Scripts.Systems
                 if (currentTime.GetHour() == Constants.ClosingHour)
                 {
                     StaticStates.Get<DayPhaseState>().IncrementDayPhase();
+                }
+            }
+
+            foreach (var walker in hallwayWalkers)
+            {
+                if (ActionManagerSystem.Instance.IsEntityIdle(walker))
+                {
+                    if (dayPhase.CurrentDayPhase != DayPhase.Night || Random.value > 0.8)
+                    {
+                        ActionManagerSystem.Instance.QueueAction(walker, CommonActions.WalkToWaypoint());
+                    }
                 }
             }
         }
