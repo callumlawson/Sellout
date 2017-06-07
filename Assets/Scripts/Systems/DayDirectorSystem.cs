@@ -4,6 +4,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Cutscenes;
+using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -71,6 +72,7 @@ namespace Assets.Scripts.Systems
         {
             people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
             people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
+            people.ForEach(person => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(person, new DestoryEntityInInventoryAction()));
             Locations.ResetPeopleToSpawnPoints(people);
         }
 
