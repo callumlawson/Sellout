@@ -18,7 +18,6 @@ namespace Assets.Scripts
         [UsedImplicitly] public bool IsDebugOn;
         [UsedImplicitly] public bool SkipFirstDayFadein;
         [UsedImplicitly] public bool DisableStory;
-        [UsedImplicitly] public bool DisableTalkingToPlayer;
 
         private EntityStateSystem entitySystem;
         private bool tickingStarted;
@@ -29,7 +28,6 @@ namespace Assets.Scripts
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
             GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
             GameSettings.DisableStory = DisableStory;
-            GameSettings.DisableTalkingToPlayer = DisableTalkingToPlayer;
 
             entitySystem = new EntityStateSystem();
 
@@ -40,6 +38,7 @@ namespace Assets.Scripts
             StaticStates.Add(new PlayerDecisionsState());
 
             //Debug
+            entitySystem.AddSystem(new DebugControlsSystem());
             entitySystem.AddSystem(new EntityTooltipSystem());
 
             //Init

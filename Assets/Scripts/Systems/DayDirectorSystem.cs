@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Scripts.GameActions.Cutscenes;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -15,9 +16,9 @@ namespace Assets.Scripts.Systems
         private TimeState time;
         private GameTime lastTime;
         private DayPhaseState dayPhase;
-        private List<Entity> initPeople;
+        private List<Entity> people;
 
-        private bool DoneFirstDayFadeIn;
+        private bool doneFirstDayFadeIn;
         private readonly List<Day> inGameDays = new List<Day> ();
 
         public List<Type> RequiredStates()
@@ -27,7 +28,7 @@ namespace Assets.Scripts.Systems
 
         public void OnEndInit(List<Entity> matchingEntities)
         {
-            initPeople = matchingEntities;
+            people = matchingEntities;
             dayPhase = StaticStates.Get<DayPhaseState>();
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
             time = StaticStates.Get<TimeState>();
@@ -35,13 +36,13 @@ namespace Assets.Scripts.Systems
             inGameDays.Add(new SecondDay(matchingEntities));
         }
 
-        private void OnDayPhaseChanged(DayPhase dayPhase)
+        private void OnDayPhaseChanged(DayPhase newDayPhase)
         {
-            switch (dayPhase)
+            switch (newDayPhase)
             {
                 case DayPhase.Morning:
+                    SetLighting(newDayPhase);
                     ResetNPCs();
-                    //Fade handled by the new day flow. 
                     break;
                 case DayPhase.Open:
                     time.gameTime.SetTime(Constants.OpeningHour, 0);
@@ -49,32 +50,42 @@ namespace Assets.Scripts.Systems
                     {
                         ResetNPCs();
                         EventSystem.StartDrinkMakingEvent.Invoke();
+                        SetLighting(newDayPhase);
                     });
                     break;
                 case DayPhase.Night:
-                    ResetNPCs();
-                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "After Hours");
-                    EventSystem.EndDrinkMakingEvent.Invoke();
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Always some stragglers. Use the console near the door to turf them out.", () =>
+                    {
+                        ResetNPCs();
+                        EventSystem.EndDrinkMakingEvent.Invoke();
+                        SetLighting(newDayPhase);
+                        DayOneNight.Start(people); //TODO support more than one day
+                    });
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("dayPhase", dayPhase, null);
+                    throw new ArgumentOutOfRangeException("newDayPhase", newDayPhase, null);
             }
         }
 
         private void ResetNPCs()
         {
-            initPeople.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-            initPeople.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
-            Locations.ResetPeopleToSpawnPoints(initPeople);
+            people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
+            people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
+            Locations.ResetPeopleToSpawnPoints(people);
+        }
+
+        private static void SetLighting(DayPhase newDayPhase)
+        {
+            LightControllerVisualizer.Instance.SetLighting(newDayPhase);
         }
 
         public void Tick(List<Entity> matchingEntities)
         {
             var currentTime = time.gameTime;
-            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !DoneFirstDayFadeIn)
+            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !doneFirstDayFadeIn)
             {
                 StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
-                DoneFirstDayFadeIn = true;
+                doneFirstDayFadeIn = true;
             }
 
             if (time.GameEnded)
