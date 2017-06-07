@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System;
 using Assets.Framework.States;
 using System.Linq;
+using Assets.Scripts.GameActions.DayPhases;
 
 public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 {
@@ -80,6 +81,12 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
         if (waitForPurchaseWaypointIsFree)
         {
             OnWaitForPurchaseWaypointFree();
+        }
+
+        if (GetNextCharacter() == null && purchaseWaypoint.GetState<UserState>().IsFree() && waitForPurchaseWaypoint.GetState<UserState>().IsFree())
+        {
+            var player = StaticStates.Get<PlayerState>().Player;
+            ActionManagerSystem.Instance.QueueAction(player, new CloseBarIfOpenAction());
         }
     }
 
