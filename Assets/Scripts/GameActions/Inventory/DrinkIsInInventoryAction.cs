@@ -12,7 +12,7 @@ namespace Assets.Scripts.GameActions.Inventory
         private readonly DrinkState drinkToCheckFor;
 
         private readonly int timeoutInMins;
-        private DateTime startTime;
+        private GameTime startTime;
         private TimeState timeState;
 
         public DrinkIsInInventoryAction(DrinkState drinkToCheckFor, int timeoutInMins)
@@ -24,7 +24,7 @@ namespace Assets.Scripts.GameActions.Inventory
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.Time;
+            startTime = timeState.gameTime.GetCopy();
         }
 
         public override void OnFrame(Entity entity)
@@ -35,7 +35,7 @@ namespace Assets.Scripts.GameActions.Inventory
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
-            if ((timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
+            if (timeState.gameTime - startTime > timeoutInMins)
             {
                 UnityEngine.Debug.Log("Timedout!");
                 ActionStatus = ActionStatus.Failed;

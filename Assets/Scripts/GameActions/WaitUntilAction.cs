@@ -9,16 +9,16 @@ namespace Assets.Scripts.GameActions
     class WaitUntilAction : GameAction
     {
         private TimeState timeState;
-        private DateTime goalTime;
+        private GameTime goalTime;
 
-        public WaitUntilAction(DateTime goalTime)
+        public WaitUntilAction(GameTime goalTime)
         {
             this.goalTime = goalTime;
         }
 
         public override void OnFrame(Entity entity)
         {
-            var currentTime = timeState.Time;
+            var currentTime = timeState.gameTime;
             if (currentTime >= goalTime)
             {
                 ActionStatus = ActionStatus.Succeeded;

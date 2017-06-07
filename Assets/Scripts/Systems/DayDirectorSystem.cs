@@ -13,8 +13,7 @@ namespace Assets.Scripts.Systems
     class DayDirectorSystem : ITickEntitySystem, IEndInitEntitySystem
     {
         private TimeState time;
-        private Day currentDay;
-        private DateTime lastTime;
+        private GameTime lastTime;
         private DayPhaseState dayPhase;
         private List<Entity> initPeople;
 
@@ -45,6 +44,7 @@ namespace Assets.Scripts.Systems
                     //Fade handled by the new day flow. 
                     break;
                 case DayPhase.Open:
+                    time.gameTime.SetTime(Constants.OpeningHour, 0);
                     Interface.Instance.BlackFader.FadeToBlack(4.0f, "Opening Time", () =>
                     {
                         ResetNPCs();
@@ -70,50 +70,43 @@ namespace Assets.Scripts.Systems
 
         public void Tick(List<Entity> matchingEntities)
         {
-            var currentTime = time.Time;
+            var currentTime = time.gameTime;
             if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !DoneFirstDayFadeIn)
             {
                 StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
                 DoneFirstDayFadeIn = true;
             }
 
-            if (time.GameEnded || dayPhase.CurrentDayPhase != DayPhase.Open)
+            if (time.GameEnded)
             {
                 return;
             }
 
-            if (currentTime != lastTime)
+            if (dayPhase.CurrentDayPhase == DayPhase.Open)
             {
-                currentDay = UpdateDay(currentTime, matchingEntities);
-
-                var timeDifferenceInMin = (currentTime - lastTime).Minutes;
-                for (var elapsedMin = 1; elapsedMin <= timeDifferenceInMin; elapsedMin++)
+                if (currentTime.GetHour() == Constants.ClosingHour)
                 {
-                    lastTime = lastTime.AddMinutes(1);
-                    if (!GameSettings.DisableStory)
-                    {
-                        currentDay.UpdateDay(lastTime, matchingEntities);
-                    }
+                    StaticStates.Get<DayPhaseState>().IncrementDayPhase();
                 }
-                lastTime = currentTime;
             }
         }
 
-        private Day UpdateDay(DateTime currentTime, List<Entity> matchingEntities)
+        /*
+        private void UpdateDay(GameTime currentTime, List<Entity> matchingEntities)
         {
-            if (currentTime.Hour >= Constants.DayEndHour)
+            if (currentTime.GetHour() >= Constants.ClosingHour)
             {
+                currentTime.IncrementDay();
                 TriggerEndOfDayAfterDelay(currentTime, matchingEntities);
-                currentTime = currentTime.AddHours(Constants.NightLengthInHours);
-                time.Time = currentTime;
-                lastTime = currentTime;
+                
+                lastTime = currentTime.GetCopy();
 
-                if (currentTime.Day - 1 < inGameDays.Count)
+                if (currentTime.GetDay() - 1 < inGameDays.Count)
                 {
-                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.Day), true, true);
+                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.GetDay()), true, true);
                 }
 
-                if (currentTime.Day - 1 >= inGameDays.Count)
+                if (currentTime.GetDay() - 1 >= inGameDays.Count)
                 {
                     StaticStates.Get<TimeState>().TriggerEndOfGame.Invoke();
                     StaticStates.Get<TimeState>().GameEnded = true;
@@ -122,13 +115,14 @@ namespace Assets.Scripts.Systems
                 }
             }
 
-            return inGameDays[currentTime.Day - 1];
+            return inGameDays[currentTime.GetDay() - 1];
         }
 
-        private void TriggerEndOfDayAfterDelay(DateTime currentTime, List<Entity> matchingEntities)
+        private void TriggerEndOfDayAfterDelay(GameTime currentTime, List<Entity> matchingEntities)
         {
-            var dayToEnd = inGameDays[currentTime.Day - 1];
+            var dayToEnd = inGameDays[currentTime.GetDay() - 1];
             DOTween.Sequence().SetDelay(3.0f).OnComplete(() => dayToEnd.OnEndOfDay(matchingEntities)); //HAX
         }
+        */
     }
 }

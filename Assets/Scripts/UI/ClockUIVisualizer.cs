@@ -37,8 +37,8 @@ namespace Assets.Scripts.UI
 
             if (dayPhase.CurrentDayPhase == DayPhase.Open)
             {
-                Day.text = string.Format(DayText, timeState.Time.Day);
-                Time.text = string.Format(TimeText, timeState.Time.Hour, timeState.Time.Minute);
+                Day.text = string.Format(DayText, timeState.gameTime.GetDay());
+                Time.text = string.Format(TimeText, timeState.gameTime.GetHour(), timeState.gameTime.GetMinute());
             }
             else
             {

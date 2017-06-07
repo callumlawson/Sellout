@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
@@ -13,7 +12,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         private readonly Goal goal;
         private readonly Entity occupant;
         private readonly int timeoutInMins;
-        private DateTime startTime;
+        private GameTime startTime;
         private TimeState timeState;
 
         public WaitForWaypointWithUserAction(Goal goal, Entity occupant, int timeoutInMins)
@@ -26,7 +25,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.Time;
+            startTime = timeState.gameTime.GetCopy();
         }
 
         public override void OnFrame(Entity entity)
@@ -51,7 +50,7 @@ namespace Assets.Scripts.GameActions.Waypoints
             {
                 ActionStatus = ActionStatus.Succeeded;
             }
-            if (timeoutInMins > 0 && (timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
+            if (timeoutInMins > 0 && (timeState.gameTime - startTime) > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

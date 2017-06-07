@@ -17,7 +17,7 @@ namespace Assets.Scripts.GameActions.Waypoints
 
         private TimeState timeState;
         private readonly int timeoutInMins;
-        private DateTime startTime;
+        private GameTime startTime;
 
         public GetWaypointAction(Goal waypointGoal, bool reserve = false, bool closest = false, int timeoutInMins = 30)
         {
@@ -30,7 +30,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.Time;
+            startTime = timeState.gameTime.GetCopy();
         }
 
         public override void OnFrame(Entity entity)
@@ -47,7 +47,7 @@ namespace Assets.Scripts.GameActions.Waypoints
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
-            else if (timeoutInMins > 0 && (timeState.Time - startTime).Duration().TotalMinutes > timeoutInMins)
+            else if (timeoutInMins > 0 && (timeState.gameTime - startTime) > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

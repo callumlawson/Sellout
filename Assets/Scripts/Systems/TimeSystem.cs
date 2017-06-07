@@ -32,7 +32,7 @@ namespace Assets.Scripts.Systems
             if (secondsSinceLastMinute >= Constants.SecondsPerGameMinute)
             {
 
-                timeState.Time = timeState.Time.AddMinutes(1.0f);
+                timeState.gameTime.IncrementMinute();
                 secondsSinceLastMinute = Math.Max(secondsSinceLastMinute - Constants.SecondsPerGameMinute, 0f);
             }
         }

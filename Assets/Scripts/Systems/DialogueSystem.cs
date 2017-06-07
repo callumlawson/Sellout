@@ -55,6 +55,7 @@ namespace Assets.Scripts.Systems
 
         private void OnEndMakingDrink()
         {
+            StopDialogue();
             currentDialogueUI = defaultDialogueUI;
             currentDialogueLinesParent = defaultDialogueLinesParent;
             currentSpeakerNameText = defaultSpeakerNameText;

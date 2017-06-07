@@ -6,14 +6,15 @@ namespace Assets.Scripts.States
     [Serializable]
     public class TimeState : IState
     {
-        public DateTime Time;
+        public GameTime gameTime;
+
         public Action<string, bool, bool> TriggerDayTransition;
         public Action TriggerEndOfGame;
         public bool GameEnded;
 
-        public TimeState(DateTime time)
+        public TimeState(GameTime startTime)
         {
-            Time = time;
+            gameTime = new GameTime(startTime.GetDay(), startTime.GetHour(), startTime.GetMinute());
         }
     }
 }

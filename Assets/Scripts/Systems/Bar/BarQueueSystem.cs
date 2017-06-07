@@ -15,6 +15,9 @@ using Assets.Scripts.GameActions.DayPhases;
 
 public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 {
+    private TimeState time;
+    private Entity player;
+
     private Entity purchaseWaypoint;
     private Entity waitForPurchaseWaypoint;
 
@@ -26,6 +29,8 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
     public void OnInit()
     {
         spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        time = StaticStates.Get<TimeState>();
+        player = StaticStates.Get<PlayerState>().Player;
     }
 
     public void OnEntityAdded(Entity entity)
@@ -50,6 +55,11 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
     public void Tick()
     {
         if (StaticStates.Get<DayPhaseState>().CurrentDayPhase != DayPhase.Open)
+        {
+            return;
+        }
+        
+        if (time.gameTime.GetHour() >= Constants.ClosingHour)
         {
             return;
         }
@@ -85,7 +95,6 @@ public class BarQueueSystem : IInitSystem, ITickSystem, IReactiveEntitySystem
 
         if (GetNextCharacter() == null && purchaseWaypoint.GetState<UserState>().IsFree() && waitForPurchaseWaypoint.GetState<UserState>().IsFree())
         {
-            var player = StaticStates.Get<PlayerState>().Player;
             ActionManagerSystem.Instance.QueueAction(player, new CloseBarIfOpenAction());
         }
     }

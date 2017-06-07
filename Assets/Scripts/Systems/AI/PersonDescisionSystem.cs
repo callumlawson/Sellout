@@ -14,7 +14,7 @@ namespace Assets.Scripts.Systems.AI
     {
         private const int CooldownBetweenStoriesInMins = 30;
         private TimeState time;
-        private DateTime lastStoryTime;
+        private GameTime lastStoryTime;
 
         private readonly List<SingleStorySeqenceFiller> singleStoryActions = new List<SingleStorySeqenceFiller>()
         {
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Systems.AI
         public void OnInit()
         {
             time = StaticStates.Get<TimeState>();
-            lastStoryTime = time.Time;
+            lastStoryTime = time.gameTime.GetCopy();
         }
 
         public void Tick(List<Entity> matchingEntities)
@@ -47,8 +47,8 @@ namespace Assets.Scripts.Systems.AI
 
         private void TryScheduleStory(List<Entity> matchingEntities)
         {
-            var timeSinceLastStory = time.Time - lastStoryTime;
-            if (timeSinceLastStory.Minutes > CooldownBetweenStoriesInMins)
+            var timeSinceLastStory = time.gameTime - lastStoryTime;
+            if (timeSinceLastStory > CooldownBetweenStoriesInMins)
             {
                 var storyScheduled = TryScheduleSingleEntityStories(matchingEntities);
                 if (!storyScheduled)
@@ -57,7 +57,7 @@ namespace Assets.Scripts.Systems.AI
                 }
                 if (storyScheduled)
                 {
-                    lastStoryTime = time.Time;
+                    lastStoryTime = time.gameTime.GetCopy();
                 }
             }
         }
