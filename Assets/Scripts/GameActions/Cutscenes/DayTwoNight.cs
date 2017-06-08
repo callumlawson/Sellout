@@ -54,7 +54,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("It's night on day 2.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure.", EndConversation(DialogueOutcome.Nice));
             }
         }
@@ -64,7 +64,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("I like the second night.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("What's going on? What does placeholder mean?", EndConversation(DialogueOutcome.Nice));
             }
         }
@@ -74,7 +74,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("In the jungle the mighty jungle...");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
             }
         }
