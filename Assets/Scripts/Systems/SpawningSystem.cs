@@ -142,7 +142,7 @@ namespace Assets.Scripts.Systems
                 new FaceState(FaceType.Bartender),
                 new PersonState()
             });
-            StaticStates.Add(new PlayerState(player, !GameSettings.DisableStory, false));
+            StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial, false));
             return player;
         }
 

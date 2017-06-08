@@ -21,6 +21,15 @@ namespace Assets.Scripts.States
             DayPhase = dayPhase;
         }
 
+        public void SetDayPhase(DayPhase newDayPhase)
+        {
+            CurrentDayPhase = newDayPhase;
+            if (DayPhaseChangedTo != null)
+            {
+                DayPhaseChangedTo.Invoke(newDayPhase);
+            }
+        }
+
         public void IncrementDayPhase()
         {
             switch (DayPhase)

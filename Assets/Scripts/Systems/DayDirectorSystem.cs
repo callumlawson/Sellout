@@ -20,8 +20,6 @@ namespace Assets.Scripts.Systems
         private List<Entity> people;
         private List<Entity> hallwayWalkers;
 
-        private bool doneFirstDayFadeIn;
-
         public List<Type> RequiredStates()
         {
             return new List<Type> { typeof(PersonState) };
@@ -29,11 +27,11 @@ namespace Assets.Scripts.Systems
 
         public void OnEndInit(List<Entity> allPeople)
         {
-            people = allPeople;
             dayPhase = StaticStates.Get<DayPhaseState>();
-            dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
             time = StaticStates.Get<TimeState>();
+            people = allPeople;
             hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
+            dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
         }
 
         private void OnDayPhaseChanged(DayPhase newDayPhase)
@@ -41,25 +39,41 @@ namespace Assets.Scripts.Systems
             switch (newDayPhase)
             {
                 case DayPhase.Morning:
-                    SetLighting(newDayPhase);
-                    ResetNPCs();
+                    if(time.GameTime != Constants.GameStartTime)
+                    {
+                        time.GameTime.IncrementDay();
+                        Interface.Instance.BlackFader.FadeToBlack(4.0f, string.Format("Day {0}", time.GameTime.GetDay()), () =>
+                        {
+                            DoPhaseSetup(newDayPhase);
+                            if (time.GameTime.GetDay() == 2)
+                            {
+                                DayTwoMorning.Start(people);
+                            }
+                        });
+                    }
                     break;
                 case DayPhase.Open:
-                    time.gameTime.SetTime(Constants.OpeningHour, 0);
-                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Opening Time", () =>
+                    time.GameTime.SetTime(Constants.OpeningHour, 0);
+                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Opening Time!", () =>
                     {
-                        ResetNPCs();
+                        DoPhaseSetup(newDayPhase);
                         EventSystem.StartDrinkMakingEvent.Invoke();
-                        SetLighting(newDayPhase);
                     });
                     break;
                 case DayPhase.Night:
-                    Interface.Instance.BlackFader.FadeToBlack(4.0f, "Always some stragglers. Use the console near the door to turf them out.", () =>
+                    Interface.Instance.BlackFader.FadeToBlack(5.0f, "Always some stragglers. Use the console near the door to turf them out.", () =>
                     {
-                        ResetNPCs();
+                        DoPhaseSetup(newDayPhase);
                         EventSystem.EndDrinkMakingEvent.Invoke();
-                        SetLighting(newDayPhase);
-                        DayOneNight.Start(people); //TODO support more than one day
+                        switch (time.GameTime.GetDay())
+                        {
+                            case 1:
+                                DayOneNight.Start(people);
+                                break;
+                            case 2:
+                                DayTwoNight.Start(people);
+                                break;
+                        }
                     });
                     break;
                 default:
@@ -67,31 +81,14 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void ResetNPCs()
-        {
-            people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
-            people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
-            people.ForEach(person => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(person, new DestoryEntityInInventoryAction()));
-            Locations.ResetPeopleToSpawnPoints(people);
-        }
-
-        private static void SetLighting(DayPhase newDayPhase)
-        {
-            LightControllerVisualizer.Instance.SetLighting(newDayPhase);
-        }
-
         public void Tick(List<Entity> matchingEntities)
         {
-            var currentTime = time.gameTime;
-            if (currentTime == Constants.GameStartTime && !GameSettings.SkipFirstDayFadein && !doneFirstDayFadeIn)
-            {
-                StaticStates.Get<TimeState>().TriggerDayTransition.Invoke("Day 1", false, true);
-                doneFirstDayFadeIn = true;
-            }
+            var currentTime = time.GameTime;
 
-            if (time.GameEnded)
+            if (currentTime == Constants.GameStartTime)
             {
-                return;
+                PerformStartGameActions();
+                time.GameTime.IncrementMinute();
             }
 
             if (dayPhase.CurrentDayPhase == DayPhase.Open)
@@ -114,38 +111,36 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        /*
-        private void UpdateDay(GameTime currentTime, List<Entity> matchingEntities)
+        private void PerformStartGameActions()
         {
-            if (currentTime.GetHour() >= Constants.ClosingHour)
+            Locations.ResetPeopleToSpawnPoints(people);
+            if (!GameSettings.SkipFirstDayFadein)
             {
-                currentTime.IncrementDay();
-                TriggerEndOfDayAfterDelay(currentTime, matchingEntities);
-                
-                lastTime = currentTime.GetCopy();
-
-                if (currentTime.GetDay() - 1 < inGameDays.Count)
-                {
-                    StaticStates.Get<TimeState>().TriggerDayTransition.Invoke(string.Format("Day {0}", currentTime.GetDay()), true, true);
-                }
-
-                if (currentTime.GetDay() - 1 >= inGameDays.Count)
-                {
-                    StaticStates.Get<TimeState>().TriggerEndOfGame.Invoke();
-                    StaticStates.Get<TimeState>().GameEnded = true;
-                    UnityEngine.Debug.Log("Reached the end of the last day!");
-                    return inGameDays[0];
-                }
+                Interface.Instance.BlackFader.FadeToBlack(4.0f, "Day 1", null, false);
             }
-
-            return inGameDays[currentTime.GetDay() - 1];
+            if (!GameSettings.DisableTutorial)
+            {
+                DayOneMorning.Start(people);
+            }
         }
 
-        private void TriggerEndOfDayAfterDelay(GameTime currentTime, List<Entity> matchingEntities)
+        private void DoPhaseSetup(DayPhase newDayPhase)
         {
-            var dayToEnd = inGameDays[currentTime.GetDay() - 1];
-            DOTween.Sequence().SetDelay(3.0f).OnComplete(() => dayToEnd.OnEndOfDay(matchingEntities)); //HAX
+            ResetNPCs();
+            SetLighting(newDayPhase);
         }
-        */
+
+        private void ResetNPCs()
+        {
+            people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
+            people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
+            people.ForEach(person => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(person, new DestoryEntityInInventoryAction()));
+            Locations.ResetPeopleToSpawnPoints(people);
+        }
+
+        private static void SetLighting(DayPhase newDayPhase)
+        {
+            LightControllerVisualizer.Instance.SetLighting(newDayPhase);
+        }
     }
 }

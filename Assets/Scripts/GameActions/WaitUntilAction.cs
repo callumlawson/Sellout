@@ -3,6 +3,7 @@ using System;
 using Assets.Framework.Entities;
 using Assets.Scripts.States;
 using Assets.Framework.States;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.GameActions
 {
@@ -18,7 +19,7 @@ namespace Assets.Scripts.GameActions
 
         public override void OnFrame(Entity entity)
         {
-            var currentTime = timeState.gameTime;
+            var currentTime = timeState.GameTime;
             if (currentTime >= goalTime)
             {
                 ActionStatus = ActionStatus.Succeeded;

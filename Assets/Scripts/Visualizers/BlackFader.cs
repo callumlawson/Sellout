@@ -11,18 +11,41 @@ namespace Assets.Scripts.Visualizers
         [UsedImplicitly] public Image Background;
         [UsedImplicitly] public Text Text;
 
-        public void FadeToBlack(float timeInSeconds, string text = "", Action midFade = null)
+        public void FadeToBlack(float timeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
         {
-            Background.DOFade(1.0f, timeInSeconds / 4);
-            Background.raycastTarget = true;
-            DOTween.Sequence().SetDelay(timeInSeconds - timeInSeconds / 4).OnComplete(() => Background.raycastTarget = false);
-            Background.DOFade(0.0f, timeInSeconds / 4).SetDelay(timeInSeconds - timeInSeconds / 4);
+            if (fadeIn)
+            {
+                Background.DOFade(1.0f, timeInSeconds/4);
+                Background.raycastTarget = true;
+                DOTween.Sequence()
+                    .SetDelay(timeInSeconds - timeInSeconds/4)
+                    .OnComplete(() => Background.raycastTarget = false);
+                Background.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds - timeInSeconds/4);
+            }
+            else
+            {
+                Background.DOFade(1.0f, 0.0f);
+                Background.raycastTarget = true;
+                DOTween.Sequence()
+                    .SetDelay(timeInSeconds - timeInSeconds / 2)
+                    .OnComplete(() => Background.raycastTarget = false);
+                Background.DOFade(0.0f, timeInSeconds/2).SetDelay(timeInSeconds/2);
+            }
 
             if (Text != null && text != "")
             {
-                Text.text = text;
-                Text.DOFade(1.0f, timeInSeconds / 4).SetDelay(timeInSeconds / 8);
-                Text.DOFade(0.0f, timeInSeconds / 4).SetDelay(timeInSeconds - timeInSeconds / 4 - timeInSeconds / 8);
+                if (fadeIn)
+                {
+                    Text.text = text;
+                    Text.DOFade(1.0f, timeInSeconds/4).SetDelay(timeInSeconds/8);
+                    Text.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds - timeInSeconds/4 - timeInSeconds/8);
+                }
+                else
+                {
+                    Text.text = text;
+                    Text.DOFade(1.0f, 0.0f);
+                    Text.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds/2);
+                }
             }
 
             DOTween.Sequence().SetDelay(timeInSeconds/4).OnComplete(() =>

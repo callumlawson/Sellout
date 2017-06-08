@@ -6,6 +6,7 @@ using Assets.Framework.Systems;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.States;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.Util;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -34,7 +35,7 @@ namespace Assets.Scripts.Systems.AI
         public void OnInit()
         {
             time = StaticStates.Get<TimeState>();
-            lastStoryTime = time.gameTime.GetCopy();
+            lastStoryTime = time.GameTime.GetCopy();
         }
 
         public void Tick(List<Entity> matchingEntities)
@@ -47,7 +48,7 @@ namespace Assets.Scripts.Systems.AI
 
         private void TryScheduleStory(List<Entity> matchingEntities)
         {
-            var timeSinceLastStory = time.gameTime - lastStoryTime;
+            var timeSinceLastStory = time.GameTime - lastStoryTime;
             if (timeSinceLastStory > CooldownBetweenStoriesInMins)
             {
                 var storyScheduled = TryScheduleSingleEntityStories(matchingEntities);
@@ -57,7 +58,7 @@ namespace Assets.Scripts.Systems.AI
                 }
                 if (storyScheduled)
                 {
-                    lastStoryTime = time.gameTime.GetCopy();
+                    lastStoryTime = time.GameTime.GetCopy();
                 }
             }
         }
@@ -142,6 +143,5 @@ namespace Assets.Scripts.Systems.AI
                 StorySequence = sequence;
             }
         }
-
     }
 }

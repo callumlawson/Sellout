@@ -5,6 +5,6 @@
     {
         public static bool IsDebugOn = false;
         public static bool SkipFirstDayFadein = false;
-        public static bool DisableStory = false;
+        public static bool DisableTutorial = false;
     }
 }
