@@ -30,7 +30,7 @@ namespace Assets.Scripts.GameActions.Waypoints
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.gameTime.GetCopy();
+            startTime = timeState.GameTime.GetCopy();
         }
 
         public override void OnFrame(Entity entity)
@@ -47,7 +47,7 @@ namespace Assets.Scripts.GameActions.Waypoints
                 entity.GetState<ActionBlackboardState>().TargetEntity = waypoint;
                 ActionStatus = ActionStatus.Succeeded;
             }
-            else if (timeoutInMins > 0 && (timeState.gameTime - startTime) > timeoutInMins)
+            else if (timeoutInMins > 0 && (timeState.GameTime - startTime) > timeoutInMins)
             {
                 ActionStatus = ActionStatus.Failed;
             }

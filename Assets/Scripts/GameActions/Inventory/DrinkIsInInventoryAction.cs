@@ -24,7 +24,7 @@ namespace Assets.Scripts.GameActions.Inventory
         public override void OnStart(Entity entity)
         {
             timeState = StaticStates.Get<TimeState>();
-            startTime = timeState.gameTime.GetCopy();
+            startTime = timeState.GameTime.GetCopy();
         }
 
         public override void OnFrame(Entity entity)
@@ -35,7 +35,7 @@ namespace Assets.Scripts.GameActions.Inventory
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
-            if (timeState.gameTime - startTime > timeoutInMins)
+            if (timeState.GameTime - startTime > timeoutInMins)
             {
                 UnityEngine.Debug.Log("Timedout!");
                 ActionStatus = ActionStatus.Failed;

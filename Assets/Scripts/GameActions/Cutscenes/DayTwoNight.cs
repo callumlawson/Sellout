@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
-using Assets.Framework.States;
 using Assets.Scripts.GameActions.Composite;
-using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -11,7 +9,7 @@ using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
-    static class DayOneNight
+    static class DayTwoNight
     {
         public static void Start(List<Entity> matchingEntities) {
            
@@ -33,6 +31,14 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
+            //Q
+            var qSequence = new ActionSequence("Q night");
+            qSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
+            qSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+            qSequence.Add(new SetConversationAction(new QNightOne()));
+            qSequence.Add(CommonActions.SitDownLoop());
+            ActionManagerSystem.Instance.QueueAction(q, qSequence);
+
             //Jannet
             var jannetSequence = new ActionSequence("Jannet night");
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
@@ -40,27 +46,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
-
-            //Q
-            var qSequence = new ActionSequence("Q night");
-            qSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
-            qSequence.Add(DrugPusherPaysYou());
-            ActionManagerSystem.Instance.QueueAction(q, qSequence);
-        }
-
-        private static ActionSequence DrugPusherPaysYou()
-        {
-            var getPayed = new ActionSequence("DrugPusherPaysYou");
-            if (!StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
-            {
-                return getPayed;
-            }
-            getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
-            getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
-            getPayed.Add(new PauseAction(0.5f));
-            getPayed.Add(new ModifyMoneyAction(100));
-            getPayed.Add(CommonActions.LeaveBar());
-            return getPayed;
+            
         }
 
         private class QNightOne : Conversation
@@ -68,7 +54,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("It's night on day 2.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure.", EndConversation(DialogueOutcome.Nice));
             }
         }
@@ -78,7 +64,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("I like the second night.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("What's going on? What does placeholder mean?", EndConversation(DialogueOutcome.Nice));
             }
         }
@@ -88,18 +74,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WriteNPCLine("In the jungle the mighty jungle...");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
-        private class DrugPusherPayment : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
         }
     }

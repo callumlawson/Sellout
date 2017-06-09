@@ -35,10 +35,11 @@ namespace Assets.Scripts.UI
                 return;
             }
 
+            Day.text = string.Format(DayText, timeState.GameTime.GetDay());
+
             if (dayPhase.CurrentDayPhase == DayPhase.Open)
             {
-                Day.text = string.Format(DayText, timeState.gameTime.GetDay());
-                Time.text = string.Format(TimeText, timeState.gameTime.GetHour(), timeState.gameTime.GetMinute());
+                Time.text = string.Format(TimeText, timeState.GameTime.GetHour(), timeState.GameTime.GetMinute());
             }
             else
             {

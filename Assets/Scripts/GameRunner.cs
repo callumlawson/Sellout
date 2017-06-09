@@ -17,7 +17,7 @@ namespace Assets.Scripts
     {
         [UsedImplicitly] public bool IsDebugOn;
         [UsedImplicitly] public bool SkipFirstDayFadein;
-        [UsedImplicitly] public bool DisableStory;
+        [UsedImplicitly] public bool DisableTutorial;
 
         private EntityStateSystem entitySystem;
         private bool tickingStarted;
@@ -27,7 +27,7 @@ namespace Assets.Scripts
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
             GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
-            GameSettings.DisableStory = DisableStory;
+            GameSettings.DisableTutorial = DisableTutorial;
 
             entitySystem = new EntityStateSystem();
 

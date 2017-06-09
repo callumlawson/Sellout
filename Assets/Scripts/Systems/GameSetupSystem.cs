@@ -1,43 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
-using Assets.Scripts.GameActions.Cutscenes;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 
 namespace Assets.Scripts.Systems
 {
-    class GameSetupSystem : IEndInitEntitySystem, ITickEntitySystem
+    class GameSetupSystem : IEndInitEntitySystem
     {
-        //TODO: Remove evil local state.
-        private bool setup;
-
         public List<Type> RequiredStates()
         {
             return new List<Type> { typeof(PersonState) };
         }
 
-        public void OnEndInit(List<Entity> matchingEntities)
+        public void OnEndInit(List<Entity> allPeople)
         {
-            if (GameSettings.DisableStory)
+            if (GameSettings.DisableTutorial)
             {
                 return;
             }
-
-            Locations.ResetPeopleToSpawnPoints(matchingEntities);
-        }
-
-        public void Tick(List<Entity> matchingEntities)
-        {
-            if (!setup)
-            {
-                if (!GameSettings.DisableStory)
-                {
-                    DayOneMorning.Start(matchingEntities);
-                }
-                setup = true;
-            }
+            
+            StaticStates.Get<DayPhaseState>().SetDayPhase(DayPhase.Morning);
         }
     }
 }
