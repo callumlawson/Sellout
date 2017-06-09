@@ -13,14 +13,21 @@ namespace Assets.Scripts.Util
 
     public static class Ingredients
     {
-        private static Color Orange = new Color(1.0f, 0.65f, 0.0f);
+        public static List<Ingredient> AlcoholicIngredients = new List<Ingredient> { Ingredient.Synthol, Ingredient.Alcohol };
 
-        public static Dictionary<Ingredient, Color> IngredientColorMap = new Dictionary<Ingredient, Color>
+        private static readonly Color Orange = new Color(1.0f, 0.65f, 0.0f);
+
+        public static readonly Dictionary<Ingredient, Color> IngredientColorMap = new Dictionary<Ingredient, Color>
         {
             {Ingredient.Synthol, Color.white},
             {Ingredient.Alcohol, Color.green},
             {Ingredient.Orange, Orange},
             {Ingredient.Cola, Color.red}
         };
+
+        public static bool IsAlcoholic(Ingredient ingredient)
+        {
+            return AlcoholicIngredients.Contains(ingredient);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Assets.Scripts.GameActions.Inventory
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                ActionStatus = DrinkUtil.GetDifference(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) == 0.0f ? ActionStatus.Succeeded : ActionStatus.Failed;
+                ActionStatus = DrinkState.IsIdentical(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
             if (timeState.GameTime - startTime > timeoutInMins)
             {

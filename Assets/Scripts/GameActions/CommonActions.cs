@@ -144,7 +144,7 @@ namespace Assets.Scripts.GameActions
         {
             var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
             orderDrink.Add(QueueForDrinkOrder(entity, 10, 20));
-            orderDrink.Add(OrderDrinkFromPayPoint(entity, drinkRecipe, orderTimeoutInMins));           
+            orderDrink.Add(DrinkOrders.OrderExactDrink(entity, drinkRecipe, orderTimeoutInMins));           
             return orderDrink;
         }
 
@@ -175,19 +175,7 @@ namespace Assets.Scripts.GameActions
             return queueForDrink;
         }
 
-        public static ConditionalActionSequence OrderDrinkFromPayPoint(Entity entity, DrinkRecipe drinkRecipe, int orderTimeoutInMins = 20)
-        {
-            var orderDrink = new ConditionalActionSequence("OrderDrinkFromPaypoint");
-            orderDrink.Add(new ConversationAction(new Dialogues.OrderDrinkConverstation(drinkRecipe.DrinkName)));
-            orderDrink.Add(new StartDrinkOrderAction(new DrinkOrder
-            {
-                OrdererName = entity.GetState<NameState>().Name,
-                OrdererSpecies = "Human",
-                Recipe = drinkRecipe
-            }));
-            orderDrink.Add(WaitForDrink(entity, drinkRecipe, orderTimeoutInMins));
-            return orderDrink;
-        }
+  
 
         public static ConditionalActionSequence GoToPaypointOrderDrinkAndSitDown(Entity entity, DrinkRecipe drinkRecipe, int orderTimeoutInMins = 20)
         {

@@ -9,53 +9,53 @@ namespace Assets.Scripts.States
     [Serializable]
     public class DrinkState : IState
     {
-        [SerializeField] private Dictionary<Ingredient, int> contents;
+        [SerializeField] private readonly Dictionary<Ingredient, int> drinkContents;
 
         public Action DrinkAmountChanged = delegate {  };
 
         public DrinkState()
         {
-            contents = new Dictionary<Ingredient, int>();
+            drinkContents = new Dictionary<Ingredient, int>();
         }
 
         public DrinkState(Dictionary<Ingredient, int> contents)
         {
-            this.contents = new Dictionary<Ingredient, int>(contents);
+            drinkContents = new Dictionary<Ingredient, int>(contents);
             DrinkAmountChanged.Invoke();
         }
 
         public DrinkState(DrinkState template)
         {
-            contents = new Dictionary<Ingredient, int>();
+            drinkContents = new Dictionary<Ingredient, int>();
             foreach (var content in template.GetContents())
             {
-                contents.Add(content.Key, content.Value);
+                drinkContents.Add(content.Key, content.Value);
             }
         }
         
         public Dictionary<Ingredient, int> GetContents()
         {
-            return contents;
+            return drinkContents;
         }
 
         public void Clear()
         {
-            contents.Clear();
+            drinkContents.Clear();
             DrinkAmountChanged.Invoke();
         }
 
         public void ChangeIngredientAmount(Ingredient ingredient, int delta)
         {
-            var currentAmount = contents.ContainsKey(ingredient) ? contents[ingredient] : 0;
+            var currentAmount = drinkContents.ContainsKey(ingredient) ? drinkContents[ingredient] : 0;
             var newAmount = Mathf.Clamp(currentAmount + delta, 0, int.MaxValue);            
 
             if (newAmount > 0)
             {
-                contents[ingredient] = currentAmount + delta;
+                drinkContents[ingredient] = currentAmount + delta;
             }
             else
             {
-                contents.Remove(ingredient);
+                drinkContents.Remove(ingredient);
             }
             DrinkAmountChanged.Invoke();
         }
@@ -63,17 +63,86 @@ namespace Assets.Scripts.States
         public int GetTotalDrinkSize()
         {
             var size = 0;
-            foreach (var drinkToAmount in contents)
+            foreach (var drinkToAmount in drinkContents)
             {
                 size += drinkToAmount.Value;
             }
             return size;
         }
 
+        public bool ContainsIngedient(Ingredient ingredient)
+        {
+            return drinkContents.ContainsKey(ingredient) && drinkContents[ingredient] >= 1;
+        }
+
+        public static bool IsVirgin(DrinkState drink)
+        {
+            return GetAlcoholAmount(drink) == 0;
+        }
+
+        public static bool IsIdentical(DrinkState goal, DrinkState drink)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            return GetDifference(goal, drink) == 0.0f;
+        }
+
+        private static int GetAlcoholAmount(DrinkState drink)
+        {
+            var drinkContents = drink.GetContents();
+            var alcholAmount = 0;
+            foreach (var ingredientAmt in drinkContents)
+            {
+                if (Ingredients.IsAlcoholic(ingredientAmt.Key))
+                {
+                    alcholAmount += ingredientAmt.Value;
+                }
+            }
+            return alcholAmount;
+        }
+
+        private static float GetDifference(DrinkState goal, DrinkState drink)
+        {
+            var goalContents = goal.GetContents();
+            var drinkContents = drink.GetContents();
+
+            var totalGoalIngredients = 0;
+            var totalDifference = 0;
+
+            foreach (var ingredientAmt in goalContents)
+            {
+                var ingredient = ingredientAmt.Key;
+                var goalAmt = ingredientAmt.Value;
+
+                totalGoalIngredients += goalAmt;
+
+                int amtDrink;
+                drinkContents.TryGetValue(ingredient, out amtDrink);
+
+                var difference = Mathf.Abs(goalAmt - amtDrink);
+                if (difference != 0)
+                {
+                    totalDifference += difference;
+                }
+            }
+
+            foreach (var ingredientAmt in drinkContents)
+            {
+                var ingredient = ingredientAmt.Key;
+                var amt = ingredientAmt.Value;
+
+                if (!goalContents.ContainsKey(ingredient))
+                {
+                    totalDifference += amt;
+                }
+            }
+
+            return Mathf.Min(totalDifference / (float)totalGoalIngredients, 1.0f);
+        }
+
         public override string ToString()
         {
             var output = "Drink: \n";
-            foreach (var content in contents)
+            foreach (var content in drinkContents)
             {
                 output = output + "\t(" + content.Key + "->" + content.Value + ")\n";
             }

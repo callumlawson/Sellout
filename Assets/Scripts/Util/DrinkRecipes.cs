@@ -7,8 +7,8 @@ namespace Assets.Scripts.Util
 {
     public class DrinkRecipe
     {
-        public string DrinkName { get; private set; }
-        public DrinkState Contents { get; private set; }
+        public string DrinkName { get; set; }
+        public DrinkState Contents { get; set; }
 
         public DrinkRecipe(string drinkName, DrinkState contents)
         {
@@ -26,7 +26,9 @@ namespace Assets.Scripts.Util
             new DrinkRecipe("Space Screwdriver", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Alcohol, 1}, {Ingredient.Orange, 1}})),
             new DrinkRecipe("Space Rum and Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Alcohol, 1}, {Ingredient.Cola, 1}})),
             new DrinkRecipe("Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}})),
-            new DrinkRecipe("Frosted Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}, { Ingredient.Cola, 1 }}))
+            new DrinkRecipe("Frosted Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}, { Ingredient.Cola, 1 }})),
+            new DrinkRecipe("Orangeola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 1}, {Ingredient.Orange, 1}})),
+            new DrinkRecipe("Long Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 3}}))
         };
 
         public static DrinkRecipe GetRandomDrinkRecipe()
