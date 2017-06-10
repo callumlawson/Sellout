@@ -1,7 +1,7 @@
 ﻿using System;
 using Assets.Framework.Entities;
+using Assets.Scripts.GameActions;
 using Assets.Scripts.Util.Events;
-using Assets.Scripts.Util;
 
 namespace Assets.Scripts.Systems
 {
@@ -18,13 +18,6 @@ namespace Assets.Scripts.Systems
         public Entity Stack;       
     }
 
-    public struct DrinkOrder
-    {
-        public DrinkRecipe Recipe;
-        public string OrdererName;
-        public string OrdererSpecies;
-    }
-
     static class EventSystem
     {
         public static Action PauseEvent = delegate { };
@@ -33,7 +26,7 @@ namespace Assets.Scripts.Systems
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
         public static Action StartDrinkMakingEvent = delegate {  };
         public static Action EndDrinkMakingEvent = delegate {  };
-        public static Action<DrinkOrder> StartDrinkOrderEvent = delegate {  };
+        public static Action<DrinkOrders.DrinkOrder> StartDrinkOrderEvent = delegate {  };
         public static Action EndDrinkOrderEvent = delegate {  };
 
         public delegate void OnClickEvent(ClickEvent clickEvent);

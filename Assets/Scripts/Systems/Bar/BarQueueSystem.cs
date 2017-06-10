@@ -119,7 +119,7 @@ namespace Assets.Scripts.Systems.Bar
             purchaseWaypoint.GetState<UserState>().Use(waitingCharacter, "Bar Queue System");
 
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, new GoToWaypointAction());
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, DrinkOrders.OrderExactDrink(waitingCharacter, DrinkRecipes.GetRandomDrinkRecipe()));
+            ActionManagerSystem.Instance.QueueAction(waitingCharacter, DrinkOrders.GetRandomOrder(waitingCharacter));
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDown());
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDownLoop());
         }

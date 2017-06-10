@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Assets.Framework.Entities;
+using Assets.Scripts.GameActions;
+using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
+using Assets.Scripts.Visualizers;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.Systems;
-using Assets.Scripts.Visualizers;
-using Assets.Framework.Entities;
 
-namespace Assets.Scripts.UI
+namespace Assets.Scripts.UI.Bar
 {
     [UsedImplicitly]
     class MixologyBookUI : MonoBehaviour, IEntityVisualizer
@@ -23,13 +23,13 @@ namespace Assets.Scripts.UI
         [SerializeField] private Text speciesText;
         #pragma warning restore 649
 
-        private string recipeToNamePath = "Title/Text";
-        private string ingredientToNamePath = "Panel/Name";
-        private string ingredientToAmounttPath = "Panel/Amount";
+        private const string RecipeToNamePath = "Title/Text";
+        private const string IngredientToNamePath = "Panel/Name";
+        private const string IngredientToAmounttPath = "Panel/Amount";
 
-        private readonly string DefaultNameText = "????";
-        private readonly string DefaultOrderText = "????";
-        private readonly string DefaultSpeciesText = "????";
+        private const string DefaultNameText = "????";
+        private const string DefaultOrderText = "????";
+        private const string DefaultSpeciesText = "????";
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
@@ -53,14 +53,18 @@ namespace Assets.Scripts.UI
             EventSystem.EndDrinkOrderEvent += OnEndDrinkOrder;
         }
 
-        public void OnStartDrinkOrder(DrinkOrder order)
+        private void OnStartDrinkOrder(DrinkOrders.DrinkOrder order)
         {
-            nameText.text = order.OrdererName != null ? order.OrdererName : DefaultNameText;
-            orderText.text = order.Recipe != null ? order.Recipe.DrinkName : DefaultOrderText;
-            speciesText.text = order.OrdererSpecies != null ? order.OrdererSpecies : DefaultSpeciesText;
+            if (order.OrderType == DrinkOrders.DrinkOrderType.Exact)
+            {
+                var exactOrder = (DrinkOrders.ExactDrinkorder) order;
+                orderText.text = exactOrder.Recipe != null ? exactOrder.Recipe.DrinkName : DefaultOrderText;
+            }
+            nameText.text = order.OrdererName ?? DefaultNameText;
+            speciesText.text = DrinkOrders.DrinkOrder.OrdererSpecies ?? DefaultSpeciesText;
         }
 
-        public void OnEndDrinkOrder()
+        private void OnEndDrinkOrder()
         {
             nameText.text = "";
             orderText.text = "";
@@ -71,14 +75,14 @@ namespace Assets.Scripts.UI
         {
             var recipeUI = Instantiate(recipeTemplate);
             recipeUI.transform.SetParent(recipeContentPane.transform);
-            recipeUI.transform.Find(recipeToNamePath).GetComponent<Text>().text = recipe.DrinkName;
+            recipeUI.transform.Find(RecipeToNamePath).GetComponent<Text>().text = recipe.DrinkName;
             
             foreach (var ingredient in recipe.Contents.GetContents())
             {
                 var ingredientUI = Instantiate(ingredientTemplate);
                 ingredientUI.transform.SetParent(recipeUI.transform);
-                ingredientUI.transform.Find(ingredientToNamePath).GetComponent<Text>().text = ingredient.Key.ToString();
-                ingredientUI.transform.Find(ingredientToAmounttPath).GetComponent<Text>().text = ingredient.Value.ToString();
+                ingredientUI.transform.Find(IngredientToNamePath).GetComponent<Text>().text = ingredient.Key.ToString();
+                ingredientUI.transform.Find(IngredientToAmounttPath).GetComponent<Text>().text = ingredient.Value.ToString();
             }
         }
 

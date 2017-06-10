@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Drinks;
 using Assets.Scripts.GameActions.Inventory;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
@@ -45,14 +46,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var drinkRecipe = DrinkRecipes.GetDrinkRecipe(drinkName);
 
             var orderSequence = new ConditionalActionSequence("Drink order", false);
-            orderSequence.Add(new StartDrinkOrderAction(new DrinkOrder
-            {
-                OrdererName = mcGraw.GetState<NameState>().Name,
-                OrdererSpecies = "Human",
-                Recipe = drinkRecipe
-            }));
+            var drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, mcGraw.GetState<NameState>().Name);
+            orderSequence.Add(new StartDrinkOrderAction(drinkOrder));
             mcGrawSequence.Add(orderSequence);
-            orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkRecipe, 90, true, new DrinkSucsessDialogue()));
+            orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkOrder.DrinkPredicate, 90, true, new DrinkSucsessDialogue()));
             mcGrawSequence.Add(new RemoveTutorialControlLockAction());
             mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
             mcGrawSequence.Add(new PauseAction(3.0f));
@@ -101,7 +98,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("<i>Looks at you expectantly</i>");
-                DialogueSystem.Instance.WriteNPCLine("Wait, you arn't Dave...");
+                DialogueSystem.Instance.WriteNPCLine("Wait, you aren't Dave...");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Nope, I'm new. Poor Dave had to jump ship. What can I get you this morning?", SoItBegings);
             }
 

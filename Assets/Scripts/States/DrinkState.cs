@@ -75,7 +75,7 @@ namespace Assets.Scripts.States
             return drinkContents.ContainsKey(ingredient) && drinkContents[ingredient] >= 1;
         }
 
-        public static bool IsVirgin(DrinkState drink)
+        public static bool IsNonAlcoholic(DrinkState drink)
         {
             return GetAlcoholAmount(drink) == 0;
         }

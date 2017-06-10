@@ -6,7 +6,7 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions.Composite
 {
-    abstract class ActionSequenceBase : CompositeAction, ICancellableAction
+    public abstract class ActionSequenceBase : CompositeAction, ICancellableAction
     {
         private bool SequenceIsCancellable;
 
@@ -105,7 +105,7 @@ namespace Assets.Scripts.GameActions.Composite
     }
 
     //Run actions in sequence. Failure prevent remaining actions being run.
-    class ConditionalActionSequence : ActionSequenceBase
+    public class ConditionalActionSequence : ActionSequenceBase
     {
         public ConditionalActionSequence(string name = "Unnamed", bool isCancellable = true) : base(name, isCancellable)
         {

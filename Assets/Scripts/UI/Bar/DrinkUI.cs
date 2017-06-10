@@ -1,19 +1,18 @@
-﻿using Assets.Scripts.States;
-using Assets.Scripts.UI;
-using Assets.Scripts.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Assets.Scripts.Util;
+using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Assets.Scripts.Systems
+namespace Assets.Scripts.UI.Bar
 {
     class DrinkUI : MonoBehaviour
     {
-#pragma warning disable 649
+        #pragma warning disable 649
         [SerializeField] private MixologyBookUI mixologyBook;
         public IngredientPanelUI ingredientTemplate;
         public RectTransform ingredientListParent;
-#pragma warning restore 649
+        #pragma warning restore 649
 
         public delegate void OnMixEvent();
         public delegate void OnCloseEvent();
@@ -27,8 +26,7 @@ namespace Assets.Scripts.Systems
 
         private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
-
-
+        [UsedImplicitly]
         public void Awake()
         {
             ingredientPanels = new Dictionary<Ingredient, IngredientPanelUI>();

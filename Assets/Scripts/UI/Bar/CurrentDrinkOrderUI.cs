@@ -1,43 +1,51 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using Assets.Scripts.GameActions;
 using Assets.Scripts.Systems;
-using Assets.Scripts.Util;
+using JetBrains.Annotations;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class CurrentDrinkOrderUI : MonoBehaviour
+namespace Assets.Scripts.UI.Bar
 {
-    GameObject panel;
-    Text CurrentDrinkText;
-
-    private readonly string DefaultDrinkOrderName = "????";
+    public class CurrentDrinkOrderUI : MonoBehaviour
+    {
+        private GameObject panel;
+        private Text currentDrinkText;
     
-    void Awake()
-    {
-        panel = transform.GetChild(0).gameObject;
-        CurrentDrinkText = GetComponentInChildren<Text>();
-        panel.SetActive(false);
-    }
+        [UsedImplicitly]
+        public void Awake()
+        {
+            panel = transform.GetChild(0).gameObject;
+            currentDrinkText = GetComponentInChildren<Text>();
+            panel.SetActive(false);
+        }
 
-    private void Start()
-    {
-        EventSystem.StartDrinkOrderEvent += OnStartDrinkOrder;
-        EventSystem.EndDrinkOrderEvent += OnEndDrinkOrderEvent;
-    }
+        [UsedImplicitly]
+        public void Start()
+        {
+            EventSystem.StartDrinkOrderEvent += OnStartDrinkOrder;
+            EventSystem.EndDrinkOrderEvent += OnEndDrinkOrderEvent;
+        }
 
-    private void OnStartDrinkOrder(DrinkOrder drink)
-    {
-        var name = drink.Recipe != null ? drink.Recipe.DrinkName : DefaultDrinkOrderName;
-        CurrentDrinkText.text = name;
-        panel.SetActive(true);
-    }
+        private void OnStartDrinkOrder(DrinkOrders.DrinkOrder order)
+        {
+            switch (order.OrderType)
+            {
+                case DrinkOrders.DrinkOrderType.Exact:
+                    var exactOrder = (DrinkOrders.ExactDrinkorder) order;
+                    currentDrinkText.text = exactOrder.Recipe.DrinkName;
+                    break;
+                case DrinkOrders.DrinkOrderType.NonAlcoholic:
+                    currentDrinkText.text = "Non Alcoholic";
+                    break;
+            }
 
-    private void OnEndDrinkOrderEvent()
-    {
-        CurrentDrinkText.text = "";
-        panel.SetActive(false);
-    }
+            panel.SetActive(true);
+        }
 
-    void Update()
-    {
-
+        private void OnEndDrinkOrderEvent()
+        {
+            currentDrinkText.text = "";
+            panel.SetActive(false);
+        }
     }
 }

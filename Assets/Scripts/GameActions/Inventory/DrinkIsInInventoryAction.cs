@@ -9,15 +9,15 @@ namespace Assets.Scripts.GameActions.Inventory
 {
     public class DrinkIsInInventoryAction : GameAction
     {
-        private readonly DrinkState drinkToCheckFor;
-
         private readonly int timeoutInMins;
         private GameTime startTime;
         private TimeState timeState;
 
-        public DrinkIsInInventoryAction(DrinkState drinkToCheckFor, int timeoutInMins)
+        private Func<DrinkState, bool> drinkPredicate;
+
+        public DrinkIsInInventoryAction(Func<DrinkState, bool> drinkPredicate, int timeoutInMins)
         {
-            this.drinkToCheckFor = drinkToCheckFor;
+            this.drinkPredicate = drinkPredicate;
             this.timeoutInMins = timeoutInMins;
         }
 
@@ -32,8 +32,7 @@ namespace Assets.Scripts.GameActions.Inventory
             var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                ActionStatus = DrinkState.IsIdentical(inventoryItem.GetState<DrinkState>(), drinkToCheckFor) ? ActionStatus.Succeeded : ActionStatus.Failed;
+                ActionStatus = drinkPredicate.Invoke(inventoryItem.GetState<DrinkState>()) ? ActionStatus.Succeeded : ActionStatus.Failed;
             }
             if (timeState.GameTime - startTime > timeoutInMins)
             {

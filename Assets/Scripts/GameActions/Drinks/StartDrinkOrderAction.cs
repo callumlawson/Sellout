@@ -1,34 +1,37 @@
-﻿using Assets.Scripts.GameActions.Framework;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
+using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.Systems;
 
-public class StartDrinkOrderAction : GameAction
+namespace Assets.Scripts.GameActions.Drinks
 {
-    private DrinkOrder drink;
-
-    public StartDrinkOrderAction(DrinkOrder drink)
+    public class StartDrinkOrderAction : GameAction
     {
-        this.drink = drink;
-    }
+        private readonly DrinkOrders.DrinkOrder drinkOrder;
 
-    public override void OnStart(Entity entity)
-    {
-        EventSystem.StartDrinkOrderEvent.Invoke(drink);
-        ActionStatus = ActionStatus.Succeeded;
-    }
+        public StartDrinkOrderAction(DrinkOrders.DrinkOrder order)
+        {
+            drinkOrder = order;
+        }
 
-    public override void OnFrame(Entity entity)
-    {
-        // do nothing
-    }    
+        public override void OnStart(Entity entity)
+        {
+            EventSystem.StartDrinkOrderEvent.Invoke(drinkOrder);
+            ActionStatus = ActionStatus.Succeeded;
+        }
 
-    public override void Pause()
-    {
-        // do nothing
-    }
+        public override void OnFrame(Entity entity)
+        {
+            // do nothing
+        }    
 
-    public override void Unpause()
-    {
-        // do nothing
+        public override void Pause()
+        {
+            // do nothing
+        }
+
+        public override void Unpause()
+        {
+            // do nothing
+        }
     }
 }

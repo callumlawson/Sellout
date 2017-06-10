@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Systems;
+using Assets.Scripts.UI.Bar;
 using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEngine.UI;

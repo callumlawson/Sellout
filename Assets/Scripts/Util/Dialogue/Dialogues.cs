@@ -25,36 +25,12 @@ namespace Assets.Scripts.Util.Dialogue
             }
         }
 
-        public class OrderDrinkConverstation : Conversation
-        {
-            private readonly string drinkName;
-
-            public OrderDrinkConverstation(string drinkName)
-            {
-                this.drinkName = drinkName;
-            }
-
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("I'd like a " + drinkName + " please.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
         public class OrderDrinkRetryConverstation : Conversation
         {
-            private readonly string drinkName;
-
-            public OrderDrinkRetryConverstation(string drinkName)
-            {
-                this.drinkName = drinkName;
-            }
-
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("That's not right! I ordered a " + drinkName + ". Use the menu to your left.");
+                DialogueSystem.Instance.WriteNPCLine("That's not right! Use the menu to your left.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
