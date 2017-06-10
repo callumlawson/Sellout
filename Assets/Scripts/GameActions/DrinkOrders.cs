@@ -56,9 +56,19 @@ namespace Assets.Scripts.GameActions
 
         public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 20)
         {
-            return Random.value > 0.5 
-                ? OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name), orderTimeOurInMins) 
-                : OrderNonAlcoholicDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), orderTimeOurInMins);
+            var randomValue = Random.value;
+            if (randomValue <= 0.33)
+            {
+                return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name), orderTimeOurInMins);
+            }
+            else if (randomValue <= 0.66)
+            {
+                return OrderNonAlcoholicDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), orderTimeOurInMins);
+            }
+            else
+            {
+                return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), orderTimeOurInMins);
+            }
         }
 
         public static ConditionalActionSequence OrderExactDrink(Entity entity, ExactDrinkorder drinkOrder, int orderTimeoutInMins = 20)

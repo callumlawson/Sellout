@@ -24,7 +24,6 @@ namespace Assets.Scripts.Systems.Drinks
         private bool usingBar;
 
         private Entity mixologyBook;
-        private Entity glassStack;
         private PlayerState playerState;
 
         public void SetEntitySystem(EntityStateSystem ess)
@@ -54,20 +53,20 @@ namespace Assets.Scripts.Systems.Drinks
                     switch (targetPrefab.PrefabName)
                     {
                         case Prefabs.GlassStack:
-                            glassStack = target;
+                        case Prefabs.BeerStack:
                             if (drink == null)
                             {
-                                PickUpGlass(playerState.Player, glassStack);
+                                PickUpStackItem(playerState.Player, target);
                             }
                             break;
                         case Prefabs.Drink:
                             if (drink == null)
                             {
                                 var drinkParent = target.GetState<InventoryState>().Parent;
-                                if (drinkParent.HasState<GlassStackState>())
+                                if (drinkParent.HasState<ItemStackState>())
                                 {
-                                    glassStack = drinkParent;
-                                    PickUpGlass(playerState.Player, glassStack);
+                                    var itemStack = drinkParent;
+                                    PickUpStackItem(playerState.Player, itemStack);
                                 }
                             }
                             break;
@@ -77,7 +76,7 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.Washup:
                             if (drink != null)
                             {
-                                WashUpGlass(playerState.Player);
+                                WashUpItem(playerState.Player);
                             }
                             break;
                         case Prefabs.Player:
@@ -105,11 +104,11 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void PickUpGlass(Entity requester, Entity stack)
+        private void PickUpStackItem(Entity requester, Entity stack)
         {
             if (!requester.HasState<InventoryState>())
             {
-                Debug.LogError("Requester tried to pick up a glass but has no inventory state!");
+                Debug.LogError("Requester tried to pick up a stack item but has no inventory state!");
             }
 
             if (requester.GetState<InventoryState>().Child != null)
@@ -117,18 +116,13 @@ namespace Assets.Scripts.Systems.Drinks
                 return;
             }
 
-            EventSystem.TakeGlass(new TakeGlassRequest { Requester = requester, Stack = stack });
-            
-            if (requester.GetState<InventoryState>().Child == null || requester.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName != Prefabs.Drink)
-            {
-                Debug.LogErrorFormat("Tried to take glass, but came up with {0} instead!", requester.GetState<InventoryState>().Child);
-            }
+            EventSystem.TakeStackItem(new TakeStackItemRequest { Requester = requester, Stack = stack });            
 
             drink = requester.GetState<InventoryState>().Child;
             DrinkColliderIsEnabled(false);
         }
 
-        private void WashUpGlass(Entity requester)
+        private void WashUpItem(Entity requester)
         {
             EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = requester, EntityTo = null, Mover = drink });
             entitySystem.RemoveEntity(drink);
@@ -147,7 +141,7 @@ namespace Assets.Scripts.Systems.Drinks
                 });
                 DrinkColliderIsEnabled(true);
                 drink = null;
-                glassStack.GameObject.SetActive(true);
+                //glassStack.GameObject.SetActive(true); Caryn
             }
         }
 

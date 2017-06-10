@@ -8,7 +8,8 @@ namespace Assets.Scripts.Util
         Synthol,
         Alcohol,
         Orange,
-        Cola
+        Cola,
+        Beer
     }
 
     public static class Ingredients
@@ -16,13 +17,15 @@ namespace Assets.Scripts.Util
         public static List<Ingredient> AlcoholicIngredients = new List<Ingredient> { Ingredient.Synthol, Ingredient.Alcohol };
 
         private static readonly Color Orange = new Color(1.0f, 0.65f, 0.0f);
+        private static readonly Color Brown = new Color(69.0f/255.0f, 56.0f/255.0f, 35.0f/255.0f);
 
         public static readonly Dictionary<Ingredient, Color> IngredientColorMap = new Dictionary<Ingredient, Color>
         {
             {Ingredient.Synthol, Color.white},
             {Ingredient.Alcohol, Color.green},
             {Ingredient.Orange, Orange},
-            {Ingredient.Cola, Color.red}
+            {Ingredient.Cola, Color.red},
+            {Ingredient.Beer, Brown }
         };
 
         public static bool IsAlcoholic(Ingredient ingredient)

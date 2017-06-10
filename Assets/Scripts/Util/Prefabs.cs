@@ -16,6 +16,8 @@
         public const string Player = "Player";
         public const string Console = "Console";
         public const string BarConsole = "BarConsole";
+        public const string BeerStack = "BeerStack";
+        public const string Beer = "Beer";
 
         //UI
         public const string DrinkMixingUI = "DrinkMixingUI";

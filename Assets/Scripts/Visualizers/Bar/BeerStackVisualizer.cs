@@ -5,14 +5,14 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.Visualizers.Bar
 {
-    public class GlassStackVisualizer : ItemStackVisualizer
+    public class BeerStackVisualizer : ItemStackVisualizer
     {
         public override List<IState> GetNewStackItem()
         {
             return new List<IState>
             {
-                new PrefabState(Prefabs.Drink),
-                new DrinkState(new DrinkState()),
+                new PrefabState(Prefabs.Beer),
+                new DrinkState(new DrinkState(DrinkRecipes.Beer.Contents)),
                 new PositionState(transform.position),
                 new InventoryState()
             };

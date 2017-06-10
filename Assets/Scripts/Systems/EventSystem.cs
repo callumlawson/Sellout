@@ -12,7 +12,7 @@ namespace Assets.Scripts.Systems
         public Entity Mover;
     }
 
-    public struct TakeGlassRequest
+    public struct TakeStackItemRequest
     {
         public Entity Requester;
         public Entity Stack;       
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Systems
         public delegate void OnClickEvent(ClickEvent clickEvent);
         public static OnClickEvent onClickInteraction = null;
 
-        public static Action<TakeGlassRequest> TakeGlass = delegate { };
+        public static Action<TakeStackItemRequest> TakeStackItem = delegate { };
 
         public static void BroadcastEvent(ClickEvent clickEvent)
         {

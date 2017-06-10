@@ -7,7 +7,7 @@ using Assets.Scripts.States.Bar;
 
 namespace Assets.Scripts.Blueprints
 {
-    public class GlassStackSpawner : MonoBehaviour, IEntityBlueprint
+    public class BeerStackSpawner : MonoBehaviour, IEntityBlueprint
     {
         public List<IState> EntityToSpawn()
         {
@@ -15,11 +15,11 @@ namespace Assets.Scripts.Blueprints
             {
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
-                new PrefabState(Prefabs.GlassStack),
+                new PrefabState(Prefabs.BeerStack),
                 new ItemStackState(),
                 new InventoryState(),
                 new VisibleSlotState(),
-                new TooltipState("Dispenses glasses for making drinks.")
+                new TooltipState("Dispenses beers.")
             };
         }
     }

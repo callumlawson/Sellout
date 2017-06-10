@@ -62,7 +62,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new DialogueSystem());
             entitySystem.AddSystem(new HierarchyManipulationSystem()); //Must run before VisibleSlotSystem
             entitySystem.AddSystem(new VisibleSlotSystem());
-            entitySystem.AddSystem(new GlassStackSystem());
+            entitySystem.AddSystem(new ItemStackSystem());
             entitySystem.AddSystem(new BarQueueSystem());
 
             //NPC/AI
