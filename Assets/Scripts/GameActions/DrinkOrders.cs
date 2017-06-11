@@ -17,7 +17,8 @@ namespace Assets.Scripts.GameActions
         public enum DrinkOrderType
         {
             Exact,
-            NonAlcoholic
+            NonAlcoholic,
+            ContainingIngredient
         }
 
         public abstract class DrinkOrder
@@ -54,16 +55,32 @@ namespace Assets.Scripts.GameActions
             }
         }
 
+        public class IncludingIngredientOrder : DrinkOrder
+        {
+            public readonly Ingredient Ingredient;
+
+            public IncludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ContainingIngredient)
+            {
+                Ingredient = ingredient;
+                OrdererName = ordererName;
+                DrinkPredicate = testDrink => testDrink.ContainsIngedient(Ingredient) && DrinkRecipes.Contains(testDrink);
+            }
+        }
+
         public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 20)
         {
             var randomValue = Random.value;
-            if (randomValue <= 0.33)
+            if (randomValue <= 0.25)
             {
                 return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name), orderTimeOurInMins);
             }
-            if (randomValue <= 0.66)
+            if (randomValue <= 0.50)
             {
                 return OrderNonAlcoholicDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), orderTimeOurInMins);
+            }
+            if (randomValue <= 0.75)
+            {
+                return OrderSpecificIngredientDrink(entity, new IncludingIngredientOrder(Ingredients.DispensedNonAlcoholicIngredients.PickRandom(), entity.GetState<NameState>().Name));
             }
             return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), orderTimeOurInMins);
         }
@@ -80,7 +97,16 @@ namespace Assets.Scripts.GameActions
         public static ConditionalActionSequence OrderNonAlcoholicDrink(Entity entity, NonAlcoholicDrinkOrder drinkOrder, int orderTimeoutInMins = 20)
         {
             var orderDrink = new ConditionalActionSequence("OrderNonAlcoholicDrink");
-            orderDrink.Add(new ConversationAction(new OrderNonAlcoholicDrinkConverstation()));
+            orderDrink.Add(new ConversationAction(new OrderNonAlcoholicDrinkConversation()));
+            orderDrink.Add(new StartDrinkOrderAction(drinkOrder));
+            orderDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
+            return orderDrink;
+        }
+
+        public static ConditionalActionSequence OrderSpecificIngredientDrink(Entity entity, IncludingIngredientOrder drinkOrder, int orderTimeoutInMins = 20)
+        {
+            var orderDrink = new ConditionalActionSequence("OrderSpecificIngredientDrink");
+            orderDrink.Add(new ConversationAction(new OrderDrinkIncludingIngredientConversation(drinkOrder.Ingredient)));
             orderDrink.Add(new StartDrinkOrderAction(drinkOrder));
             orderDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
             return orderDrink;
@@ -103,7 +129,7 @@ namespace Assets.Scripts.GameActions
             }
         }
 
-        private class OrderNonAlcoholicDrinkConverstation : Conversation
+        private class OrderNonAlcoholicDrinkConversation : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
             {
@@ -111,6 +137,23 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WriteNPCLine("I'll have anything on the menu, as long as it's non-alcoholic.");
                 DialogueSystem.Instance.WriteNPCLine(Random.value > 0.5 ? "...had a heavy one last night.": "Got a shift starting soon.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>No problem.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class OrderDrinkIncludingIngredientConversation : Conversation
+        {
+            private readonly Ingredient ingredient;
+
+            public OrderDrinkIncludingIngredientConversation(Ingredient ingredient)
+            {
+                this.ingredient = ingredient;
+            }
+
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Give me something containing " + ingredient + ". It's my favourite");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Sure.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
     }

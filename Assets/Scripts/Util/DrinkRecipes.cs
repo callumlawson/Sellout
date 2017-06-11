@@ -25,11 +25,11 @@ namespace Assets.Scripts.Util
 
         public static readonly List<DrinkRecipe> Recipes = new List<DrinkRecipe>
         {
-            new DrinkRecipe("Space Screwdriver", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Alcohol, 1}, {Ingredient.Orange, 1}})),
+            new DrinkRecipe("Space Screwdriver", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Alcohol, 1}, {Ingredient.Orangeade, 1}})),
             new DrinkRecipe("Space Rum and Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Alcohol, 1}, {Ingredient.Cola, 1}})),
             new DrinkRecipe("Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}})),
             new DrinkRecipe("Frosted Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}, { Ingredient.Cola, 1 }})),
-            new DrinkRecipe("Orangeola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 1}, {Ingredient.Orange, 1}})),
+            new DrinkRecipe("Orangeola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 1}, {Ingredient.Orangeade, 1}})),
             new DrinkRecipe("Long Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 3}})),
             Beer
         };
