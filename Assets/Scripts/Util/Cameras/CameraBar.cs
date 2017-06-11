@@ -3,6 +3,9 @@ using DG.Tweening;
 using Assets.Framework.States;
 using Assets.Scripts.States;
 using System.Linq;
+using System;
+using System.Collections.Generic;
+using Assets.Scripts.Visualizers;
 
 namespace Assets.Scripts.Util.Cameras
 {
@@ -13,7 +16,9 @@ namespace Assets.Scripts.Util.Cameras
 
         private bool MoveFinished;
         private bool RotateFinished;
-        
+
+        private NameStateVisualizer playerNameStateVisualizer;
+        private Renderer[] playerRenderers;
         private Material[] playerMaterials;
         private Collider[] playerColliders;
 
@@ -23,10 +28,16 @@ namespace Assets.Scripts.Util.Cameras
         private bool waitingToTurnOnCeiling;
         private bool waitingToturnOffCeiling;
 
+        private List<Tweener> fadeTweeners;
+
         void Start()
         {
+            fadeTweeners = new List<Tweener>();
+
             var player = StaticStates.Get<PlayerState>().Player.GameObject;
-            playerMaterials = player.GetComponentsInChildren<Renderer>().Select(renderer => renderer.material).ToArray();
+            playerNameStateVisualizer = player.GetComponent<NameStateVisualizer>();
+            playerRenderers = player.GetComponentsInChildren<Renderer>();
+            playerMaterials = playerRenderers.Select(renderer => renderer.material).ToArray();
             playerColliders = player.GetComponentsInChildren<Collider>();
 
             var ceiling = GameObject.FindGameObjectWithTag("Ceiling");
@@ -77,11 +88,15 @@ namespace Assets.Scripts.Util.Cameras
 
             transform.DOMove(TargetCameraPosition.position, 1.0f);
             transform.DORotate(TargetCameraPosition.rotation.eulerAngles, 1.0f);
-            
+
+            fadeTweeners.Clear();
+
             foreach (var material in playerMaterials)
             {
                 SetMaterialaToTransparent(material);
-                material.DOFade(0.0f, 1.0f);
+                var fadeTweener = material.DOFade(0.0f, 1.0f);
+                fadeTweener.OnComplete(FadeOutFinished);
+                fadeTweeners.Add(fadeTweener);
             }
 
             foreach (var collider in playerColliders)
@@ -92,12 +107,27 @@ namespace Assets.Scripts.Util.Cameras
             waitingToTurnOnCeiling = true;           
         }
 
+        private void FadeOutFinished()
+        {
+            playerNameStateVisualizer.SetNameTagHidden(true);
+            SetRenderersEnabled(false);
+        }
+
         public void StopCameraBehaviour()
         {
             var cameraFollow = GetComponent<CameraFollow>();
             var cameraFollowPosition = cameraFollow.GetNextCameraPosition(false);
             var cameraFollowRotation = cameraFollow.GetFollowRotation();
-            
+
+            playerNameStateVisualizer.SetNameTagHidden(false);
+
+            foreach (var fadeTweener in fadeTweeners)
+            {
+                fadeTweener.Kill(false);
+            }
+
+            SetRenderersEnabled(true);
+
             transform.DOMove(cameraFollowPosition, 1.0f).OnComplete(OnMoveComplete);
             transform.DORotate(cameraFollowRotation, 1.0f).OnComplete(OnRotateComplete);
 
@@ -153,6 +183,14 @@ namespace Assets.Scripts.Util.Cameras
             material.DisableKeyword("_ALPHABLEND_ON");
             material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
             material.renderQueue = -1;
+        }
+
+        private void SetRenderersEnabled(bool enable)
+        {
+            foreach (var renderer in playerRenderers)
+            {
+                renderer.enabled = enable;
+            }
         }
     }
 }

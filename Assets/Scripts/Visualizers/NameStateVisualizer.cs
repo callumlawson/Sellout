@@ -19,6 +19,13 @@ namespace Assets.Scripts.Visualizers
         private RectTransform nameTagRectTransform;
         private Vector3 offset;
 
+        private bool hidden;
+
+        public void SetNameTagHidden(bool hidden)
+        {
+            this.hidden = hidden;
+        }
+
         public void OnStartRendering(Entity entity)
         {
             positionState = entity.GetState<PositionState>();
@@ -31,7 +38,7 @@ namespace Assets.Scripts.Visualizers
 
         public void OnFrame()
         {
-            if (BoundsLookup.Instance.GetBarBounds().Contains(positionState.Position))
+            if (!hidden && BoundsLookup.Instance.GetBarBounds().Contains(positionState.Position))
             {
                 nameTag.SetActive(true);
                 nameTagRectTransform.anchoredPosition =
