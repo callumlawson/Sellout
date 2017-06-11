@@ -7,8 +7,8 @@ namespace Assets.Scripts.Util
 {
     public class DrinkRecipe
     {
-        public string DrinkName { get; set; }
-        public DrinkState Contents { get; set; }
+        public string DrinkName { get; private set; }
+        public DrinkState Contents { get; private set; }
 
         public DrinkRecipe(string drinkName, DrinkState contents)
         {
@@ -21,7 +21,7 @@ namespace Assets.Scripts.Util
     {
         private static readonly Random Random = new Random();
 
-        public static DrinkRecipe Beer = new DrinkRecipe("Beer", new DrinkState(new Dictionary<Ingredient, int> { { Ingredient.Beer, 5 } }));
+        public static readonly DrinkRecipe Beer = new DrinkRecipe("Beer", new DrinkState(new Dictionary<Ingredient, int> { { Ingredient.Beer, 5 } }));
 
         public static readonly List<DrinkRecipe> Recipes = new List<DrinkRecipe>
         {
@@ -31,8 +31,13 @@ namespace Assets.Scripts.Util
             new DrinkRecipe("Frosted Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}, { Ingredient.Cola, 1 }})),
             new DrinkRecipe("Orangeola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 1}, {Ingredient.Orange, 1}})),
             new DrinkRecipe("Long Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 3}})),
-            Beer,
+            Beer
         };
+
+        public static bool Contains(DrinkState drinkState)
+        {
+            return Recipes.Any(recipe => recipe.Contents.Equals(drinkState));
+        }
 
         public static DrinkRecipe GetRandomDrinkRecipe()
         {
@@ -41,14 +46,7 @@ namespace Assets.Scripts.Util
 
         public static DrinkRecipe GetDrinkRecipe(string drinkName)
         {
-            foreach (var recipe in Recipes)
-            {
-                if (recipe.DrinkName == drinkName)
-                {
-                    return recipe;
-                }
-            }
-            return null;
+            return Recipes.FirstOrDefault(recipe => recipe.DrinkName == drinkName);
         }
     }
 }

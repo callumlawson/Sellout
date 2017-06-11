@@ -2,6 +2,7 @@
 using Assets.Scripts.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.States
@@ -58,6 +59,11 @@ namespace Assets.Scripts.States
                 drinkContents.Remove(ingredient);
             }
             DrinkAmountChanged.Invoke();
+        }
+
+        public int GetIngredientAmount(Ingredient ingredient)
+        {
+            return drinkContents[ingredient];
         }
 
         public int GetTotalDrinkSize()
@@ -147,6 +153,25 @@ namespace Assets.Scripts.States
                 output = output + "\t(" + content.Key + "->" + content.Value + ")\n";
             }
             return output;
+        }
+
+        public override bool Equals(object otherDrinkState)
+        {
+            var item = otherDrinkState as DrinkState;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            return drinkContents.Keys.All(ingredient => item.ContainsIngedient(ingredient)) &&
+                   item.drinkContents.Keys.All(ContainsIngedient) &&
+                   drinkContents.Keys.All(ingredient => item.GetIngredientAmount(ingredient) == GetIngredientAmount(ingredient));
+        }
+
+        public override int GetHashCode()
+        {
+            return drinkContents != null ? drinkContents.GetHashCode() : 0;
         }
     }
 }

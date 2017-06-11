@@ -50,7 +50,7 @@ namespace Assets.Scripts.GameActions
             public NonAlcoholicDrinkOrder(string ordererName) : base(DrinkOrderType.NonAlcoholic)
             {
                 OrdererName = ordererName;
-                DrinkPredicate = DrinkState.IsNonAlcoholic;
+                DrinkPredicate = testDrink => DrinkState.IsNonAlcoholic(testDrink) && DrinkRecipes.Contains(testDrink);
             }
         }
 
@@ -61,14 +61,11 @@ namespace Assets.Scripts.GameActions
             {
                 return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name), orderTimeOurInMins);
             }
-            else if (randomValue <= 0.66)
+            if (randomValue <= 0.66)
             {
                 return OrderNonAlcoholicDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), orderTimeOurInMins);
             }
-            else
-            {
-                return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), orderTimeOurInMins);
-            }
+            return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), orderTimeOurInMins);
         }
 
         public static ConditionalActionSequence OrderExactDrink(Entity entity, ExactDrinkorder drinkOrder, int orderTimeoutInMins = 20)
