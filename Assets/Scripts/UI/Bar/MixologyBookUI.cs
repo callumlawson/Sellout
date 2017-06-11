@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
@@ -25,13 +24,10 @@ namespace Assets.Scripts.UI.Bar
 
         private const string RecipeToNamePath = "Title/Text";
         private const string IngredientToNamePath = "Panel/Name";
-        private const string IngredientToAmounttPath = "Panel/Amount";
+        private const string IngredientToAmountPath = "Panel/Amount";
 
         private const string DefaultNameText = "????";
         private const string DefaultOrderText = "????";
-        private const string DefaultSpeciesText = "????";
-
-        private Dictionary<Ingredient, IngredientPanelUI> ingredientPanels;
 
         [UsedImplicitly]
         public void Awake()
@@ -61,7 +57,7 @@ namespace Assets.Scripts.UI.Bar
                 orderText.text = exactOrder.Recipe != null ? exactOrder.Recipe.DrinkName : DefaultOrderText;
             }
             nameText.text = order.OrdererName ?? DefaultNameText;
-            speciesText.text = DrinkOrders.DrinkOrder.OrdererSpecies ?? DefaultSpeciesText;
+            speciesText.text = DrinkOrders.DrinkOrder.OrdererSpecies;
         }
 
         private void OnEndDrinkOrder()
@@ -81,8 +77,8 @@ namespace Assets.Scripts.UI.Bar
             {
                 var ingredientUI = Instantiate(ingredientTemplate);
                 ingredientUI.transform.SetParent(recipeUI.transform);
-                ingredientUI.transform.Find(IngredientToNamePath).GetComponent<Text>().text = ingredient.Key.ToString();
-                ingredientUI.transform.Find(IngredientToAmounttPath).GetComponent<Text>().text = ingredient.Value.ToString();
+                ingredientUI.transform.Find(IngredientToNamePath).GetComponent<Text>().text = ingredient.Key != Ingredient.Beer ? ingredient.Key.ToString() : "Bottled";
+                ingredientUI.transform.Find(IngredientToAmountPath).GetComponent<Text>().text = ingredient.Key != Ingredient.Beer ? ingredient.Value.ToString() : "";
             }
         }
 
