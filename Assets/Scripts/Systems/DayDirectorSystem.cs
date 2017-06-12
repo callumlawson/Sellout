@@ -128,6 +128,7 @@ namespace Assets.Scripts.Systems
         {
             ResetNPCs();
             SetLighting(newDayPhase);
+            ResetBarStateAndDialogues();
         }
 
         private void ResetNPCs()
@@ -136,6 +137,12 @@ namespace Assets.Scripts.Systems
             people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
             people.ForEach(person => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(person, new DestoryEntityInInventoryAction()));
             Locations.ResetPeopleToSpawnPoints(people);
+        }
+
+        private void ResetBarStateAndDialogues()
+        {
+            DialogueSystem.Instance.StopDialogue();
+            EventSystem.EndDrinkOrderEvent.Invoke();
         }
 
         private static void SetLighting(DayPhase newDayPhase)
