@@ -41,7 +41,7 @@ namespace Assets.Scripts.Util.Dialogue
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Figures.</i>", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("", EndConversation(DialogueOutcome.Default), 2.0f);
             }
         }
 

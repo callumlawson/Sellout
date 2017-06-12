@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.Util;
@@ -42,6 +43,7 @@ namespace Assets.Scripts.Systems
         private Text currentSpeakerNameText;
         
         private readonly List<GameObject> currentChoices = new List<GameObject>();
+        private Sequence conversationTimeout;
 
         public bool ConverstationActive;
         
@@ -99,10 +101,17 @@ namespace Assets.Scripts.Systems
             WriteSpeakerName(nameOfSpeaker);
             ShowDialogue(true);
             StandardSoundPlayer.Instance.PlayPop();
+
+            
         }
 
         public void StopDialogue()
         {
+            if (conversationTimeout != null)
+            {
+                conversationTimeout.Kill();
+            }
+
             ConverstationActive = false;
             ShowDialogue(false);
         }
@@ -129,7 +138,7 @@ namespace Assets.Scripts.Systems
             textField.text = "     " + textField.text;
         }
 
-        public void WritePlayerChoiceLine(string line, Action onSelected)
+        public void WritePlayerChoiceLine(string line, Action onSelected, float timeTillAutoSelect = 0.0f)
         {
             var textGameObject = CreateDialogueLine(line, LineType.Response);
             currentChoices.Add(textGameObject);
@@ -144,10 +153,22 @@ namespace Assets.Scripts.Systems
                 currentChoices.Remove(textGameObject);
                 clickTrigger.triggers.Clear();
                 DisableChoices();
-                StandardSoundPlayer.Instance.PlayClick();
                 onSelected();
+                StandardSoundPlayer.Instance.PlayClick();
             });
             clickTrigger.triggers.Add(entry);
+
+            if (timeTillAutoSelect > 0.1f)
+            {
+                conversationTimeout = DOTween.Sequence().SetDelay(timeTillAutoSelect).OnComplete(() =>
+                {
+                    if (currentChoices.Any())
+                    {
+                        onSelected();
+                        StopDialogue();
+                    }
+                });
+            }
         }
 
         public void WriteNPCLine(string line)
