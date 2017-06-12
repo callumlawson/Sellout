@@ -115,7 +115,6 @@ namespace Assets.Scripts.GameActions
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I'd like a " + drinkName + " please.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
 
@@ -126,7 +125,6 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I'll have anything on the menu, as long as it's non-alcoholic.");
                 DialogueSystem.Instance.WriteNPCLine(Random.value > 0.5 ? "...had a heavy one last night.": "Got a shift starting soon.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>No problem.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
 
@@ -143,7 +141,6 @@ namespace Assets.Scripts.GameActions
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Give me something containing " + ingredient + ". It's my favourite");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Sure.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
     }

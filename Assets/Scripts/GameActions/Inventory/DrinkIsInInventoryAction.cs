@@ -36,7 +36,6 @@ namespace Assets.Scripts.GameActions.Inventory
             }
             if (timeState.GameTime - startTime > timeoutInMins)
             {
-                UnityEngine.Debug.Log("Timedout!");
                 ActionStatus = ActionStatus.Failed;
             }
         }

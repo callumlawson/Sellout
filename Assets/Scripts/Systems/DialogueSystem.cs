@@ -94,7 +94,7 @@ namespace Assets.Scripts.Systems
             currentSpeakerNameText = defaultSpeakerNameText;
         }
 
-        public void StartDialogue(string nameOfSpeaker)
+        public void StartDialogue(string nameOfSpeaker, float timeoutInSeconds = 0.0f, Action onEndMethod = null)
         {
             CleanUpDialogueLines();
             ConverstationActive = true;
@@ -102,7 +102,17 @@ namespace Assets.Scripts.Systems
             ShowDialogue(true);
             StandardSoundPlayer.Instance.PlayPop();
 
-            
+            if (timeoutInSeconds > 0.1f)
+            {
+                conversationTimeout = DOTween.Sequence().SetDelay(timeoutInSeconds).OnComplete(() =>
+                {
+                    if (onEndMethod != null)
+                    {
+                        onEndMethod();
+                    }
+                    StopDialogue();
+                });
+            }
         }
 
         public void StopDialogue()
@@ -110,6 +120,7 @@ namespace Assets.Scripts.Systems
             if (conversationTimeout != null)
             {
                 conversationTimeout.Kill();
+                conversationTimeout = null;
             }
 
             ConverstationActive = false;
@@ -138,7 +149,7 @@ namespace Assets.Scripts.Systems
             textField.text = "     " + textField.text;
         }
 
-        public void WritePlayerChoiceLine(string line, Action onSelected, float timeTillAutoSelect = 0.0f)
+        public void WritePlayerChoiceLine(string line, Action onSelected)
         {
             var textGameObject = CreateDialogueLine(line, LineType.Response);
             currentChoices.Add(textGameObject);
@@ -157,18 +168,6 @@ namespace Assets.Scripts.Systems
                 StandardSoundPlayer.Instance.PlayClick();
             });
             clickTrigger.triggers.Add(entry);
-
-            if (timeTillAutoSelect > 0.1f)
-            {
-                conversationTimeout = DOTween.Sequence().SetDelay(timeTillAutoSelect).OnComplete(() =>
-                {
-                    if (currentChoices.Any())
-                    {
-                        onSelected();
-                        StopDialogue();
-                    }
-                });
-            }
         }
 
         public void WriteNPCLine(string line)

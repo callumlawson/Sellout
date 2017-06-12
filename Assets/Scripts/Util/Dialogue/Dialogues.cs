@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Systems;
+﻿using System;
+using Assets.Scripts.Systems;
 
 namespace Assets.Scripts.Util.Dialogue
 {
@@ -39,9 +40,8 @@ namespace Assets.Scripts.Util.Dialogue
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.StartDialogue(converstationInitiator, 1.5f, EndConversation(DialogueOutcome.Default));
                 DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
-                DialogueSystem.Instance.WritePlayerChoiceLine("", EndConversation(DialogueOutcome.Default), 2.0f);
             }
         }
 
