@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 1fe8cd46e2cbb2647926d1d15032d7dd
-timeCreated: 1491151809
+timeCreated: 1497309113
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -116,13 +116,13 @@ TextureImporter:
       name: metal_background_hollow
       rect:
         serializedVersion: 2
-        x: 413
+        x: 412
         y: 0
-        width: 99
-        height: 99
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 15, y: 15, z: 15, w: 15}
+      border: {x: 16, y: 16, z: 16, w: 16}
       outline: []
       tessellationDetail: 0
     outline: []
