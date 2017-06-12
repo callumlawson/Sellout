@@ -161,7 +161,7 @@ namespace Assets.Scripts.GameActions.Composite
     }
 
     //Run actions in sequence. Continues after failure.
-    class ActionSequence : ActionSequenceBase
+    public class ActionSequence : ActionSequenceBase
     {
         public ActionSequence(string name = "Unnamed", bool isCancellable = true) : base(name, isCancellable)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Decorators;
 using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.GameActions.Drinks;
 using Assets.Scripts.GameActions.Framework;
@@ -72,47 +73,36 @@ namespace Assets.Scripts.GameActions
             var randomValue = Random.value;
             if (randomValue <= 0.25)
             {
-                return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name), orderTimeOurInMins);
+                var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name);
+                return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
             }
             if (randomValue <= 0.50)
             {
-                return OrderNonAlcoholicDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), orderTimeOurInMins);
+                return OrderDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), new OrderNonAlcoholicDrinkConversation(), orderTimeOurInMins);
             }
             if (randomValue <= 0.75)
             {
-                return OrderSpecificIngredientDrink(entity, new IncludingIngredientOrder(Ingredients.DispensedNonAlcoholicIngredients.PickRandom(), entity.GetState<NameState>().Name));
+                var ingredient = Ingredients.DispensedNonAlcoholicIngredients.PickRandom();
+                return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeOurInMins);
             }
-            return OrderExactDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), orderTimeOurInMins);
+            return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeOurInMins);
         }
 
-        public static ConditionalActionSequence OrderExactDrink(Entity entity, ExactDrinkorder drinkOrder, int orderTimeoutInMins = 20)
+        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, int orderTimeoutInMins = 20)
         {
-            var orderDrink = new ConditionalActionSequence("OrderExactDrink");
-            orderDrink.Add(new ConversationAction(new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName)));
-            orderDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            orderDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
-            return orderDrink;
+            var wrapper = new ActionSequence("DrinkOrderThenClear");
+            var orderDrink = new ParallelUntilAllCompleteAction("OrderDrink");
+            orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
+            var waitForDrink = new ConditionalActionSequence("WaitForDrink");
+            waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
+            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
+            orderDrink.Add(waitForDrink);
+            wrapper.Add(orderDrink);
+            wrapper.Add(new ClearConversationAction());
+            return wrapper;
         }
 
-        public static ConditionalActionSequence OrderNonAlcoholicDrink(Entity entity, NonAlcoholicDrinkOrder drinkOrder, int orderTimeoutInMins = 20)
-        {
-            var orderDrink = new ConditionalActionSequence("OrderNonAlcoholicDrink");
-            orderDrink.Add(new ConversationAction(new OrderNonAlcoholicDrinkConversation()));
-            orderDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            orderDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
-            return orderDrink;
-        }
-
-        public static ConditionalActionSequence OrderSpecificIngredientDrink(Entity entity, IncludingIngredientOrder drinkOrder, int orderTimeoutInMins = 20)
-        {
-            var orderDrink = new ConditionalActionSequence("OrderSpecificIngredientDrink");
-            orderDrink.Add(new ConversationAction(new OrderDrinkIncludingIngredientConversation(drinkOrder.Ingredient)));
-            orderDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            orderDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
-            return orderDrink;
-        }
-
-        private class OrderExactDrinkConverstation : Conversation
+        public class OrderExactDrinkConverstation : Conversation
         {
             private readonly string drinkName;
 

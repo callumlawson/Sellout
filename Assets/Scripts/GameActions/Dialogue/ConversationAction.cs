@@ -5,9 +5,9 @@ using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.GameActions.Dialogue
 {
-    class ConversationAction : GameAction
+    public class ConversationAction : GameAction
     {
-        private Conversation conversation;
+        private readonly Conversation conversation;
         private bool startedConversation;
 
         public ConversationAction(Conversation conversation)

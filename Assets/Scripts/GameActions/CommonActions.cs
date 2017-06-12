@@ -145,7 +145,8 @@ namespace Assets.Scripts.GameActions
         {
             var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
             orderDrink.Add(QueueForDrinkOrder(entity, 10, 20));
-            orderDrink.Add(DrinkOrders.OrderExactDrink(entity, new DrinkOrders.ExactDrinkorder(drinkRecipe, entity.GetState<NameState>().Name), orderTimeoutInMins));           
+            DrinkOrders.ExactDrinkorder drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, entity.GetState<NameState>().Name);
+            orderDrink.Add(DrinkOrders.OrderDrink(entity, drinkOrder, new DrinkOrders.OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeoutInMins));           
             return orderDrink;
         }
 
