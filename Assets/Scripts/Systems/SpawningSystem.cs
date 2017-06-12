@@ -9,6 +9,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
 using UnityEngine;
 using Assets.Scripts.States.Cameras;
+using Assets.Scripts.States.Bar;
 
 namespace Assets.Scripts.Systems
 {
@@ -23,10 +24,13 @@ namespace Assets.Scripts.Systems
 
         public void OnInit()
         {
+            StaticStates.Add(new BarEntities());
+
             var player = SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));            
             SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);
             SpawnPeople(entitySystem);
             SpawnEntitiesFromBlueprints();
+            
         }
 
         public void OnEndInit()
