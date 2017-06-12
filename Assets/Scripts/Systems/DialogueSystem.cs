@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Framework.Systems;
 using Assets.Framework.Util;
 using Assets.Scripts.Util;
@@ -15,8 +14,6 @@ namespace Assets.Scripts.Systems
 {
     class DialogueSystem : IInitSystem
     {
-        private readonly Interface interfaceMonobehaviour = Interface.Instance;
-
         private enum LineType
         {
             Dialogue,
@@ -75,13 +72,11 @@ namespace Assets.Scripts.Systems
         private void InitUI()
         {
             defaultDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.DiagloguePanelUI));
-            defaultDialogueUI.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
             defaultDialogueLinesParent = defaultDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             defaultDialogueUI.SetActive(false);
             defaultSpeakerNameText = defaultDialogueUI.transform.Find("DiagloguePanelOuter/NamePanel").GetComponentInChildren<Text>();
 
             barDialogueUI = Object.Instantiate(AssetLoader.LoadAsset(Prefabs.BarDiagloguePanelUI));
-            barDialogueUI.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
             barDialogueLinesParent = barDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             barDialogueUI.SetActive(false);
             barSpeakerNameText = barDialogueUI.transform.Find("DiagloguePanelOuter/NamePanel").GetComponentInChildren<Text>();
