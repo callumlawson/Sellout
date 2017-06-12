@@ -11,6 +11,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using UnityEngine;
+using Assets.Scripts.GameActions.Inventory;
 
 namespace Assets.Scripts.Systems.Bar
 {
@@ -120,6 +121,7 @@ namespace Assets.Scripts.Systems.Bar
 
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, new GoToWaypointAction());
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, DrinkOrders.GetRandomOrder(waitingCharacter));
+            ActionManagerSystem.Instance.QueueAction(waitingCharacter, new PlaceItemInReceiveSpot());
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDown());
             ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDownLoop());
         }

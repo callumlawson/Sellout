@@ -11,6 +11,7 @@
         public const string GlassStack = "GlassStack";
         public const string MixologyBook = "MixologyBook";
         public const string ServeSpot = "ServeSpot";
+        public const string ReceiveSpot = "ReceiveSpot";
         public const string Camera = "Camera";
         public const string Washup = "Washup";
         public const string Player = "Player";
@@ -18,6 +19,7 @@
         public const string BarConsole = "BarConsole";
         public const string BeerStack = "BeerStack";
         public const string Beer = "Beer";
+        public const string Drugs = "Drugs";
 
         //UI
         public const string DrinkMixingUI = "DrinkMixingUI";
