@@ -25,7 +25,7 @@ namespace Assets.Scripts.Util
             {Ingredient.Synthol, Color.white},
             {Ingredient.Alcohol, Color.green},
             {Ingredient.Orangeade, Orange},
-            {Ingredient.Cola, Color.red},
+            {Ingredient.Cola, Color.black},
             {Ingredient.Beer, Brown }
         };
 
