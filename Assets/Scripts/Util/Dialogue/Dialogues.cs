@@ -30,7 +30,7 @@ namespace Assets.Scripts.Util.Dialogue
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("That's not right! Use the menu to your left.");
+                DialogueSystem.Instance.WriteNPCLine("That's not right! Use the Drinks console on your left.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
             }
         }
