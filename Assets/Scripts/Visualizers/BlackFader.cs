@@ -24,7 +24,10 @@ namespace Assets.Scripts.Visualizers
             }
             else
             {
-                Background.DOFade(1.0f, 0.0f);
+                var dayMaterialColor = Text.GetComponent<Text>().color;
+                Text.GetComponent<Text>().color = new Color(dayMaterialColor.r, dayMaterialColor.b, dayMaterialColor.g, 1.0f);
+                var backgroundMaterialColor = Background.GetComponent<Image>().color; Background.GetComponent<Image>().color = 
+                    new Color(backgroundMaterialColor.r, backgroundMaterialColor.b, backgroundMaterialColor.g, 1.0f);
                 Background.raycastTarget = true;
                 DOTween.Sequence()
                     .SetDelay(timeInSeconds - timeInSeconds / 2)
