@@ -64,6 +64,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new VisibleSlotSystem());
             entitySystem.AddSystem(new ItemStackSystem());
             entitySystem.AddSystem(new BarQueueSystem());
+            entitySystem.AddSystem(new BarEntitiesSystem());
 
             //NPC/AI
             entitySystem.AddSystem(new ActionManagerSystem());
