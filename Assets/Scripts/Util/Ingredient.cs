@@ -22,8 +22,8 @@ namespace Assets.Scripts.Util
 
         public static readonly Dictionary<Ingredient, Color> IngredientColorMap = new Dictionary<Ingredient, Color>
         {
-            {Ingredient.Synthol, Color.white},
-            {Ingredient.Alcohol, Color.green},
+            {Ingredient.Synthol, Color.green},
+            {Ingredient.Alcohol, Color.white},
             {Ingredient.Orangeade, Orange},
             {Ingredient.Cola, Color.black},
             {Ingredient.Beer, Brown }
