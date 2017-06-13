@@ -72,6 +72,10 @@ namespace Assets.Scripts.Systems.AI
             switch (prefab)
             {
                 case Prefabs.Counter:
+                case Prefabs.BeerStack:
+                case Prefabs.GlassStack:
+                case Prefabs.IngredientDispenser:
+                case Prefabs.MixologyBook:
                     ActionManagerSystem.Instance.QueueAction(player, CommonActions.PlayerUseBar());
                     break;
                 case Prefabs.Person:
