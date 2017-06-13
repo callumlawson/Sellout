@@ -37,6 +37,10 @@ namespace Assets.Scripts.UI.Bar
                 case DrinkOrders.DrinkOrderType.NonAlcoholic:
                     currentDrinkText.text = "Non Alcoholic";
                     break;
+                case DrinkOrders.DrinkOrderType.ContainingIngredient:
+                    var containingIngredient = (DrinkOrders.IncludingIngredientOrder) order;
+                    currentDrinkText.text = "With " + containingIngredient.Ingredient;
+                    break;
             }
 
             panel.SetActive(true);

@@ -81,7 +81,7 @@ namespace Assets.Scripts.Systems.Drinks
                                 if (itemInReceiveSpot != null)
                                 {
                                     EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
-                                    InventoeryItemColliderIsEnabled(false);
+                                    InventoryItemColliderIsEnabled(false);
                                 }
                             }
                             break;
@@ -127,7 +127,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
 
             EventSystem.TakeStackItem(new TakeStackItemRequest { Requester = player, Stack = stack }); 
-            InventoeryItemColliderIsEnabled(false);
+            InventoryItemColliderIsEnabled(false);
         }
 
         private void WashUpItem(Entity requester)
@@ -150,7 +150,7 @@ namespace Assets.Scripts.Systems.Drinks
                     EntityTo = person,
                     Mover = playerInventory.Child
                 });
-                InventoeryItemColliderIsEnabled(true);
+                InventoryItemColliderIsEnabled(true);
             }
         }
 
@@ -236,9 +236,12 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
         
-        private void InventoeryItemColliderIsEnabled(bool enable)
+        private void InventoryItemColliderIsEnabled(bool enable)
         {
-            playerInventory.Child.GameObject.GetComponent<Collider>().enabled = enable;
+            if (playerInventory.Child != null)
+            {
+                playerInventory.Child.GameObject.GetComponent<Collider>().enabled = enable;
+            }
         }
 
         private void LerpDrinkPosition(Vector3 newDrinkPosition)
