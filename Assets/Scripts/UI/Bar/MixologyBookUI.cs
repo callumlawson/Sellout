@@ -26,9 +26,6 @@ namespace Assets.Scripts.UI.Bar
         private const string IngredientToNamePath = "Panel/Name";
         private const string IngredientToAmountPath = "Panel/Amount";
 
-        private const string DefaultNameText = "????";
-        private const string DefaultOrderText = "????";
-
         [UsedImplicitly]
         public void Awake()
         {
@@ -51,12 +48,8 @@ namespace Assets.Scripts.UI.Bar
 
         private void OnStartDrinkOrder(DrinkOrders.DrinkOrder order)
         {
-            if (order.OrderType == DrinkOrders.DrinkOrderType.Exact)
-            {
-                var exactOrder = (DrinkOrders.ExactDrinkorder) order;
-                orderText.text = exactOrder.Recipe != null ? exactOrder.Recipe.DrinkName : DefaultOrderText;
-            }
-            nameText.text = order.OrdererName ?? DefaultNameText;
+            orderText.text = order.ToString();
+            nameText.text = order.OrdererName;
             speciesText.text = DrinkOrders.DrinkOrder.OrdererSpecies;
         }
 
