@@ -20,6 +20,7 @@
         public const string BeerStack = "BeerStack";
         public const string Beer = "Beer";
         public const string Drugs = "Drugs";
+        public const string Cubby = "Cubby";
 
         //UI
         public const string DrinkMixingUI = "DrinkMixingUI";

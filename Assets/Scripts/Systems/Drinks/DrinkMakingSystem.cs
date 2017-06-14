@@ -75,15 +75,10 @@ namespace Assets.Scripts.Systems.Drinks
                             }
                             break;
                         case Prefabs.ReceiveSpot:
-                            if (playerInventory.Child == null)
-                            {
-                                var itemInReceiveSpot = target.GetState<InventoryState>().Child;
-                                if (itemInReceiveSpot != null)
-                                {
-                                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
-                                    InventoeryItemColliderIsEnabled(false);
-                                }
-                            }
+                            TakeItemFromReceiveSpot(target);
+                            break;
+                        case Prefabs.Cubby:
+                            ExchangeItemWithSpot(target);
                             break;
                         case Prefabs.IngredientDispenser:
                             AddIngredientToDrink(target);
@@ -110,12 +105,50 @@ namespace Assets.Scripts.Systems.Drinks
                                 GiveDrinkToPerson(target);
                             }
                             break;
+                        default:
+                            if (target.HasState<InventoryState>())
+                            {
+                                var parent = target.GetState<InventoryState>().Parent;
+                                if (parent.GetState<PrefabState>().PrefabName == Prefabs.Cubby || parent.GetState<PrefabState>().PrefabName == Prefabs.ReceiveSpot)
+                                {
+                                    ExchangeItemWithSpot(target);
+                                }
+                            }
+                            break;
                     }
                 }
                 else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.TutorialControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
                 }
+            }
+        }
+
+        private void TakeItemFromReceiveSpot(Entity target)
+        {
+            if (playerInventory.Child == null)
+            {
+                var itemInReceiveSpot = target.GetState<InventoryState>().Child;
+                if (itemInReceiveSpot != null)
+                {
+                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
+                    InventoryItemColliderIsEnabled(false);
+                }
+            }
+        }
+
+        private void ExchangeItemWithSpot(Entity target)
+        {
+            var itemInReceiveSpot = target.GetState<InventoryState>().Child;
+            if (playerInventory.Child == null && itemInReceiveSpot != null)
+            {
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
+                InventoryItemColliderIsEnabled(false);
+            }
+            else if (playerInventory.Child != null && itemInReceiveSpot == null)
+            {
+                InventoryItemColliderIsEnabled(true);
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = target, Mover = playerInventory.Child });                
             }
         }
 
@@ -127,7 +160,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
 
             EventSystem.TakeStackItem(new TakeStackItemRequest { Requester = player, Stack = stack }); 
-            InventoeryItemColliderIsEnabled(false);
+            InventoryItemColliderIsEnabled(false);
         }
 
         private void WashUpItem(Entity requester)
@@ -150,7 +183,7 @@ namespace Assets.Scripts.Systems.Drinks
                     EntityTo = person,
                     Mover = playerInventory.Child
                 });
-                InventoeryItemColliderIsEnabled(true);
+                InventoryItemColliderIsEnabled(true);
             }
         }
 
@@ -236,7 +269,7 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
         
-        private void InventoeryItemColliderIsEnabled(bool enable)
+        private void InventoryItemColliderIsEnabled(bool enable)
         {
             playerInventory.Child.GameObject.GetComponent<Collider>().enabled = enable;
         }
