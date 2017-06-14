@@ -28,17 +28,7 @@ namespace Assets.Scripts.UI.Bar
 
         private void OnStartDrinkOrder(DrinkOrders.DrinkOrder order)
         {
-            switch (order.OrderType)
-            {
-                case DrinkOrders.DrinkOrderType.Exact:
-                    var exactOrder = (DrinkOrders.ExactDrinkorder) order;
-                    currentDrinkText.text = exactOrder.Recipe.DrinkName;
-                    break;
-                case DrinkOrders.DrinkOrderType.NonAlcoholic:
-                    currentDrinkText.text = "Non Alcoholic";
-                    break;
-            }
-
+            currentDrinkText.text = order.ToString();
             panel.SetActive(true);
         }
 

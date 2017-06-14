@@ -1,9 +1,14 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
-public class HeldDrinkVisualizer : MonoBehaviour
+namespace Assets.Scripts.Visualizers.NPCs
 {
-    void Update()
+    public class HeldDrinkVisualizer : MonoBehaviour
     {
-        transform.rotation = Quaternion.identity;
+        [UsedImplicitly]
+        void Update()
+        {
+            transform.rotation = Quaternion.identity;
+        }
     }
 }

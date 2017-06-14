@@ -271,7 +271,10 @@ namespace Assets.Scripts.Systems.Drinks
         
         private void InventoryItemColliderIsEnabled(bool enable)
         {
-            playerInventory.Child.GameObject.GetComponent<Collider>().enabled = enable;
+            if (playerInventory.Child != null)
+            {
+                playerInventory.Child.GameObject.GetComponent<Collider>().enabled = enable;
+            }
         }
 
         private void LerpDrinkPosition(Vector3 newDrinkPosition)

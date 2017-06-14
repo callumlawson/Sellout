@@ -45,6 +45,11 @@ namespace Assets.Scripts.GameActions
                 OrdererName = ordererName;
                 DrinkPredicate = testDrink => DrinkState.IsIdentical(recipe.Contents, testDrink);
             }
+
+            public override string ToString()
+            {
+                return Recipe.DrinkName;
+            }
         }
 
         public class NonAlcoholicDrinkOrder : DrinkOrder
@@ -53,6 +58,11 @@ namespace Assets.Scripts.GameActions
             {
                 OrdererName = ordererName;
                 DrinkPredicate = testDrink => DrinkState.IsNonAlcoholic(testDrink) && DrinkRecipes.Contains(testDrink);
+            }
+
+            public override string ToString()
+            {
+                return "Non Alcoholic";
             }
         }
 
@@ -65,6 +75,11 @@ namespace Assets.Scripts.GameActions
                 Ingredient = ingredient;
                 OrdererName = ordererName;
                 DrinkPredicate = testDrink => testDrink.ContainsIngedient(Ingredient) && DrinkRecipes.Contains(testDrink);
+            }
+
+            public override string ToString()
+            {
+                return "With " + Ingredient;
             }
         }
 
