@@ -88,6 +88,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
             tolstoySequence.Add(endOfTutorialSyncPoint);
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
             tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne()));
+            tolstoySequence.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
+            tolstoySequence.Add(CommonActions.WaitForDrink(tolstoy, state => true, 99999));
+            tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
+            tolstoySequence.Add(new ConversationAction(new TolstoyMorningGivenDrink()));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningAfterDrink()));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }
@@ -147,6 +152,26 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("You should talk to her.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure. I want to meet everyone.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("Perhaps some other time. Got to get the bar ready!", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class TolstoyMorningGivenDrink : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.WriteNPCLine("Wow, thanks. I really needed this.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Everyone has one of those days occasionally.", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class TolstoyMorningAfterDrink : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.WriteNPCLine("Really, thank you!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("No worries", EndConversation(DialogueOutcome.Default));
             }
         }
 
