@@ -23,6 +23,16 @@ namespace Assets.Framework.Util
             return idComponent != null ? idComponent.EntityId : EntityIdComponent.InvalidEntityId;
         }
 
+        public static int GetEntityIdRecursive(this GameObject go)
+        {
+            var idComponent = go.GetComponentInParent<EntityIdComponent>();
+            if (idComponent == null && go.transform.parent != null)
+            {
+                GetEntityIdRecursive(go.transform.parent.gameObject);
+            }
+            return idComponent != null ? idComponent.EntityId : EntityIdComponent.InvalidEntityId;
+        }
+
         public static GameObject GetEntityObject(this GameObject go)
         {
             var idComponent = go.GetComponentInParent<EntityIdComponent>();

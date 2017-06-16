@@ -1,6 +1,10 @@
-﻿using Assets.Framework.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
+using Assets.Framework.Util;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.DayPhases;
@@ -12,13 +16,14 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.Events;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Systems.AI
 {
-    class ClickResponseSystem : IInitSystem
+    class InputResponseSystem : IInitSystem, IFrameEntitySystem, IEntityManager
     {
         private static Entity player;
-
+        private EntityStateSystem entitySystem;
         private PlayerState playerState;
 
         public void OnInit()
@@ -28,7 +33,47 @@ namespace Assets.Scripts.Systems.AI
             playerState = StaticStates.Get<PlayerState>();
         }
 
+        public void SetEntitySystem(EntityStateSystem ess)
+        {
+            entitySystem = ess;
+        }
+
+        public List<Type> RequiredStates()
+        {
+            return new List<Type> { typeof(IsPlayerState) };
+        }
+
+        public void OnFrame(List<Entity> matchingEntities)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                var playerEntity = matchingEntities.First();
+                var playerPosition = playerEntity.GameObject.transform.position;
+                var colliders = Physics.OverlapSphere(playerPosition, Constants.InteractRangeInMeters);
+                if (!colliders.Any())
+                {
+                    return;
+                }
+                var entityIds = colliders.Select(collider => collider.gameObject.GetEntityIdRecursive());
+                var entities = entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId).Select(entityId => entitySystem.GetEntity(entityId)).ToList();
+                entities = entities.Where(entity => !Equals(entity, StaticStates.Get<PlayerState>().Player)).ToList();
+                if (!entities.Any())
+                {
+                    return;
+                }
+                var targetEntity = entities.First();
+                Debug.Log("Target entity: " + targetEntity);
+                OnInteraction(targetEntity);
+            }
+        }
+
         private void OnClickInteraction(ClickEvent clickevent)
+        {
+            var targetEntity = clickevent.Target;
+            OnInteraction(targetEntity);
+        }
+
+        private void OnInteraction(Entity targetEntity)
         {
             if (DialogueSystem.Instance.ConverstationActive)
             {
@@ -49,8 +94,7 @@ namespace Assets.Scripts.Systems.AI
             {
                 return;
             }
-            
-            var targetEntity = clickevent.Target;
+
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();

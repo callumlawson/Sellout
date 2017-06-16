@@ -58,7 +58,7 @@ namespace Assets.Scripts
             entitySystem.AddSystem(new PathfindingSystem());            
             entitySystem.AddSystem(new CharacterControllerSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
-            entitySystem.AddSystem(new ClickResponseSystem());
+            entitySystem.AddSystem(new InputResponseSystem());
             entitySystem.AddSystem(new DialogueSystem());
             entitySystem.AddSystem(new HierarchyManipulationSystem()); //Must run before VisibleSlotSystem
             entitySystem.AddSystem(new VisibleSlotSystem());

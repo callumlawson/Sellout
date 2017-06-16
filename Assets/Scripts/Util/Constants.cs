@@ -17,5 +17,6 @@
 
         //Player
         public const float PlayerWalkSpeed = 5;
+        public const float InteractRangeInMeters = 2.5f;
     }
 }
