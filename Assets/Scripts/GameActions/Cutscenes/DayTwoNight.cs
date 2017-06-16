@@ -18,6 +18,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
 
+            /*
             //McGraw
             var mcGrawSequence = new ActionSequence("McGrawTutorial");
             mcGrawSequence.Add(new CallbackAction(() =>
@@ -38,15 +39,24 @@ namespace Assets.Scripts.GameActions.Cutscenes
             qSequence.Add(new SetConversationAction(new QNightOne()));
             qSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(q, qSequence);
+            */
 
             //Jannet
             var jannetSequence = new ActionSequence("Jannet night");
+            jannetSequence.Add(new CallbackAction(() =>
+            {
+                EventSystem.EndDrinkMakingEvent.Invoke();
+                ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
+                    new TeleportAction(Locations.CenterOfBar()));
+            })); //This is kind of dirty - but demo!
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
             jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
-            
+
+            //McGraw and Q
+            DrugStory.DrugPusherInspectorShowdown(mcGraw, q);            
         }
 
         private class QNightOne : Conversation

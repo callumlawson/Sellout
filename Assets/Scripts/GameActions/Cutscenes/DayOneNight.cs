@@ -63,16 +63,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
             return getPayed;
         }
 
-        private class QNightOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure.", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
         private class McGrawNightOne : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
