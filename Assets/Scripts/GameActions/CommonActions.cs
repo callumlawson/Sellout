@@ -15,6 +15,9 @@ using Assets.Scripts.Util.Dialogue;
 using UnityEngine;
 using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 using Random = UnityEngine.Random;
+using Assets.Scripts.GameActions.AILifecycle;
+using Assets.Scripts.GameActions.Cusscenes;
+using Assets.Framework.Systems;
 
 namespace Assets.Scripts.GameActions
 {
@@ -71,27 +74,18 @@ namespace Assets.Scripts.GameActions
             walk.Add(new GoToPositionAction(targetPosition));
             return walk;
         }
-
-        public static ActionSequence LeaveBar()
-        {
-            var leave = new ActionSequence("Leaving");
-            leave.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
-            return leave;
-        }
         
         public static ActionSequence ShortSitDown(Entity entity)
         {
             var sitDown = new ActionSequence("Short Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: false)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
-            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new SitDownAction());
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(4.0f));
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(3.0f));
-            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
-            sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
+            sitDown.Add(new StandUpAction());
             sitDown.Add(new ReleaseWaypointAction());
             sitDown.Add(Wander());
             return sitDown;
@@ -192,14 +186,12 @@ namespace Assets.Scripts.GameActions
             var sitDown = new ActionSequence("Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
             sitDown.Add(new GoToWaypointAction());
-            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
-            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new SitDownAction());
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(4.0f));
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(3.0f));
-            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
-            sitDown.Add(new PauseAction(1.0f)); //Delay for standing up.
+            sitDown.Add(new StandUpAction());
             sitDown.Add(new DrinkItemInInventory());
             sitDown.Add(new ReleaseWaypointAction());
             sitDown.Add(new GetWaypointAction(Goal.Storage, reserve: false, closest: true));
@@ -219,8 +211,7 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence StandUp()
         {
             var standUp = new ActionSequence("Stand up");
-            standUp.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
-            standUp.Add(new PauseAction(1.0f)); //Delay for standing up.
+            standUp.Add(new StandUpAction());
             standUp.Add(new ReleaseWaypointAction());
             return standUp;
         }
@@ -228,8 +219,7 @@ namespace Assets.Scripts.GameActions
         public static ConditionalActionSequence SitDownLoop()
         {
             var sitDown = new ConditionalActionSequence("Sit down", true);
-            sitDown.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
-            sitDown.Add(new PauseAction(6.0f));
+            sitDown.Add(new SitDownAction());
             sitDown.Add(new TriggerAnimationAction(AnimationEvent.ChairTalk1Trigger));
             sitDown.Add(new PauseAction(4.0f));
             sitDown.Add(new CallbackAction(() => sitDown.Add(SitDownLoop()))); //Lol
@@ -244,6 +234,16 @@ namespace Assets.Scripts.GameActions
             useBar.Add(new StartUsingWaypointAction()); //TODO: Need to release this.
             useBar.Add(new MakeDrinkAction());
             return useBar;
+        }
+
+        public static ActionSequence TalkToBarPatrons()
+        {
+            var sequence = new ActionSequence("TalkToBarPatrons", true);
+            sequence.Add(new GetSittingBarPatron());
+            sequence.Add(new GoToMovingEntityAction());
+            sequence.Add(new PauseAction(5f));
+            sequence.Add(new CallbackAction(() => sequence.Add(TalkToBarPatrons()))); //Lol
+            return sequence;
         }
     }
 }
