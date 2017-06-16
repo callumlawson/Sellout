@@ -24,11 +24,6 @@ namespace Assets.Scripts.Systems
 
                 navAgent.enabled = pathfindingState.IsActive;
 
-                if (!navAgent.enabled)
-                {
-                    return;
-                }
-
                 var positionGoal = pathfindingState.GetTargetPosition();
                 var rotationGoal = pathfindingState.GetTargetRotation();
                 var paused = pathfindingState.GetPaused();
