@@ -8,6 +8,7 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.AILifecycle;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
@@ -59,7 +60,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
             getPayed.Add(new PauseAction(0.5f));
             getPayed.Add(new ModifyMoneyAction(100));
-            getPayed.Add(CommonActions.LeaveBar());
+            getPayed.Add(new LeaveBarAction());
             return getPayed;
         }
 

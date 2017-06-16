@@ -4,6 +4,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using UnityEngine;
+using Assets.Scripts.States.AI;
 
 namespace Assets.Scripts.Util.NPC
 {
@@ -96,7 +97,8 @@ namespace Assets.Scripts.Util.NPC
                 new PersonAnimationState(),
                 new ClothingState(npc.Top, npc.Bottom),
                 new HairState(npc.Hair),
-                new FaceState(npc.Face)
+                new FaceState(npc.Face),
+                new LifecycleState()
             });
         }
     }

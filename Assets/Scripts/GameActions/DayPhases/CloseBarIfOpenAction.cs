@@ -2,6 +2,7 @@
 using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
+using Assets.Scripts.Systems;
 
 namespace Assets.Scripts.GameActions.DayPhases
 {
@@ -12,7 +13,7 @@ namespace Assets.Scripts.GameActions.DayPhases
             var dayPhaseState = StaticStates.Get<DayPhaseState>();
             if (dayPhaseState.CurrentDayPhase == DayPhase.Open)
             {
-                dayPhaseState.IncrementDayPhase();
+                EventSystem.DayPhaseIncrementRequest.Invoke();
             }
             ActionStatus = ActionStatus.Succeeded;
         }

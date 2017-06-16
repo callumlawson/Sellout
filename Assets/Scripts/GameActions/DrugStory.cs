@@ -15,6 +15,7 @@ using UnityEngine;
 using Assets.Scripts.Util;
 using Assets.Scripts.GameActions.Bar;
 using Assets.Scripts.GameActions.Waypoints;
+using Assets.Scripts.GameActions.AILifecycle;
 
 namespace Assets.Scripts.GameActions
 {
@@ -54,7 +55,8 @@ namespace Assets.Scripts.GameActions
             var sequence = new ActionSequence("FinishDrugOffer");
             sequence.Add(new PauseAction(0.5f));
             sequence.Add(new ReleaseWaypointAction());
-            sequence.Add(CommonActions.LeaveBar());
+            sequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
+            sequence.Add(CommonActions.TalkToBarPatrons());
             return sequence;
         }
 
@@ -134,7 +136,7 @@ namespace Assets.Scripts.GameActions
                     }
                 }
             }));
-            questionTime.Add(CommonActions.LeaveBar());
+            questionTime.Add(new LeaveBarAction());
             return questionTime;
         }
 
@@ -225,11 +227,10 @@ namespace Assets.Scripts.GameActions
             showdownPusher.Add(sync3);
             showdownInspector.Add(sync3);
 
-
-            showdownInspector.Add(CommonActions.LeaveBar());
+            showdownInspector.Add(new LeaveBarAction());
 
             showdownPusher.Add(CommonActions.StandUp());
-            showdownPusher.Add(CommonActions.LeaveBar());
+            showdownPusher.Add(new LeaveBarAction());
 
             ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
             ActionManagerSystem.Instance.QueueAction(inspector, showdownInspector);
