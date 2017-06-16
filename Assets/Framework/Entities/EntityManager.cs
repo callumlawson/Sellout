@@ -4,7 +4,6 @@ using System.Reflection;
 using Assets.Framework.States;
 using Assets.Framework.Util;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace Assets.Framework.Entities
 {

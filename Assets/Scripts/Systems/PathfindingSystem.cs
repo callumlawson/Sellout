@@ -4,6 +4,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Assets.Scripts.Systems
 {
@@ -19,11 +20,19 @@ namespace Assets.Scripts.Systems
             foreach (var entity in matchingEntities)
             {
                 var pathfindingState = entity.GetState<PathfindingState>();
+                var navAgent = entity.GameObject.GetComponent<NavMeshAgent>();
+
+                navAgent.enabled = pathfindingState.IsActive;
+
+                if (!navAgent.enabled)
+                {
+                    return;
+                }
+
                 var positionGoal = pathfindingState.GetTargetPosition();
                 var rotationGoal = pathfindingState.GetTargetRotation();
                 var paused = pathfindingState.GetPaused();
                 var stoppingDistance = pathfindingState.GetStoppingDistance();
-                var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
                 if (positionGoal.HasValue)
                 {

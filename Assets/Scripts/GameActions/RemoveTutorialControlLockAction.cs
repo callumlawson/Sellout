@@ -10,7 +10,7 @@ namespace Assets.Scripts.GameActions
         public override void OnStart(Entity entity)
         {
             var playerState = StaticStates.Get<PlayerState>();
-            playerState.TutorialControlLock = false;
+            playerState.CutsceneControlLock = false;
             ActionStatus = ActionStatus.Succeeded;
         }
 

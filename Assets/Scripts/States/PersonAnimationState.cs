@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Framework.States;
-using Assets.Scripts.Util;
+using UnityEngine;
+using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 
 namespace Assets.Scripts.States
 {

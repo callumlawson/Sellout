@@ -7,13 +7,13 @@ namespace Assets.Scripts.States
     class PlayerState : IState
     {
         public readonly Entity Player;
-        public bool TutorialControlLock;
+        public bool CutsceneControlLock;
         public bool IsUsingBar;
 
-        public PlayerState(Entity player, bool tutorialControlLock, bool isUsingBar)
+        public PlayerState(Entity player, bool cutsceneControlLock, bool isUsingBar)
         {
             Player = player;
-            TutorialControlLock = tutorialControlLock;
+            CutsceneControlLock = cutsceneControlLock;
             IsUsingBar = isUsingBar;
         }
 

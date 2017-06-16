@@ -56,7 +56,7 @@ namespace Assets.Scripts
 
             entitySystem.AddSystem(new PausingSystem());
             entitySystem.AddSystem(new PathfindingSystem());            
-            entitySystem.AddSystem(new HealthSystem());
+            entitySystem.AddSystem(new CharacterControllerSystem());
             entitySystem.AddSystem(new DrinkMakingSystem());
             entitySystem.AddSystem(new ClickResponseSystem());
             entitySystem.AddSystem(new DialogueSystem());
@@ -90,6 +90,12 @@ namespace Assets.Scripts
                 tickingStarted = true;
             }
             entitySystem.Update();
+        }
+
+        [UsedImplicitly]
+        public void FixedUpdate()
+        {
+            entitySystem.FixedUpdate();
         }
 
         private IEnumerator Ticker()

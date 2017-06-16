@@ -14,5 +14,8 @@
 
         //Drinks
         public const int MaxUnitsInDrink = 6;
+
+        //Player
+        public const float PlayerWalkSpeed = 5;
     }
 }

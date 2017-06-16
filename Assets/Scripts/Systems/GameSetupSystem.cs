@@ -12,7 +12,7 @@ namespace Assets.Scripts.Systems
     {
         public List<Type> RequiredStates()
         {
-            return new List<Type> { typeof(PersonState) };
+            return new List<Type> { typeof(IsPersonState) };
         }
 
         public void OnEndInit(List<Entity> allPeople)

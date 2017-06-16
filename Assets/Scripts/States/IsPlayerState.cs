@@ -4,11 +4,11 @@ using Assets.Framework.States;
 namespace Assets.Scripts.States
 {
     [Serializable]
-    public class PersonState : IState
+    public class IsPlayerState : IState
     {
         public override string ToString()
         {
-            return "Is Person";
+            return "Is Player";
         }
     }
 }

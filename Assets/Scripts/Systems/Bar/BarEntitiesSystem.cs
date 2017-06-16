@@ -1,7 +1,5 @@
 ﻿using System;
-using UnityEngine;
 using Assets.Framework.Systems;
-using Assets.Scripts.States;
 using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.States.Bar;

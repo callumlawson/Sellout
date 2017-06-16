@@ -48,7 +48,7 @@ namespace Assets.Scripts.Systems.Bar
 
         public List<Type> RequiredStates()
         {
-            return new List<Type> { typeof(PersonState), typeof(PrefabState) };
+            return new List<Type> { typeof(IsPersonState), typeof(PrefabState) };
         }
 
         public void Tick()

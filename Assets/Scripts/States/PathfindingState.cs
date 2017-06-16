@@ -8,6 +8,7 @@ namespace Assets.Scripts.States
     [Serializable]
     class PathfindingState : IState
     {
+        public bool IsActive = true;
         private SerializableVector3? targetPosition;
         private float? targetRotation;
         private bool paused;
@@ -23,6 +24,11 @@ namespace Assets.Scripts.States
         {
             this.targetPosition = targetPosition;
             this.targetRotation = targetRotation;
+        }
+
+        public void SetActive(bool active)
+        {
+            IsActive = active;
         }
 
         public void ClearTarget()

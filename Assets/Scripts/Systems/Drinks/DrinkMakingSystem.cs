@@ -117,7 +117,7 @@ namespace Assets.Scripts.Systems.Drinks
                             break;
                     }
                 }
-                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.TutorialControlLock)
+                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.CutsceneControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
                 }

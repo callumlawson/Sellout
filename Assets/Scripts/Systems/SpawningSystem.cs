@@ -25,12 +25,10 @@ namespace Assets.Scripts.Systems
         public void OnInit()
         {
             StaticStates.Add(new BarEntities());
-
-            var player = SpawnPlayer(new Vector3(9.5f, 1.007366f, 0.6f));            
+            var player = SpawnPlayer(new Vector3(9.5f, 1.2f, 0.6f));            
             SpawnCamera(new Vector3(12.07f, 15.9f, 0.0f), Quaternion.Euler(48, -90, 0), player);
             SpawnPeople(entitySystem);
             SpawnEntitiesFromBlueprints();
-            
         }
 
         public void OnEndInit()
@@ -132,6 +130,7 @@ namespace Assets.Scripts.Systems
             var player = entitySystem.CreateEntity(new List<IState>
             {
                 new PrefabState(Prefabs.Player),
+                new IsPlayerState(),
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PositionState(position),
@@ -144,7 +143,7 @@ namespace Assets.Scripts.Systems
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender),
                 new FaceState(FaceType.Bartender),
-                new PersonState()
+                new IsPersonState()
             });
             StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial, false));
             return player;

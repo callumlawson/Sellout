@@ -29,7 +29,7 @@ namespace Assets.Scripts.Systems.AI
 
         public List<Type> RequiredStates()
         {
-            return new List<Type> { typeof(PersonState) };
+            return new List<Type> { typeof(IsPersonState) };
         }
 
         public void OnInit()

@@ -35,7 +35,7 @@ namespace Assets.Scripts.Systems.AI
                 return;
             }
 
-            if (!ActionManagerSystem.Instance.IsEntityIdle(player) && !playerState.TutorialControlLock)
+            if (!ActionManagerSystem.Instance.IsEntityIdle(player) && !playerState.CutsceneControlLock)
             {
                 ActionManagerSystem.Instance.TryClearActionsForEntity(player);
             }
@@ -54,16 +54,11 @@ namespace Assets.Scripts.Systems.AI
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();
-                if (!playerState.TutorialControlLock || (playerState.TutorialControlLock && prefab.PrefabName == Prefabs.Counter))
+                if (!playerState.CutsceneControlLock || (playerState.CutsceneControlLock && prefab.PrefabName == Prefabs.Counter))
                 {
                     ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                     QueueActionsForPrefab(targetEntity, prefab.PrefabName);
                 }
-            }
-            else if (!playerState.TutorialControlLock)
-            {
-                ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
-                ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(clickevent.ClickPosition));
             }
         }
 
@@ -91,17 +86,13 @@ namespace Assets.Scripts.Systems.AI
                     }
                     break;
                 case Prefabs.Drink:
-                    //TODO replace with GOTO entity
-                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
                     ActionManagerSystem.Instance.QueueAction(player, new SetTargetEntityAction(targetEntity));
                     ActionManagerSystem.Instance.QueueAction(player, new PickUpItem());
                     break;
                 case Prefabs.Washup:
-                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position));
                     ActionManagerSystem.Instance.QueueAction(player, new DestoryEntityInInventoryAction());
                     break;
                 case Prefabs.Console:
-                    ActionManagerSystem.Instance.QueueAction(player, new GoToPositionAction(targetEntity.GetState<PositionState>().Position, 1.0f));
                     ActionManagerSystem.Instance.QueueAction(player, new ChangeDayPhaseAction());
                     break;
                 case Prefabs.BarConsole:

@@ -14,7 +14,8 @@ namespace Assets.Framework.Systems
         private readonly Dictionary<IFilteredSystem, List<Entity>> activeEntitiesPerSystem = new Dictionary<IFilteredSystem, List<Entity>>();
         private readonly List<ITickEntitySystem> tickEntitySystems = new List<ITickEntitySystem>();
         private readonly List<ITickSystem> tickSystems = new List<ITickSystem>();
-        private readonly List<IFrameEntitySystem> updateEntitySystems = new List<IFrameEntitySystem>();
+        private readonly List<IFrameEntitySystem> frameEntitySystems = new List<IFrameEntitySystem>();
+        private readonly List<IPhysicsFrameEntitySystem> physicsFrameEntitySystems = new List<IPhysicsFrameEntitySystem>();
         private readonly List<IFrameSystem> updateSytems = new List<IFrameSystem>();
         private readonly List<IInitSystem> initSystems = new List<IInitSystem>();
         private readonly List<IEndInitEntitySystem> endInitEntitySystems = new List<IEndInitEntitySystem>();
@@ -34,7 +35,8 @@ namespace Assets.Framework.Systems
         public void AddSystem(ISystem system)
         {
             var tickEntitySystem = system as ITickEntitySystem;
-            var updateEntitySystem = system as IFrameEntitySystem;
+            var frameEntitySystem = system as IFrameEntitySystem;
+            var physicsFrameEntitySystem = system as IPhysicsFrameEntitySystem;
             var updateSystem = system as IFrameSystem;
             var tickSystem = system as ITickSystem;
             var fiteredSystem = system as IFilteredSystem;
@@ -54,9 +56,14 @@ namespace Assets.Framework.Systems
               tickEntitySystems.Add(tickEntitySystem);  
             }
 
-            if (updateEntitySystem != null)
+            if (frameEntitySystem != null)
             {
-                updateEntitySystems.Add(updateEntitySystem);
+                frameEntitySystems.Add(frameEntitySystem);
+            }
+
+            if (physicsFrameEntitySystem != null)
+            {
+                physicsFrameEntitySystems.Add(physicsFrameEntitySystem);
             }
 
             if (updateSystem != null)
@@ -120,7 +127,7 @@ namespace Assets.Framework.Systems
                 return;
             }
 
-            foreach (var system in updateEntitySystems)
+            foreach (var system in frameEntitySystems)
             {
                 system.OnFrame(activeEntitiesPerSystem[system]);
             }
@@ -129,6 +136,19 @@ namespace Assets.Framework.Systems
                 system.OnFrame();
             }
             //DeleteMarkedEntities();
+        }
+
+        public void FixedUpdate()
+        {
+            if (paused)
+            {
+                return;
+            }
+
+            foreach (var system in physicsFrameEntitySystems)
+            {
+                system.OnPhysicsFrame(activeEntitiesPerSystem[system]);
+            }
         }
 
         public void Tick()

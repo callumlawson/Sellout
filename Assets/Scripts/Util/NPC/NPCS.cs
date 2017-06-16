@@ -89,7 +89,7 @@ namespace Assets.Scripts.Util.NPC
                 new PathfindingState(position, null),
                 new InventoryState(),
                 new VisibleSlotState(),
-                new PersonState(),
+                new IsPersonState(),
                 new MoodState(Mood.Happy),
                 new ConversationState(null),
                 new DialogueOutcomeState(),
