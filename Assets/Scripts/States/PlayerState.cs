@@ -3,18 +3,25 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 namespace Assets.Scripts.States
 {
+    public enum PlayerStatus
+    {
+        FreeMove,
+        Cutscene,
+        Bar
+    }
+
     [Serializable]
     class PlayerState : IState
     {
         public readonly Entity Player;
         public bool CutsceneControlLock;
-        public bool IsUsingBar;
+        public PlayerStatus PlayerStatus;
 
-        public PlayerState(Entity player, bool cutsceneControlLock, bool isUsingBar)
+        public PlayerState(Entity player, bool cutsceneControlLock)
         {
+            PlayerStatus = PlayerStatus.FreeMove;
             Player = player;
             CutsceneControlLock = cutsceneControlLock;
-            IsUsingBar = isUsingBar;
         }
 
         public override string ToString()

@@ -243,9 +243,9 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (!usingBar)
             {
+                playerState.PlayerStatus = PlayerStatus.Bar;
                 CameraSystem.GetCameraSystem().SetCameraMode(CameraSystem.CameraMode.Bar);
                 usingBar = true;
-                playerState.IsUsingBar = true;
             }
         }
 
@@ -265,7 +265,7 @@ namespace Assets.Scripts.Systems.Drinks
                 }
 
                 usingBar = false;
-                playerState.IsUsingBar = false;
+                playerState.PlayerStatus = PlayerStatus.FreeMove;
             }
         }
         

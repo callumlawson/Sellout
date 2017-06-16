@@ -9,13 +9,6 @@ namespace Assets.Scripts.Systems.Bar
 {
     class BarEntitiesSystem : IInitSystem, IReactiveEntitySystem
     {
-        private EntityStateSystem entitySystem;
-
-        public void SetEntitySystem(EntityStateSystem ess)
-        {
-            entitySystem = ess;
-        }
-
         public void OnInit()
         {
             var barEntitiesState = new BarEntities();

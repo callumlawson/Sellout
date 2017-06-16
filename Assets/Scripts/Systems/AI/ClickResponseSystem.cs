@@ -45,7 +45,7 @@ namespace Assets.Scripts.Systems.AI
                 return;
             }
 
-            if (playerState.IsUsingBar)
+            if (playerState.PlayerStatus == PlayerStatus.Bar)
             {
                 return;
             }

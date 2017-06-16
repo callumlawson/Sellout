@@ -51,6 +51,11 @@ namespace Assets.Scripts.Systems
                     ourRigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 }
 
+                if (playerState.PlayerStatus != PlayerStatus.FreeMove)
+                {
+                    return;
+                }
+
                 var x = -Input.GetAxisRaw("Vertical");
                 var z = Input.GetAxisRaw("Horizontal");
                 var rawInputVec = new Vector3(x, 0, z);

@@ -145,7 +145,7 @@ namespace Assets.Scripts.Systems
                 new FaceState(FaceType.Bartender),
                 new IsPersonState()
             });
-            StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial, false));
+            StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial));
             return player;
         }
 

@@ -45,7 +45,7 @@ namespace Assets.Scripts.Systems
                     navAgent.isStopped = true;
                     navAgent.velocity = Vector3.zero;
                 }
-                else
+                else if(navAgent.isActiveAndEnabled)
                 {
                     navAgent.isStopped = false;
                 }
