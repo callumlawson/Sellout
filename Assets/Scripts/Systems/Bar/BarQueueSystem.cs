@@ -30,6 +30,22 @@ namespace Assets.Scripts.Systems.Bar
         {
             time = StaticStates.Get<TimeState>();
             player = StaticStates.Get<PlayerState>().Player;
+
+            var dayPhase = StaticStates.Get<DayPhaseState>();
+            dayPhase.DayPhaseChangedTo += DayPhaseChangedTo;
+        }
+
+        private void DayPhaseChangedTo(DayPhase phase)
+        {
+            if (phase == DayPhase.Open)
+            {
+                inUseCharacters.Clear();
+
+                if (time.GameTime.GetDay() == 1)
+                {
+                    // Add drug story guy here!
+                }
+            }
         }
 
         public void OnEntityAdded(Entity entity)
