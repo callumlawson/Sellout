@@ -164,16 +164,17 @@ namespace Assets.Scripts.GameActions
                }
             ));
             queueForDrink.Add(new GoToWaypointAction());
-            queueForDrink.Add(
-            new OnFailureDecorator(
-                new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, getToWaypointTimeout), //Does not reserve wayponit.
-                () =>
-                {
-                    ActionManagerSystem.Instance.QueueAction(entity, new ReleaseWaypointAction());
-                    ActionManagerSystem.Instance.QueueAction(entity, new UpdateMoodAction(Mood.Angry));
-                    ActionManagerSystem.Instance.QueueAction(entity, Wander());
-                })
-            );
+            //Consider re-adding if we miss it.
+//            queueForDrink.Add(
+//            new OnFailureDecorator(
+//                new WaitForWaypointWithUserAction(Goal.RingUp, StaticStates.Get<PlayerState>().Player, getToWaypointTimeout), //Does not reserve wayponit.
+//                () =>
+//                {
+//                    ActionManagerSystem.Instance.QueueAction(entity, new ReleaseWaypointAction());
+//                    ActionManagerSystem.Instance.QueueAction(entity, new UpdateMoodAction(Mood.Angry));
+//                    ActionManagerSystem.Instance.QueueAction(entity, Wander());
+//                })
+//            );
             return queueForDrink;
         }
 
