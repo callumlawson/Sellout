@@ -216,6 +216,15 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
+        public static ActionSequence StandUp()
+        {
+            var standUp = new ActionSequence("Stand up");
+            standUp.Add(new TriggerAnimationAction(AnimationEvent.SittingFinishTrigger));
+            standUp.Add(new PauseAction(1.0f)); //Delay for standing up.
+            standUp.Add(new ReleaseWaypointAction());
+            return standUp;
+        }
+
         public static ConditionalActionSequence SitDownLoop()
         {
             var sitDown = new ConditionalActionSequence("Sit down", true);

@@ -161,23 +161,20 @@ namespace Assets.Scripts.GameActions
             }
         }
 
-        public static void DrugPusherInspectorShowdown(Entity inspector, Entity drugPusher)
+        public static void DrugPusherInspectorShowdown(Entity inspector, Entity drugPusher, Transform sitDownPoint)
         {
             var showdownPusher = new ActionSequence("ShowdownPusher");
             var showdownInspector = new ActionSequence("ShowdownInspector");
             var tookDrugMoney = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer;
             var helpedInspector = StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher;
 
-            showdownPusher.Add(CommonActions.Wander());
-            showdownInspector.Add(CommonActions.Wander());
+            showdownPusher.Add(new TeleportAction(sitDownPoint));
+            showdownPusher.Add(new ReportSuccessDecorator(CommonActions.SitDownLoop()));
 
             //Confront each other! (Consider make this be in front of bar).
             var sync = new SyncedAction(inspector, drugPusher);
             showdownPusher.Add(sync);
             showdownInspector.Add(sync);
-
-            showdownPusher.Add(new SetTargetEntityAction(inspector));
-            showdownPusher.Add(new GoToMovingEntityAction());
 
             showdownInspector.Add(new SetTargetEntityAction(drugPusher));
             showdownInspector.Add(new GoToMovingEntityAction());
@@ -228,7 +225,10 @@ namespace Assets.Scripts.GameActions
             showdownPusher.Add(sync3);
             showdownInspector.Add(sync3);
 
+
             showdownInspector.Add(CommonActions.LeaveBar());
+
+            showdownPusher.Add(CommonActions.StandUp());
             showdownPusher.Add(CommonActions.LeaveBar());
 
             ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
