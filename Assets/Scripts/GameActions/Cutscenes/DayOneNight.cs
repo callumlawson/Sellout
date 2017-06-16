@@ -97,9 +97,12 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
+                if (StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+                {
+                    DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                    DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
+                }
             }
         }
     }

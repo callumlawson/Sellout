@@ -26,7 +26,6 @@ namespace Assets.Scripts.GameActions
             sequence.Add(new OnFailureDecorator(
                OfferDrugs(drugPusher),
                () => {
-                   Debug.Log("Sequence failed.");
                    var disagreeSequence = new ActionSequence("RefusedDrugOffer");
                    disagreeSequence.Add(new ClearConversationAction());
                    disagreeSequence.Add(new ConversationAction(new DrugPusherOfferRefusedConversation()));
@@ -38,8 +37,7 @@ namespace Assets.Scripts.GameActions
                    StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
                })
             );
-
-            Debug.Log("Sequence succeeded!");
+            
             var acceptSequence = new ActionSequence("AcceptedDrugOffer");
             acceptSequence.Add(new ConversationAction(new DrugPusherOfferAcceptedConversation()));
             acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
