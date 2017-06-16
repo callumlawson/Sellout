@@ -8,6 +8,13 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util.Dialogue;
+using Assets.Scripts.GameActions.Decorators;
+using Assets.Scripts.GameActions.Inventory;
+using Assets.Scripts.States.Bar;
+using UnityEngine;
+using Assets.Scripts.Util;
+using Assets.Scripts.GameActions.Bar;
+using Assets.Scripts.GameActions.Waypoints;
 
 namespace Assets.Scripts.GameActions
 {
@@ -16,40 +23,91 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
-            sequence.Add(CommonActions.TalkToPlayer(new DrugPusherOffer()));
-            sequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
-            {
-                {
-                    DialogueOutcome.Agree, () =>
-                    {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher,
-                            new UpdateMoodAction(Mood.Happy));
-                        StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
-                    }
-                },
-                {
-                    DialogueOutcome.Disagree, () =>
-                    {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher,
-                            new UpdateMoodAction(Mood.Angry));
-                        StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
-                    }
-                }
-            }));
+            sequence.Add(new OnFailureDecorator(
+               OfferDrugs(drugPusher),
+               () => {
+                   Debug.Log("Sequence failed.");
+                   var disagreeSequence = new ActionSequence("RefusedDrugOffer");
+                   disagreeSequence.Add(new ClearConversationAction());
+                   disagreeSequence.Add(new ConversationAction(new DrugPusherOfferRefusedConversation()));
+                   disagreeSequence.Add(new UpdateMoodAction(Mood.Angry));
+                   disagreeSequence.Add(FinishDrugOffer());
+
+                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
+
+                   StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
+               })
+            );
+
+            Debug.Log("Sequence succeeded!");
+            var acceptSequence = new ActionSequence("AcceptedDrugOffer");
+            acceptSequence.Add(new ConversationAction(new DrugPusherOfferAcceptedConversation()));
+            acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
+            sequence.Add(acceptSequence);
+            sequence.Add(FinishDrugOffer());
+
+            StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
+
+            return sequence;
+        }
+
+        private static ActionSequence FinishDrugOffer()
+        {
+            var sequence = new ActionSequence("FinishDrugOffer");
+            sequence.Add(new PauseAction(0.5f));
+            sequence.Add(new ReleaseWaypointAction());
             sequence.Add(CommonActions.LeaveBar());
             return sequence;
         }
 
-        private class DrugPusherOffer : Conversation
+        private static ConditionalActionSequence OfferDrugs(Entity drugPusher)
+        {
+            var receiveSpot = StaticStates.Get<BarEntities>().ReceiveSpot;
+
+            var drugsTemplate = new List<IState>
+            {
+                new PrefabState(Prefabs.Drugs),
+                new DrinkState(new DrinkState()),
+                new PositionState(receiveSpot.GameObject.transform.position),
+                new InventoryState()
+            };
+
+            var sequence = new ConditionalActionSequence("DrugOfferSequence");
+            sequence.Add(new ReportSuccessDecorator(new ConversationAction(new DrugPusherOfferConversation())));
+            sequence.Add(new PlaceItemInReceiveSpot(drugsTemplate));
+            sequence.Add(new WaitForReceivedItemDecision());
+            sequence.Add(new ClearConversationAction());
+            return sequence;
+        }
+
+        private class DrugPusherOfferConversation : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("I want to sell Space Weed in your bar.");
                 DialogueSystem.Instance.WriteNPCLine("If you turn a blind eye I'll give you some product and a cut of the money");
-                DialogueSystem.Instance.WriteNPCLine("You in?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("No. Not my thing. Don't come back.", EndConversation(DialogueOutcome.Disagree));
-                DialogueSystem.Instance.WritePlayerChoiceLine("Sure, if the money is right.", EndConversation(DialogueOutcome.Agree));
+                DialogueSystem.Instance.WriteNPCLine("Here's a sample on the house.");
+            }
+        }
+
+        private class DrugPusherOfferAcceptedConversation : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Glad we can do business. I'll be back tonight with your cut.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class DrugPusherOfferRefusedConversation : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Whatever, your loss.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
             }
         }
 
