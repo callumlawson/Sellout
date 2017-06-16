@@ -26,9 +26,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
-            mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
-            mcGrawSequence.Add(CommonActions.SitDownLoop());
+            mcGrawSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
+            mcGrawSequence.Add(DrugStory.InspectorQuestions(mcGraw));
             ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
             //Ellie
@@ -65,16 +64,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.StartDialogue("Ellie");
                 DialogueSystem.Instance.WriteNPCLine("The like the second day.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Sure.", EndConversation(DialogueOutcome.Mean));
-            }
-        }
-
-        private class McGrawMorningOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("The time is morning of the second day.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
             }
         }
     }

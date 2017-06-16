@@ -11,7 +11,6 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using UnityEngine;
-using Assets.Scripts.GameActions.Inventory;
 
 namespace Assets.Scripts.Systems.Bar
 {
@@ -24,12 +23,31 @@ namespace Assets.Scripts.Systems.Bar
         private Entity waitForPurchaseWaypoint;
 
         private readonly HashSet<Entity> allCharacters = new HashSet<Entity>();
+
         private readonly HashSet<Entity> inUseCharacters = new HashSet<Entity>();
+        private readonly HashSet<Entity> specialCharacters = new HashSet<Entity>();
 
         public void OnInit()
         {
             time = StaticStates.Get<TimeState>();
             player = StaticStates.Get<PlayerState>().Player;
+
+            var dayPhase = StaticStates.Get<DayPhaseState>();
+            dayPhase.DayPhaseChangedTo += DayPhaseChangedTo;
+        }
+
+        private void DayPhaseChangedTo(DayPhase phase)
+        {
+            if (phase == DayPhase.Open)
+            {
+                inUseCharacters.Clear();
+                specialCharacters.Clear();
+
+                if (time.GameTime.GetDay() == 1)
+                {
+                    specialCharacters.Add(allCharacters.First(entity => entity.GetState<NameState>().Name == "Q"));
+                }
+            }        
         }
 
         public void OnEntityAdded(Entity entity)
@@ -114,16 +132,27 @@ namespace Assets.Scripts.Systems.Bar
 
             waitForPurchaseWaypoint.GetState<UserState>().ClearReserver();
             waitForPurchaseWaypoint.GetState<UserState>().ClearUser();
+            
+            AddPurchaseActionsForCharacter(waitingCharacter);
+        }
 
-            waitingCharacter.GetState<ActionBlackboardState>().TargetEntity = purchaseWaypoint;
-            purchaseWaypoint.GetState<UserState>().Reserve(waitingCharacter, "Bar Queue System");
-            purchaseWaypoint.GetState<UserState>().Use(waitingCharacter, "Bar Queue System");
+        private void AddPurchaseActionsForCharacter(Entity character)
+        {
+            character.GetState<ActionBlackboardState>().TargetEntity = purchaseWaypoint;
+            purchaseWaypoint.GetState<UserState>().Reserve(character, "Bar Queue System");
+            purchaseWaypoint.GetState<UserState>().Use(character, "Bar Queue System");
+            ActionManagerSystem.Instance.QueueAction(character, new GoToWaypointAction());
 
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, new GoToWaypointAction());
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, DrinkOrders.GetRandomOrder(waitingCharacter));
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, new PlaceItemInReceiveSpot());
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDown());
-            ActionManagerSystem.Instance.QueueAction(waitingCharacter, CommonActions.SitDownLoop());
+            if (time.GameTime.GetDay() == 1 && character.GetState<NameState>().Name == "Q")
+            {
+                ActionManagerSystem.Instance.QueueAction(character, DrugStory.DrugPusherIntro(character));
+            }
+            else
+            {
+                ActionManagerSystem.Instance.QueueAction(character, DrinkOrders.GetRandomOrder(character));
+                ActionManagerSystem.Instance.QueueAction(character, CommonActions.SitDown());
+                ActionManagerSystem.Instance.QueueAction(character, CommonActions.SitDownLoop());
+            }
         }
 
         private void OnWaitForPurchaseWaypointFree()
@@ -155,6 +184,19 @@ namespace Assets.Scripts.Systems.Bar
             if (idleCharacters.Count == 0)
             {
                 return null;
+            }
+
+            if (specialCharacters.Count > 0)
+            {
+                var choice = specialCharacters.First();
+
+                if (!idleCharacters.Contains(choice))
+                {
+                    Debug.LogError("Want to use special character " + choice + " but that character is busy!");
+                }
+
+                specialCharacters.Remove(choice);
+                return choice;
             }
 
             var randomChoice = UnityEngine.Random.Range(0, idleCharacters.Count - 1);

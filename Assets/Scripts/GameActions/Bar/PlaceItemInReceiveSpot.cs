@@ -13,6 +13,13 @@ namespace Assets.Scripts.GameActions.Inventory
 {
     class PlaceItemInReceiveSpot : GameAction
     {
+        private List<IState> template;
+
+        public PlaceItemInReceiveSpot(List<IState> template)
+        {
+            this.template = template;
+        }
+
         public override void OnStart(Entity entity)
         {
             var receiveSpot = StaticStates.Get<BarEntities>().ReceiveSpot;            
@@ -33,13 +40,7 @@ namespace Assets.Scripts.GameActions.Inventory
 
         private bool CreateDrugsInReceiveSlot(Entity receiveSlot) {
 
-            var newItem = EntityStateSystem.Instance.CreateEntity(new List<IState>
-            {
-                new PrefabState(Prefabs.Drugs),
-                new DrinkState(new DrinkState()),
-                new PositionState(receiveSlot.GameObject.transform.position),
-                new InventoryState()
-            });
+            var newItem = EntityStateSystem.Instance.CreateEntity(template);
 
             EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = null, EntityTo = receiveSlot, Mover = newItem });
 

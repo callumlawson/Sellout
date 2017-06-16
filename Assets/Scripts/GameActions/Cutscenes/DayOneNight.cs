@@ -63,16 +63,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
             return getPayed;
         }
 
-        private class QNightOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure.", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
         private class McGrawNightOne : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
@@ -97,9 +87,12 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
+                if (StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+                {
+                    DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                    DialogueSystem.Instance.WriteNPCLine("Pretty good day today. Here is your cut.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
+                }
             }
         }
     }

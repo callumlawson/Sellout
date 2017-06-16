@@ -18,35 +18,22 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
 
-            //McGraw
-            var mcGrawSequence = new ActionSequence("McGrawTutorial");
-            mcGrawSequence.Add(new CallbackAction(() =>
+            //Jannet
+            var jannetSequence = new ActionSequence("Jannet night");
+            jannetSequence.Add(new CallbackAction(() =>
             {
                 EventSystem.EndDrinkMakingEvent.Invoke();
                 ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
-            mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            mcGrawSequence.Add(new SetConversationAction(new McGrawNightOne()));
-            mcGrawSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
-
-            //Q
-            var qSequence = new ActionSequence("Q night");
-            qSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
-            qSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            qSequence.Add(new SetConversationAction(new QNightOne()));
-            qSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(q, qSequence);
-
-            //Jannet
-            var jannetSequence = new ActionSequence("Jannet night");
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
             jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
-            
+
+            //McGraw and Q
+            DrugStory.DrugPusherInspectorShowdown(mcGraw, q, Locations.SitDownPoint2());            
         }
 
         private class QNightOne : Conversation
