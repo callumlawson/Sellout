@@ -44,12 +44,8 @@ namespace Assets.Scripts.Systems
                     }
                     if (GetEntitiesInRange().Contains(nowSelectedEntity))
                     {
-                        Recursive.ApplyActionRecursively(objectHit.GetEntityObject().transform, transform => AddOutline(transform, true));
+                        Recursive.ApplyActionRecursively(objectHit.GetEntityObject().transform, AddOutline);
                         StaticStates.Get<CursorState>().SelectedEntity = nowSelectedEntity;
-                    }
-                    else
-                    {
-                        Recursive.ApplyActionRecursively(objectHit.GetEntityObject().transform, transform => AddOutline(transform, false));
                     }
                 }
                 else
@@ -84,7 +80,7 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private static void AddOutline(Transform transform, bool isPositive)
+        private static void AddOutline(Transform transform)
         {
             var objectHit = transform.gameObject;
             if (!objectHit.GetComponent<Renderer>() || objectHit.GetComponent<TextMesh>())
@@ -93,7 +89,6 @@ namespace Assets.Scripts.Systems
             }
             var outline = objectHit.GetComponent<Outline>() ?? objectHit.AddComponent<Outline>();
             outline.enabled = true;
-            outline.color = isPositive ? 0 : 1;
         }
     }
 }
