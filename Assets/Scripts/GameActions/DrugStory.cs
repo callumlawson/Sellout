@@ -24,39 +24,38 @@ namespace Assets.Scripts.GameActions
         public static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
-            sequence.Add(new OnFailureDecorator(
-               OfferDrugs(drugPusher),
-               () => {
-                   var disagreeSequence = new ActionSequence("RefusedDrugOffer");
-                   disagreeSequence.Add(new ClearConversationAction());
-                   disagreeSequence.Add(new ConversationAction(new DrugPusherOfferRefusedConversation()));
-                   disagreeSequence.Add(new UpdateMoodAction(Mood.Angry));
-                   disagreeSequence.Add(FinishDrugOffer());
+            sequence.Add(new OnActionStatusDecorator(
+                OfferDrugs(drugPusher),                
+                () => {
+                    var acceptSequence = new ActionSequence("AcceptedDrugOffer");
+                    acceptSequence.Add(new ClearConversationAction());
+                    acceptSequence.Add(new ConversationAction(new DrugPusherOfferAcceptedConversation()));
+                    acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
+                    acceptSequence.Add(new PauseAction(0.5f));
+                    acceptSequence.Add(new ReleaseWaypointAction());
+                    acceptSequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
+                    acceptSequence.Add(CommonActions.TalkToBarPatrons());
+                    sequence.Add(acceptSequence);
 
-                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, acceptSequence);
 
-                   StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
-               })
-            );
-            
-            var acceptSequence = new ActionSequence("AcceptedDrugOffer");
-            acceptSequence.Add(new ConversationAction(new DrugPusherOfferAcceptedConversation()));
-            acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
-            sequence.Add(acceptSequence);
-            sequence.Add(FinishDrugOffer());
+                    StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
+                },
+                () => {
+                    var disagreeSequence = new ActionSequence("RefusedDrugOffer");
+                    disagreeSequence.Add(new ClearConversationAction());
+                    disagreeSequence.Add(new ConversationAction(new DrugPusherOfferRefusedConversation()));
+                    disagreeSequence.Add(new UpdateMoodAction(Mood.Angry));
+                    disagreeSequence.Add(new PauseAction(0.5f));
+                    disagreeSequence.Add(new ReleaseWaypointAction());
+                    disagreeSequence.Add(new LeaveBarAction());
 
-            StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
 
-            return sequence;
-        }
+                    StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
+                }
+            ));
 
-        private static ActionSequence FinishDrugOffer()
-        {
-            var sequence = new ActionSequence("FinishDrugOffer");
-            sequence.Add(new PauseAction(0.5f));
-            sequence.Add(new ReleaseWaypointAction());
-            sequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
-            sequence.Add(CommonActions.TalkToBarPatrons());
             return sequence;
         }
 

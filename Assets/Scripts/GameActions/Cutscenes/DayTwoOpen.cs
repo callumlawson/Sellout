@@ -4,6 +4,8 @@ using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
+using Assets.Framework.States;
+using Assets.Scripts.States;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
@@ -11,11 +13,13 @@ namespace Assets.Scripts.GameActions.Cutscenes
     {
         public static void Start(List<Entity> matchingEntities) {
 
-            var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
-
-            var qSequence = new ActionSequence("Q open");
-            qSequence.Add(CommonActions.TalkToBarPatrons());
-            ActionManagerSystem.Instance.QueueAction(q, qSequence);
+            if (StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+            {
+                var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
+                var qSequence = new ActionSequence("Q open");
+                qSequence.Add(CommonActions.TalkToBarPatrons());
+                ActionManagerSystem.Instance.QueueAction(q, qSequence);
+            }
         }
     }
 }

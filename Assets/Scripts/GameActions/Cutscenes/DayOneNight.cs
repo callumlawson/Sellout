@@ -9,6 +9,8 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.AILifecycle;
+using Assets.Framework.Systems;
+using System.Linq;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
@@ -16,46 +18,65 @@ namespace Assets.Scripts.GameActions.Cutscenes
     {
         public static void Start(List<Entity> matchingEntities) {
            
-            var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
+            var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
             var jannet = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Jannet.Name);
+            var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
+
             var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
 
-            //McGraw
-            var mcGrawSequence = new ActionSequence("McGrawTutorial");
-            mcGrawSequence.Add(new CallbackAction(() =>
+            var seats = EntityStateSystem.Instance.GetEntitiesWithState<GoalSatisfierState>().Where(entity => entity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.Sit));
+            var chosenSeats = seats.PickRandom(3).ToArray();
+
+            //Jannet
+            var jannetSequence = new ActionSequence("Jannet night");
+            jannetSequence.Add(new CallbackAction(() =>
             {
                 EventSystem.EndDrinkMakingEvent.Invoke();
                 ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
-            mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            mcGrawSequence.Add(new SetConversationAction(new McGrawNightOne()));
-            mcGrawSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
-
-            //Jannet
-            var jannetSequence = new ActionSequence("Jannet night");
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
-            jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
+            jannetSequence.Add(new TeleportAction(chosenSeats[0].GameObject.transform));
             jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 
+            //Tolstoy
+            var tolstoySequence = new ActionSequence("Tolstoy night");
+            tolstoySequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
+            tolstoySequence.Add(new TeleportAction(chosenSeats[2].GameObject.transform));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyNightOne()));
+            tolstoySequence.Add(CommonActions.SitDownLoop());
+            ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
+
+            //Ellie
+            var ellieSequence = new ActionSequence("Ellie night");
+            ellieSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
+            ellieSequence.Add(new TeleportAction(chosenSeats[3].GameObject.transform));
+            ellieSequence.Add(new SetConversationAction(new EllieNightOne()));
+            ellieSequence.Add(CommonActions.SitDownLoop());
+            ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
+
             //Q
             var qSequence = new ActionSequence("Q night");
             qSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
-            qSequence.Add(DrugPusherPaysYou());
+            if (StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+            {   
+                qSequence.Add(DrugPusherPaysYou());
+            }
+            else
+            {
+                qSequence.Add(new TeleportAction(chosenSeats[1].GameObject.transform));
+                qSequence.Add(new SetConversationAction(new QNightOneRefused()));
+                qSequence.Add(CommonActions.SitDownLoop());
+            }
             ActionManagerSystem.Instance.QueueAction(q, qSequence);
         }
 
         private static ActionSequence DrugPusherPaysYou()
         {
             var getPayed = new ActionSequence("DrugPusherPaysYou");
-            if (!StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
-            {
-                return getPayed;
-            }
             getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
             getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
             getPayed.Add(new PauseAction(0.5f));
@@ -74,11 +95,41 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
         }
 
+        private class QNightOneRefused : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Q");
+                DialogueSystem.Instance.WriteNPCLine("You missed out on a great opportunity today.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
         private class JannetNightOne : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
+                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class TolstoyNightOne : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class EllieNightOne : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Ellie");
                 DialogueSystem.Instance.WriteNPCLine("Placeholder.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
             }
