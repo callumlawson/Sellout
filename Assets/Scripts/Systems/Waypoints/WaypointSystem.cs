@@ -55,6 +55,16 @@ namespace Assets.Scripts.Systems
             //Do Nothing
         }
 
+        public void ClearAllWaypoints()
+        {
+            var waypoints = entitySystem.GetEntitiesWithState<WaypointState>();
+            foreach (var waypoint in waypoints)
+            {
+                waypoint.GetState<UserState>().ClearReserver();
+                waypoint.GetState<UserState>().ClearUser();
+            }
+        }
+
         private IEnumerable<Entity> GetFreeWaypointsThatSatisfyGoal(Goal goal)
         {
             return entitySystem.GetEntitiesWithState<GoalSatisfierState>()

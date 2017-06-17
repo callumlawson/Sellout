@@ -6,6 +6,7 @@ using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.AILifecycle;
 
 internal class FirstDay : Day
 {
@@ -183,7 +184,7 @@ namespace Assets.Scripts.Util
             {
                 foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
                 {
-                    ActionManagerSystem.Instance.QueueAction(person, CommonActions.LeaveBar());
+                    ActionManagerSystem.Instance.QueueAction(person, new LeaveBarAction());
                 }
             });
 

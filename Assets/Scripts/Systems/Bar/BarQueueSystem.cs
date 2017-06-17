@@ -93,7 +93,6 @@ namespace Assets.Scripts.Systems.Bar
 
             if (purchaseWaypoint == null || waitForPurchaseWaypoint == null)
             {
-                Debug.LogError("Could not find all the waypoints for the bar queue! Purchase waypoint: " + purchaseWaypoint + ". Wait for purchase waypoint: " + waitForPurchaseWaypoint + ".");
                 return;
             }
 
@@ -163,8 +162,6 @@ namespace Assets.Scripts.Systems.Bar
             {
                 return;
             }
-
-            //ActionManagerSystem.Instance.QueueAction(nextCharacter, new TeleportAction(SpawnPoint.transform));
 
             inUseCharacters.Add(nextCharacter);
 

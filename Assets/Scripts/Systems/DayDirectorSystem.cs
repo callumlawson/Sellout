@@ -10,6 +10,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
@@ -32,6 +33,13 @@ namespace Assets.Scripts.Systems
             people = allPeople;
             hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
+            EventSystem.DayPhaseIncrementRequest += OnDayPhaseIncrementRequest;
+        }
+
+        private void OnDayPhaseIncrementRequest()
+        {
+            DoPhaseCleanup();
+            StaticStates.Get<DayPhaseState>().IncrementDayPhase();
         }
 
         private void OnDayPhaseChanged(DayPhase newDayPhase)
@@ -58,6 +66,15 @@ namespace Assets.Scripts.Systems
                     {
                         DoPhaseSetup(newDayPhase);
                         EventSystem.StartDrinkMakingEvent.Invoke();
+
+                        switch (time.GameTime.GetDay())
+                        {
+                            case 1:
+                                break;
+                            case 2:
+                                DayTwoOpen.Start(people);
+                                break;
+                        }
                     });
                     break;
                 case DayPhase.Night:
@@ -95,7 +112,7 @@ namespace Assets.Scripts.Systems
             {
                 if (currentTime.GetHour() == Constants.ClosingHour)
                 {
-                    StaticStates.Get<DayPhaseState>().IncrementDayPhase();
+                    OnDayPhaseIncrementRequest();
                 }
             }
 
@@ -124,11 +141,16 @@ namespace Assets.Scripts.Systems
             }
         }
 
+        private void DoPhaseCleanup()
+        {
+            WaypointSystem.Instance.ClearAllWaypoints();
+        }
+
         private void DoPhaseSetup(DayPhase newDayPhase)
         {
             ResetNPCs();
-            SetLighting(newDayPhase);
             ResetBarStateAndDialogues();
+            SetLighting(newDayPhase);
         }
 
         private void ResetNPCs()

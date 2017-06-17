@@ -8,6 +8,7 @@ using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
+using Assets.Scripts.GameActions.AILifecycle;
 
 namespace Assets.Scripts.GameActions
 {
@@ -139,8 +140,8 @@ namespace Assets.Scripts.GameActions
 
             mainActionSequence.Add(CommonActions.TalkToPlayer(new TolstoyTwoDialogue()));
 
-            mainActionSequence.Add(CommonActions.LeaveBar());
-            otherActionSequence.Add(CommonActions.LeaveBar());
+            mainActionSequence.Add(new LeaveBarAction());
+            otherActionSequence.Add(new LeaveBarAction());
         }
 
         private class TolstoyOneDialogue : Conversation

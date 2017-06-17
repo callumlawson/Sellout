@@ -34,6 +34,8 @@ namespace Assets.Scripts.Systems
 
         public static Action<TakeStackItemRequest> TakeStackItem = delegate { };
 
+        public static Action DayPhaseIncrementRequest = delegate { };
+
         public static void BroadcastEvent(ClickEvent clickEvent)
         {
             onClickInteraction(clickEvent);
