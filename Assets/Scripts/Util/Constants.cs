@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Util
+﻿using UnityEngine;
+
+namespace Assets.Scripts.Util
 {
     public static class Constants
     {
@@ -16,7 +18,8 @@
         public const int MaxUnitsInDrink = 6;
 
         //Player
-        public const float PlayerWalkSpeed = 5;
+        public const float PlayerWalkSpeed = 4;
+        public const float PlayerRunMultiplier = 1.4f;
         public const float InteractRangeInMeters = 3f;
     }
 }

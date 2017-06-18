@@ -60,6 +60,10 @@ namespace Assets.Scripts.Systems
                 var z = Input.GetAxisRaw("Horizontal");
                 var rawInputVec = new Vector3(x, 0, z);
                 var inputVec = rawInputVec.normalized * Constants.PlayerWalkSpeed;
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    inputVec *= Constants.PlayerRunMultiplier;
+                }
                 var speed = ourRigidbody.velocity.magnitude;
                 ourRigidbody.AddForce(inputVec - ourRigidbody.velocity, ForceMode.VelocityChange);
                 if (speed > 0.2f && rawInputVec.magnitude > 0.1f)
