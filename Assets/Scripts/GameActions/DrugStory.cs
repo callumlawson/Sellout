@@ -253,27 +253,27 @@ namespace Assets.Scripts.GameActions
 
                 if (helpedInspector && !tookDrugMoney)
                 {
-                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I nabbed him just as he came in. Enough Space Weed on him to be a criminal offense.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Alright.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.");
+                    DialogueSystem.Instance.WriteNPCLine("Glad I could count on you to help keep this ship safe.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Nod.", EndConversation(DialogueOutcome.Nice));
                 }
                 else if (helpedInspector && tookDrugMoney)
                 {
-                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I got him just as he came in. Enough Space Weed on him to be a criminal offense.");
-                    DialogueSystem.Instance.WriteNPCLine("That said I'm pretty sure you were turning a blind eye. I'll be watching you carefully.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Alright.", EndConversation(DialogueOutcome.Default));
+                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.");
+                    DialogueSystem.Instance.WriteNPCLine("That said he was pretty brazen selling in the bar. You sure you weren't turning a blind eye?");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
                 }
                 else if (!helpedInspector && tookDrugMoney)
                 {
                     DialogueSystem.Instance.WriteNPCLine("This guy is going to space jail and you are lucky to not be going there with him.");
                     DialogueSystem.Instance.WriteNPCLine("He admitted to giving you kickbacks. I'll be having that - and then some.");
                     DialogueSystem.Instance.WriteNPCLine("Consider yourself on very thin ice.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Alright.", EndConversation(DialogueOutcome.Mean));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Mean));
                 }
                 else //!helpedInpsector and !tookDrugMoney
                 {
                     DialogueSystem.Instance.WriteNPCLine("I was lucky to catch him on his way in. I'm also pretty suprised you didn't see anything.");
-                    DialogueSystem.Instance.WriteNPCLine("I'll be watching you carefully.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Alright.", EndConversation(DialogueOutcome.Default));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
                 }
             }
         }
