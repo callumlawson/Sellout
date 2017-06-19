@@ -23,7 +23,7 @@ namespace Assets.Scripts.Util
             return waypointPositions[Random.Range(0, waypointPositions.Count)];
         }
 
-        private static Vector3 BehindBarLocation()
+        public static Vector3 BehindBarLocation()
         {
             return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
         }

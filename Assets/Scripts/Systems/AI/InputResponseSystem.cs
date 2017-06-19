@@ -115,6 +115,7 @@ namespace Assets.Scripts.Systems.AI
                 case Prefabs.GlassStack:
                 case Prefabs.IngredientDispenser:
                 case Prefabs.MixologyBook:
+                    ActionManagerSystem.Instance.QueueAction(player, new TeleportAction(Locations.BehindBarLocation()));
                     ActionManagerSystem.Instance.QueueAction(player, CommonActions.PlayerUseBar());
                     break;
                 case Prefabs.Person:
