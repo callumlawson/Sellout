@@ -85,16 +85,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
             return getPayed;
         }
 
-        private class McGrawNightOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("What's going on? What does placeholder mean?", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
         private class QNightOneRefused : Conversation
         {
             protected override void StartConversation(string converstationInitiator)

@@ -47,6 +47,10 @@ namespace Assets.Scripts.Systems.Bar
                 {
                     specialCharacters.Add(allCharacters.First(entity => entity.GetState<NameState>().Name == "Q"));
                 }
+                else if (time.GameTime.GetDay() == 2)
+                {
+                    inUseCharacters.Add(allCharacters.First(entity => entity.GetState<NameState>().Name == "Q"));
+                }
             }        
         }
 
