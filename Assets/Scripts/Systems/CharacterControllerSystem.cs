@@ -27,7 +27,7 @@ namespace Assets.Scripts.Systems
                 playerState = StaticStates.Get<PlayerState>();
                 return;
             }
-            playerPathfindingState.IsActive = playerState.CutsceneControlLock;
+            playerPathfindingState.IsActive = playerState.CutsceneControlLock || StaticStates.Get<DayPhaseState>().CurrentDayPhase == DayPhase.Open;
         }
 
         public void OnPhysicsFrame(List<Entity> matchingEntities)

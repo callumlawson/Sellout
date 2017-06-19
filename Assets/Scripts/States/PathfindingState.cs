@@ -26,11 +26,6 @@ namespace Assets.Scripts.States
             this.targetRotation = targetRotation;
         }
 
-        public void SetActive(bool active)
-        {
-            IsActive = active;
-        }
-
         public void ClearTarget()
         {
             targetPosition = null;
