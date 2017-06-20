@@ -23,6 +23,13 @@ namespace Assets.Scripts.GameActions
 {
     static class CommonActions
     {
+        public static void AddSyncEntityAction(Entity a, Entity b, ActionSequence aSequence, ActionSequence bSequence)
+        {
+            var sync = new SyncedAction(a, b);
+            aSequence.Add(sync);
+            bSequence.Add(sync);
+        }
+
         public static void DrinkOrWanderAroundIfIdle(List<Entity> matchingEntities)
         {
             foreach (var entity in matchingEntities)
