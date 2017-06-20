@@ -151,7 +151,7 @@ namespace Assets.Scripts.Systems.Bar
                 ActionManagerSystem.Instance.QueueAction(character, DrugStory.DrugPusherIntro(character));
             }
             else
-            {
+            {   
                 ActionManagerSystem.Instance.QueueAction(character, DrinkOrders.GetRandomOrder(character));
                 ActionManagerSystem.Instance.QueueAction(character, CommonActions.SitDown());
                 ActionManagerSystem.Instance.QueueAction(character, CommonActions.SitDownLoop());

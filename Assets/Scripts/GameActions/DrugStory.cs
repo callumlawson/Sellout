@@ -173,16 +173,12 @@ namespace Assets.Scripts.GameActions
             showdownPusher.Add(new ReportSuccessDecorator(CommonActions.SitDownLoop()));
 
             //Confront each other! (Consider make this be in front of bar).
-            var sync = new SyncedAction(inspector, drugPusher);
-            showdownPusher.Add(sync);
-            showdownInspector.Add(sync);
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             showdownInspector.Add(new SetTargetEntityAction(drugPusher));
             showdownInspector.Add(new GoToMovingEntityAction());
 
-            var sync2 = new SyncedAction(inspector, drugPusher);
-            showdownPusher.Add(sync2);
-            showdownInspector.Add(sync2);
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             //Placeholder "agument". Perhaps the player could see what was being said?
             //Floating speach bubbles?
@@ -197,6 +193,19 @@ namespace Assets.Scripts.GameActions
 
             showdownPusher.Add(new PauseAction(6));
             showdownPusher.Add(new UpdateMoodAction(Mood.Angry));
+
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownPusher.Add(CommonActions.StandUp());
+            showdownPusher.Add(new SetTargetEntityAction(inspector));
+            showdownPusher.Add(new GoToMovingEntityAction(1.0f));
+
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownInspector.Add(new PlayParticleEffectAction(Particles.Dustup, inspector, drugPusher));
+            showdownPusher.Add(new PauseAction(5));
+
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             //Do do consequence? Handcuffs? Fight?
             showdownInspector.Add(CommonActions.TalkToPlayer(new InspectorResolution(tookDrugMoney, helpedInspector)));
@@ -222,13 +231,10 @@ namespace Assets.Scripts.GameActions
                 }
             }));
 
-            var sync3 = new SyncedAction(inspector, drugPusher);
-            showdownPusher.Add(sync3);
-            showdownInspector.Add(sync3);
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             showdownInspector.Add(new LeaveBarAction());
 
-            showdownPusher.Add(CommonActions.StandUp());
             showdownPusher.Add(new LeaveBarAction());
 
             ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
