@@ -15,15 +15,24 @@ namespace Assets.Scripts
 {
     public class GameRunner : MonoBehaviour
     {
+        public bool GameStarted;
+
         [UsedImplicitly] public bool IsDebugOn;
         [UsedImplicitly] public bool SkipFirstDayFadein;
         [UsedImplicitly] public bool DisableTutorial;
 
         private EntityStateSystem entitySystem;
         private bool tickingStarted;
+        
+        public static GameRunner Instance;
 
         [UsedImplicitly]
         public void Awake()
+        {
+            Instance = this;
+        }
+
+        public void StartGame()
         {
             GameSettings.IsDebugOn = Debug.isDebugBuild && IsDebugOn;
             GameSettings.SkipFirstDayFadein = SkipFirstDayFadein;
@@ -78,12 +87,19 @@ namespace Assets.Scripts
             //GameStart
             entitySystem.AddSystem(new GameSetupSystem());
 
+            UnityEngine.Debug.Log("System init called");
             entitySystem.Init();
+            GameStarted = true;
         }
 
         [UsedImplicitly]
         public void Update()
         {
+            if (!GameStarted)
+            {
+                return;
+            }
+
             if (!tickingStarted)
             {
                 StartCoroutine(Ticker());
@@ -95,6 +111,11 @@ namespace Assets.Scripts
         [UsedImplicitly]
         public void FixedUpdate()
         {
+            if (!GameStarted)
+            {
+                return;
+            }
+
             entitySystem.FixedUpdate();
         }
 

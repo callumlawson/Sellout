@@ -12,8 +12,6 @@ namespace Assets.Scripts.Visualizers
     [UsedImplicitly]
     class NameStateVisualizer : MonoBehaviour, IEntityVisualizer
     {
-        private readonly Interface interfaceMonobehaviour = Interface.Instance;
-
         private PositionState positionState;
         private GameObject nameTag;
         private RectTransform nameTagRectTransform;
@@ -28,9 +26,14 @@ namespace Assets.Scripts.Visualizers
 
         public void OnStartRendering(Entity entity)
         {
+            if (Interface.Instance == null)
+            {
+                return;
+            }
+
             positionState = entity.GetState<PositionState>();
             nameTag = Instantiate(AssetLoader.LoadAsset(Prefabs.NameTagUI));
-            nameTag.transform.SetParent(interfaceMonobehaviour.DyanmicUIRoot.transform);
+            nameTag.transform.SetParent(Interface.Instance.DyanmicUIRoot.transform);
             nameTag.GetComponent<Text>().text = entity.GetState<NameState>().Name;
             nameTagRectTransform = nameTag.GetComponent<RectTransform>();
             offset = new Vector3(0, entity.GetState<NameState>().VerticalOffset, 0);
@@ -42,7 +45,7 @@ namespace Assets.Scripts.Visualizers
             {
                 nameTag.SetActive(true);
                 nameTagRectTransform.anchoredPosition =
-                    interfaceMonobehaviour.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
+                    Interface.Instance.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
             }
             else
             {

@@ -1,17 +1,20 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
+using Assets.Scripts.UI.Bar;
+using Assets.Scripts.Util;
 using JetBrains.Annotations;
+using NUnit.Framework.Internal;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Visualizers
 {
     [UsedImplicitly]
     class MixologyBookVisualizer : MonoBehaviour, IEntityVisualizer
     {
-        public GameObject MixologyUI;
-
         private ActiveState activeState;
+        private GameObject mixologyUI;
 
         public void OnStartRendering(Entity entity)
         {
@@ -20,23 +23,15 @@ namespace Assets.Scripts.Visualizers
 
         public void OnFrame()
         {
-
-        }
-
-        public void Update()
-        {
-            if (MixologyUI.activeSelf != activeState.IsActive)
+            if (mixologyUI == null)
             {
-                MixologyUI.SetActive(activeState.IsActive);
+                mixologyUI = Interface.Instance.MixologyBookUI;
+                mixologyUI.GetComponent<MixologyBookUI>().CloseButton.onClick.AddListener(Close);
+            }
 
-                if (activeState.IsActive)
-                {
-                    EventSystem.PauseEvent.Invoke();
-                }
-                else
-                {
-                    EventSystem.ResumeEvent.Invoke();
-                }
+            if (mixologyUI.activeSelf != activeState.IsActive)
+            {
+                mixologyUI.SetActive(activeState.IsActive);
             }
         }
 

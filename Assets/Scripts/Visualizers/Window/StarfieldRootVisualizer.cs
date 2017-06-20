@@ -1,40 +1,50 @@
-﻿using UnityEngine;
-using Assets.Framework.Entities;
-using Assets.Framework.States;
+﻿using Assets.Framework.States;
 using Assets.Scripts.States;
+using JetBrains.Annotations;
+using UnityEngine;
 
-public class StarfieldRootVisualizer : MonoBehaviour
+namespace Assets.Scripts.Visualizers.Window
 {
-    GameObject player;
+    public class StarfieldRootVisualizer : MonoBehaviour
+    {
+        GameObject player;
 
-    void Start()
-    {
-        var particles = GameObject.FindGameObjectsWithTag("Starfield");
-        foreach (var particle in particles)
+        [UsedImplicitly]
+        void Start()
         {
-            var system = particle.GetComponent<ParticleSystem>();
-            var pm = system.main;
-            pm.simulationSpace = ParticleSystemSimulationSpace.Custom;
-            pm.customSimulationSpace = transform;
-            system.Stop();
-            system.Clear();
-            system.Play();
-        }
-    }
-    
-    void Update()
-    {
-        if (player == null)
-        {
-            var playerState = StaticStates.Get<PlayerState>();
-            if (playerState != null)
+            var particles = GameObject.FindGameObjectsWithTag("Starfield");
+            foreach (var particle in particles)
             {
-                player = playerState.Player.GameObject;
+                var system = particle.GetComponent<ParticleSystem>();
+                var pm = system.main;
+                pm.simulationSpace = ParticleSystemSimulationSpace.Custom;
+                pm.customSimulationSpace = transform;
+                system.Stop();
+                system.Clear();
+                system.Play();
+            }
+        }
+    
+        [UsedImplicitly]
+        void Update()
+        {
+            if (!GameRunner.Instance.GameStarted)
+            {
+                return;
             }
 
-            if (player == null) return;
-        }
+            if (player == null)
+            {
+                var playerState = StaticStates.Get<PlayerState>();
+                if (playerState != null)
+                {
+                    player = playerState.Player.GameObject;
+                }
 
-        this.transform.position = player.transform.position;
+                if (player == null) return;
+            }
+
+            transform.position = player.transform.position;
+        }
     }
 }

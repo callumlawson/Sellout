@@ -56,8 +56,11 @@ namespace Assets.Scripts.Systems
         {
             foreach (var entity in matchingEntities)
             {
-                var navAgent = entity.GameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
-                navAgent.isStopped = true;
+                var navAgent = entity.GameObject.GetComponent<NavMeshAgent>();
+                if (navAgent.isActiveAndEnabled)
+                {
+                    navAgent.isStopped = true;
+                }
             }
         }
 

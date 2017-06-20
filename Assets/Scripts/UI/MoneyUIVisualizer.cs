@@ -15,6 +15,11 @@ namespace Assets.Scripts.UI
         [UsedImplicitly]
         public void Update()
         {
+            if (!GameRunner.Instance.GameStarted)
+            {
+                return;
+            }
+
             if (moneyState == null)
             {
                 moneyState = StaticStates.Get<MoneyState>();

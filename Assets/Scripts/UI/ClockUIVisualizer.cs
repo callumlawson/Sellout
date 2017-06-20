@@ -20,6 +20,11 @@ namespace Assets.Scripts.UI
         [UsedImplicitly]
         public void Update()
         {
+            if (!GameRunner.Instance.GameStarted)
+            {
+                return;
+            }
+
             if (timeState == null)
             {
                 timeState = StaticStates.Get<TimeState>();

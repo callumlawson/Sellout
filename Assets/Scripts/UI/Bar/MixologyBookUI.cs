@@ -17,6 +17,7 @@ namespace Assets.Scripts.UI.Bar
         [SerializeField] private GameObject recipeTemplate;
         [SerializeField] private GameObject ingredientTemplate;
         [SerializeField] private GameObject breakTemplate;
+        [SerializeField] public Button CloseButton;
         [SerializeField] private Text nameText;
         [SerializeField] private Text orderText;
         [SerializeField] private Text speciesText;

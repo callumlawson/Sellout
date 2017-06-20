@@ -11,6 +11,7 @@ namespace Assets.Scripts.Util
         [UsedImplicitly] public GameObject TooltipRoot;
         [UsedImplicitly] public GameObject TooltipWindow;
         [UsedImplicitly] public GameObject DyanmicUIRoot;
+        [UsedImplicitly] public GameObject MixologyBookUI;
         [UsedImplicitly] public BlackFader BlackFader;
 
         [UsedImplicitly]
