@@ -87,7 +87,6 @@ namespace Assets.Scripts
             //GameStart
             entitySystem.AddSystem(new GameSetupSystem());
 
-            UnityEngine.Debug.Log("System init called");
             entitySystem.Init();
             GameStarted = true;
         }

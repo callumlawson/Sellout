@@ -1,12 +1,9 @@
 ﻿using Assets.Framework.Entities;
 using Assets.Scripts.States;
-using Assets.Scripts.Systems;
 using Assets.Scripts.UI.Bar;
 using Assets.Scripts.Util;
 using JetBrains.Annotations;
-using NUnit.Framework.Internal;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.Visualizers
 {
@@ -29,9 +26,9 @@ namespace Assets.Scripts.Visualizers
                 mixologyUI.GetComponent<MixologyBookUI>().CloseButton.onClick.AddListener(Close);
             }
 
-            if (mixologyUI.activeSelf != activeState.IsActive)
+            if (mixologyUI.transform.GetChild(0).gameObject.activeSelf != activeState.IsActive)
             {
-                mixologyUI.SetActive(activeState.IsActive);
+                mixologyUI.transform.GetChild(0).gameObject.SetActive(activeState.IsActive);
             }
         }
 
@@ -40,7 +37,7 @@ namespace Assets.Scripts.Visualizers
             //Do nothing
         }
 
-        public void Close()
+        private void Close()
         {
             activeState.IsActive = false;
         }

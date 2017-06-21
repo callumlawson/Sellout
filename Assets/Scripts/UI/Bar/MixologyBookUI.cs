@@ -1,8 +1,6 @@
-﻿using Assets.Framework.Entities;
-using Assets.Scripts.GameActions;
+﻿using Assets.Scripts.GameActions;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
-using Assets.Scripts.Visualizers;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +8,7 @@ using UnityEngine.UI;
 namespace Assets.Scripts.UI.Bar
 {
     [UsedImplicitly]
-    class MixologyBookUI : MonoBehaviour, IEntityVisualizer
+    class MixologyBookUI : MonoBehaviour
     {
         #pragma warning disable 649
         [SerializeField] private GameObject recipeContentPane;
@@ -39,10 +37,7 @@ namespace Assets.Scripts.UI.Bar
                     breakUI.transform.SetParent(recipeContentPane.transform);
                 }
             }
-        }
 
-        public void OnStartRendering(Entity entity)
-        {
             EventSystem.StartDrinkOrderEvent += OnStartDrinkOrder;
             EventSystem.EndDrinkOrderEvent += OnEndDrinkOrder;
         }
@@ -74,16 +69,6 @@ namespace Assets.Scripts.UI.Bar
                 ingredientUI.transform.Find(IngredientToNamePath).GetComponent<Text>().text = ingredient.Key != Ingredient.Beer ? ingredient.Key.ToString() : "Bottled";
                 ingredientUI.transform.Find(IngredientToAmountPath).GetComponent<Text>().text = ingredient.Key != Ingredient.Beer ? ingredient.Value.ToString() : "";
             }
-        }
-
-        public void OnFrame()
-        {
-            // do nothing
-        }
-
-        public void OnStopRendering(Entity entity)
-        {
-            // do nothing
         }
     }
 }
