@@ -104,17 +104,14 @@ namespace Assets.Scripts.Systems.Drinks
                             break;
                         case Prefabs.Cubby:
                         case Prefabs.ServeSpot:
-                            ExchangeItemWithSpot(target);
+                            ExchangeItemWithSpot(target, targetPrefab.PrefabName);
                             break;
                         default:
                             if (target.HasState<InventoryState>())
                             {
                                 var parent = target.GetState<InventoryState>().Parent;
                                 var parentPrefab = parent.GetState<PrefabState>().PrefabName;
-                                if (parentPrefab == Prefabs.Cubby || parentPrefab == Prefabs.ReceiveSpot || parentPrefab == Prefabs.ServeSpot)
-                                {
-                                    ExchangeItemWithSpot(target);
-                                }
+                                ExchangeItemWithSpot(target, parentPrefab);
                             }
                             break;
                     }
@@ -139,9 +136,15 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void ExchangeItemWithSpot(Entity target)
+        private void ExchangeItemWithSpot(Entity target, string spotPrefab)
         {
+            if (spotPrefab != Prefabs.Cubby && spotPrefab != Prefabs.ReceiveSpot && spotPrefab != Prefabs.ServeSpot)
+            {
+                return;
+            }
+           
             var itemInReceiveSpot = target.GetState<InventoryState>().Child;
+
             if (playerInventory.Child == null && itemInReceiveSpot != null)
             {
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
@@ -149,6 +152,18 @@ namespace Assets.Scripts.Systems.Drinks
             }
             else if (playerInventory.Child != null && itemInReceiveSpot == null)
             {
+                var playerItemPrefab = playerInventory.Child.GetState<PrefabState>().PrefabName;
+
+                if (spotPrefab == Prefabs.Cubby && (playerItemPrefab == Prefabs.Beer || playerItemPrefab == Prefabs.Drink))
+                {
+                    return;
+                }
+
+                if (spotPrefab == Prefabs.ServeSpot && playerItemPrefab != Prefabs.Drink)
+                {
+                    return;
+                }
+
                 InventoryItemColliderIsEnabled(true);
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = target, Mover = playerInventory.Child });                
             }
