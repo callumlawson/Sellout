@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.States;
 using Assets.Scripts.States;
+using Assets.Scripts.States.Bar;
 using Assets.Scripts.Util;
 using UnityEngine;
-using Assets.Scripts.States.Bar;
 
-namespace Assets.Scripts.Blueprints
+namespace Assets.Scripts.Blueprints.BarEquipment
 {
-    public class ReceiveSpotSpawner : MonoBehaviour, IEntityBlueprint
+    public class BeerStackSpawner : MonoBehaviour, IEntityBlueprint
     {
         public List<IState> EntityToSpawn()
         {
@@ -15,11 +15,11 @@ namespace Assets.Scripts.Blueprints
             {
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
-                new PrefabState(Prefabs.ReceiveSpot),
+                new PrefabState(Prefabs.BeerStack),
+                new ItemStackState(),
                 new InventoryState(),
                 new VisibleSlotState(),
-                new BarEntityState(),
-                new TooltipState("A spot for patrons to place items.")
+                new TooltipState("Dispenses beers.")
             };
         }
     }

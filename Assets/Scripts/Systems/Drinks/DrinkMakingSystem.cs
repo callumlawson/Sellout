@@ -74,12 +74,6 @@ namespace Assets.Scripts.Systems.Drinks
                                 }
                             }
                             break;
-                        case Prefabs.ReceiveSpot:
-                            TakeItemFromReceiveSpot(target);
-                            break;
-                        case Prefabs.Cubby:
-                            ExchangeItemWithSpot(target);
-                            break;
                         case Prefabs.IngredientDispenser:
                             AddIngredientToDrink(target);
                             break;
@@ -105,11 +99,19 @@ namespace Assets.Scripts.Systems.Drinks
                                 GiveDrinkToPerson(target);
                             }
                             break;
+                        case Prefabs.ReceiveSpot:
+                            TakeItemFromReceiveSpot(target);
+                            break;
+                        case Prefabs.Cubby:
+                        case Prefabs.ServeSpot:
+                            ExchangeItemWithSpot(target);
+                            break;
                         default:
                             if (target.HasState<InventoryState>())
                             {
                                 var parent = target.GetState<InventoryState>().Parent;
-                                if (parent.GetState<PrefabState>().PrefabName == Prefabs.Cubby || parent.GetState<PrefabState>().PrefabName == Prefabs.ReceiveSpot)
+                                var parentPrefab = parent.GetState<PrefabState>().PrefabName;
+                                if (parentPrefab == Prefabs.Cubby || parentPrefab == Prefabs.ReceiveSpot || parentPrefab == Prefabs.ServeSpot)
                                 {
                                     ExchangeItemWithSpot(target);
                                 }

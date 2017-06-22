@@ -4,10 +4,12 @@ using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using UnityEngine;
 using Assets.Scripts.States.Bar;
+using JetBrains.Annotations;
 
-namespace Assets.Scripts.Blueprints
+namespace Assets.Scripts.Blueprints.BarEquipment
 {
-    public class GlassStackSpawner : MonoBehaviour, IEntityBlueprint
+    [UsedImplicitly]
+    public class ServeSpotSpawner : MonoBehaviour, IEntityBlueprint
     {
         public List<IState> EntityToSpawn()
         {
@@ -15,11 +17,11 @@ namespace Assets.Scripts.Blueprints
             {
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
-                new PrefabState(Prefabs.GlassStack),
-                new ItemStackState(),
+                new PrefabState(Prefabs.ServeSpot),
                 new InventoryState(),
                 new VisibleSlotState(),
-                new TooltipState("Dispenses glasses for making drinks.")
+                new BarEntityState(),
+                new TooltipState("A spot for placing your items.")
             };
         }
     }
