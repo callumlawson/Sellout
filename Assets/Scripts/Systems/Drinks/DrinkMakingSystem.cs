@@ -9,6 +9,7 @@ using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
 using Assets.Scripts.Systems.Cameras;
 using Assets.Scripts.States.Bar;
+using Assets.Scripts.Visualizers.Bar;
 
 namespace Assets.Scripts.Systems.Drinks
 {
@@ -58,20 +59,14 @@ namespace Assets.Scripts.Systems.Drinks
                     {
                         case Prefabs.GlassStack:
                         case Prefabs.BeerStack:
-                            if (playerInventory.Child == null)
-                            {
-                                PickUpStackItem(target);
-                            }
+                            PickUpStackItem(target);
                             break;
                         case Prefabs.Drink:
-                            if (playerInventory.Child == null)
+                            var drinkParent = target.GetState<InventoryState>().Parent;
+                            if (drinkParent.HasState<ItemStackState>())
                             {
-                                var drinkParent = target.GetState<InventoryState>().Parent;
-                                if (drinkParent.HasState<ItemStackState>())
-                                {
-                                    var itemStack = drinkParent;
-                                    PickUpStackItem(itemStack);
-                                }
+                                var itemStack = drinkParent;
+                                PickUpStackItem(itemStack);
                             }
                             break;
                         case Prefabs.IngredientDispenser:
@@ -168,11 +163,19 @@ namespace Assets.Scripts.Systems.Drinks
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = target, Mover = playerInventory.Child });                
             }
         }
-
+        
         private void PickUpStackItem(Entity stack)
         {
             if (playerInventory.Child != null)
             {
+                var stackItemPrefabState = stack.GameObject.GetComponent<ItemStackVisualizer>().GetNewStackItem().Find(state => state.GetType() == typeof(PrefabState)) as PrefabState;
+                if (playerInventory.Child.GetState<PrefabState>().PrefabName == stackItemPrefabState.PrefabName)
+                {
+                    var mover = playerInventory.Child;
+                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = null, Mover = mover });
+                    entitySystem.RemoveEntity(mover);
+                }
+
                 return;
             }
 
