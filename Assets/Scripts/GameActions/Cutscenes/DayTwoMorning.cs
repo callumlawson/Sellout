@@ -52,8 +52,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Tolstoy");
-                DialogueSystem.Instance.WriteNPCLine("It's day two morning!.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiiight...", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WriteNPCLine("You really need to get window shields.");
+                DialogueSystem.Instance.WriteNPCLine("This horrible purple light makes my drinks look wierd.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("How can you not want to look at the stars?", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Default));
             }
         }
 
@@ -62,8 +64,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Ellie");
-                DialogueSystem.Instance.WriteNPCLine("The like the second day.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Sure.", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WriteNPCLine("I love this purple nebula.");
+                DialogueSystem.Instance.WriteNPCLine("Imagine the strange new worlds it could be hiding!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("It is beautiful.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I've never really cared much for space.", EndConversation(DialogueOutcome.Default));
             }
         }
     }
