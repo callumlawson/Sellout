@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
@@ -28,7 +30,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
+            jannetSequence.Add(new SetConversationAction(new JannetNightTwo()));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 
@@ -36,33 +38,26 @@ namespace Assets.Scripts.GameActions.Cutscenes
             DrugStory.DrugPusherInspectorShowdown(mcGraw, q, Locations.SitDownPoint2());            
         }
 
-        private class QNightOne : Conversation
+        private class JannetNightTwo : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("It's night on day 2.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Err, sure.", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
-        private class McGrawNightOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("I like the second night.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("What's going on? What does placeholder mean?", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
-        private class JannetNightOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
+                var decision = StaticStates.Get<PlayerDecisionsState>();
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("In the jungle the mighty jungle...");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+                if (decision.AcceptedDrugPushersOffer)
+                {
+                    DialogueSystem.Instance.WriteNPCLine("Have you seen Q? He owes me a, err, drink...");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Well if you need a 'drink' I'm here every day.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Nice));
+                }
+                else
+                {
+                    DialogueSystem.Instance.WriteNPCLine("What a bust up!");
+                    DialogueSystem.Instance.WriteNPCLine("How Q managed to find a market for his horrible substances I'll never know.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You'd be suprised. Being stuck in this space can drives people crazy eventually.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You'd think in a ship as small as this there would be no room for it.", EndConversation(DialogueOutcome.Nice));
+                }
+                
             }
         }
     }
