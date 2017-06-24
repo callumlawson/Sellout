@@ -135,10 +135,8 @@ namespace Assets.Scripts.Systems
             {
                 Interface.Instance.BlackFader.FadeToBlack(4.0f, "Day 1", null, false);
             }
-            if (!GameSettings.DisableTutorial)
-            {
-                DayOneMorning.Start(people);
-            }
+
+            DayOneMorning.Start(people);
         }
 
         private void DoPhaseCleanup()

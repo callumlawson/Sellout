@@ -28,50 +28,62 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
             //McGraw
             var mcGrawSequence = new ActionSequence("McGrawTutorial");
-            mcGrawSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
-            mcGrawSequence.Add(new GetWaypointAction(Goal.PayFor));
-            mcGrawSequence.Add(new GoToWaypointAction());
-            mcGrawSequence.Add(new ConversationAction(new TutorialIntroDiaglogue()));
-            mcGrawSequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
-            {
-                {
-                    DialogueOutcome.Nice, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Happy))
-                },
-                {
-                    DialogueOutcome.Mean, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Angry))
-                }
-            }));
-            mcGrawSequence.Add(CommonActions.QueueForDrinkOrder(mcGraw, 10, 20));
-            const string drinkName = "Mind Meld";
-            var drinkRecipe = DrinkRecipes.GetDrinkRecipe(drinkName);
 
-            var orderSequence = new ConditionalActionSequence("Drink order", false);
-            var drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, mcGraw.GetState<NameState>().Name);
-            orderSequence.Add(new StartDrinkOrderAction(drinkOrder));
-            mcGrawSequence.Add(orderSequence);
-            orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkOrder.DrinkPredicate, 90, true, new DrinkSucsessDialogue()));
-            mcGrawSequence.Add(new RemoveTutorialControlLockAction());
-            mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
-            mcGrawSequence.Add(new PauseAction(3.0f));
-            mcGrawSequence.Add(endOfTutorialSyncPoint);
-            mcGrawSequence.Add(new CallbackAction(() =>
+            if (!GameSettings.DisableTutorial)
             {
-                EventSystem.EndDrinkMakingEvent.Invoke();
-                ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
-                    new TeleportAction(Locations.CenterOfBar()));
-            })); //This is kind of dirty - but demo!
-            mcGrawSequence.Add(new DestoryEntityInInventoryAction());
-            mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
-            mcGrawSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+                mcGrawSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
+                mcGrawSequence.Add(new GetWaypointAction(Goal.PayFor));
+                mcGrawSequence.Add(new GoToWaypointAction());
+                mcGrawSequence.Add(new ConversationAction(new TutorialIntroDiaglogue()));
+                mcGrawSequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
+                {
+                    {
+                        DialogueOutcome.Nice, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Happy))
+                    },
+                    {
+                        DialogueOutcome.Mean, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Angry))
+                    }
+                }));
+                mcGrawSequence.Add(CommonActions.QueueForDrinkOrder(mcGraw, 10, 20));
+                const string drinkName = "Mind Meld";
+                var drinkRecipe = DrinkRecipes.GetDrinkRecipe(drinkName);
 
-            //Player
-            var playerSequence = new ActionSequence("PlayerTutorial");
-            playerSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
-            playerSequence.Add(new GetWaypointAction(Goal.RingUp));
-            playerSequence.Add(new GoToWaypointAction());
-            ActionManagerSystem.Instance.QueueAction(player, playerSequence);
+                var orderSequence = new ConditionalActionSequence("Drink order", false);
+                var drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, mcGraw.GetState<NameState>().Name);
+                orderSequence.Add(new StartDrinkOrderAction(drinkOrder));
+                mcGrawSequence.Add(orderSequence);
+                orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkOrder.DrinkPredicate, 90, true, new DrinkSucsessDialogue()));
+                mcGrawSequence.Add(new RemoveTutorialControlLockAction());
+                mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
+                mcGrawSequence.Add(new PauseAction(3.0f));
+                mcGrawSequence.Add(endOfTutorialSyncPoint);
+                mcGrawSequence.Add(new CallbackAction(() =>
+                {
+                    EventSystem.EndDrinkMakingEvent.Invoke();
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
+                        new TeleportAction(Locations.CenterOfBar()));
+                })); //This is kind of dirty - but demo!
+                mcGrawSequence.Add(new DestoryEntityInInventoryAction());
+                mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
+                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
+                mcGrawSequence.Add(CommonActions.SitDownLoop());
+                ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+
+                //Player
+                var playerSequence = new ActionSequence("PlayerTutorial");
+                playerSequence.Add(new TeleportAction(Locations.OutsideDoorLocation()));
+                playerSequence.Add(new GetWaypointAction(Goal.RingUp));
+                playerSequence.Add(new GoToWaypointAction());
+                ActionManagerSystem.Instance.QueueAction(player, playerSequence);
+            }
+            else
+            {
+                mcGrawSequence.Add(endOfTutorialSyncPoint);
+                mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
+                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
+                mcGrawSequence.Add(CommonActions.SitDownLoop());
+                ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+            }
 
             //Ellie
             var ellieSequence = new ActionSequence("Ellie morning");
