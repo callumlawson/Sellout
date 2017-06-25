@@ -75,13 +75,21 @@ namespace Assets.Scripts.Systems.Bar
 
                 if (time.GameTime.GetDay() == 1)
                 {
-                    var q = allCharacters.First(entity => entity.GetState<NameState>().Name == "Q");
-                    specialCharacters.AddLast(q);
-                    specialCharacterActions.Add(q, DrugStory.DrugPusherIntro(q));
+                    var dayOneStart = DrugStory.DayOneStart();
+                    foreach (var pair in dayOneStart)
+                    {
+                        specialCharacters.AddLast(pair.Key);
+                        specialCharacterActions.Add(pair.Key, pair.Value);
+                    }
                 }
                 else if (time.GameTime.GetDay() == 2)
                 {
-                    inUseCharacters.Add(allCharacters.First(entity => entity.GetState<NameState>().Name == "Q"));
+                    var dayOneStart = DrugStory.DayOneStart();
+                    foreach (var pair in dayOneStart)
+                    {
+                        specialCharacters.AddLast(pair.Key);
+                        specialCharacterActions.Add(pair.Key, pair.Value);
+                    }
                 }
             }        
         }

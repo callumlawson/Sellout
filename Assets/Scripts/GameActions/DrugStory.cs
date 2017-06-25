@@ -16,16 +16,40 @@ using Assets.Scripts.Util;
 using Assets.Scripts.GameActions.Bar;
 using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.GameActions.AILifecycle;
+using Assets.Framework.Systems;
+using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.GameActions
 {
     static class DrugStory
     {
+        public static Dictionary<Entity, ActionSequence> DayOneStart()
+        {
+            var startSequences = new Dictionary<Entity, ActionSequence>();
+
+            var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
+            startSequences.Add(q, DrugPusherIntro(q));
+            
+            return startSequences;
+        }
+
+        public static Dictionary<Entity, ActionSequence> DayTwoState()
+        {
+            var startSequences = new Dictionary<Entity, ActionSequence>();
+
+            var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
+            var qActions = new ActionSequence("Q day 2.");
+            qActions.Add(new BusyAction());
+            startSequences.Add(q, qActions);
+
+            return startSequences;
+        }
+
         public static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
             sequence.Add(new OnActionStatusDecorator(
-                OfferDrugs(drugPusher),                
+                OfferDrugs(drugPusher),
                 () => {
                     var acceptSequence = new ActionSequence("AcceptedDrugOffer");
                     acceptSequence.Add(new ClearConversationAction());
@@ -34,7 +58,7 @@ namespace Assets.Scripts.GameActions
                     acceptSequence.Add(new PauseAction(0.5f));
                     acceptSequence.Add(new ReleaseWaypointAction());
                     acceptSequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
-                    acceptSequence.Add(CommonActions.TalkToBarPatrons());
+                    acceptSequence.Add(CommonActions.TalkToBarPatronsLoop());
                     sequence.Add(acceptSequence);
 
                     ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, acceptSequence);

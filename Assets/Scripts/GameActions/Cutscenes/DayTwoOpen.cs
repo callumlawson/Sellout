@@ -17,7 +17,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
                 var qSequence = new ActionSequence("Q open");
-                qSequence.Add(CommonActions.TalkToBarPatrons());
+                qSequence.Add(CommonActions.TalkToBarPatronsLoop());
                 ActionManagerSystem.Instance.QueueAction(q, qSequence);
             }
         }
