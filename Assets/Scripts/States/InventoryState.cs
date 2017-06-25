@@ -10,7 +10,7 @@ namespace Assets.Scripts.States
         public Entity Parent { get; private set; }
         public Entity Child { get; private set; }
 
-        public Action<InventoryState> HierarchyUpdated = delegate {  };
+        public readonly Action<InventoryState> HierarchyUpdated = delegate {  };
 
         public InventoryState()
         {

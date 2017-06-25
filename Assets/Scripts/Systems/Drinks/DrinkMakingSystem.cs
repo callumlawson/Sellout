@@ -73,7 +73,7 @@ namespace Assets.Scripts.Systems.Drinks
                             AddIngredientToDrink(target);
                             break;
                         case Prefabs.Washup:
-                            if (playerInventory.Child != null)
+                            if (playerInventory.Child != null && playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle)
                             {
                                 WashUpItem(player);
                             }
@@ -101,6 +101,12 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.ServeSpot:
                             ExchangeItemWithSpot(target, targetPrefab.PrefabName);
                             break;
+                        case Prefabs.DispensingBottle:
+                            TakeItem(target);
+                            break;
+                        case Prefabs.DrinkSurface:
+                            TryPutDownDispensingBottle();
+                            break;
                         default:
                             if (target.HasState<InventoryState>())
                             {
@@ -110,11 +116,11 @@ namespace Assets.Scripts.Systems.Drinks
                             }
                             break;
                     }
-                }
+                } 
                 else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.CutsceneControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
-                }
+                }  
             }
         }
 
@@ -128,6 +134,24 @@ namespace Assets.Scripts.Systems.Drinks
                     EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
                     InventoryItemColliderIsEnabled(false);
                 }
+            }
+        }
+        
+        private void TakeItem(Entity targetItem)
+        {
+            if (playerInventory.Child == null && targetItem != null)
+            {
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = null, EntityTo = player, Mover = targetItem });
+                InventoryItemColliderIsEnabled(false);
+            }
+        }
+
+        private void TryPutDownDispensingBottle()
+        {
+            if (playerInventory.Child != null && playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle)
+            {
+                InventoryItemColliderIsEnabled(true);
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = null, Mover = playerInventory.Child});
             }
         }
 
@@ -149,7 +173,7 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 var playerItemPrefab = playerInventory.Child.GetState<PrefabState>().PrefabName;
 
-                if (spotPrefab == Prefabs.Cubby && (playerItemPrefab == Prefabs.Beer || playerItemPrefab == Prefabs.Drink))
+                if (spotPrefab == Prefabs.Cubby && (playerItemPrefab == Prefabs.Beer || playerItemPrefab == Prefabs.Drink || playerItemPrefab == Prefabs.DispensingBottle))
                 {
                     return;
                 }
@@ -219,7 +243,9 @@ namespace Assets.Scripts.Systems.Drinks
                     return;
                 }
                 var selectedPrefabType = selectedEntity.GetState<PrefabState>().PrefabName;
-                if (playerInventory.Child != null && (
+                if (playerInventory.Child != null &&
+                    playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle
+                    && (
                     selectedPrefabType == Prefabs.Counter ||
                     selectedPrefabType == Prefabs.Washup ||
                     selectedPrefabType == Prefabs.IngredientDispenser ||

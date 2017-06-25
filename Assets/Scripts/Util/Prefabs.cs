@@ -3,7 +3,7 @@
     public static class Prefabs
     {
         public const string Person = "Person";
-        public static string Booth = "Booth";
+        public const string Booth = "Booth";
         public const string Waypoint = "Waypoint";
         public const string Drink = "Drink";
         public const string Counter = "Counter";
@@ -21,9 +21,11 @@
         public const string Beer = "Beer";
         public const string Drugs = "Drugs";
         public const string Cubby = "Cubby";
+        public const string DispensingBottle = "DispensingBottle";
+        public const string DrinkSurface = "DrinkSurface";
+
 
         //UI
-        public const string DrinkMixingUI = "DrinkMixingUI";
         public const string DiagloguePanelUI = "DialoguePanel";
         public const string BarDiagloguePanelUI = "BarDialoguePanel";
         public const string DialogueLineUI = "DialogueLine";

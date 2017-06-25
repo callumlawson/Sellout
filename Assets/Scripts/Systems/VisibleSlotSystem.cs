@@ -26,6 +26,11 @@ namespace Assets.Scripts.Systems
                     MoveChildOutOfView(parentingRequest.Mover.GameObject);
                 }
             }
+
+            if (parentingRequest.EntityTo == null)
+            {
+                parentingRequest.Mover.GameObject.transform.parent = null;
+            }
         }
 
         private void MoveChildIntoVisibleSlot(Entity to, GameObject child)

@@ -111,6 +111,7 @@ namespace Assets.Scripts.Systems.AI
             switch (prefab)
             {
                 case Prefabs.Counter:
+                case Prefabs.DrinkSurface:
                 case Prefabs.BeerStack:
                 case Prefabs.GlassStack:
                 case Prefabs.IngredientDispenser:
