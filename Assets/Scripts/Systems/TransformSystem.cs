@@ -26,7 +26,7 @@ namespace Assets.Scripts.Systems
             if (entity.HasState<RotationState>())
             {
                 var rotationState = entity.GetState<RotationState>();
-                //RotationTeleport(entity, rotationState.Rotation);
+                RotationTeleport(entity, rotationState.Rotation);
                 rotationState.Teleport += rot => RotationTeleport(entity, rot);
             }
         }
