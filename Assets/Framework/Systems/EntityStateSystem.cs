@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Util;
+using Assets.Scripts.Util.NPC;
+using Assets.Scripts.States;
+using UnityEngine;
 
 namespace Assets.Framework.Systems
 {
@@ -17,6 +21,7 @@ namespace Assets.Framework.Systems
         private readonly List<IFrameEntitySystem> frameEntitySystems = new List<IFrameEntitySystem>();
         private readonly List<IPhysicsFrameEntitySystem> physicsFrameEntitySystems = new List<IPhysicsFrameEntitySystem>();
         private readonly List<IFrameSystem> updateSytems = new List<IFrameSystem>();
+
         private readonly List<IInitSystem> initSystems = new List<IInitSystem>();
         private readonly List<IEndInitEntitySystem> endInitEntitySystems = new List<IEndInitEntitySystem>();
         private readonly List<IEndInitSystem> endInitSystems = new List<IEndInitSystem>();
@@ -24,12 +29,24 @@ namespace Assets.Framework.Systems
         private readonly List<Entity> entitiesToRemove = new List<Entity>();
         private readonly EntityManager entityManager;
 
+        private readonly Dictionary<String, Entity> namedEntities = new Dictionary<string, Entity>();
+
         private bool paused;
 
         public EntityStateSystem()
         {
             entityManager = new EntityManager();
             Instance = this;
+        }
+
+        public Entity GetEntityWithName(string name)
+        {
+            if (!namedEntities.ContainsKey(name))
+            {
+                return null;
+            }
+
+            return namedEntities[name];
         }
 
         public void AddSystem(ISystem system)
@@ -193,6 +210,13 @@ namespace Assets.Framework.Systems
         {
             var newStates = copyStates ? states.DeepClone() : states;
             var entity = entityManager.BuildEntity(newStates);
+
+            if (entity.HasState<NameState>())
+            {
+                var name = entity.GetState<NameState>().Name;
+                namedEntities[name] = entity;
+            }
+
             if (fireEntityAdded)
             {
                 EntityAdded(entity);

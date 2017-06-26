@@ -241,13 +241,20 @@ namespace Assets.Scripts.GameActions
             return useBar;
         }
 
-        public static ActionSequence TalkToBarPatrons()
+        public static ActionSequence TalkToBarPatronsLoop()
+        {
+            var sequence = new ActionSequence("TalkToBarPatrons", true);
+            sequence.Add(TalkToBarPatron());
+            sequence.Add(new CallbackAction(() => sequence.Add(TalkToBarPatronsLoop()))); //Lol
+            return sequence;
+        }
+
+        public static ActionSequence TalkToBarPatron()
         {
             var sequence = new ActionSequence("TalkToBarPatrons", true);
             sequence.Add(new GetSittingBarPatron());
             sequence.Add(new GoToMovingEntityAction());
             sequence.Add(new PauseAction(5f));
-            sequence.Add(new CallbackAction(() => sequence.Add(TalkToBarPatrons()))); //Lol
             return sequence;
         }
     }
