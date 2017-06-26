@@ -103,6 +103,12 @@ namespace Assets.Scripts.GameActions
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeOurInMins);
         }
 
+        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, int orderTimeOurInMins = 20)
+        {
+            var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
+            return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+        }
+
         public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, int orderTimeoutInMins = 20)
         {
             var wrapper = new ActionSequence("DrinkOrderThenClear");

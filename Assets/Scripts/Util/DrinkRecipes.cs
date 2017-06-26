@@ -30,8 +30,7 @@ namespace Assets.Scripts.Util
             new DrinkRecipe("Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}})),
             new DrinkRecipe("Frosted Mind Meld", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Synthol, 3}, {Ingredient.Alcohol, 1}, { Ingredient.Cola, 1 }})),
             new DrinkRecipe("Orangeola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 1}, {Ingredient.Orangeade, 1}})),
-            new DrinkRecipe("Long Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 3}})),
-            Beer
+            new DrinkRecipe("Long Cola", new DrinkState(new Dictionary<Ingredient, int> {{Ingredient.Cola, 3}}))
         };
 
         public static bool Contains(DrinkState drinkState)
@@ -47,6 +46,12 @@ namespace Assets.Scripts.Util
         public static DrinkRecipe GetDrinkRecipe(string drinkName)
         {
             return Recipes.FirstOrDefault(recipe => recipe.DrinkName == drinkName);
+        }
+        
+        public static DrinkRecipe GetRandomAlcoholicDrinkRecipe()
+        {
+            var alcoholicDrinks = Recipes.Where(recipe => recipe.Contents.GetContents().Any(keyValue => Ingredients.AlcoholicIngredients.Contains(keyValue.Key)));
+            return alcoholicDrinks.ElementAt(Random.Next(0, alcoholicDrinks.Count()));
         }
     }
 }

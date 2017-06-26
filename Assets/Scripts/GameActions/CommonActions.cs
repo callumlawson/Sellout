@@ -189,6 +189,15 @@ namespace Assets.Scripts.GameActions
             return orderingAndDrinking;
         }
 
+        public static ActionSequence BuyDrinkAndSitDown(Entity entity)
+        {
+            var purchaseSequence = new ActionSequence("Purchase");
+            purchaseSequence.Add(DrinkOrders.GetRandomOrder(entity));
+            purchaseSequence.Add(CommonActions.SitDown());
+            purchaseSequence.Add(CommonActions.SitDownLoop());
+            return purchaseSequence;
+        }
+
         public static ActionSequence SitDownAndDrink()
         {
             var sitDown = new ActionSequence("Sit down");

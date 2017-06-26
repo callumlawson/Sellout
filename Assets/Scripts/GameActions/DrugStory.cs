@@ -18,6 +18,7 @@ using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Framework.Systems;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.Framework;
 
 namespace Assets.Scripts.GameActions
 {
@@ -38,13 +39,204 @@ namespace Assets.Scripts.GameActions
             var startSequences = new Dictionary<Entity, ActionSequence>();
 
             var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
-            var qActions = new ActionSequence("Q day 2.");
-            qActions.Add(new BusyAction());
-            startSequences.Add(q, qActions);
+            var mcgraw = EntityStateSystem.Instance.GetEntityWithName(NPCS.McGraw.Name);            
+
+            var playerDecisionState = StaticStates.Get<PlayerDecisionsState>();
+            if (playerDecisionState.ToldInspectorAboutDrugPusher || !playerDecisionState.AcceptedDrugPushersOffer)
+            {
+                startSequences.Add(mcgraw, InspectorAskToDrink(mcgraw));
+                startSequences.Add(q, DrugPusherDrinkTest(q));
+            }
+            else
+            {
+                startSequences.Add(q, DrugPusherAskToDrink(q));
+                startSequences.Add(mcgraw, InspectorDrinkText(q));
+            }
 
             return startSequences;
         }
 
+        /**
+         *      Day 2
+         * */
+        public static ActionSequence InspectorAskToDrink(Entity inspector)
+        {
+            var sequence = new ActionSequence("InspectorAskToDrink");
+            sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
+            sequence.Add(CommonActions.BuyDrinkAndSitDown(inspector));
+            return sequence;
+        }
+        
+        public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
+        {
+            var sequence = new ActionSequence("DrugPusherAskToDrink");
+            sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
+            sequence.Add(CommonActions.BuyDrinkAndSitDown(drugPusher));
+            return sequence;
+        }
+
+        public static ActionSequence InspectorDrinkText(Entity inspector)
+        {
+            var failureConversations = new List<Conversation>() { new InspectorDrinkFailed1(), new InspectorDrinkFailed2(), new InspectorDrinkFailed3() };
+            var successConversation = new InspectorDrinkSuccess();
+            var betweenDrinks = CommonActions.SitDownAndDrink(); // TODO(caryn): does this stop correctly?
+            var afterSuccess = CommonActions.SitDownLoop();
+            return DrinkTest(0, 3, inspector, failureConversations, successConversation, betweenDrinks, afterSuccess);
+        }
+
+        public static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
+        {
+            var failureConversations = new List<Conversation>() { new DrugPusherDrinkFailed1(), new DrugPusherDrinkFailed2(), new DrugPusherDrinkFailed3() };
+            var successConversation = new DrugPusherDrinkSuccess();
+            var betweenDrinks = CommonActions.TalkToBarPatron();
+            var afterSuccess = CommonActions.TalkToBarPatronsLoop();
+            return DrinkTest(0, 3, drugPusher, failureConversations, successConversation, betweenDrinks, afterSuccess);
+        }
+
+        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, Conversation successConversations, GameAction betweenDrinks, GameAction afterSuccess)
+        {
+            var sequence = new ActionSequence("DrinkTest: " + drinker);
+
+            var drinkOrder = DrinkOrders.GetRandomAlcoholicDrinkOrder(drinker);
+            sequence.Add(new OnActionStatusDecorator(
+                drinkOrder,
+                () =>
+                {
+                    var successSequence = new ActionSequence("DrinkTestSuccess1: " + drinker);
+                    if (currentSuccesses + 1 == maxSuccesses)
+                    {
+                        successSequence.Add(new ConversationAction(successConversations));
+                        successSequence.Add(afterSuccess);
+                    }
+                    else
+                    {
+                        successSequence.Add(betweenDrinks);
+                        successSequence.Add(DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess));
+                    }
+
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, successSequence);
+                   
+                },
+                () =>
+                {
+                    var failureSequence = new ActionSequence("DrinkTestFail: " + currentSuccesses + " " + drinker);
+                    failureSequence.Add(new ConversationAction(failureConversations[currentSuccesses]));
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, new LeaveBarAction());
+                    StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory = currentSuccesses;
+                }
+            ));
+
+            return sequence;
+        }
+
+
+
+        private class DrugPusherAskToGetinspectorDrunk : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hey, I think the Inspector McGraw is on to us.");
+                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and he'll be to smashed to do anything.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class InspectorAskToGetDrugPusherDrunk : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hey, Q is about to come in and order some drinks.");
+                DialogueSystem.Instance.WriteNPCLine("I know he's dealing but I can't catch him, he's too fast.");
+                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and I'm sure he'll slip up.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        // Inspector Sequence //
+        private class InspectorDrinkFailed1 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class InspectorDrinkFailed2 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anymore anwyays.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class InspectorDrinkFailed3 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anymore anyways.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+        private class InspectorDrinkSuccess : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("What were in those drinks?! Strong stuff!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        // DrugPusher Sequence //
+        private class DrugPusherDrinkFailed1 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class DrugPusherDrinkFailed2 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anymore anwyays.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class DrugPusherDrinkFailed3 : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hm... this doesn't taste right. I probably shouldn't be drinking anymore anyways.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+        private class DrugPusherDrinkSuccess : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("What were in those drinks?! Strong stuff!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        /**
+         *      Day 1
+         * */
         public static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
