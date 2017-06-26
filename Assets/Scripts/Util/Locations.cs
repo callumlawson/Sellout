@@ -23,9 +23,9 @@ namespace Assets.Scripts.Util
             return waypointPositions[Random.Range(0, waypointPositions.Count)];
         }
 
-        public static Vector3 BehindBarLocation()
+        public static Transform BehindBarLocation()
         {
-            return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform.position;
+            return GameObject.FindGameObjectWithTag("BarSpawnPoint").transform;
         }
 
         public static Transform RandomSeatLocation()
@@ -59,7 +59,8 @@ namespace Assets.Scripts.Util
             {
                 if (person.HasState<NameState>() && person.GetState<NameState>().Name == "You")
                 {
-                    person.GetState<PositionState>().Teleport(BehindBarLocation());
+                    person.GetState<PositionState>().Teleport(BehindBarLocation().position);
+                    person.GetState<RotationState>().Teleport(BehindBarLocation().rotation);
                 }
                 else if (person.HasState<NameState>() && person.GetState<NameState>().Name == "Expendable")
                 {

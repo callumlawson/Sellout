@@ -8,6 +8,7 @@ namespace Assets.Scripts.States
     class RotationState : IState
     {
         public Quaternion Rotation;
+        public Action<Quaternion> Teleport;
 
         public RotationState(Quaternion rotation)
         {

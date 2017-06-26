@@ -52,9 +52,8 @@ namespace Assets.Scripts
 
             //Init
             entitySystem.AddSystem(new WaypointSystem());
-            entitySystem.AddSystem(new PositionSystem());
+            entitySystem.AddSystem(new TransformSystem());
             entitySystem.AddSystem(new SpawningSystem());
-            entitySystem.AddSystem(new RotationInitSystem());
             entitySystem.AddSystem(new InitVisualizersSystem());
 
             //Camera
