@@ -55,7 +55,6 @@ namespace Assets.Scripts.Systems
 
         private static void RotationTeleport(Entity entity, Quaternion rotation)
         {
-            Debug.Log("teleport rotation: " + rotation.eulerAngles);
             entity.GameObject.transform.rotation = rotation;
         }
     }
