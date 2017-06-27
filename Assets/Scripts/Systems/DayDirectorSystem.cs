@@ -141,6 +141,8 @@ namespace Assets.Scripts.Systems
 
         private void DoPhaseCleanup()
         {
+            ResetNPCs();
+            ResetBarStateAndDialogues();
             WaypointSystem.Instance.ClearAllWaypoints();
         }
 

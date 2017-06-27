@@ -19,24 +19,25 @@ using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Framework.Systems;
 using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.Systems.Bar;
 
 namespace Assets.Scripts.GameActions
 {
     static class DrugStory
     {
-        public static Dictionary<Entity, ActionSequence> DayOneStart()
+        public static List<EntityActionPair> DayOneStart()
         {
-            var startSequences = new Dictionary<Entity, ActionSequence>();
+            var startSequences = new List<EntityActionPair>();
 
             var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
-            startSequences.Add(q, DrugPusherIntro(q));
+            startSequences.Add(new EntityActionPair(q, DrugPusherIntro(q)));
             
             return startSequences;
         }
 
-        public static Dictionary<Entity, ActionSequence> DayTwoState()
+        public static List<EntityActionPair> DayTwoState()
         {
-            var startSequences = new Dictionary<Entity, ActionSequence>();
+            var startSequences = new List<EntityActionPair>();
 
             var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
             var mcgraw = EntityStateSystem.Instance.GetEntityWithName(NPCS.McGraw.Name);            
@@ -44,13 +45,13 @@ namespace Assets.Scripts.GameActions
             var playerDecisionState = StaticStates.Get<PlayerDecisionsState>();
             if (playerDecisionState.ToldInspectorAboutDrugPusher || !playerDecisionState.AcceptedDrugPushersOffer)
             {
-                startSequences.Add(mcgraw, InspectorAskToDrink(mcgraw));
-                startSequences.Add(q, DrugPusherDrinkTest(q));
+                startSequences.Add(new EntityActionPair(mcgraw, InspectorAskToDrink(mcgraw)));
+                startSequences.Add(new EntityActionPair(q, DrugPusherDrinkTest(q)));
             }
             else
             {
-                startSequences.Add(q, DrugPusherAskToDrink(q));
-                startSequences.Add(mcgraw, InspectorDrinkText(q));
+                startSequences.Add(new EntityActionPair(q, DrugPusherAskToDrink(q)));
+                startSequences.Add(new EntityActionPair(mcgraw, InspectorDrinkText(mcgraw)));
             }
 
             return startSequences;
@@ -63,7 +64,9 @@ namespace Assets.Scripts.GameActions
         {
             var sequence = new ActionSequence("InspectorAskToDrink");
             sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
-            sequence.Add(CommonActions.BuyDrinkAndSitDown(inspector));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector));
+            sequence.Add(CommonActions.SitDown());
+            sequence.Add(CommonActions.SitDownLoop());
             return sequence;
         }
         
@@ -71,7 +74,9 @@ namespace Assets.Scripts.GameActions
         {
             var sequence = new ActionSequence("DrugPusherAskToDrink");
             sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
-            sequence.Add(CommonActions.BuyDrinkAndSitDown(drugPusher));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher));
+            sequence.Add(CommonActions.SitDown());
+            sequence.Add(CommonActions.SitDownLoop());
             return sequence;
         }
 
@@ -79,7 +84,7 @@ namespace Assets.Scripts.GameActions
         {
             var failureConversations = new List<Conversation>() { new InspectorDrinkFailed1(), new InspectorDrinkFailed2(), new InspectorDrinkFailed3() };
             var successConversation = new InspectorDrinkSuccess();
-            var betweenDrinks = CommonActions.SitDownAndDrink(); // TODO(caryn): does this stop correctly?
+            var betweenDrinks = new List<GameAction> { CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink() };
             var afterSuccess = CommonActions.SitDownLoop();
             return DrinkTest(0, 3, inspector, failureConversations, successConversation, betweenDrinks, afterSuccess);
         }
@@ -88,12 +93,12 @@ namespace Assets.Scripts.GameActions
         {
             var failureConversations = new List<Conversation>() { new DrugPusherDrinkFailed1(), new DrugPusherDrinkFailed2(), new DrugPusherDrinkFailed3() };
             var successConversation = new DrugPusherDrinkSuccess();
-            var betweenDrinks = CommonActions.TalkToBarPatron();
+            var betweenDrinks = new List<GameAction> { CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron() };
             var afterSuccess = CommonActions.TalkToBarPatronsLoop();
             return DrinkTest(0, 3, drugPusher, failureConversations, successConversation, betweenDrinks, afterSuccess);
         }
 
-        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, Conversation successConversations, GameAction betweenDrinks, GameAction afterSuccess)
+        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, Conversation successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
         {
             var sequence = new ActionSequence("DrinkTest: " + drinker);
 
@@ -105,31 +110,34 @@ namespace Assets.Scripts.GameActions
                     var successSequence = new ActionSequence("DrinkTestSuccess1: " + drinker);
                     if (currentSuccesses + 1 == maxSuccesses)
                     {
+                        Debug.Log("Complete success!");
                         successSequence.Add(new ConversationAction(successConversations));
                         successSequence.Add(afterSuccess);
                     }
                     else
                     {
-                        successSequence.Add(betweenDrinks);
-                        successSequence.Add(DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess));
-                    }
+                        Debug.Log("Adding more actions...");
+                        var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
 
+                        successSequence.Add(betweenDrinks[currentSuccesses]);
+                        successSequence.Add(new QueueForBarWithPriority(nextDrinkTest));
+                    }
                     ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, successSequence);
-                   
                 },
                 () =>
                 {
+                    Debug.Log("Failure on " + currentSuccesses);
                     var failureSequence = new ActionSequence("DrinkTestFail: " + currentSuccesses + " " + drinker);
                     failureSequence.Add(new ConversationAction(failureConversations[currentSuccesses]));
-                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, new LeaveBarAction());
+                    failureSequence.Add(new ReleaseWaypointAction());
+                    failureSequence.Add(new LeaveBarAction());
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, failureSequence);
                     StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory = currentSuccesses;
                 }
             ));
 
             return sequence;
         }
-
-
 
         private class DrugPusherAskToGetinspectorDrunk : Conversation
         {
