@@ -4,12 +4,13 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Assets.Scripts.Systems
 {
     //Updates the position in state from the scene. Move entities by setting their position the normal unity way.
-    class PositionSystem : IReactiveEntitySystem, IFrameEntitySystem
+    class TransformSystem : IReactiveEntitySystem, IFrameEntitySystem
     {
         public System.Collections.Generic.List<Type> RequiredStates()
         {
@@ -19,8 +20,15 @@ namespace Assets.Scripts.Systems
         public void OnEntityAdded(Entity entity)
         {
             var positionState = entity.GetState<PositionState>();
-            Teleport(entity, positionState.Position);
-            positionState.Teleport += pos => Teleport(entity, pos);
+            PositionTeleport(entity, positionState.Position);
+            positionState.Teleport += pos => PositionTeleport(entity, pos);
+
+            if (entity.HasState<RotationState>())
+            {
+                var rotationState = entity.GetState<RotationState>();
+                RotationTeleport(entity, rotationState.Rotation);
+                rotationState.Teleport += rot => RotationTeleport(entity, rot);
+            }
         }
 
         public void OnFrame(System.Collections.Generic.List<Entity> matchingEntities)
@@ -36,13 +44,18 @@ namespace Assets.Scripts.Systems
             //Do nothing.
         }
 
-        private static void Teleport(Entity entity, SerializableVector3 position)
+        private static void PositionTeleport(Entity entity, SerializableVector3 position)
         {
             entity.GameObject.transform.position = position;
             if (entity.HasState<PathfindingState>())
             {
                 entity.GameObject.GetComponent<NavMeshAgent>().Warp(position);
             }
+        }
+
+        private static void RotationTeleport(Entity entity, Quaternion rotation)
+        {
+            entity.GameObject.transform.rotation = rotation;
         }
     }
 }

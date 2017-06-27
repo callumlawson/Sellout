@@ -7,10 +7,7 @@ namespace Assets.Scripts.GameActions.AILifecycle
 {
     class LeaveBarAction : GameAction, ICancellableAction
     {
-        private float sitDownTime = 6.0f;
-        private float totalTime = 0.0f;
-
-        private GoToPositionAction goToPosition;
+        private readonly GoToPositionAction goToPosition;
 
         public LeaveBarAction()
         {

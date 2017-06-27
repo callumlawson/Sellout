@@ -134,6 +134,7 @@ namespace Assets.Scripts.Systems
                 new InventoryState(),
                 new VisibleSlotState(),
                 new PositionState(position),
+                new RotationState(Quaternion.identity),
                 new PathfindingState(null, null),
                 new ActionBlackboardState(null),
                 //Warning: Changing 'You' to something else will break stuff. 
@@ -144,7 +145,7 @@ namespace Assets.Scripts.Systems
                 new HairState(HairType.Bartender),
                 new FaceState(FaceType.Bartender),
                 new IsPersonState()
-            });
+            }, false);
             StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial));
             return player;
         }
