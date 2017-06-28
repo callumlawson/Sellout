@@ -18,7 +18,7 @@ namespace Assets.Scripts.Systems.Drinks
         private EntityStateSystem entitySystem;
         private DayPhaseState dayPhase;
 
-        private float drinkDistanceFromCamera = 2.5f;
+        private float drinkDistanceFromCamera = 2.1f;
 
         private bool usingBar;
 
@@ -141,8 +141,8 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (playerInventory.Child == null && targetItem != null)
             {
+                targetItem.GameObject.GetComponent<Collider>().enabled = false;
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = null, EntityTo = player, Mover = targetItem });
-                InventoryItemColliderIsEnabled(false);
             }
         }
 
@@ -235,11 +235,12 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (usingBar && playerInventory.Child != null)
             {
+                var snapToSurface = playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle;
                 var cursorState = StaticStates.Get<CursorState>();
                 var selectedEntity = cursorState.SelectedEntity;
                 if (selectedEntity == null)
                 {
-                    LerpDrinkPosition(GetNewHeldDrinkPosition());
+                    LerpDrinkPosition(GetNewHeldDrinkPosition(snapToSurface));
                     return;
                 }
                 var selectedPrefabType = selectedEntity.GetState<PrefabState>().PrefabName;
@@ -247,6 +248,7 @@ namespace Assets.Scripts.Systems.Drinks
                     playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle
                     && (
                     selectedPrefabType == Prefabs.Counter ||
+                    selectedPrefabType == Prefabs.ServeSpot ||
                     selectedPrefabType == Prefabs.Washup ||
                     selectedPrefabType == Prefabs.IngredientDispenser ||
                     selectedPrefabType == Prefabs.Person ||
@@ -260,13 +262,13 @@ namespace Assets.Scripts.Systems.Drinks
                     }
                     else
                     {
-                        drinkPosition = GetNewHeldDrinkPosition();
+                        drinkPosition = GetNewHeldDrinkPosition(snapToSurface);
                     }
                     LerpDrinkPosition(drinkPosition);
                 }
                 else if (playerInventory.Child != null)
                 {
-                    LerpDrinkPosition(GetNewHeldDrinkPosition());
+                    LerpDrinkPosition(GetNewHeldDrinkPosition(snapToSurface));
                 }
             }
             else if (!usingBar && playerInventory.Child != null)
@@ -332,11 +334,23 @@ namespace Assets.Scripts.Systems.Drinks
             playerInventory.Child.GameObject.transform.position = Vector3.Lerp(playerInventory.Child.GameObject.transform.position, newDrinkPosition, Time.deltaTime * 20);
         }
 
-        private Vector3 GetNewHeldDrinkPosition()
+        private Vector3 GetNewHeldDrinkPosition(bool snapToSurface)
         {
             var mousePosition = Input.mousePosition;
-            var worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
-            return worldPoint;
+            if (snapToSurface)
+            {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    var objectHit = hit.collider.gameObject;
+                    if (objectHit.CompareTag("DrinkSurface"))
+                    {
+                        return hit.point;
+                    }
+                }
+            }
+            return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
         }
     }
 }
