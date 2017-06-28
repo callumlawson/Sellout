@@ -120,6 +120,7 @@ namespace Assets.Scripts.GameActions
                         var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
 
                         successSequence.Add(betweenDrinks[currentSuccesses]);
+                        successSequence.Add(new DestoryEntityInInventoryAction());
                         successSequence.Add(new QueueForBarWithPriority(nextDrinkTest));
                     }
                     ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, successSequence);
