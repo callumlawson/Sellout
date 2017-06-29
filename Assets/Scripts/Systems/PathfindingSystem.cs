@@ -29,7 +29,7 @@ namespace Assets.Scripts.Systems
                 var paused = pathfindingState.GetPaused();
                 var stoppingDistance = pathfindingState.GetStoppingDistance();
 
-                if (positionGoal.HasValue)
+                if (positionGoal.HasValue && navAgent.isActiveAndEnabled)
                 {
                     navAgent.updateRotation = true;
                     navAgent.destination = positionGoal.Value;
