@@ -47,13 +47,10 @@ namespace Assets.Scripts.Systems
             {
                 entity = entitySystem.CreateEntity(possibleBlueprint.EntityToSpawn(), false, false);
                 var entityGameObject = entity.GameObject;
-                entityGameObject.AddComponent<EntityIdComponent>().EntityId = entity.EntityId;
-
                 if (parent != null)
                 {
                     entityGameObject.transform.SetParent(parent.GameObject.transform, true);
                 }
-
                 entitiesSpawned.Add(entity);
             }
 
