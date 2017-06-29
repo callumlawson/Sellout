@@ -62,11 +62,17 @@ namespace Assets.Scripts.Systems.Drinks
                             PickUpStackItem(target);
                             break;
                         case Prefabs.Drink:
+                        case Prefabs.Beer:
+                        case Prefabs.DispensingBottle:
                             var drinkParent = target.GetState<InventoryState>().Parent;
-                            if (drinkParent.HasState<ItemStackState>())
+                            if (drinkParent != null && drinkParent.HasState<ItemStackState>())
                             {
                                 var itemStack = drinkParent;
                                 PickUpStackItem(itemStack);
+                            }
+                            else
+                            {
+                                TakeItem(target);    
                             }
                             break;
                         case Prefabs.IngredientDispenser:
@@ -101,11 +107,8 @@ namespace Assets.Scripts.Systems.Drinks
                         case Prefabs.ServeSpot:
                             ExchangeItemWithSpot(target, targetPrefab.PrefabName);
                             break;
-                        case Prefabs.DispensingBottle:
-                            TakeItem(target);
-                            break;
                         case Prefabs.DrinkSurface:
-                            TryPutDownDispensingBottle();
+                            TryPutDown();
                             break;
                         default:
                             if (target.HasState<InventoryState>())
@@ -146,9 +149,9 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void TryPutDownDispensingBottle()
+        private void TryPutDown()
         {
-            if (playerInventory.Child != null && playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle)
+            if (playerInventory.Child != null)
             {
                 InventoryItemColliderIsEnabled(true);
                 EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = null, Mover = playerInventory.Child});
@@ -235,7 +238,7 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (usingBar && playerInventory.Child != null)
             {
-                var snapToSurface = playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle;
+                var snapToSurface = true; //playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle;
                 var cursorState = StaticStates.Get<CursorState>();
                 var selectedEntity = cursorState.SelectedEntity;
                 if (selectedEntity == null)
