@@ -8,8 +8,11 @@ namespace Assets.Scripts.Systems
 {
     class VisibleSlotSystem : IInitSystem
     {
+        private Transform entitiesRootTransform;
+
         public void OnInit()
         {
+            entitiesRootTransform = GameObject.Find("Entities").transform;
             EventSystem.ParentingRequestEvent += OnInventoryEvent;
         }
 
@@ -29,11 +32,11 @@ namespace Assets.Scripts.Systems
 
             if (parentingRequest.EntityTo == null)
             {
-                parentingRequest.Mover.GameObject.transform.parent = null;
+                parentingRequest.Mover.GameObject.transform.parent = entitiesRootTransform;
             }
         }
 
-        private void MoveChildIntoVisibleSlot(Entity to, GameObject child)
+        private static void MoveChildIntoVisibleSlot(Entity to, GameObject child)
         {
             var visibleSlot = to.GameObject.GetComponentInChildren<SlotVisualizer>();
             if (visibleSlot != null)
@@ -49,7 +52,7 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void MoveChildOutOfView(GameObject child)
+        private static void MoveChildOutOfView(GameObject child)
         {
             child.transform.parent = null;
             child.transform.position = new Vector3(0, -10, 0);
