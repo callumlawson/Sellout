@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Framework;
+using UnityEngine;
 
 namespace Assets.Scripts.GameActions.Composite
 {
@@ -26,7 +27,8 @@ namespace Assets.Scripts.GameActions.Composite
             Actions.ForEach(action => action.OnFrame(entity));
             if (Actions.All(action => action.IsComplete()))
             {
-                ActionStatus = ActionStatus.Succeeded;
+                var status = Actions.Any(action => action.ActionStatus == ActionStatus.Failed) ? ActionStatus.Failed : ActionStatus.Succeeded;
+                ActionStatus = status;
             }
         }
 
