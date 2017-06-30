@@ -82,23 +82,21 @@ namespace Assets.Scripts.GameActions
         {
             var failureConversations = inspectorFailureLines;
             var successConversations = inspectorSuccessLines;
-            var totalSuccessConversation = inspectorTotalSuccessLine;
             var betweenDrinks = new List<GameAction> { CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink() };
             var afterSuccess = CommonActions.SitDownLoop();
-            return DrinkTest(0, 3, inspector, failureConversations, successConversations, totalSuccessConversation, betweenDrinks, afterSuccess);
+            return DrinkTest(0, 3, inspector, failureConversations, successConversations, betweenDrinks, afterSuccess);
         }
 
         public static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
         {
-            var failureConversations = drugPusherFailureLines;
-            var successConversations = drugPusherSuccessLines;
-            var totalSuccessConversation = drugPusherTotalSuccessLine;
+            var failureConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherFailureLinesAccepted : drugPusherFailureLinesRejected;
+            var successConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherSuccessLinesAccepted : drugPusherSuccessLinesRejected;
             var betweenDrinks = new List<GameAction> { CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron() };
             var afterSuccess = CommonActions.TalkToBarPatronsLoop();
-            return DrinkTest(0, 3, drugPusher, failureConversations, successConversations, totalSuccessConversation, betweenDrinks, afterSuccess);
+            return DrinkTest(0, 3, drugPusher, failureConversations, successConversations, betweenDrinks, afterSuccess);
         }
 
-        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, Conversation totalSuccessConversation, List<GameAction> betweenDrinks, GameAction afterSuccess)
+        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
         {
             var sequence = new ActionSequence("DrinkTest: " + drinker);
 
@@ -113,14 +111,14 @@ namespace Assets.Scripts.GameActions
                         Debug.Log("Complete success!");
                         successSequence.Add(new ClearConversationAction());
                         successSequence.Add(new EndDrinkOrderAction());
-                        successSequence.Add(new ConversationAction(totalSuccessConversation));
+                        successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
                         successSequence.Add(new ReleaseWaypointAction());
                         successSequence.Add(afterSuccess);
                     }
                     else
                     {
                         Debug.Log("Success, adding more actions...");
-                        var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, totalSuccessConversation, betweenDrinks, afterSuccess);
+                        var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
 
                         successSequence.Add(new ClearConversationAction());
                         successSequence.Add(new EndDrinkOrderAction());
