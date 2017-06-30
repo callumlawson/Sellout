@@ -36,7 +36,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(player,
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
-            jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(chosenSeats[0].GameObject.transform));
             jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
             jannetSequence.Add(CommonActions.SitDownLoop());
@@ -44,16 +43,14 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
             //Tolstoy
             var tolstoySequence = new ActionSequence("Tolstoy night");
-            tolstoySequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
-            tolstoySequence.Add(new TeleportAction(chosenSeats[2].GameObject.transform));
+            tolstoySequence.Add(new TeleportAction(chosenSeats[1].GameObject.transform));
             tolstoySequence.Add(new SetConversationAction(new TolstoyNightOne()));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
 
             //Ellie
             var ellieSequence = new ActionSequence("Ellie night");
-            ellieSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
-            ellieSequence.Add(new TeleportAction(chosenSeats[3].GameObject.transform));
+            ellieSequence.Add(new TeleportAction(chosenSeats[2].GameObject.transform));
             ellieSequence.Add(new SetConversationAction(new EllieNightOne()));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
@@ -110,8 +107,21 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Tolstoy");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+                if (StaticStates.Get<PlayerDecisionsState>().GaveTolstoyDrink)
+                {
+                    DialogueSystem.Instance.WriteNPCLine("Handing me that drink this morning was a little thing.");
+                    DialogueSystem.Instance.WriteNPCLine("But you don't even know me, don't owe me anything.");
+                    DialogueSystem.Instance.WriteNPCLine("Dave wouldn't have done that.");
+                    DialogueSystem.Instance.WriteNPCLine("Thank you.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("It was nothing, glad to help.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("A happy customer comes back.", EndConversation(DialogueOutcome.Default));
+                }
+                else
+                {
+                    DialogueSystem.Instance.WriteNPCLine("I know it's late. I'm finishing up, don't worry.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("I'm not in a rush - take your time.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You have 10 minutes.", EndConversation(DialogueOutcome.Nice));
+                }
             }
         }
 

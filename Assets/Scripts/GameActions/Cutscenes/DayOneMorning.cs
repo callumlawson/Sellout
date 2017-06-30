@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Framework.States;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.GameActions.Drinks;
@@ -105,6 +106,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
             tolstoySequence.Add(new ConversationAction(new TolstoyMorningGivenDrink()));
             tolstoySequence.Add(new SetConversationAction(new TolstoyMorningAfterDrink()));
+            tolstoySequence.Add(new CallbackAction(() => StaticStates.Get<PlayerDecisionsState>().GaveTolstoyDrink = true));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }
