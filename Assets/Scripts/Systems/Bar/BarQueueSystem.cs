@@ -11,6 +11,8 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.GameActions.Composite;
+using UnityEngine;
+using Assets.Scripts.GameActions.Framework;
 
 namespace Assets.Scripts.Systems.Bar
 {
@@ -42,7 +44,7 @@ namespace Assets.Scripts.Systems.Bar
         private readonly HashSet<Entity> inUseCharacters = new HashSet<Entity>();
 
         private readonly LinkedList<Entity> specialCharacters = new LinkedList<Entity>();
-        private readonly Dictionary<Entity, ActionSequence> specialCharacterActions = new Dictionary<Entity, ActionSequence>();
+        private readonly Dictionary<Entity, GameAction> specialCharacterActions = new Dictionary<Entity, GameAction>();
 
         public BarQueueSystem()
         {
@@ -59,7 +61,7 @@ namespace Assets.Scripts.Systems.Bar
             dayPhase.DayPhaseChangedTo += DayPhaseChangedTo;
         }
 
-        public void QueueEntityNext(Entity entity, ActionSequence actions)
+        public void QueueEntityNext(Entity entity, GameAction actions)
         {
             specialCharacters.AddLast(entity);
             specialCharacterActions.Add(entity, actions);
@@ -78,17 +80,17 @@ namespace Assets.Scripts.Systems.Bar
                     var dayOneStart = DrugStory.DayOneStart();
                     foreach (var pair in dayOneStart)
                     {
-                        specialCharacters.AddLast(pair.Key);
-                        specialCharacterActions.Add(pair.Key, pair.Value);
+                        specialCharacters.AddLast(pair.GetEntity());
+                        specialCharacterActions.Add(pair.GetEntity(), pair.GetGameAction());
                     }
                 }
                 else if (time.GameTime.GetDay() == 2)
                 {
-                    var dayOneStart = DrugStory.DayOneStart();
-                    foreach (var pair in dayOneStart)
+                    var dayTwoStart = DrugStory.DayTwoState();
+                    foreach (var pair in dayTwoStart)
                     {
-                        specialCharacters.AddLast(pair.Key);
-                        specialCharacterActions.Add(pair.Key, pair.Value);
+                        specialCharacters.AddLast(pair.GetEntity());
+                        specialCharacterActions.Add(pair.GetEntity(), pair.GetGameAction());
                     }
                 }
             }        
@@ -147,10 +149,9 @@ namespace Assets.Scripts.Systems.Bar
             {
                 if (purchaseWaypointIsFree)
                 {
-                    var availableCharacter = specialCharacters.FirstOrDefault(entity => ActionManagerSystem.Instance.IsEntityIdle(entity));
-                    if (availableCharacter != null)
+                    var availableCharacter = specialCharacters.First.Value;
+                    if (ActionManagerSystem.Instance.IsEntityIdle(availableCharacter))
                     {
-                        ActionManagerSystem.Instance.QueueAction(availableCharacter, new TeleportAction(waitForPurchaseWaypoint.GameObject.transform.position));
                         AddPurchaseActionsForCharacter(availableCharacter, specialCharacterActions[availableCharacter]);
 
                         specialCharacters.Remove(availableCharacter);
@@ -202,14 +203,15 @@ namespace Assets.Scripts.Systems.Bar
             AddPurchaseActionsForCharacter(waitingCharacter, purchaseSequence);
         }
 
-        private void AddPurchaseActionsForCharacter(Entity character, ActionSequence sequence)
+        private void AddPurchaseActionsForCharacter(Entity character, GameAction actionsAtTil)
         {
             character.GetState<ActionBlackboardState>().TargetEntity = purchaseWaypoint;
             purchaseWaypoint.GetState<UserState>().Reserve(character, "Bar Queue System");
             purchaseWaypoint.GetState<UserState>().Use(character, "Bar Queue System");
+
             ActionManagerSystem.Instance.QueueAction(character, new GoToWaypointAction());
 
-            ActionManagerSystem.Instance.QueueAction(character, sequence);
+            ActionManagerSystem.Instance.QueueAction(character, actionsAtTil);
         }
         
         private void OnWaitForPurchaseWaypointFree()

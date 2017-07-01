@@ -9,5 +9,6 @@ namespace Assets.Scripts.States
         public bool AcceptedDrugPushersOffer = true;
         public bool ToldInspectorAboutDrugPusher = false;
         public bool GaveTolstoyDrink = false;
+        public int NumberOfDrinksServedInDrugStory = -1;
     }
 }

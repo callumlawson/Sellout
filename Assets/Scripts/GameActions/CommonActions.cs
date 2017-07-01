@@ -98,6 +98,13 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
+        public static ConditionalActionSequence WaitForDrinkWithoutFailure(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins)
+        {
+            var waitForDrink = new ConditionalActionSequence("WaitForDrink");
+            waitForDrink.Add(new DrinkIsInInventoryAction(drinkPredicate, timeoutInGameMins));
+            return waitForDrink;
+        }
+
         public static ConditionalActionSequence WaitForDrink(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
@@ -187,6 +194,15 @@ namespace Assets.Scripts.GameActions
             orderingAndDrinking.Add(SitDownAndDrink());
 
             return orderingAndDrinking;
+        }
+
+        public static ActionSequence BuyDrinkAndSitDown(Entity entity)
+        {
+            var purchaseSequence = new ActionSequence("Purchase");
+            purchaseSequence.Add(DrinkOrders.GetRandomOrder(entity));
+            purchaseSequence.Add(CommonActions.SitDown());
+            purchaseSequence.Add(CommonActions.SitDownLoop());
+            return purchaseSequence;
         }
 
         public static ActionSequence SitDownAndDrink()

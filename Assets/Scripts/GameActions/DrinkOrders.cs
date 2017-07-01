@@ -103,6 +103,18 @@ namespace Assets.Scripts.GameActions
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeOurInMins);
         }
 
+        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, int orderTimeOurInMins = 20)
+        {
+            var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
+            return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+        }
+
+        public static GameAction GetRandomAlcoholicDrinkOrderWithoutFailure(Entity entity, int orderTimeOurInMins = 20)
+        {
+            var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
+            return OrderDrinkWithoutFailure(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+        }
+
         public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, int orderTimeoutInMins = 20)
         {
             var wrapper = new ActionSequence("DrinkOrderThenClear");
@@ -115,6 +127,17 @@ namespace Assets.Scripts.GameActions
             wrapper.Add(orderDrink);
             wrapper.Add(new ClearConversationAction());
             return wrapper;
+        }
+
+        public static GameAction OrderDrinkWithoutFailure(Entity entity, DrinkOrder drinkOrder, Conversation conversation, int orderTimeoutInMins = 20)
+        {
+            var orderDrink = new ParallelUntilAllCompleteAction("OrderDrink");
+            orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
+            var waitForDrink = new ConditionalActionSequence("WaitForDrink");
+            waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
+            waitForDrink.Add(CommonActions.WaitForDrinkWithoutFailure(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
+            orderDrink.Add(waitForDrink);
+            return orderDrink;
         }
 
         public class OrderExactDrinkConverstation : Conversation
