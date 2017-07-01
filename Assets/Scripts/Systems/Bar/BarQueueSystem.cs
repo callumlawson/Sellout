@@ -63,7 +63,6 @@ namespace Assets.Scripts.Systems.Bar
 
         public void QueueEntityNext(Entity entity, GameAction actions)
         {
-            Debug.Log("Queueing " + entity.GetState<NameState>().Name + " in special characters.");
             specialCharacters.AddLast(entity);
             specialCharacterActions.Add(entity, actions);
         }
@@ -81,7 +80,6 @@ namespace Assets.Scripts.Systems.Bar
                     var dayOneStart = DrugStory.DayOneStart();
                     foreach (var pair in dayOneStart)
                     {
-                        Debug.Log("Queueing " + pair.GetEntity().GetState<NameState>().Name + " in special characters day change.");
                         specialCharacters.AddLast(pair.GetEntity());
                         specialCharacterActions.Add(pair.GetEntity(), pair.GetGameAction());
                     }
@@ -91,7 +89,6 @@ namespace Assets.Scripts.Systems.Bar
                     var dayTwoStart = DrugStory.DayTwoState();
                     foreach (var pair in dayTwoStart)
                     {
-                        Debug.Log("Queueing " + pair.GetEntity().GetState<NameState>().Name + " in special characters day change.");
                         specialCharacters.AddLast(pair.GetEntity());
                         specialCharacterActions.Add(pair.GetEntity(), pair.GetGameAction());
                     }
@@ -155,20 +152,11 @@ namespace Assets.Scripts.Systems.Bar
                     var availableCharacter = specialCharacters.First.Value;
                     if (ActionManagerSystem.Instance.IsEntityIdle(availableCharacter))
                     {
-                        Debug.Log("Sepcial character " + availableCharacter.GetState<NameState>().Name + " doing purchase.");
                         AddPurchaseActionsForCharacter(availableCharacter, specialCharacterActions[availableCharacter]);
 
                         specialCharacters.Remove(availableCharacter);
                         specialCharacterActions.Remove(availableCharacter);
                     }
-                    else
-                    {
-                        Debug.Log("Special character " + specialCharacters.First().GetState<NameState>().Name + " isn't free!");
-                    }
-                }
-                else
-                {
-                    Debug.Log("Waypoint is owned by " + purchaseWaypoint.GetState<UserState>().User.GetState<NameState>().Name + " so " + specialCharacters.First().GetState<NameState>().Name + " couldn't reserve it.");
                 }
             }
             else
@@ -252,7 +240,6 @@ namespace Assets.Scripts.Systems.Bar
 
             if (idleCharacters.Count == 0)
             {
-                Debug.Log("Unable to find free character from " + freeCharacters.Count + " and " + inUseCharacters.Count);
                 return null;
             }
 

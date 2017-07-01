@@ -108,7 +108,6 @@ namespace Assets.Scripts.GameActions
                     var successSequence = new ActionSequence("DrinkTestSuccess1: " + drinker);
                     if (currentSuccesses + 1 == maxSuccesses)
                     {
-                        Debug.Log("Complete success!");
                         successSequence.Add(new ClearConversationAction());
                         successSequence.Add(new EndDrinkOrderAction());
                         successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
@@ -117,7 +116,6 @@ namespace Assets.Scripts.GameActions
                     }
                     else
                     {
-                        Debug.Log("Success, adding more actions...");
                         var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
 
                         successSequence.Add(new ClearConversationAction());
@@ -132,7 +130,6 @@ namespace Assets.Scripts.GameActions
                 },
                 () =>
                 {
-                    Debug.Log("Failure on " + currentSuccesses);
                     var failureSequence = new ActionSequence("DrinkTestFail: " + currentSuccesses + " " + drinker);
                     failureSequence.Add(new ClearConversationAction());
                     failureSequence.Add(new EndDrinkOrderAction());
