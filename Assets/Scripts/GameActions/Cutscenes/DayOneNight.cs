@@ -97,8 +97,18 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+                if (StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer)
+                {
+                    DialogueSystem.Instance.WriteNPCLine("Q gave me a great deal on his, erm, plants.");
+                    DialogueSystem.Instance.WriteNPCLine("It's all had to be so hush hush before. Did they change the rules");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Something like that.", EndConversation(DialogueOutcome.Default));
+                }
+                else
+                {
+                    DialogueSystem.Instance.WriteNPCLine("What do you want?");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Nothing, sorry.", EndConversation(DialogueOutcome.Default));
+                }
+                
             }
         }
 
