@@ -40,9 +40,8 @@ namespace Assets.Scripts.GameActions
 
             var q = EntityStateSystem.Instance.GetEntityWithName(NPCS.Q.Name);
             var mcgraw = EntityStateSystem.Instance.GetEntityWithName(NPCS.McGraw.Name);
-
-            var playerDecisionState = StaticStates.Get<PlayerDecisionsState>();
-            if (playerDecisionState.ToldInspectorAboutDrugPusher || !playerDecisionState.AcceptedDrugPushersOffer)
+            
+            if (IsDrugPusherDrinking())
             {
                 startSequences.Add(new EntityActionPair(mcgraw, InspectorAskToDrink(mcgraw)));
                 startSequences.Add(new EntityActionPair(q, DrugPusherDrinkTest(q)));
@@ -57,126 +56,30 @@ namespace Assets.Scripts.GameActions
         }
 
         /**
-         *      Day 2
+         *  Util
          * */
-        public static ActionSequence InspectorAskToDrink(Entity inspector)
+        private static bool IsDrugPusherDrinking()
         {
-            var sequence = new ActionSequence("InspectorAskToDrink");
-            sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
-            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector));
-            sequence.Add(CommonActions.SitDown());
-            sequence.Add(CommonActions.SitDownLoop());
-            return sequence;
+            var playerDecisionState = StaticStates.Get<PlayerDecisionsState>();
+            return playerDecisionState.ToldInspectorAboutDrugPusher || !playerDecisionState.AcceptedDrugPushersOffer;
         }
 
-        public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
+        private class SingleOutcomeConversation : Conversation
         {
-            var sequence = new ActionSequence("DrugPusherAskToDrink");
-            sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
-            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher));
-            sequence.Add(CommonActions.TalkToBarPatronsLoop());
-            return sequence;
-        }
-
-        public static ActionSequence InspectorDrinkText(Entity inspector)
-        {
-            var failureConversations = inspectorFailureLines;
-            var successConversations = inspectorSuccessLines;
-            var betweenDrinks = new List<GameAction> { CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink() };
-            var afterSuccess = CommonActions.SitDownLoop();
-            return DrinkTest(0, 3, inspector, failureConversations, successConversations, betweenDrinks, afterSuccess);
-        }
-
-        public static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
-        {
-            var failureConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherFailureLinesAccepted : drugPusherFailureLinesRejected;
-            var successConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherSuccessLinesAccepted : drugPusherSuccessLinesRejected;
-            var betweenDrinks = new List<GameAction> { CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron() };
-            var afterSuccess = CommonActions.TalkToBarPatronsLoop();
-            return DrinkTest(0, 3, drugPusher, failureConversations, successConversations, betweenDrinks, afterSuccess);
-        }
-
-        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
-        {
-            var sequence = new ActionSequence("DrinkTest: " + drinker);
-
-            var drinkOrder = DrinkOrders.GetRandomAlcoholicDrinkOrderWithoutFailure(drinker);
-            sequence.Add(new OnActionStatusDecorator(
-                drinkOrder,
-                () =>
-                {
-                    var successSequence = new ActionSequence("DrinkTestSuccess1: " + drinker);
-                    if (currentSuccesses + 1 == maxSuccesses)
-                    {
-                        successSequence.Add(new ClearConversationAction());
-                        successSequence.Add(new EndDrinkOrderAction());
-                        successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
-                        successSequence.Add(new ReleaseWaypointAction());
-                        successSequence.Add(afterSuccess);
-                    }
-                    else
-                    {
-                        var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
-
-                        successSequence.Add(new ClearConversationAction());
-                        successSequence.Add(new EndDrinkOrderAction());
-                        successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
-                        successSequence.Add(new ReleaseWaypointAction());
-                        successSequence.Add(betweenDrinks[currentSuccesses]);
-                        successSequence.Add(new DestoryEntityInInventoryAction());
-                        successSequence.Add(new QueueForBarWithPriority(nextDrinkTest));
-                    }
-                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, successSequence);
-                },
-                () =>
-                {
-                    var failureSequence = new ActionSequence("DrinkTestFail: " + currentSuccesses + " " + drinker);
-                    failureSequence.Add(new ClearConversationAction());
-                    failureSequence.Add(new EndDrinkOrderAction());
-                    failureSequence.Add(new ConversationAction(failureConversations[currentSuccesses]));
-                    failureSequence.Add(new DestoryEntityInInventoryAction());
-                    failureSequence.Add(new ReleaseWaypointAction());
-                    failureSequence.Add(new LeaveBarAction());
-                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, failureSequence);
-                    StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory = currentSuccesses;
-                }
-            ));
-
-            return sequence;
-        }
-
-        private class DrugPusherAskToGetinspectorDrunk : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Hey, I think the Inspector McGraw is on to us.");
-                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and he'll be to smashed to do anything.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class InspectorAskToGetDrugPusherDrunk : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Hey, Q is about to come in and order some drinks.");
-                DialogueSystem.Instance.WriteNPCLine("I know he's dealing but I can't catch him, he's too fast.");
-                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and I'm sure he'll slip up.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class SingleLineConversation : Conversation
-        {
-            private string line;
+            private string[] lines;
             private string response;
             private DialogueOutcome outcome;
 
-            public SingleLineConversation(string line, string response, DialogueOutcome outcome)
+            public SingleOutcomeConversation(string line, string response, DialogueOutcome outcome)
             {
-                this.line = line;
+                this.lines = new string[] { line };
+                this.response = response;
+                this.outcome = outcome;
+            }
+
+            public SingleOutcomeConversation(string[] lines, string response, DialogueOutcome outcome)
+            {
+                this.lines = lines;
                 this.response = response;
                 this.outcome = outcome;
             }
@@ -184,50 +87,18 @@ namespace Assets.Scripts.GameActions
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine(line);
+                foreach (var line in lines)
+                {
+                    DialogueSystem.Instance.WriteNPCLine(line);
+                }
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>" + response + "</i>", EndConversation(outcome));
             }
         }
 
-        // Inspector Sequence //
-        private static List<Conversation> inspectorFailureLines = new List<Conversation> {
-            new SingleLineConversation("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. Too bad because the first one was great I probably should stop drinking anyways.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. *Hic* Well, I probably shouldn't drink anymore anways.", "Nod.", DialogueOutcome.Default),
-        };
-        private static List<Conversation> inspectorSuccessLines = new List<Conversation> {
-            new SingleLineConversation("Ahh, just the thing to take the day off.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Delicious! I'm really feeling these, must be tired from the long day.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad you're on the ship. This is the last one, promise. *Hic*.", "Nod.", DialogueOutcome.Default),
-        };
-
-        // DrugPusher Sequence //
-        private static List<Conversation> drugPusherFailureLinesAccepted = new List<Conversation> {
-            new SingleLineConversation("Hm... this doesn't taste right. Figures, you have business sense but not bartending skill.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. Guess the first was a fluke.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. *Hic* Well, I should stop anyways.", "Nod.", DialogueOutcome.Default),
-        };
-        private static List<Conversation> drugPusherFailureLinesRejected = new List<Conversation> {
-            new SingleLineConversation("Hm... this doesn't taste right. Figures, you have no business sense or bartending skill.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. Guess the first was a fluke. Figures.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Hm... this doesn't taste right. *Hic* Figures, you have no business sense or bartending skill. *Hic*", "Nod.", DialogueOutcome.Default),
-        };
-
-        private static List<Conversation> drugPusherSuccessLinesAccepted = new List<Conversation> {
-            new SingleLineConversation("Ahh, I've been needing this.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad we're business partners. *Hic*.", "Nod.", DialogueOutcome.Default),
-        };
-        private static List<Conversation> drugPusherSuccessLinesRejected = new List<Conversation> {
-            new SingleLineConversation("Ahh, I've been needing this. No hard feelings from before", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
-            new SingleLineConversation("*Hic* You may have terrible business sense but you make a good drink. *Hic* I'd better stop before I lose it.", "Nod.", DialogueOutcome.Default),
-        };
-
-
         /**
          *      Day 1
          * */
+        #region Day 1
         public static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
@@ -316,7 +187,13 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
             }
         }
+#endregion
+        
+        /**
+         *      Day 2
+         * */
 
+        #region Day 2 - Morning
         public static ActionSequence InspectorQuestions(Entity security)
         {
             var questionTime = new ActionSequence("InspectorQuestions");
@@ -368,13 +245,167 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WritePlayerChoiceLine("Not that I've seen, and I'm here all day.", EndConversation(DialogueOutcome.Disagree));
             }
         }
+        #endregion
 
+        #region Day 2 - Open
+
+        // Intro
+        public static ActionSequence InspectorAskToDrink(Entity inspector)
+        {
+            var sequence = new ActionSequence("InspectorAskToDrink");
+            sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector));
+            sequence.Add(CommonActions.SitDown());
+            sequence.Add(CommonActions.SitDownLoop());
+            return sequence;
+        }
+
+        public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
+        {
+            var sequence = new ActionSequence("DrugPusherAskToDrink");
+            sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher));
+            sequence.Add(CommonActions.TalkToBarPatronsLoop());
+            return sequence;
+        }
+
+        private class DrugPusherAskToGetinspectorDrunk : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hey, I think the Inspector McGraw is on to us.");
+                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and he'll be to smashed to do anything.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        private class InspectorAskToGetDrugPusherDrunk : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("Hey, Q is about to come in and order some drinks.");
+                DialogueSystem.Instance.WriteNPCLine("I know he's dealing but I can't catch him, he's too fast.");
+                DialogueSystem.Instance.WriteNPCLine("Keep him happy with drinks and I'm sure he'll slip up.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
+        // Minigame
+        public static ActionSequence InspectorDrinkText(Entity inspector)
+        {
+            var failureConversations = inspectorFailureLines;
+            var successConversations = inspectorSuccessLines;
+            var betweenDrinks = new List<GameAction> { CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink(), CommonActions.SitDownAndDrink() };
+            var afterSuccess = CommonActions.SitDownLoop();
+            return DrinkTest(0, 3, inspector, failureConversations, successConversations, betweenDrinks, afterSuccess);
+        }
+
+        public static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
+        {
+            var failureConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherFailureLinesAccepted : drugPusherFailureLinesRejected;
+            var successConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherSuccessLinesAccepted : drugPusherSuccessLinesRejected;
+            var betweenDrinks = new List<GameAction> { CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron(), CommonActions.TalkToBarPatron() };
+            var afterSuccess = CommonActions.TalkToBarPatronsLoop();
+            return DrinkTest(0, 3, drugPusher, failureConversations, successConversations, betweenDrinks, afterSuccess);
+        }
+
+        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
+        {
+            var sequence = new ActionSequence("DrinkTest: " + drinker);
+
+            var drinkOrder = DrinkOrders.GetRandomAlcoholicDrinkOrderWithoutFailure(drinker);
+            sequence.Add(new OnActionStatusDecorator(
+                drinkOrder,
+                () =>
+                {
+                    var successSequence = new ActionSequence("DrinkTestSuccess1: " + drinker);
+                    if (currentSuccesses + 1 == maxSuccesses)
+                    {
+                        successSequence.Add(new ClearConversationAction());
+                        successSequence.Add(new EndDrinkOrderAction());
+                        successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
+                        successSequence.Add(new ReleaseWaypointAction());
+                        successSequence.Add(afterSuccess);
+                    }
+                    else
+                    {
+                        var nextDrinkTest = DrinkTest(currentSuccesses + 1, maxSuccesses, drinker, failureConversations, successConversations, betweenDrinks, afterSuccess);
+
+                        successSequence.Add(new ClearConversationAction());
+                        successSequence.Add(new EndDrinkOrderAction());
+                        successSequence.Add(new ConversationAction(successConversations[currentSuccesses]));
+                        successSequence.Add(new ReleaseWaypointAction());
+                        successSequence.Add(betweenDrinks[currentSuccesses]);
+                        successSequence.Add(new DestoryEntityInInventoryAction());
+                        successSequence.Add(new QueueForBarWithPriority(nextDrinkTest));
+                    }
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, successSequence);
+                },
+                () =>
+                {
+                    var failureSequence = new ActionSequence("DrinkTestFail: " + currentSuccesses + " " + drinker);
+                    failureSequence.Add(new ClearConversationAction());
+                    failureSequence.Add(new EndDrinkOrderAction());
+                    failureSequence.Add(new ConversationAction(failureConversations[currentSuccesses]));
+                    failureSequence.Add(new DestoryEntityInInventoryAction());
+                    failureSequence.Add(new ReleaseWaypointAction());
+                    failureSequence.Add(new LeaveBarAction());
+                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drinker, failureSequence);
+                    StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory = currentSuccesses;
+                }
+            ));
+
+            return sequence;
+        }
+
+        // Inspector Sequence //
+        private static List<Conversation> inspectorFailureLines = new List<Conversation> {
+            new SingleOutcomeConversation("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. Too bad because the first one was great I probably should stop drinking anyways.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Well, I probably shouldn't drink anymore anways.", "Nod.", DialogueOutcome.Default),
+        };
+        private static List<Conversation> inspectorSuccessLines = new List<Conversation> {
+            new SingleOutcomeConversation("Ahh, just the thing to take the day off.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Delicious! I'm really feeling these, must be tired from the long day.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad you're on the ship. This is the last one, promise. *Hic*.", "Nod.", DialogueOutcome.Default),
+        };
+
+        // DrugPusher Sequence //
+        private static List<Conversation> drugPusherFailureLinesAccepted = new List<Conversation> {
+            new SingleOutcomeConversation("Hm... this doesn't taste right. Figures, you have business sense but not bartending skill.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. Guess the first was a fluke.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Well, I should stop anyways.", "Nod.", DialogueOutcome.Default),
+        };
+        private static List<Conversation> drugPusherFailureLinesRejected = new List<Conversation> {
+            new SingleOutcomeConversation("Hm... this doesn't taste right. Figures, you have no business sense or bartending skill.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. Guess the first was a fluke. Figures.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Figures, you have no business sense or bartending skill. *Hic*", "Nod.", DialogueOutcome.Default),
+        };
+
+        private static List<Conversation> drugPusherSuccessLinesAccepted = new List<Conversation> {
+            new SingleOutcomeConversation("Ahh, I've been needing this.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad we're business partners. *Hic*.", "Nod.", DialogueOutcome.Default),
+        };
+        private static List<Conversation> drugPusherSuccessLinesRejected = new List<Conversation> {
+            new SingleOutcomeConversation("Ahh, I've been needing this. No hard feelings from before", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
+            new SingleOutcomeConversation("*Hic* You may have terrible business sense but you make a good drink. *Hic* I'd better stop before I lose it.", "Nod.", DialogueOutcome.Default),
+        };
+
+
+        #endregion
+
+        #region Day 2 - Night
         public static void DrugPusherInspectorShowdown(Entity inspector, Entity drugPusher, Transform sitDownPoint)
         {
             var showdownPusher = new ActionSequence("ShowdownPusher");
             var showdownInspector = new ActionSequence("ShowdownInspector");
             var tookDrugMoney = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer;
             var helpedInspector = StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher;
+            var successfulDrinks = StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory;
 
             showdownPusher.Add(new TeleportAction(sitDownPoint));
             showdownPusher.Add(new ReportSuccessDecorator(CommonActions.SitDownLoop()));
@@ -412,83 +443,138 @@ namespace Assets.Scripts.GameActions
             showdownInspector.Add(new PlayParticleEffectAction(Particles.Dustup, inspector, drugPusher));
             showdownPusher.Add(new PauseAction(5));
 
-            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
-
-            //Do do consequence? Handcuffs? Fight?
-            showdownInspector.Add(CommonActions.TalkToPlayer(new InspectorResolution(tookDrugMoney, helpedInspector)));
-            showdownInspector.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
-            {
-                {
-                    DialogueOutcome.Nice, () =>
-                    {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(inspector, new UpdateMoodAction(Mood.Happy));
-                    }
-                },
-                {
-                    DialogueOutcome.Default, () =>
-                    {
-                    }
-                },
-                {
-                    DialogueOutcome.Mean, () =>
-                    {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(inspector, new UpdateMoodAction(Mood.Angry));
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(inspector, new ModifyMoneyAction(-100));
-                    }
-                }
-            }));
-
-            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
-
-            showdownInspector.Add(new LeaveBarAction());
-
-            showdownPusher.Add(new LeaveBarAction());
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);            
 
             ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
             ActionManagerSystem.Instance.QueueAction(inspector, showdownInspector);
+
+            Resolution(inspector, drugPusher);
         }
 
-        private class InspectorResolution : Conversation
+        private static void Resolution(Entity inspector, Entity drugPusher)
         {
-            private readonly bool tookDrugMoney;
-            private readonly bool helpedInspector;
+            var decisionState = StaticStates.Get<PlayerDecisionsState>();
+            var successfulDrinks = decisionState.NumberOfDrinksServedInDrugStory;
 
-            public InspectorResolution(bool tookDrugMoney, bool helpedInspector)
+            var drugPusherActions = new ActionSequence("DrugPusher Resolution");
+            var inspectorActions = new ActionSequence("Inspector Resolution");
+
+            if (IsDrugPusherDrinking())
             {
-                this.tookDrugMoney = tookDrugMoney;
-                this.helpedInspector = helpedInspector;
+                if (successfulDrinks == 0 || successfulDrinks == 1)
+                {
+                    drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new ConversationAction(
+                        new SingleOutcomeConversation("Damn it, he got away. I guess those drinks didn't do much did they. Maybe work on your bartending skills next time.",
+                        "...",
+                        DialogueOutcome.Bad)));
+                    inspectorActions.Add(new LeaveBarAction());
+                }
+                else if (successfulDrinks == 2)
+                {
+                    if (decisionState.AcceptedDrugPushersOffer)
+                    {
+                        inspectorActions.Add(new ConversationAction(
+                            new SingleOutcomeConversation(
+                                new string[] {
+                                    "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
+                                    "He did say that you were in on it... he's pretty drunk though so he's probably just making it up."},
+                                "...",
+                                DialogueOutcome.Bad)
+                            )
+                        );
+                    }
+                    else
+                    {
+                        inspectorActions.Add(new ConversationAction(
+                            new SingleOutcomeConversation(
+                                new string[] {
+                                    "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
+                                    "You're a great asset to this crew."},
+                                "...",
+                                DialogueOutcome.Bad)
+                            )
+                        );
+                    }
+
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new LeaveBarAction());
+                }
+                else if (successfulDrinks == 3)
+                {
+                    if (decisionState.AcceptedDrugPushersOffer)
+                    {
+                        inspectorActions.Add(new ConversationAction(
+                            new SingleOutcomeConversation(
+                                new string[] {
+                                    "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
+                                    "He tried to tell me something but he's so drunk he can barely speak! Good job."},
+                                "...",
+                                DialogueOutcome.Bad)
+                            )
+                        );
+                    }
+                    else
+                    {
+                        inspectorActions.Add(new ConversationAction(
+                            new SingleOutcomeConversation(
+                                new string[] {
+                                    "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
+                                    "You're a great asset to this crew."},
+                                "...",
+                                DialogueOutcome.Bad)
+                            )
+                        );
+                    }
+
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new LeaveBarAction());
+                }
+            }
+            else
+            {
+                if (successfulDrinks == 0 || successfulDrinks == 1)
+                {
+                    inspectorActions.Add(new ConversationAction(
+                            new SingleOutcomeConversation(
+                                new string[] {
+                                    "No thanks to you I was able to catch this criminal. He had enough Space Weed on him to put him away for a good while.",
+                                    "He tells me that you were in on it, I'm going to have my eye on you for a long time."},
+                                "...",
+                                DialogueOutcome.Bad)
+                            )
+                        );
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new LeaveBarAction());
+                }
+                else if (successfulDrinks == 2)
+                {
+                    drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new ConversationAction(
+                        new SingleOutcomeConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
+                        "...",
+                        DialogueOutcome.Bad)));
+                    inspectorActions.Add(new LeaveBarAction());
+                }
+                else if (successfulDrinks == 3)
+                {
+                    if (decisionState.AcceptedDrugPushersOffer)
+                        drugPusherActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new ConversationAction(
+                        new SingleOutcomeConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
+                        "...",
+                        DialogueOutcome.Bad)));
+                    inspectorActions.Add(new LeaveBarAction());
+                }
             }
 
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("I've got him red handed - drugs and cash.");
-
-                if (helpedInspector && !tookDrugMoney)
-                {
-                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.");
-                    DialogueSystem.Instance.WriteNPCLine("Glad I could count on you to help keep this ship safe.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Nod.", EndConversation(DialogueOutcome.Nice));
-                }
-                else if (helpedInspector && tookDrugMoney)
-                {
-                    DialogueSystem.Instance.WriteNPCLine("Thanks to your info I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.");
-                    DialogueSystem.Instance.WriteNPCLine("That said he was pretty brazen selling in the bar. You sure you weren't turning a blind eye?");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
-                }
-                else if (!helpedInspector && tookDrugMoney)
-                {
-                    DialogueSystem.Instance.WriteNPCLine("This guy is going to space jail and you are lucky to not be going there with him.");
-                    DialogueSystem.Instance.WriteNPCLine("He admitted to giving you kickbacks. I'll be having that - and then some.");
-                    DialogueSystem.Instance.WriteNPCLine("Consider yourself on very thin ice.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Mean));
-                }
-                else //!helpedInpsector and !tookDrugMoney
-                {
-                    DialogueSystem.Instance.WriteNPCLine("I was lucky to catch him on his way in. I'm also pretty suprised you didn't see anything.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
-                }
-            }
+            ActionManagerSystem.Instance.QueueAction(drugPusher, drugPusherActions);
+            ActionManagerSystem.Instance.QueueAction(inspector, inspectorActions);
         }
+
+#endregion
     }
 }
