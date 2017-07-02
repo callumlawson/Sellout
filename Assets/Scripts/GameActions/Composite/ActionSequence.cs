@@ -8,12 +8,12 @@ namespace Assets.Scripts.GameActions.Composite
 {
     public abstract class ActionSequenceBase : CompositeAction, ICancellableAction
     {
-        private bool SequenceIsCancellable;
+        private readonly bool sequenceIsCancellable;
 
-        public ActionSequenceBase(string name = "Unnamed", bool isCancellable = true)
+        protected ActionSequenceBase(string name = "Unnamed", bool isCancellable = true)
         {
             CompositeActionName = name;
-            SequenceIsCancellable = isCancellable;
+            sequenceIsCancellable = isCancellable;
         }
 
         protected bool Paused;
@@ -89,7 +89,7 @@ namespace Assets.Scripts.GameActions.Composite
         
         public bool IsCancellable()
         {
-            if (!SequenceIsCancellable)
+            if (!sequenceIsCancellable)
             {
                 return false;
             }

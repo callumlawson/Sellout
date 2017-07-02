@@ -140,8 +140,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Ellie");
-                DialogueSystem.Instance.WriteNPCLine("Placeholder.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Riiiight.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("When I ask for a drink containing my favorite ingredient I don't always want the same thing.");
+                DialogueSystem.Instance.WriteNPCLine("That would be boring.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll keep that in mind.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Why don't you just order exactly what you want!", EndConversation(DialogueOutcome.Bad));
             }
         }
 

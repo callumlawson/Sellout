@@ -10,7 +10,6 @@ using Assets.Scripts.States;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Random = UnityEngine.Random;
-using UnityEngine;
 
 namespace Assets.Scripts.Systems
 {
