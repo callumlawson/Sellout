@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Composite;
@@ -60,6 +59,15 @@ namespace Assets.Scripts.Systems.AI
             {
                 var action = entityActions[entity];
                 action.Cancel();
+            }
+        }
+
+        public void TryCancelThenHardClearActions(Entity entity)
+        {
+            TryClearActionsForEntity(entity);
+            if(entityActions.ContainsKey(entity))
+            {
+                entityActions[entity] = new ActionSequence("Root");
             }
         }
 

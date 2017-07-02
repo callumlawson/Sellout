@@ -155,7 +155,7 @@ namespace Assets.Scripts.Systems
 
         private void ResetNPCs()
         {
-            people.ForEach(person => ActionManagerSystem.Instance.TryClearActionsForEntity(person));
+            people.ForEach(person => ActionManagerSystem.Instance.TryCancelThenHardClearActions(person));
             people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
             people.ForEach(person => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(person, new DestoryEntityInInventoryAction()));
             Locations.ResetPeopleToSpawnPoints(people);
