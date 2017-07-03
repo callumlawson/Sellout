@@ -26,7 +26,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
 
             var seats = EntityStateSystem.Instance.GetEntitiesWithState<GoalSatisfierState>().Where(entity => entity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.Sit));
-            var chosenSeats = seats.PickRandom(3).ToArray();
+            var chosenSeats = seats.PickRandom(4).ToArray();
 
             //Jannet
             var jannetSequence = new ActionSequence("Jannet night");
@@ -64,7 +64,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
             else
             {
-                qSequence.Add(new TeleportAction(chosenSeats[1].GameObject.transform));
+                qSequence.Add(new TeleportAction(chosenSeats[3].GameObject.transform));
                 qSequence.Add(new SetConversationAction(new QNightOneRefused()));
                 qSequence.Add(CommonActions.SitDownLoop());
             }

@@ -86,7 +86,8 @@ namespace Assets.Scripts.Systems.AI
 
         private ActionSequence GetActionsForEntity(Entity entity)
         {
-            return !entityActions.ContainsKey(entity) ? new ActionSequence() : entityActions[entity];
+            InitActionsIfNone(entity);
+            return entityActions[entity];
         }
     }
 }

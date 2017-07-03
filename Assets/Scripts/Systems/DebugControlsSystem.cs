@@ -1,4 +1,6 @@
-﻿using Assets.Framework.Systems;
+﻿using Assets.Framework.States;
+using Assets.Framework.Systems;
+using Assets.Scripts.States;
 using UnityEngine;
 
 namespace Assets.Scripts.Systems
@@ -9,7 +11,7 @@ namespace Assets.Scripts.Systems
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                EventSystem.DayPhaseIncrementRequest.Invoke();
+                StaticStates.Get<DayPhaseState>().IncrementDayPhase();
             }
         }
     }

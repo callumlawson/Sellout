@@ -32,13 +32,6 @@ namespace Assets.Scripts.Systems
             people = allPeople;
             hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
-            EventSystem.DayPhaseIncrementRequest += OnDayPhaseIncrementRequest;
-        }
-
-        private void OnDayPhaseIncrementRequest()
-        {
-            DoPhaseCleanup();
-            StaticStates.Get<DayPhaseState>().IncrementDayPhase();
         }
 
         private void OnDayPhaseChanged(DayPhase newDayPhase)
@@ -111,7 +104,7 @@ namespace Assets.Scripts.Systems
             {
                 if (currentTime.GetHour() == Constants.ClosingHour)
                 {
-                    OnDayPhaseIncrementRequest();
+                    StaticStates.Get<DayPhaseState>().IncrementDayPhase();
                 }
             }
 
@@ -138,18 +131,12 @@ namespace Assets.Scripts.Systems
             DayOneMorning.Start(people);
         }
 
-        private void DoPhaseCleanup()
+        private void DoPhaseSetup(DayPhase newDayPhase)
         {
+            SetLighting(newDayPhase);
             ResetNPCs();
             ResetBarStateAndDialogues();
             WaypointSystem.Instance.ClearAllWaypoints();
-        }
-
-        private void DoPhaseSetup(DayPhase newDayPhase)
-        {
-            ResetNPCs();
-            ResetBarStateAndDialogues();
-            SetLighting(newDayPhase);
         }
 
         private void ResetNPCs()
