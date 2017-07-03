@@ -19,6 +19,7 @@ using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Framework.Systems;
 using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.GameActions.Navigation;
 
 namespace Assets.Scripts.GameActions
 {
@@ -463,12 +464,19 @@ namespace Assets.Scripts.GameActions
             {
                 if (successfulDrinks == 0 || successfulDrinks == 1)
                 {
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
+
                     inspectorActions.Add(new ConversationAction(
                         new SingleOutcomeConversation("Damn it, he got away. I guess those drinks didn't do much did they. Maybe work on your bartending skills next time.",
                         "...",
                         DialogueOutcome.Bad)));
+
+
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
                 }
                 else if (successfulDrinks == 2)
                 {
@@ -547,27 +555,43 @@ namespace Assets.Scripts.GameActions
                             )
                         );
                     CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
+
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
                 }
                 else if (successfulDrinks == 2)
                 {
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
+
                     inspectorActions.Add(new ConversationAction(
                         new SingleOutcomeConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
                         "...",
                         DialogueOutcome.Bad)));
+
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
                 }
                 else if (successfulDrinks == 3)
                 {
-                    if (decisionState.AcceptedDrugPushersOffer)
-                        drugPusherActions.Add(new LeaveBarAction());
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
+                    drugPusherActions.Add(new LeaveBarAction());
+                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
+
                     inspectorActions.Add(new ConversationAction(
                         new SingleOutcomeConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
                         "...",
                         DialogueOutcome.Bad)));
+
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
+                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
                 }
             }
 
