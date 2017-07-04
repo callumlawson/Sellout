@@ -22,5 +22,23 @@ namespace Assets.Scripts.Util
                 ApplyActionRecursively(child, function);
             }
         }
+
+        public static T GetComponentInChildren<T>(Transform transform) where T: MonoBehaviour
+        {
+            var result = transform.gameObject.GetComponent<T>();
+            if (result != null)
+            {
+                return result;
+            }
+            foreach (Transform child in transform)
+            {
+                result = GetComponentInChildren<T>(child);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -116,6 +116,7 @@ namespace Assets.Scripts.Systems.AI
                 case Prefabs.GlassStack:
                 case Prefabs.IngredientDispenser:
                 case Prefabs.MixologyBook:
+                case Prefabs.DispensingBottle:
                     ActionManagerSystem.Instance.QueueAction(player, new TeleportAction(Locations.BehindBarLocation()));
                     ActionManagerSystem.Instance.QueueAction(player, CommonActions.PlayerUseBar());
                     break;
@@ -128,7 +129,7 @@ namespace Assets.Scripts.Systems.AI
                     }
                     else
                     {
-                        ActionManagerSystem.Instance.QueueAction(player, TalkToNPC(targetEntity, isCancellable: true));
+                        ActionManagerSystem.Instance.QueueAction(player, TalkToNPC(targetEntity));
                     }
                     break;
                 case Prefabs.Drink:

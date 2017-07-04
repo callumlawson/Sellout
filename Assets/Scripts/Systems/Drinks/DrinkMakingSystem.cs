@@ -1,4 +1,5 @@
-﻿using Assets.Framework.States;
+﻿using System;
+using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using System.Linq;
@@ -54,7 +55,8 @@ namespace Assets.Scripts.Systems.Drinks
                 if (clickevent.MouseButton == 0 && target != null && target.HasState<PrefabState>())
                 {
                     var targetPrefab = target.GetState<PrefabState>();
-
+                    var heldItem = playerInventory.Child;
+                    var heldItemPrefabName = heldItem != null ? playerInventory.Child.GetState<PrefabState>().PrefabName : null;
                     switch (targetPrefab.PrefabName)
                     {
                         case Prefabs.GlassStack:
@@ -62,24 +64,25 @@ namespace Assets.Scripts.Systems.Drinks
                             PickUpStackItem(target);
                             break;
                         case Prefabs.Drink:
-                        case Prefabs.Beer:
-                        case Prefabs.DispensingBottle:
-                            var drinkParent = target.GetState<InventoryState>().Parent;
-                            if (drinkParent != null && drinkParent.HasState<ItemStackState>())
+                            if (heldItemPrefabName == Prefabs.DispensingBottle)
                             {
-                                var itemStack = drinkParent;
-                                PickUpStackItem(itemStack);
+                                AddIngredientToDrink(target, heldItem);
                             }
                             else
                             {
-                                TakeItem(target);    
+                                TryTakeItem(target);
                             }
                             break;
+                        case Prefabs.Beer:
+                        case Prefabs.DispensingBottle:
+                            TryTakeItem(target);
+                            break;
                         case Prefabs.IngredientDispenser:
-                            AddIngredientToDrink(target);
+                            AddIngredientToDrink(heldItem, target);
                             break;
                         case Prefabs.Washup:
-                            if (playerInventory.Child != null && playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle)
+                            if (playerInventory.Child != null &&
+                                playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle)
                             {
                                 WashUpItem(player);
                             }
@@ -119,11 +122,12 @@ namespace Assets.Scripts.Systems.Drinks
                             }
                             break;
                     }
-                } 
-                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.CutsceneControlLock)
+                }
+                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open &&
+                         !playerState.CutsceneControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
-                }  
+                }
             }
         }
 
@@ -134,18 +138,28 @@ namespace Assets.Scripts.Systems.Drinks
                 var itemInReceiveSpot = target.GetState<InventoryState>().Child;
                 if (itemInReceiveSpot != null)
                 {
-                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
+                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                    {
+                        EntityFrom = target,
+                        EntityTo = player,
+                        Mover = itemInReceiveSpot
+                    });
                     InventoryItemColliderIsEnabled(false);
                 }
             }
         }
-        
-        private void TakeItem(Entity targetItem)
+
+        private void TryTakeItem(Entity targetItem)
         {
             if (playerInventory.Child == null && targetItem != null)
             {
                 targetItem.GameObject.GetComponent<Collider>().enabled = false;
-                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = null, EntityTo = player, Mover = targetItem });
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                {
+                    EntityFrom = null,
+                    EntityTo = player,
+                    Mover = targetItem
+                });
             }
         }
 
@@ -154,7 +168,12 @@ namespace Assets.Scripts.Systems.Drinks
             if (playerInventory.Child != null)
             {
                 InventoryItemColliderIsEnabled(true);
-                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = null, Mover = playerInventory.Child});
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                {
+                    EntityFrom = player,
+                    EntityTo = null,
+                    Mover = playerInventory.Child
+                });
             }
         }
 
@@ -164,19 +183,26 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 return;
             }
-           
+
             var itemInReceiveSpot = target.GetState<InventoryState>().Child;
 
             if (playerInventory.Child == null && itemInReceiveSpot != null)
             {
-                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = target, EntityTo = player, Mover = itemInReceiveSpot });
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                {
+                    EntityFrom = target,
+                    EntityTo = player,
+                    Mover = itemInReceiveSpot
+                });
                 InventoryItemColliderIsEnabled(false);
             }
             else if (playerInventory.Child != null && itemInReceiveSpot == null)
             {
                 var playerItemPrefab = playerInventory.Child.GetState<PrefabState>().PrefabName;
 
-                if (spotPrefab == Prefabs.Cubby && (playerItemPrefab == Prefabs.Beer || playerItemPrefab == Prefabs.Drink || playerItemPrefab == Prefabs.DispensingBottle))
+                if (spotPrefab == Prefabs.Cubby &&
+                    (playerItemPrefab == Prefabs.Beer || playerItemPrefab == Prefabs.Drink ||
+                     playerItemPrefab == Prefabs.DispensingBottle))
                 {
                     return;
                 }
@@ -187,26 +213,39 @@ namespace Assets.Scripts.Systems.Drinks
                 }
 
                 InventoryItemColliderIsEnabled(true);
-                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = target, Mover = playerInventory.Child });                
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                {
+                    EntityFrom = player,
+                    EntityTo = target,
+                    Mover = playerInventory.Child
+                });
             }
         }
-        
+
         private void PickUpStackItem(Entity stack)
         {
             if (playerInventory.Child != null)
             {
-                var stackItemPrefabState = stack.GameObject.GetComponent<ItemStackVisualizer>().GetNewStackItem().Find(state => state.GetType() == typeof(PrefabState)) as PrefabState;
+                var stackItemPrefabState =
+                    stack.GameObject.GetComponent<ItemStackVisualizer>()
+                        .GetNewStackItem()
+                        .Find(state => state.GetType() == typeof(PrefabState)) as PrefabState;
                 if (playerInventory.Child.GetState<PrefabState>().PrefabName == stackItemPrefabState.PrefabName)
                 {
                     var mover = playerInventory.Child;
-                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = player, EntityTo = null, Mover = mover });
+                    EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                    {
+                        EntityFrom = player,
+                        EntityTo = null,
+                        Mover = mover
+                    });
                     entitySystem.RemoveEntity(mover);
                 }
 
                 return;
             }
 
-            EventSystem.TakeStackItem(new TakeStackItemRequest { Requester = player, Stack = stack }); 
+            EventSystem.TakeStackItem(new TakeStackItemRequest {Requester = player, Stack = stack});
             InventoryItemColliderIsEnabled(false);
         }
 
@@ -215,7 +254,12 @@ namespace Assets.Scripts.Systems.Drinks
             var item = requester.GetState<InventoryState>().Child;
             if (item != null)
             {
-                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest { EntityFrom = requester, EntityTo = null, Mover = item });
+                EventSystem.ParentingRequestEvent.Invoke(new ParentingRequest
+                {
+                    EntityFrom = requester,
+                    EntityTo = null,
+                    Mover = item
+                });
                 entitySystem.RemoveEntity(item);
             }
         }
@@ -238,41 +282,33 @@ namespace Assets.Scripts.Systems.Drinks
         {
             if (usingBar && playerInventory.Child != null)
             {
-                var snapToSurface = true; //playerInventory.Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle;
                 var cursorState = StaticStates.Get<CursorState>();
                 var selectedEntity = cursorState.SelectedEntity;
+                var heldPrefabType = playerInventory.Child.GetState<PrefabState>().PrefabName;
+
                 if (selectedEntity == null)
                 {
-                    LerpDrinkPosition(GetNewHeldDrinkPosition(snapToSurface));
+                    LerpToHeldItemToPosition(GetNewHeldItemPosition());
                     return;
                 }
                 var selectedPrefabType = selectedEntity.GetState<PrefabState>().PrefabName;
-                if (playerInventory.Child != null &&
-                    playerInventory.Child.GetState<PrefabState>().PrefabName != Prefabs.DispensingBottle
-                    && (
-                    selectedPrefabType == Prefabs.Counter ||
-                    selectedPrefabType == Prefabs.ServeSpot ||
-                    selectedPrefabType == Prefabs.Washup ||
-                    selectedPrefabType == Prefabs.IngredientDispenser ||
-                    selectedPrefabType == Prefabs.Person ||
-                    selectedPrefabType == Prefabs.MixologyBook))
+
+                if (heldPrefabType == Prefabs.DispensingBottle)
                 {
-                    var possibleSlot = selectedEntity.GameObject.GetComponentInChildren<SlotVisualizer>();
-                    Vector3 drinkPosition;
-                    if (possibleSlot != null && possibleSlot.CanHoldDrinks())
+                    var possibleTransform = TryGetPourPoint(selectedEntity);
+                    if (possibleTransform != null)
                     {
-                        drinkPosition = possibleSlot.transform.position;
+                        LerpToHeldItemToPositionAndRotation(possibleTransform.position, possibleTransform.rotation);
                     }
                     else
                     {
-                        drinkPosition = GetNewHeldDrinkPosition(snapToSurface);
+                        LerpToHeldItemToPositionAndRotation(GetNewHeldItemPosition(), Quaternion.identity);
                     }
-                    LerpDrinkPosition(drinkPosition);
+                    return;
                 }
-                else if (playerInventory.Child != null)
-                {
-                    LerpDrinkPosition(GetNewHeldDrinkPosition(snapToSurface));
-                }
+
+                var heldItemPosition = IsDrinkSnappingTarget(selectedPrefabType) ? TryGetDrinkSnapSpot(selectedEntity) : GetNewHeldItemPosition();
+                LerpToHeldItemToPosition(heldItemPosition);
             }
             else if (!usingBar && playerInventory.Child != null)
             {
@@ -280,13 +316,44 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void AddIngredientToDrink(Entity dispenser)
+        private static bool IsDrinkSnappingTarget(string selectedPrefabType)
         {
-            if (playerInventory.Child != null && playerInventory.Child.GetState<DrinkState>().GetTotalDrinkSize() < Constants.MaxUnitsInDrink)
+            return selectedPrefabType == Prefabs.Counter ||
+                   selectedPrefabType == Prefabs.ServeSpot ||
+                   selectedPrefabType == Prefabs.Washup ||
+                   selectedPrefabType == Prefabs.IngredientDispenser ||
+                   selectedPrefabType == Prefabs.Person ||
+                   selectedPrefabType == Prefabs.MixologyBook;
+        }
+
+        private Vector3 TryGetDrinkSnapSpot(Entity selectedEntity)
+        {
+            var possibleSlot = selectedEntity.GameObject.GetComponentInChildren<SlotVisualizer>();
+            Vector3 drinkPosition;
+            if (possibleSlot != null && possibleSlot.CanHoldDrinks())
+            {
+                drinkPosition = possibleSlot.transform.position;
+            }
+            else
+            {
+                drinkPosition = GetNewHeldItemPosition();
+            }
+            return drinkPosition;
+        }
+
+        private static Transform TryGetPourPoint(Entity selectedEntity)
+        {
+            var possiblePourPoint = Recursive.GetComponentInChildren<PouringPoint>(selectedEntity.GameObject.transform);
+            return possiblePourPoint != null ? possiblePourPoint.gameObject.transform : null;
+        }
+
+        private static void AddIngredientToDrink(Entity drink, Entity dispenser)
+        {
+            if (drink != null && drink.HasState<DrinkState>() && drink.GetState<DrinkState>().GetTotalDrinkSize() < Constants.MaxUnitsInDrink)
             {
                 var ingredient = dispenser.GetState<DrinkState>().GetContents().Keys.First();
                 dispenser.GameObject.GetComponent<OneShotAudioPlayer>().PlayOneShot();
-                playerInventory.Child.GetState<DrinkState>().ChangeIngredientAmount(ingredient, 1);
+                drink.GetState<DrinkState>().ChangeIngredientAmount(ingredient, 1);
             }
         }
 
@@ -308,7 +375,7 @@ namespace Assets.Scripts.Systems.Drinks
                 if (mixologyBook != null)
                 {
                     mixologyBook.GetState<ActiveState>().IsActive = false;
-                }                
+                }
 
                 if (playerInventory.Child != null)
                 {
@@ -319,7 +386,7 @@ namespace Assets.Scripts.Systems.Drinks
                 playerState.PlayerStatus = PlayerStatus.FreeMove;
             }
         }
-        
+
         private void InventoryItemColliderIsEnabled(bool enable)
         {
             if (playerInventory.Child != null)
@@ -328,29 +395,32 @@ namespace Assets.Scripts.Systems.Drinks
             }
         }
 
-        private void LerpDrinkPosition(Vector3 newDrinkPosition)
+        private void LerpToHeldItemToPositionAndRotation(Vector3 position, Quaternion rotation)
+        {
+            LerpToHeldItemToPosition(position);
+            playerInventory.Child.GameObject.transform.rotation = Quaternion.Slerp(playerInventory.Child.GameObject.transform.rotation, rotation, Time.deltaTime * 20);
+        }
+
+        private void LerpToHeldItemToPosition(Vector3 newDrinkPosition)
         {
             if (Vector3.Distance(playerInventory.Child.GameObject.transform.position, newDrinkPosition) > 5)
             {
                 playerInventory.Child.GameObject.transform.position = newDrinkPosition;
             }
-            playerInventory.Child.GameObject.transform.position = Vector3.Lerp(playerInventory.Child.GameObject.transform.position, newDrinkPosition, Time.deltaTime * 20);
+            playerInventory.Child.GameObject.transform.position = Vector3.Lerp(playerInventory.Child.GameObject.transform.position, newDrinkPosition, Time.deltaTime*20);
         }
 
-        private Vector3 GetNewHeldDrinkPosition(bool snapToSurface)
+        private Vector3 GetNewHeldItemPosition()
         {
             var mousePosition = Input.mousePosition;
-            if (snapToSurface)
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100))
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100))
+                var objectHit = hit.collider.gameObject;
+                if (objectHit.CompareTag("DrinkSurface"))
                 {
-                    var objectHit = hit.collider.gameObject;
-                    if (objectHit.CompareTag("DrinkSurface"))
-                    {
-                        return hit.point;
-                    }
+                    return hit.point;
                 }
             }
             return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
