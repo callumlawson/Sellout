@@ -89,24 +89,24 @@ namespace Assets.Scripts.GameActions
             if (randomValue <= 0.25)
             {
                 var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name);
-                return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+                return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeoutInMins: orderTimeOurInMins);
             }
             if (randomValue <= 0.50)
             {
-                return OrderDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), new OrderNonAlcoholicDrinkConversation(), orderTimeOurInMins);
+                return OrderDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), new OrderNonAlcoholicDrinkConversation(), orderTimeoutInMins: orderTimeOurInMins);
             }
             if (randomValue <= 0.75)
             {
                 var ingredient = Ingredients.DispensedNonAlcoholicIngredients.PickRandom();
-                return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeOurInMins);
+                return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeoutInMins: orderTimeOurInMins);
             }
-            return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeOurInMins);
+            return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeoutInMins: orderTimeOurInMins);
         }
 
-        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, int orderTimeOurInMins = 20)
+        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeOurInMins = 20)
         {
             var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
-            return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+            return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), correctDrinkConversation, incorrectDrinkConversation, orderTimeOurInMins);
         }
 
         public static GameAction GetRandomAlcoholicDrinkOrderWithoutFailure(Entity entity, int orderTimeOurInMins = 20)
@@ -115,14 +115,14 @@ namespace Assets.Scripts.GameActions
             return OrderDrinkWithoutFailure(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
         }
 
-        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, int orderTimeoutInMins = 20)
+        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeoutInMins = 20)
         {
             var wrapper = new ActionSequence("DrinkOrderThenClear");
             var orderDrink = new ParallelUntilAllCompleteAction("OrderDrink");
             orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
+            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
             orderDrink.Add(waitForDrink);
             wrapper.Add(orderDrink);
             wrapper.Add(new ClearConversationAction());

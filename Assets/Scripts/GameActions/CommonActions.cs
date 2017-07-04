@@ -105,7 +105,7 @@ namespace Assets.Scripts.GameActions
             return waitForDrink;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
@@ -115,12 +115,19 @@ namespace Assets.Scripts.GameActions
                    {
                        if (retry) //If retry is true then you are stuck until you don't fail.
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkPredicate, 90, true, correctDrinkConversation));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkPredicate, 90, true, correctDrinkConversation, incorrectDrinkConversation));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation()));
                        }
                        else
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                           if (incorrectDrinkConversation == null)
+                           {
+                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                           }
+                           else
+                           {
+                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(incorrectDrinkConversation));
+                           }
                        }
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
@@ -154,7 +161,7 @@ namespace Assets.Scripts.GameActions
             var orderDrink = new ConditionalActionSequence("OrderDrinkIfPossible");
             orderDrink.Add(QueueForDrinkOrder(entity, 10, 20));
             DrinkOrders.ExactDrinkorder drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, entity.GetState<NameState>().Name);
-            orderDrink.Add(DrinkOrders.OrderDrink(entity, drinkOrder, new DrinkOrders.OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeoutInMins));           
+            orderDrink.Add(DrinkOrders.OrderDrink(entity, drinkOrder, new DrinkOrders.OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeoutInMins: orderTimeoutInMins));           
             return orderDrink;
         }
 
