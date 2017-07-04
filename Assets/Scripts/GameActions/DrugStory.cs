@@ -253,9 +253,11 @@ namespace Assets.Scripts.GameActions
         // Intro
         public static ActionSequence InspectorAskToDrink(Entity inspector)
         {
+            var incorrectDrinkConversation = new SingleOutcomeConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", "Right.", DialogueOutcome.Default);
+
             var sequence = new ActionSequence("InspectorAskToDrink");
             sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
-            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector, incorrectDrinkConversation: incorrectDrinkConversation));
             sequence.Add(CommonActions.SitDown());
             sequence.Add(CommonActions.SitDownLoop());
             return sequence;
@@ -263,9 +265,11 @@ namespace Assets.Scripts.GameActions
 
         public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
         {
+            var incorrectDrinkConversation = new SingleOutcomeConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", "Right.", DialogueOutcome.Default);
+
             var sequence = new ActionSequence("DrugPusherAskToDrink");
             sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
-            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher));
+            sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher, incorrectDrinkConversation: incorrectDrinkConversation));
             sequence.Add(CommonActions.TalkToBarPatronsLoop());
             return sequence;
         }
