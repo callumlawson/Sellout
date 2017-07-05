@@ -116,26 +116,26 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("<i>Looks at you expectantly</i>");
-                DialogueSystem.Instance.WriteNPCLine("Wait, you aren't Dave...");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Nope, I'm new. Poor Dave had to jump ship. What can I get you this morning?", SoItBegings);
+                DialogueSystem.Instance.WriteNPCLine("Morning!");
+                DialogueSystem.Instance.WriteNPCLine("I should introduce myself. McGraw - head of security");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks, I'm still learning names. What can I get you at this early hour?", SoItBegings);
             }
 
             private void SoItBegings()
             {
                 DialogueSystem.Instance.NextPanel();
-                DialogueSystem.Instance.WriteNPCLine("Sigh, now I'm going to have to train you up as well.");
                 DialogueSystem.Instance.WriteNPCLine("Don't worry, my favorite drink is easy to make.");
-                DialogueSystem.Instance.WriteNPCLine("Just grab that glass and dispense three measures of Synthol then a single measure of Alcohol.");
-                DialogueSystem.Instance.WriteNPCLine("Can't get the brain going without a morning Mind Meld!");
-                DialogueSystem.Instance.WritePlayerChoiceLine("You drink alcohol straight. For breakfast?", Problem);
+                DialogueSystem.Instance.WriteNPCLine("Just grab that glass and pour three measures of Synthol then a single measure of Alcohol.");
+                DialogueSystem.Instance.WriteNPCLine("I can't get my brain going in the morning without it.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("You drink a glass of basically straight alcohol for breakfast?", Problem);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Coming right up!", EndConversation(DialogueOutcome.Nice));
             }
 
             private void Problem()
             {
                 DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Problem with that?");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I guess not. Coming right up", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I guess not. Coming right up.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("It's your liver.", EndConversation(DialogueOutcome.Mean));
                 DialogueSystem.Instance.WriteNPCLine("<i>Click on the bar to get started...</i>");
             }
@@ -148,10 +148,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That's... actually pretty good.");
                 DialogueSystem.Instance.WriteNPCLine("As you're new I'll give you some advice. Watch out for Q.");
-                DialogueSystem.Instance.WriteNPCLine("Q and Dave got up to all sorts of trouble. Ship security were loitering here all the time.");
-                DialogueSystem.Instance.WriteNPCLine("Now that you are here, perhaps we can have some peace and quiet!");
-                DialogueSystem.Instance.WriteNPCLine("Till later!");
-                DialogueSystem.Instance.WritePlayerChoiceLine("See you!", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("He and Dave got up to all sorts of trouble and I don't want that with you.");
+                DialogueSystem.Instance.WriteNPCLine("Now that you are here, perhaps I can have some peace and quiet!");
+                DialogueSystem.Instance.WriteNPCLine("See you around.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Until next time.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Say nothing</i>", EndConversation(DialogueOutcome.Default));
             }
         }
