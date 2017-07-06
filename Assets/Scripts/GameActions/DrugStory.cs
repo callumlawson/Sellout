@@ -415,9 +415,6 @@ namespace Assets.Scripts.GameActions
         {
             var showdownPusher = new ActionSequence("ShowdownPusher");
             var showdownInspector = new ActionSequence("ShowdownInspector");
-            var tookDrugMoney = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer;
-            var helpedInspector = StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher;
-            var successfulDrinks = StaticStates.Get<PlayerDecisionsState>().NumberOfDrinksServedInDrugStory;
 
             showdownPusher.Add(new TeleportAction(sitDownPoint));
             showdownPusher.Add(new ReportSuccessDecorator(CommonActions.SitDownLoop()));
