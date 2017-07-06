@@ -10,16 +10,22 @@ namespace Assets.Scripts.Systems
     {
         public void OnFrame()
         {
-            if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            var cursorState = StaticStates.Get<CursorState>();
+            var selectedEntity = cursorState.SelectedEntity;
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() || selectedEntity == null) 
             {
-                var cursorState = StaticStates.Get<CursorState>();
-                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition, 0));
+                return;
             }
-
-            if (Input.GetMouseButtonDown(1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButtonDown(0))
             {
-                var cursorState = StaticStates.Get<CursorState>();
-                EventSystem.BroadcastEvent(new ClickEvent(cursorState.SelectedEntity, cursorState.MousedOverPosition, 1));
+                if (selectedEntity.HasState<InteractiveState>() && !selectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
+                {
+                    EventSystem.BroadcastEvent(new ClickEvent(selectedEntity, cursorState.MousedOverPosition, 0));
+                }
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                EventSystem.BroadcastEvent(new ClickEvent(selectedEntity, cursorState.MousedOverPosition, 1));
             }
         }
     }
