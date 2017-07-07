@@ -10,6 +10,7 @@ using Assets.Scripts.Systems.Drinks;
 using Assets.Scripts.Util;
 using Assets.Scripts.Systems.Cameras;
 using Assets.Scripts.Systems.Bar;
+using Assets.Scripts.Systems.Input;
 
 namespace Assets.Scripts
 {
@@ -40,6 +41,7 @@ namespace Assets.Scripts
 
             entitySystem = new EntityStateSystem();
 
+            //StaticStates
             StaticStates.Add(new DayPhaseState(DayPhase.Morning));
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
@@ -77,10 +79,10 @@ namespace Assets.Scripts
             //NPC/AI
             entitySystem.AddSystem(new ActionManagerSystem());
             entitySystem.AddSystem(new DayDirectorSystem());
-            //entitySystem.AddSystem(new PersonDescisionSystem());
 
-            //Player
-            entitySystem.AddSystem(new EntityInteractionSystem());
+            //Input - Ordering of systems important here. 
+            entitySystem.AddSystem(new CursorSystem());
+            entitySystem.AddSystem(new InteractionSystem());
             entitySystem.AddSystem(new EntitySelectorSystem());
 
             //GameStart

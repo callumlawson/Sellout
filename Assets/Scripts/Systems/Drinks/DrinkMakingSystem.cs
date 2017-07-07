@@ -1,5 +1,4 @@
-﻿using System;
-using Assets.Framework.States;
+﻿using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using System.Linq;
@@ -9,7 +8,6 @@ using Assets.Framework.Entities;
 using Assets.Scripts.Util.Events;
 using Assets.Scripts.Visualizers;
 using Assets.Scripts.Systems.Cameras;
-using Assets.Scripts.States.Bar;
 using Assets.Scripts.Visualizers.Bar;
 
 namespace Assets.Scripts.Systems.Drinks
@@ -19,7 +17,7 @@ namespace Assets.Scripts.Systems.Drinks
         private EntityStateSystem entitySystem;
         private DayPhaseState dayPhase;
 
-        private float drinkDistanceFromCamera = 2.1f;
+        private const float DrinkDistanceFromCamera = 2.1f;
 
         private bool usingBar;
 
@@ -37,7 +35,7 @@ namespace Assets.Scripts.Systems.Drinks
         public void OnInit()
         {
             EventSystem.StartDrinkMakingEvent += OnStartMakingDrink;
-            EventSystem.onClickInteraction += OnClickInteraction;
+            EventSystem.OnClickedEvent += OnClickInteraction;
             EventSystem.EndDrinkMakingEvent += StopMakingDrink;
 
             playerState = StaticStates.Get<PlayerState>();
@@ -123,8 +121,7 @@ namespace Assets.Scripts.Systems.Drinks
                             break;
                     }
                 }
-                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open &&
-                         !playerState.CutsceneControlLock)
+                else if (clickevent.MouseButton == 1 && dayPhase.CurrentDayPhase != DayPhase.Open && !playerState.CutsceneControlLock)
                 {
                     EventSystem.EndDrinkMakingEvent.Invoke();
                 }
@@ -423,7 +420,7 @@ namespace Assets.Scripts.Systems.Drinks
                     return hit.point;
                 }
             }
-            return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, drinkDistanceFromCamera));
+            return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, DrinkDistanceFromCamera));
         }
     }
 }

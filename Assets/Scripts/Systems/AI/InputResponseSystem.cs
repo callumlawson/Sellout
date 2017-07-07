@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
-using Assets.Framework.Util;
 using Assets.Scripts.GameActions;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.DayPhases;
@@ -14,28 +12,20 @@ using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
-using Assets.Scripts.Util.Events;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Systems.AI
 {
-    class InputResponseSystem : IInitSystem, IFrameEntitySystem, IEntityManager
+    class InputResponseSystem : IInitSystem, IFrameEntitySystem
     {
         private static Entity player;
-        private EntityStateSystem entitySystem;
         private PlayerState playerState;
 
         public void OnInit()
         {
-            EventSystem.onClickInteraction += OnClickInteraction;
+            EventSystem.OnClickedEvent += clickEvent => OnInteraction(clickEvent.Target);
             player = StaticStates.Get<PlayerState>().Player;
             playerState = StaticStates.Get<PlayerState>();
-        }
-
-        public void SetEntitySystem(EntityStateSystem ess)
-        {
-            entitySystem = ess;
         }
 
         public List<Type> RequiredStates()
@@ -45,32 +35,29 @@ namespace Assets.Scripts.Systems.AI
 
         public void OnFrame(List<Entity> matchingEntities)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                var playerEntity = matchingEntities.First();
-                var playerPosition = playerEntity.GameObject.transform.position;
-                var colliders = Physics.OverlapSphere(playerPosition, Constants.InteractRangeInMeters);
-                if (!colliders.Any())
-                {
-                    return;
-                }
-                var entityIds = colliders.Select(collider => collider.gameObject.GetEntityIdRecursive());
-                var entities = entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId).Select(entityId => entitySystem.GetEntity(entityId)).ToList();
-                entities = entities.Where(entity => !Equals(entity, StaticStates.Get<PlayerState>().Player)).ToList();
-                if (!entities.Any())
-                {
-                    return;
-                }
-                var targetEntity = entities.First();
-                Debug.Log("Target entity: " + targetEntity);
-                OnInteraction(targetEntity);
-            }
-        }
-
-        private void OnClickInteraction(ClickEvent clickevent)
-        {
-            var targetEntity = clickevent.Target;
-            OnInteraction(targetEntity);
+            //Currently you click to interact. We might want to bring this back later.
+            #region E interaction
+            //            if (Input.GetKeyDown(KeyCode.E))
+            //            {
+            //                var playerEntity = matchingEntities.First();
+            //                var playerPosition = playerEntity.GameObject.transform.position;
+            //                var colliders = Physics.OverlapSphere(playerPosition, Constants.InteractRangeInMeters);
+            //                if (!colliders.Any())
+            //                {
+            //                    return;
+            //                }
+            //                var entityIds = colliders.Select(collider => collider.gameObject.GetEntityIdRecursive());
+            //                var entities = entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId).Select(entityId => entitySystem.GetEntity(entityId)).ToList();
+            //                entities = entities.Where(entity => !Equals(entity, StaticStates.Get<PlayerState>().Player)).ToList();
+            //                if (!entities.Any())
+            //                {
+            //                    return;
+            //                }
+            //                var targetEntity = entities.First();
+            //                Debug.Log("Target entity: " + targetEntity);
+            //                OnInteraction(targetEntity);
+            //            }
+            #endregion
         }
 
         private void OnInteraction(Entity targetEntity)
@@ -85,12 +72,7 @@ namespace Assets.Scripts.Systems.AI
                 ActionManagerSystem.Instance.TryClearActionsForEntity(player);
             }
 
-            if (!ActionManagerSystem.Instance.IsEntityIdle(player))
-            {
-                return;
-            }
-
-            if (playerState.PlayerStatus == PlayerStatus.Bar)
+            if (!ActionManagerSystem.Instance.IsEntityIdle(player) || playerState.PlayerStatus == PlayerStatus.Bar)
             {
                 return;
             }
@@ -144,6 +126,9 @@ namespace Assets.Scripts.Systems.AI
                     break;
                 case Prefabs.BarConsole:
                     ActionManagerSystem.Instance.QueueAction(player, new CloseBarIfOpenAction());
+                    break;
+                default:
+                    //Do nothing.
                     break;
             }
         }

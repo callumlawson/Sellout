@@ -22,21 +22,12 @@ namespace Assets.Scripts.Systems
     {
         public static Action PauseEvent = delegate { };
         public static Action ResumeEvent = delegate { };
-
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
         public static Action StartDrinkMakingEvent = delegate {  };
         public static Action EndDrinkMakingEvent = delegate {  };
         public static Action<DrinkOrders.DrinkOrder> StartDrinkOrderEvent = delegate {  };
         public static Action EndDrinkOrderEvent = delegate {  };
-
-        public delegate void OnClickEvent(ClickEvent clickEvent);
-        public static OnClickEvent onClickInteraction = null;
-
+        public static Action<ClickEvent> OnClickedEvent = delegate {  };
         public static Action<TakeStackItemRequest> TakeStackItem = delegate { };
-
-        public static void BroadcastEvent(ClickEvent clickEvent)
-        {
-            onClickInteraction(clickEvent);
-        }
     }
 }
