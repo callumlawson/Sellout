@@ -31,6 +31,21 @@ namespace Assets.Scripts.States
             }
         }
 
+        public DayPhase GetNextDayPhase()
+        {
+            switch (DayPhase)
+            {
+                case DayPhase.Morning:
+                    return DayPhase.Open;
+                case DayPhase.Open:
+                    return DayPhase.Night;
+                case DayPhase.Night:
+                    return DayPhase.Morning;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public void IncrementDayPhase()
         {
             switch (DayPhase)

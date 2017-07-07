@@ -36,16 +36,15 @@ namespace Assets.Scripts.Visualizers
             nameTag.transform.SetParent(Interface.Instance.DyanmicUIRoot.transform);
             nameTag.GetComponent<Text>().text = entity.GetState<NameState>().Name;
             nameTagRectTransform = nameTag.GetComponent<RectTransform>();
-            offset = new Vector3(0, entity.GetState<NameState>().VerticalOffset, 0);
+            offset = new Vector3(0, entity.GetState<NameState>().VerticalOffset, 0);            
         }
-
+        
         public void OnFrame()
         {
             if (!hidden && BoundsLookup.Instance.GetBarBounds().Contains(positionState.Position))
             {
                 nameTag.SetActive(true);
-                nameTagRectTransform.anchoredPosition =
-                    Interface.Instance.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
+                nameTagRectTransform.anchoredPosition = Interface.Instance.GetComponent<Canvas>().WorldToCanvas(positionState.Position + offset);
             }
             else
             {

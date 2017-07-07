@@ -6,6 +6,8 @@ using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using UnityEngine.Profiling;
+using UnityEngine;
+using System.Linq;
 
 namespace Assets.Scripts.Systems.AI
 {
@@ -28,13 +30,15 @@ namespace Assets.Scripts.Systems.AI
         {
             Profiler.BeginSample("ActionManagerSystem-OnFrame");
 
-            foreach (var entityToActions in entityActions)
+            var keyArray = entityActions.Keys.ToArray();
+            foreach (var entity in keyArray)
             {
-                entityToActions.Value.OnFrame(entityToActions.Key);
+                var action = entityActions[entity];
+                action.OnFrame(entity);
                 Profiler.BeginSample("ActionManagerSystem-OnFrame-Debug");
                 if (GameSettings.IsDebugOn)
                 {
-                    entityToActions.Key.GetState<ActionBlackboardState>().CurrentActions = entityToActions.Value.ToString();
+                    entity.GetState<ActionBlackboardState>().CurrentActions = action.ToString();
                 }
                 Profiler.EndSample();
             }
@@ -67,7 +71,7 @@ namespace Assets.Scripts.Systems.AI
             TryClearActionsForEntity(entity);
             if(entityActions.ContainsKey(entity))
             {
-                entityActions[entity] = new ActionSequence("Root");
+                entityActions.Remove(entity);
             }
         }
 
