@@ -10,7 +10,7 @@ using Assets.Scripts.Systems.Drinks;
 using Assets.Scripts.Util;
 using Assets.Scripts.Systems.Cameras;
 using Assets.Scripts.Systems.Bar;
-using Assets.Scripts.Systems.Input;
+using Assets.Scripts.Systems.InputHandling;
 
 namespace Assets.Scripts
 {

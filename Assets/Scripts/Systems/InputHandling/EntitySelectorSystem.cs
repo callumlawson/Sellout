@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Framework.Entities;
+﻿using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
-using Assets.Framework.Util;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Events;
@@ -12,49 +9,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.Systems.InputHandling
 {
-    internal class EntitySelectorSystem : IFrameSystem, IEntityManager
+    internal class EntitySelectorSystem : IFrameSystem
     {
-        private EntityStateSystem entitySystem;
         private Entity lastEntitSelected;
-
-        public void SetEntitySystem(EntityStateSystem ess)
-        {
-            entitySystem = ess;
-        }
 
         public void OnFrame()
         {
             var cursorState = StaticStates.Get<CursorState>();
-            UpdateCursorState(cursorState);
             HighlightEligibleUnderCursor(cursorState);
             HandleMouseClicks(cursorState);
-        }
-
-        private void UpdateCursorState(CursorState cursorState)
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
-            {
-                var objectHit = hit.collider.gameObject;
-                if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
-                {
-                    var nowSelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
-                    if (nowSelectedEntity.HasState<InteractiveState>() && !nowSelectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
-                    {
-                        return;
-                    }
-                    if (GetEntitiesInRange().Contains(nowSelectedEntity))
-                    {
-                        cursorState.SelectedEntity = nowSelectedEntity;
-                    }
-                }
-                else
-                {
-                    cursorState.SelectedEntity = null;
-                }
-                cursorState.MousedOverPosition = hit.point;
-            }
         }
 
         private static void HandleMouseClicks(CursorState cursorState)
@@ -62,7 +25,11 @@ namespace Assets.Scripts.Systems.InputHandling
             var selectedEntity = cursorState.SelectedEntity;
             if (Input.GetMouseButtonDown(0))
             {
-                if (selectedEntity.HasState<InteractiveState>() && selectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
+                if (selectedEntity == null)
+                {
+                    EventSystem.OnClickedEvent(new ClickEvent(null, cursorState.MousedOverPosition, 0));
+                }
+                else if (!selectedEntity.HasState<InteractiveState>() || selectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
                 {
                     EventSystem.OnClickedEvent(new ClickEvent(selectedEntity, cursorState.MousedOverPosition, 0));
                 }
@@ -85,20 +52,6 @@ namespace Assets.Scripts.Systems.InputHandling
                 Recursive.ApplyActionRecursively(selectedEntity.GameObject.transform, AddOutline);
             }
             lastEntitSelected = selectedEntity;
-        }
-
-        private List<Entity> GetEntitiesInRange()
-        {
-            var playerEntity = StaticStates.Get<PlayerState>().Player;
-            var playerPosition = playerEntity.GameObject.transform.position;
-            var colliders = Physics.OverlapSphere(playerPosition, Constants.InteractRangeInMeters);
-            if (!colliders.Any())
-            {
-                return null;
-            }
-            var entityIds = colliders.Select(collider => collider.gameObject.GetEntityIdRecursive());
-            var entities = entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId).Select(entityId => entitySystem.GetEntity(entityId)).ToList();
-            return entities;
         }
 
         private static void ResetOutline(Transform transform)

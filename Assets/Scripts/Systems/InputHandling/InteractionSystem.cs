@@ -4,7 +4,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 
-namespace Assets.Scripts.Systems.Input
+namespace Assets.Scripts.Systems.InputHandling
 {
     internal class InteractionSystem : IFrameEntitySystem
     {

@@ -9,11 +9,8 @@ namespace Assets.Scripts.Visualizers
     {
         [UsedImplicitly] public GameObject DrinkContents;
 
-        private DrinkState drinkState;
-
         public void OnStartRendering(Entity entity)
         {
-            drinkState = entity.GetState<DrinkState>();
             var colorState = entity.GetState<ColorState>();
             DrinkContents.GetComponent<Renderer>().material.color = colorState.Color;
         }
