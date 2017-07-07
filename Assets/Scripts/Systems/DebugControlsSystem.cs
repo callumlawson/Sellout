@@ -11,7 +11,7 @@ namespace Assets.Scripts.Systems
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                StaticStates.Get<DayPhaseState>().IncrementDayPhase();
+                DayDirectorSystem.Instance.RequestIncrementDayPhase();
             }
         }
     }

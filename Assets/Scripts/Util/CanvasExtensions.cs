@@ -10,7 +10,7 @@ namespace Assets.Scripts.Util
             {
                 camera = Camera.main;
             }
-
+            
             var viewportPosition = camera.WorldToViewportPoint(worldPosition);
             var canvasRect = canvas.GetComponent<RectTransform>();
 
