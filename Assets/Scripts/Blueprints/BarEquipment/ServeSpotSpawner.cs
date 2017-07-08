@@ -21,6 +21,7 @@ namespace Assets.Scripts.Blueprints.BarEquipment
                 new InventoryState(),
                 new VisibleSlotState(),
                 new BarEntityState(),
+                new InteractiveState(),
                 new TooltipState("A spot for placing your items.")
             };
         }

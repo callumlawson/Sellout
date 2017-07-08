@@ -1,15 +1,14 @@
-﻿using Assets.Framework.Entities;
+﻿using System.Collections.Generic;
+using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.States.Bar;
 using Assets.Scripts.Systems;
-using Assets.Scripts.Util;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.GameActions.Inventory
+namespace Assets.Scripts.GameActions.Bar
 {
     class PlaceItemInReceiveSpot : GameAction
     {

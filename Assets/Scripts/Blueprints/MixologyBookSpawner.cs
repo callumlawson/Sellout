@@ -16,6 +16,7 @@ namespace Assets.Scripts.Blueprints
                 new RotationState(transform.rotation),
                 new PrefabState(Prefabs.MixologyBook),
                 new ActiveState(false),
+                new InteractiveState(),
                 new TooltipState("Look up customer and recipe details.")
             };
         }

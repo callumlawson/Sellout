@@ -141,7 +141,8 @@ namespace Assets.Scripts.Systems
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
                 new HairState(HairType.Bartender),
                 new FaceState(FaceType.Bartender),
-                new IsPersonState()
+                new IsPersonState(),
+                new InteractiveState()
             }, false);
             StaticStates.Add(new PlayerState(player, !GameSettings.DisableTutorial));
             return player;

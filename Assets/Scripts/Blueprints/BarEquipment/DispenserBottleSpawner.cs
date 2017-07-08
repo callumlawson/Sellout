@@ -21,6 +21,7 @@ namespace Assets.Scripts.Blueprints.BarEquipment
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
                 new PrefabState(Prefabs.DispensingBottle),
+                new InteractiveState(),
                 new TooltipState("Dispenses " + Ingredient + "."),
                 new InventoryState()
             };

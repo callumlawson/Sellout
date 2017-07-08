@@ -25,6 +25,7 @@ namespace Assets.Scripts.Blueprints
                 new PositionState(transform.position),
                 new PrefabState(Prefabs.IngredientDispenser),
                 new NameState(Ingredient.ToString(), 0.5f),
+                new InteractiveState(),
                 new TooltipState("Dispenses " + Ingredient + ".")
             };
         }

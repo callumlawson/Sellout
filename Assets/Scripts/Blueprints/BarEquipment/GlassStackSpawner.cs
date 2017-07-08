@@ -3,10 +3,12 @@ using Assets.Framework.States;
 using Assets.Scripts.States;
 using Assets.Scripts.States.Bar;
 using Assets.Scripts.Util;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts.Blueprints.BarEquipment
 {
+    [UsedImplicitly]
     public class GlassStackSpawner : MonoBehaviour, IEntityBlueprint
     {
         public List<IState> EntityToSpawn()
@@ -19,6 +21,7 @@ namespace Assets.Scripts.Blueprints.BarEquipment
                 new ItemStackState(),
                 new InventoryState(),
                 new VisibleSlotState(),
+                new InteractiveState(),
                 new TooltipState("Dispenses glasses for making drinks.")
             };
         }

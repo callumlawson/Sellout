@@ -17,6 +17,7 @@ namespace Assets.Scripts.Blueprints.BarEquipment
                 new PositionState(transform.position),
                 new RotationState(transform.rotation),
                 new PrefabState(Prefabs.DrinkSurface),
+                new InteractiveState(),
                 new TooltipState("Your working area.")
             };
         }
