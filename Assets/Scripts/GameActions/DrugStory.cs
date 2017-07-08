@@ -264,7 +264,7 @@ namespace Assets.Scripts.GameActions
             var sequence = new ActionSequence("InspectorAskToDrink");
             sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
             sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(inspector, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
-            sequence.Add(CommonActions.SitDown());
+            sequence.Add(CommonActions.GoToSeat());
             sequence.Add(CommonActions.SitDownLoop());
             return sequence;
         }

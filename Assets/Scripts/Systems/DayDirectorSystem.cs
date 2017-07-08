@@ -10,6 +10,7 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using Assets.Scripts.States.AI;
 
 namespace Assets.Scripts.Systems
 {
@@ -187,6 +188,13 @@ namespace Assets.Scripts.Systems
         {
             people.ForEach(person => ActionManagerSystem.Instance.TryCancelThenHardClearActions(person));
             people.ForEach(person => person.GetState<PersonAnimationState>().ResetAnimationState());
+            people.ForEach(person =>
+            {
+                if (person.HasState<LifecycleState>())
+                {
+                    person.GetState<LifecycleState>().status = LifecycleState.LifecycleStatus.Offscreen;
+                }
+            });
             people.ForEach(person => RemoveInventoryItem(person));
             Locations.ResetPeopleToSpawnPoints(people);
         }

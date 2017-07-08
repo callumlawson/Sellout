@@ -207,7 +207,7 @@ namespace Assets.Scripts.GameActions
         {
             var purchaseSequence = new ActionSequence("Purchase");
             purchaseSequence.Add(DrinkOrders.GetRandomOrder(entity));
-            purchaseSequence.Add(CommonActions.SitDown());
+            purchaseSequence.Add(CommonActions.GoToSeat());
             purchaseSequence.Add(CommonActions.SitDownLoop());
             return purchaseSequence;
         }
@@ -231,7 +231,7 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ActionSequence SitDown()        
+        public static ActionSequence GoToSeat()        
         {
             var sitDown = new ActionSequence("Sit down");
             sitDown.Add(new GetWaypointAction(Goal.Sit, reserve: true, closest: true)); //This assumes more seats than NPCs!
