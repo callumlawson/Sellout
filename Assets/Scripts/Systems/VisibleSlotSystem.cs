@@ -13,7 +13,7 @@ namespace Assets.Scripts.Systems
         public void OnInit()
         {
             entitiesRootTransform = GameObject.Find("Entities").transform;
-            EventSystem.ParentingRequestEvent += OnInventoryEvent;
+            EventSystem.ParentingRequestSucceeded += OnInventoryEvent;
         }
 
         private void OnInventoryEvent(ParentingRequest parentingRequest)

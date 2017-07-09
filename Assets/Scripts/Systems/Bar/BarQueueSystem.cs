@@ -197,7 +197,7 @@ namespace Assets.Scripts.Systems.Bar
 
             var purchaseSequence = new ActionSequence("Purchase");
             purchaseSequence.Add(DrinkOrders.GetRandomOrder(waitingCharacter));
-            purchaseSequence.Add(CommonActions.SitDown());
+            purchaseSequence.Add(CommonActions.GoToSeat());
             purchaseSequence.Add(CommonActions.SitDownLoop());
             
             AddPurchaseActionsForCharacter(waitingCharacter, purchaseSequence);

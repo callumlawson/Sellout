@@ -8,9 +8,19 @@ namespace Assets.Scripts.States
     [Serializable]
     class ActionBlackboardState : IState
     {
+        public enum ReceiveItemDecisionResponse
+        {
+            None,
+            GaveBack,
+            ThrewOut,
+            GaveOtherItem,
+            Kept
+        }
+
         public Entity TargetEntity;
         public bool Paused;
         public string CurrentActions;
+        public ReceiveItemDecisionResponse ReceivedItemResponse;
 
         public ActionBlackboardState(Entity targetEntity)
         {

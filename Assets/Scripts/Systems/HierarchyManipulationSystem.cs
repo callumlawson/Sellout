@@ -37,6 +37,8 @@ namespace Assets.Scripts.Systems
                 }
 
                 moverHierarchy.SetParent(entityTo);
+
+                EventSystem.ParentingRequestSucceeded.Invoke(parentingRequest);
             }
         }
     }

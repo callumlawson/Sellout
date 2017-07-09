@@ -23,6 +23,7 @@ namespace Assets.Scripts.Systems
         public static Action PauseEvent = delegate { };
         public static Action ResumeEvent = delegate { };
         public static Action<ParentingRequest> ParentingRequestEvent = delegate {  };
+        public static Action<ParentingRequest> ParentingRequestSucceeded = delegate {  };
         public static Action StartDrinkMakingEvent = delegate {  };
         public static Action EndDrinkMakingEvent = delegate {  };
         public static Action<DrinkOrders.DrinkOrder> StartDrinkOrderEvent = delegate {  };
