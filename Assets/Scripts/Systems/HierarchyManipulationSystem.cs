@@ -21,7 +21,7 @@ namespace Assets.Scripts.Systems
                 Debug.LogError("Target exists but does not have an inventory.");
             }
 
-            if (mover != null && (entityTo == null || entityTo.GetState<InventoryState>().Child == null))
+            if (mover != null && (entityTo == null || (entityTo.GetState<InventoryState>().Child == null && entityTo.GetState<InventoryState>().AcceptingChildren)))
             {
                 var moverHierarchy = mover.GetState<InventoryState>();
 
@@ -37,6 +37,8 @@ namespace Assets.Scripts.Systems
                 }
 
                 moverHierarchy.SetParent(entityTo);
+
+                EventSystem.ParentingRequestSucceeded.Invoke(parentingRequest);
             }
         }
     }
