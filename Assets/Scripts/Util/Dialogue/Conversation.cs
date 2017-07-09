@@ -8,6 +8,8 @@ namespace Assets.Scripts.Util.Dialogue
     [Serializable]
     public abstract class Conversation
     {
+        public Action<DialogueOutcome> OnDialoguOutcome;
+
         private Action onEnd;
         private Entity entity;
 
@@ -35,6 +37,10 @@ namespace Assets.Scripts.Util.Dialogue
             return () =>
             {
                 entity.GetState<DialogueOutcomeState>().Outcome = outcome;
+                if (OnDialoguOutcome != null)
+                {
+                    OnDialoguOutcome(outcome);
+                }
                 onEnd();
                 DialogueSystem.Instance.StopDialogue();
             };

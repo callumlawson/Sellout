@@ -25,7 +25,7 @@ namespace Assets.Scripts.GameActions.Dialogue
             this.onFinishDefaultAction = onFinishDefaultAction;
         }
 
-        private void NoDefaultAction()
+        private static void NoDefaultAction()
         {
             Debug.LogError("No default set for conversation branch, but we hit it anways!");
         }

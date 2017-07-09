@@ -66,7 +66,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 })); //This is kind of dirty - but demo!
                 mcGrawSequence.Add(new DestoryEntityInInventoryAction());
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
+                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne(), mcGraw));
                 mcGrawSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
@@ -91,7 +91,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(endOfTutorialSyncPoint);
             ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetConversationAction(new EllieMorningOne()));
+            ellieSequence.Add(new SetConversationAction(new EllieMorningOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -100,7 +100,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(endOfTutorialSyncPoint);
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne()));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne(), tolstoy));
             tolstoySequence.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             tolstoySequence.Add(CommonActions.WaitForDrink(tolstoy, state => true, 99999));
             tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
@@ -210,7 +210,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("When it's time to open the bar you need to let the crew know.");
                 DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right inform the ship's computer you are ready.");
                 DialogueSystem.Instance.WriteNPCLine("Good luck!");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Default));
             }
         }
     }

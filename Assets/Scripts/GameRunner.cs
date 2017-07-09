@@ -126,7 +126,6 @@ namespace Assets.Scripts
                 entitySystem.Tick();
                 yield return new WaitForSeconds(Constants.TickPeriodInSeconds);
             }
-            // ReSharper disable once IteratorNeverReturns
         }
     }
 }

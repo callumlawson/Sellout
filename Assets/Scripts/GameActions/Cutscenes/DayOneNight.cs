@@ -37,21 +37,21 @@ namespace Assets.Scripts.GameActions.Cutscenes
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new TeleportAction(chosenSeats[0].GameObject.transform));
-            jannetSequence.Add(new SetConversationAction(new JannetNightOne()));
+            jannetSequence.Add(new SetConversationAction(new JannetNightOne(), jannet));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 
             //Tolstoy
             var tolstoySequence = new ActionSequence("Tolstoy night");
             tolstoySequence.Add(new TeleportAction(chosenSeats[1].GameObject.transform));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyNightOne()));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyNightOne(), tolstoy));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
 
             //Ellie
             var ellieSequence = new ActionSequence("Ellie night");
             ellieSequence.Add(new TeleportAction(chosenSeats[2].GameObject.transform));
-            ellieSequence.Add(new SetConversationAction(new EllieNightOne()));
+            ellieSequence.Add(new SetConversationAction(new EllieNightOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -65,7 +65,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             else
             {
                 qSequence.Add(new TeleportAction(chosenSeats[3].GameObject.transform));
-                qSequence.Add(new SetConversationAction(new QNightOneRefused()));
+                qSequence.Add(new SetConversationAction(new QNightOneRefused(), q));
                 qSequence.Add(CommonActions.SitDownLoop());
             }
             ActionManagerSystem.Instance.QueueAction(q, qSequence);
@@ -88,7 +88,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.StartDialogue("Q");
                 DialogueSystem.Instance.WriteNPCLine("You missed out on a great opportunity today.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Mean));
             }
         }
 
@@ -143,7 +143,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("When I ask for a drink containing my favorite ingredient I don't always want the same thing.");
                 DialogueSystem.Instance.WriteNPCLine("That would be boring.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'll keep that in mind.", EndConversation(DialogueOutcome.Nice));
-                DialogueSystem.Instance.WritePlayerChoiceLine("Why don't you just order exactly what you want!", EndConversation(DialogueOutcome.Bad));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Why don't you just order exactly what you want!", EndConversation(DialogueOutcome.Mean));
             }
         }
 
