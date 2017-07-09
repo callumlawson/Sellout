@@ -33,8 +33,8 @@ namespace Assets.Scripts.GameActions.Bar
             if (item == null || item.GameObject.activeInHierarchy == false || item.GameObject.GetComponent<EntityIdComponent>().EntityId == -1)
             {
                 item = null;
-                Debug.Log("Player destroyed the item!");
-                ActionStatus = ActionStatus.Failed;
+                entity.GetState<ActionBlackboardState>().ReceivedItemResponse = ActionBlackboardState.ReceiveItemDecisionResponse.ThrewOut;
+                ActionStatus = ActionStatus.Succeeded;
                 return;
             }
 
@@ -47,14 +47,21 @@ namespace Assets.Scripts.GameActions.Bar
 
             if (itemParent == entity)
             {
-                Debug.Log("Player gave back the item!");
-                ActionStatus = ActionStatus.Failed;
+                entity.GetState<ActionBlackboardState>().ReceivedItemResponse = ActionBlackboardState.ReceiveItemDecisionResponse.GaveBack;
+                ActionStatus = ActionStatus.Succeeded;
                 return;
             }
 
             if (itemParent.GetState<PrefabState>().PrefabName == Prefabs.Cubby)
             {
-                Debug.Log("Player kept the item!");
+                entity.GetState<ActionBlackboardState>().ReceivedItemResponse = ActionBlackboardState.ReceiveItemDecisionResponse.Kept;
+                ActionStatus = ActionStatus.Succeeded;
+                return;
+            }
+
+            if (entity.GetState<InventoryState>().Child != null)
+            {
+                entity.GetState<ActionBlackboardState>().ReceivedItemResponse = ActionBlackboardState.ReceiveItemDecisionResponse.GaveOtherItem;
                 ActionStatus = ActionStatus.Succeeded;
                 return;
             }

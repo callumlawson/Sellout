@@ -106,36 +106,61 @@ namespace Assets.Scripts.GameActions
             sequence.Add(new OnActionStatusDecorator(
                 OfferDrugs(drugPusher),
                 () => {
-                    var acceptSequence = new ActionSequence("AcceptedDrugOffer");
-                    acceptSequence.Add(new ClearConversationAction());
-                    acceptSequence.Add(new ConversationAction(new DrugPusherOfferAcceptedConversation()));
-                    acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
-                    acceptSequence.Add(new PauseAction(0.5f));
-                    acceptSequence.Add(new ReleaseWaypointAction());
-                    acceptSequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
-                    acceptSequence.Add(CommonActions.TalkToBarPatronsLoop());
-                    sequence.Add(acceptSequence);
-
-                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, acceptSequence);
-
-                    StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
+                    switch (drugPusher.GetState<ActionBlackboardState>().ReceivedItemResponse) {
+                        case ActionBlackboardState.ReceiveItemDecisionResponse.GaveBack:
+                            DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedConversation());
+                            break;
+                        case ActionBlackboardState.ReceiveItemDecisionResponse.ThrewOut:
+                            DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedStronlyConversation());
+                            break;
+                        case ActionBlackboardState.ReceiveItemDecisionResponse.Kept:
+                            DoAcceptActionSequence(drugPusher, new DrugPusherOfferAcceptedConversation());
+                            break;
+                        case ActionBlackboardState.ReceiveItemDecisionResponse.GaveOtherItem:
+                            DoAcceptActionSequence(drugPusher, new DrugPusherOfferAcceptedWithGiftConversation());
+                            break;
+                        case ActionBlackboardState.ReceiveItemDecisionResponse.None:
+                            Debug.LogError("Somehow the response to the drug offer was was none.");
+                            break;
+                    }
                 },
                 () => {
-                    var disagreeSequence = new ActionSequence("RefusedDrugOffer");
-                    disagreeSequence.Add(new ClearConversationAction());
-                    disagreeSequence.Add(new ConversationAction(new DrugPusherOfferRefusedConversation()));
-                    disagreeSequence.Add(new UpdateMoodAction(Mood.Angry));
-                    disagreeSequence.Add(new PauseAction(0.5f));
-                    disagreeSequence.Add(new ReleaseWaypointAction());
-                    disagreeSequence.Add(new LeaveBarAction());
-
-                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
-
-                    StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
+                    Debug.LogError("Drug intro failed!.");
                 }
             ));
 
             return sequence;
+        }
+
+        private static void DoAcceptActionSequence(Entity drugPusher, Conversation conversation)
+        {
+            var acceptSequence = new ActionSequence("AcceptedDrugOffer");
+            acceptSequence.Add(new ClearConversationAction());
+            acceptSequence.Add(new ConversationAction(conversation));
+            acceptSequence.Add(new UpdateMoodAction(Mood.Happy));
+            acceptSequence.Add(new PauseAction(0.5f));
+            acceptSequence.Add(new ReleaseWaypointAction());
+            acceptSequence.Add(new GoToPositionAction(Locations.OutsideDoorLocation()));
+            acceptSequence.Add(CommonActions.TalkToBarPatronsLoop());
+
+            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, acceptSequence);
+
+            StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
+        }
+
+        private static void DoRejectActionSequence(Entity drugPusher, Conversation conversation)
+        {
+            var disagreeSequence = new ActionSequence("RefusedDrugOffer");
+            disagreeSequence.Add(new ClearConversationAction());
+            disagreeSequence.Add(new ConversationAction(conversation));
+            disagreeSequence.Add(new UpdateMoodAction(Mood.Angry));
+            disagreeSequence.Add(new PauseAction(0.5f));
+            disagreeSequence.Add(new ReleaseWaypointAction());
+            disagreeSequence.Add(new LeaveBarAction());
+
+            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
+
+            StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
         }
 
         private static ConditionalActionSequence OfferDrugs(Entity drugPusher)
@@ -179,6 +204,16 @@ namespace Assets.Scripts.GameActions
             }
         }
 
+        private class DrugPusherOfferAcceptedWithGiftConversation : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("I guess that's a yes. Glad we can do business. I'll be back tonight with your cut.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+
         private class DrugPusherOfferRefusedConversation : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
@@ -188,8 +223,18 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
             }
         }
-#endregion
-        
+
+        private class DrugPusherOfferRefusedStronlyConversation : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("That was valuable product, moron. I'll take that as a no. Your loss.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
+            }
+        }
+        #endregion
+
         /**
          *      Day 2
          * */
