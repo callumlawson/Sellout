@@ -30,7 +30,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            jannetSequence.Add(new SetConversationAction(new JannetNightTwo()));
+            jannetSequence.Add(new SetConversationAction(new JannetNightTwo(), jannet));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 
@@ -47,8 +47,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 if (decision.AcceptedDrugPushersOffer)
                 {
                     DialogueSystem.Instance.WriteNPCLine("Have you seen Q? He owes me a, err, drink...");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You should really cut down on the 'drink'.", EndConversation(DialogueOutcome.Default));
                     DialogueSystem.Instance.WritePlayerChoiceLine("Well if you need a 'drink' I'm here every day.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("...", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You shouldn't mix with Q, he's trouble.", EndConversation(DialogueOutcome.Mean));
                 }
                 else
                 {
@@ -57,7 +58,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
                     DialogueSystem.Instance.WritePlayerChoiceLine("You'd be suprised. Being stuck in this space can drives people crazy eventually.", EndConversation(DialogueOutcome.Nice));
                     DialogueSystem.Instance.WritePlayerChoiceLine("You'd think in a ship as small as this there would be no room for it.", EndConversation(DialogueOutcome.Nice));
                 }
-                
             }
         }
     }

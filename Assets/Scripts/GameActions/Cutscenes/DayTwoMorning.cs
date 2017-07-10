@@ -34,7 +34,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var ellieSequence = new ActionSequence("Ellie morning");
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetConversationAction(new EllieMorningOne()));
+            ellieSequence.Add(new SetConversationAction(new EllieMorningOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -42,7 +42,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var tolstoySequence = new ActionSequence("Tolstoy morning");
             tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne()));
+            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne(), tolstoy));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }
@@ -54,8 +54,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.StartDialogue("Tolstoy");
                 DialogueSystem.Instance.WriteNPCLine("You really need to get window shields.");
                 DialogueSystem.Instance.WriteNPCLine("This horrible purple light makes my drinks look wierd.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("How can you not want to look at the stars?", EndConversation(DialogueOutcome.Default));
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("How can you not want to look at the stars?", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
             }
         }
 
@@ -67,7 +67,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("I love this purple nebula.");
                 DialogueSystem.Instance.WriteNPCLine("Imagine the strange new worlds it could be hiding!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("It is beautiful.", EndConversation(DialogueOutcome.Nice));
-                DialogueSystem.Instance.WritePlayerChoiceLine("I've never really cared much for space.", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I've never really cared much for space.", EndConversation(DialogueOutcome.Mean));
             }
         }
     }
