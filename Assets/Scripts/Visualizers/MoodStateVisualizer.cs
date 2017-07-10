@@ -24,6 +24,8 @@ namespace Assets.Scripts.Visualizers
         private RectTransform moodBubbleRectTransform;
         private readonly Vector3 offset = new Vector3(0.0f, 2.8f, 0.0f);
 
+        private Sequence moodTweenSequence;
+
         public void OnStartRendering(Entity entity)
         {
             positionState = entity.GetState<PositionState>();
@@ -51,12 +53,17 @@ namespace Assets.Scripts.Visualizers
             var imageComponent = moodBubble.GetComponent<Image>();
             imageComponent.overrideSprite = sprite;
 
+            if (moodTweenSequence != null && !moodTweenSequence.IsComplete())
+            {
+                moodTweenSequence.Kill();
+            }
             moodBubble.SetActive(true);
-            var tweenSequence = DOTween.Sequence();
-            tweenSequence.Append(imageComponent.DOFade(1.0f, 0.7f));
-            tweenSequence.AppendInterval(1.8f);
-            tweenSequence.Append(imageComponent.DOFade(0.0f, 0.7f));
-            tweenSequence.AppendCallback(() => moodBubble.SetActive(false));
+            imageComponent.DOFade(0.0f, -1f);
+            moodTweenSequence = DOTween.Sequence()
+                .Append(imageComponent.DOFade(1.0f, 0.7f))
+                .AppendInterval(1.8f)
+                .Append(imageComponent.DOFade(0.0f, 0.7f))
+                .AppendCallback(() => moodBubble.SetActive(false));
         }
 
         public void OnFrame()
