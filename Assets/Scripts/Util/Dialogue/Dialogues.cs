@@ -7,7 +7,6 @@ namespace Assets.Scripts.Util.Dialogue
     {
         public static readonly PlayerInitiatedDialogueOne DialogueOne = new PlayerInitiatedDialogueOne();
         public static readonly PlayerInitiatedDialogueTwo DialogueTwo = new PlayerInitiatedDialogueTwo();
-        public static readonly WrongDrinkConversation WrongDrinkDialogue = new WrongDrinkConversation();
 
         public class TellTheTimeConverstation : Conversation
         {
@@ -33,15 +32,6 @@ namespace Assets.Scripts.Util.Dialogue
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That's not right! Use the Drinks console on your left.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        public class WrongDrinkConversation : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator, 1.5f, EndConversation(DialogueOutcome.Default));
-                DialogueSystem.Instance.WriteNPCLine("That isn't what I ordered. <i> Throws drink into the sink! </i>");
             }
         }
 
