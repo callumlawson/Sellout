@@ -122,7 +122,29 @@ namespace Assets.Scripts.GameActions
                        {
                            if (incorrectDrinkConversation == null)
                            {
-                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(Dialogues.WrongDrinkDialogue));
+                               var random = UnityEngine.Random.Range(0, 1.0f);
+
+                               if (random <= 0.1f)
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That isn't what I ordered. <i> Throws drink into the sink!", DialogueOutcome.Bad)));
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+                               }
+                               else if (random <= 0.25f)
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That isn't what I ordered. I guess you know best...", DialogueOutcome.Bad)));
+                               }
+                               else if (random <= 0.5f)
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That doesn't taste right. It's alright I guess...", DialogueOutcome.Bad)));
+                               }
+                               else if (random <= 0.75f)
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("Hm... I must have ordered the wrong thing.", DialogueOutcome.Bad)));
+                               }
+                               else
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("This isn't what I ordered. Whatever, I'll just drink it.", DialogueOutcome.Bad)));
+                               }
                            }
                            else
                            {
@@ -132,27 +154,59 @@ namespace Assets.Scripts.GameActions
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+                       
                    }
                    else
                    {
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("I'm tired of waiting, nevermind.", DialogueOutcome.Bad)));
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
                    }
                })
             );
+
+            waitForDrink.Add(new ClearConversationAction());
+
+            
             //Only if not failed
             if (correctDrinkConversation != null)
             {
                 waitForDrink.Add(new ConversationAction(correctDrinkConversation));
             }
+            else
+            {
+                var random = UnityEngine.Random.Range(0, 1.0f);
+
+                if (random <= 0.1f)
+                {
+                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Delicious!", DialogueOutcome.Nice)));
+                }
+                else if (random <= 0.25f)
+                {
+                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Thanks!", DialogueOutcome.Nice)));
+                }
+                else if (random <= 0.5f)
+                {
+                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("<i>Nods</i>", DialogueOutcome.Nice)));
+                }
+                else if (random <= 0.75f)
+                {
+                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Thanks.", DialogueOutcome.Nice)));
+                }
+                else
+                {
+                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Cheers.", DialogueOutcome.Nice)));
+                }
+            }
+
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
             waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
-            waitForDrink.Add(new PauseAction(0.8f));
+
             waitForDrink.Add(new EndDrinkOrderAction());
             waitForDrink.Add(new ReleaseWaypointAction());
             waitForDrink.Add(new UpdateMoodAction(Mood.Happy));
+
             return waitForDrink;
         }
 
