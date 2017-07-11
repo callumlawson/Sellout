@@ -8,5 +8,10 @@ namespace Assets.Scripts.States
     class DialogueOutcomeState : IState
     {
         public DialogueOutcome Outcome;
+
+        public override string ToString()
+        {
+            return Outcome.ToString();
+        }
     }
 }

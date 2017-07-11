@@ -105,12 +105,14 @@ namespace Assets.Scripts.Util.NPC
                 new IsPersonState(),
                 new MoodState(Mood.Happy),
                 new ConversationState(null),
+                new RelationshipState(),
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
                 new ClothingState(npcTemplate.Top, npcTemplate.Bottom),
                 new HairState(npcTemplate.Hair),
                 new FaceState(npcTemplate.Face),
-                new LifecycleState()
+                new LifecycleState(),
+                new InteractiveState()
             });
         }
     }

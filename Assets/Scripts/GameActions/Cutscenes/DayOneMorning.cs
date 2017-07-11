@@ -66,7 +66,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 })); //This is kind of dirty - but demo!
                 mcGrawSequence.Add(new DestoryEntityInInventoryAction());
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne(), mcGraw));
+                mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawMorningOne(), mcGraw));
                 mcGrawSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
@@ -81,7 +81,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 mcGrawSequence.Add(endOfTutorialSyncPoint);
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-                mcGrawSequence.Add(new SetConversationAction(new McGrawMorningOne()));
+                mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawMorningOne()));
                 mcGrawSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
             }
@@ -91,7 +91,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(endOfTutorialSyncPoint);
             ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetConversationAction(new EllieMorningOne(), ellie));
+            ellieSequence.Add(new SetReactiveConversationAction(new EllieMorningOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -100,12 +100,12 @@ namespace Assets.Scripts.GameActions.Cutscenes
             tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(endOfTutorialSyncPoint);
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne(), tolstoy));
+            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningOne(), tolstoy));
             tolstoySequence.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
             tolstoySequence.Add(CommonActions.WaitForDrink(tolstoy, state => true, 99999));
             tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
             tolstoySequence.Add(new ConversationAction(new TolstoyMorningGivenDrink()));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningAfterDrink()));
+            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningAfterDrink()));
             tolstoySequence.Add(new CallbackAction(() => StaticStates.Get<PlayerDecisionsState>().GaveTolstoyDrink = true));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);

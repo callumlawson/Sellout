@@ -30,7 +30,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            jannetSequence.Add(new SetConversationAction(new JannetNightTwo(), jannet));
+            jannetSequence.Add(new SetReactiveConversationAction(new JannetNightTwo(), jannet));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 

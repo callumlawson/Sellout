@@ -37,21 +37,21 @@ namespace Assets.Scripts.GameActions.Cutscenes
                     new TeleportAction(Locations.CenterOfBar()));
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new TeleportAction(chosenSeats[0].GameObject.transform));
-            jannetSequence.Add(new SetConversationAction(new JannetNightOne(), jannet));
+            jannetSequence.Add(new SetReactiveConversationAction(new JannetNightOne(), jannet));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 
             //Tolstoy
             var tolstoySequence = new ActionSequence("Tolstoy night");
             tolstoySequence.Add(new TeleportAction(chosenSeats[1].GameObject.transform));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyNightOne(), tolstoy));
+            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyNightOne(), tolstoy));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
 
             //Ellie
             var ellieSequence = new ActionSequence("Ellie night");
             ellieSequence.Add(new TeleportAction(chosenSeats[2].GameObject.transform));
-            ellieSequence.Add(new SetConversationAction(new EllieNightOne(), ellie));
+            ellieSequence.Add(new SetReactiveConversationAction(new EllieNightOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -65,7 +65,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             else
             {
                 qSequence.Add(new TeleportAction(chosenSeats[3].GameObject.transform));
-                qSequence.Add(new SetConversationAction(new QNightOneRefused(), q));
+                qSequence.Add(new SetReactiveConversationAction(new QNightOneRefused(), q));
                 qSequence.Add(CommonActions.SitDownLoop());
             }
             ActionManagerSystem.Instance.QueueAction(q, qSequence);
