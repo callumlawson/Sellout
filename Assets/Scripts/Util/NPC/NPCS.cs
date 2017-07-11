@@ -8,58 +8,70 @@ using Assets.Scripts.States.AI;
 
 namespace Assets.Scripts.Util.NPC
 {
+    public enum NPCName
+    {
+        Q,
+        Tolstoy,
+        Jannet,
+        McGraw,
+        Ellie,
+        You,
+        Crewperson,
+        Expendable
+    }
+
     public static class NPCS
     {
-        public static NPC Q = new NPC
+        public static NpcTemplate Q = new NpcTemplate
         {
-            Name = "Q",
+            Name = NPCName.Q,
             Face = FaceType.Q,
             Hair = HairType.Q,
             Top = ClothingTopType.UniformTopRed,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC Tolstoy = new NPC
+        public static NpcTemplate Tolstoy = new NpcTemplate
         {
-            Name = "Tolstoy",
+            Name = NPCName.Tolstoy,
             Face = FaceType.Tolstoy,
             Hair = HairType.Tolstoy,
             Top = ClothingTopType.UniformTopBlue,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC Jannet = new NPC
+        public static NpcTemplate Jannet = new NpcTemplate
         {
-            Name = "Jannet",
+            Name = NPCName.Jannet,
             Face = FaceType.Jannet,
             Hair = HairType.Jannet,
             Top = ClothingTopType.UniformTopRed,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC McGraw = new NPC
+        public static NpcTemplate McGraw = new NpcTemplate
         {
-            Name = "McGraw",
+            Name = NPCName.McGraw,
             Face = FaceType.McGraw,
             Hair = HairType.McGraw,
             Top = ClothingTopType.UniformTopOrange,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC Ellie = new NPC
+        public static NpcTemplate Ellie = new NpcTemplate
         {
-            Name = "Ellie",
+            Name = NPCName.Ellie,
             Face = FaceType.Ellie,
             Hair = HairType.Ellie,
             Top = ClothingTopType.UniformTopGreen,
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NPC GenerateAnnon()
+        public static NpcTemplate GenerateAnnon()
         {
-            return new NPC
+            return new NpcTemplate
             {
-                Name = "Crewperson",
+                Name = NPCName.Crewperson,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
@@ -67,11 +79,11 @@ namespace Assets.Scripts.Util.NPC
             };
         }
 
-        public static NPC GenerateHallwayWalker()
+        public static NpcTemplate GenerateHallwayWalker()
         {
-            return new NPC
+            return new NpcTemplate
             {
-                Name = "Expendable",
+                Name = NPCName.Crewperson,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
@@ -79,13 +91,13 @@ namespace Assets.Scripts.Util.NPC
             };
         }
 
-        public static Entity SpawnNpc(EntityStateSystem entitySystem, NPC npc, Vector3 position)
+        public static Entity SpawnNpc(EntityStateSystem entitySystem, NpcTemplate npcTemplate, Vector3 position)
         {
             return entitySystem.CreateEntity(new List<IState>
             {
                 new ActionBlackboardState(null),
                 new PrefabState(Prefabs.Person),
-                new NameState(npc.Name, 2.0f),
+                new NameState(npcTemplate.Name.ToString(), 2.0f),
                 new PositionState(position),
                 new PathfindingState(position, null),
                 new InventoryState(),
@@ -95,23 +107,23 @@ namespace Assets.Scripts.Util.NPC
                 new ConversationState(null),
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
-                new ClothingState(npc.Top, npc.Bottom),
-                new HairState(npc.Hair),
-                new FaceState(npc.Face),
+                new ClothingState(npcTemplate.Top, npcTemplate.Bottom),
+                new HairState(npcTemplate.Hair),
+                new FaceState(npcTemplate.Face),
                 new LifecycleState()
             });
         }
     }
 
-    public struct NPC
+    public struct NpcTemplate
     {
-        public string Name;
+        public NPCName Name;
         public FaceType Face;
         public HairType Hair;
         public ClothingTopType Top;
         public ClothingBottomType Bottom;
 
-        public NPC(string name, FaceType face, HairType hair, ClothingTopType top, ClothingBottomType bottom) : this()
+        public NpcTemplate(NPCName name, FaceType face, HairType hair, ClothingTopType top, ClothingBottomType bottom) : this()
         {
             Top = top;
             Bottom = bottom;

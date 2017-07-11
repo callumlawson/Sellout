@@ -23,7 +23,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             var endOfTutorialSyncPoint = new SyncedAction(new List<Entity> { mcGraw, ellie, tolstoy} );
 
@@ -160,7 +160,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.StartDialogue(NPCName.Tolstoy.ToString());
                 DialogueSystem.Instance.WriteNPCLine("Hey, how you doing? Fine? Good.");
                 DialogueSystem.Instance.WriteNPCLine("Don't you think Ellie's great?");
                 DialogueSystem.Instance.WriteNPCLine("You should talk to her.");
@@ -173,7 +173,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.StartDialogue(NPCName.Tolstoy.ToString());
                 DialogueSystem.Instance.WriteNPCLine("Wow, thanks. I really needed this.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Everyone has one of those days occasionally.", EndConversation(DialogueOutcome.Default));
             }
@@ -183,7 +183,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.StartDialogue(NPCName.Tolstoy.ToString());
                 DialogueSystem.Instance.WriteNPCLine("Really, thank you!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("No worries", EndConversation(DialogueOutcome.Default));
             }

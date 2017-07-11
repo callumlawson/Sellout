@@ -11,6 +11,7 @@ using Assets.Scripts.Util;
 using Random = UnityEngine.Random;
 using UnityEngine;
 using Assets.Scripts.States.AI;
+using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.Systems
 {
@@ -68,7 +69,7 @@ namespace Assets.Scripts.Systems
             dayPhase = StaticStates.Get<DayPhaseState>();
             time = StaticStates.Get<TimeState>();
             people = allPeople;
-            hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, "Expendable");
+            hallwayWalkers = EntityQueries.GetNPCSWithName(allPeople, NPCName.Expendable);
             dayPhase.DayPhaseChangedTo += OnDayPhaseChanged;
         }
 

@@ -18,7 +18,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var jannet = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Jannet.Name);
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             //Jannet
             var jannetSequence = new ActionSequence("Jannet night");

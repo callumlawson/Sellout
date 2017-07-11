@@ -16,7 +16,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             //McGraw
             var mcGrawSequence = new ActionSequence("McGrawTutorial");

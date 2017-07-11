@@ -23,7 +23,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
 
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             var seats = EntityStateSystem.Instance.GetEntitiesWithState<GoalSatisfierState>().Where(entity => entity.GetState<GoalSatisfierState>().SatisfiedGoals.Contains(Goal.Sit));
             var chosenSeats = seats.PickRandom(4).ToArray();
