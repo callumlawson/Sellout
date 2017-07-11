@@ -14,6 +14,7 @@ namespace Assets.Scripts.UI
         [UsedImplicitly] [Range(0, 1)] public float maxScreennWidthPercentage;
         [UsedImplicitly] public float maxScreenWidthPixels;
 
+        [UsedImplicitly]
         void Start()
         {
             Resize();
