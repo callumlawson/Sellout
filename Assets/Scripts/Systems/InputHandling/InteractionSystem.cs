@@ -36,14 +36,6 @@ namespace Assets.Scripts.Systems.InputHandling
             var entityName = entity.GetState<PrefabState>().PrefabName;
             var interactiveState = entity.GetState<InteractiveState>();
 
-            if (entity.HasState<IsPersonState>() && entity.HasState<ConversationState>())
-            {
-                interactiveState.CurrentlyInteractive = playerState.PlayerStatus == PlayerStatus.Bar || entity.GetState<ConversationState>().Conversation != null;
-            }
-            else if (entity.HasState<IsPersonState>())
-            {
-                interactiveState.CurrentlyInteractive = playerState.PlayerStatus == PlayerStatus.Bar;
-            }
             if (Prefabs.BarObjectPrefabs.Contains(entityName))
             {
                 interactiveState.CurrentlyInteractive = playerState.PlayerStatus == PlayerStatus.Bar;
