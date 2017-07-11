@@ -9,6 +9,7 @@ namespace Assets.Scripts.States
     public class CursorState : IState
     {
         public Entity SelectedEntity;
+        public Entity DebugEntity;
         public SerializableVector3 MousedOverPosition;
 
         public CursorState(Entity selectedEntity, SerializableVector3 mousedOverPosition)

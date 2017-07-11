@@ -34,6 +34,7 @@ namespace Assets.Scripts.Systems.InputHandling
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
                     var nowSelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
+                    cursorState.DebugEntity = nowSelectedEntity;
                     if (nowSelectedEntity.HasState<InteractiveState>() && !nowSelectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
                     {
                         return;
