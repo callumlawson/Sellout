@@ -20,10 +20,11 @@ namespace Assets.Scripts.UI
             ResizeEventBehaviour.ScreenSizeUpdated += Resize;
         }
 
-        void OnValidate()
-        {
-            Resize();
-        }
+        //Only while working with UI.
+//        void OnValidate()
+//        {
+//            Resize();
+//        }
 
         private void Resize()
         {
