@@ -19,7 +19,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var jannet = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Jannet.Name);
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             //Jannet
             var jannetSequence = new ActionSequence("Jannet night");
@@ -31,7 +31,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             })); //This is kind of dirty - but demo!
             jannetSequence.Add(new PauseAction(0.1f)); //WORKAROUND FOR SYNC ACTION BUG
             jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            jannetSequence.Add(new SetConversationAction(new JannetNightTwo(), jannet));
+            jannetSequence.Add(new SetReactiveConversationAction(new JannetNightTwo(), jannet));
             jannetSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
 

@@ -28,7 +28,8 @@ namespace Assets.Scripts.Systems
 
         public void OnFrame()
         {
-            var selectedEntity = StaticStates.Get<CursorState>().SelectedEntity;
+            var cursorState = StaticStates.Get<CursorState>();
+            var selectedEntity = !GameSettings.IsDebugOn ? cursorState.SelectedEntity : cursorState.DebugEntity;
 
             UpdateHoverTime(selectedEntity);
             CleanPreviousTooltips();

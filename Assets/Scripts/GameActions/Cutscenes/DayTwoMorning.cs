@@ -16,7 +16,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
-            var player = EntityQueries.GetEntityWithName(matchingEntities, "You");
+            var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
             //McGraw
             var mcGrawSequence = new ActionSequence("McGrawTutorial");
@@ -34,7 +34,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var ellieSequence = new ActionSequence("Ellie morning");
             ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetConversationAction(new EllieMorningOne(), ellie));
+            ellieSequence.Add(new SetReactiveConversationAction(new EllieMorningOne(), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
 
@@ -42,7 +42,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var tolstoySequence = new ActionSequence("Tolstoy morning");
             tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            tolstoySequence.Add(new SetConversationAction(new TolstoyMorningOne(), tolstoy));
+            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningOne(), tolstoy));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
         }

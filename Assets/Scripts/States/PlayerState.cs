@@ -26,7 +26,7 @@ namespace Assets.Scripts.States
 
         public override string ToString()
         {
-            return "Player: " + Player.EntityId;
+            return "Player: " + Player.EntityId + " Player Status: " + PlayerStatus;
         }
     }
 }

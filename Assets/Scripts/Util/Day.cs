@@ -39,7 +39,7 @@ internal class FirstDay : Day
 //
 //        ScheduleEvent(18, 30, () => { ActionManagerSystem.Instance.QueueAction(q, DrugStory.DrugPusherPaysYou(q)); });
 
-        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
+        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, NPCName.Expendable));
     }
 
     public override void OnEndOfDay(List<Entity> allPeople)
@@ -81,7 +81,7 @@ internal class SecondDay : Day
 //            );
 //        });
 //
-        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, "Expendable"));
+        SchedualWalkHallway(this, EntityQueries.GetNPCSWithName(allPeople, NPCName.Expendable));
 //        SchedualRushHours(this, allPeople);
     }
 
@@ -171,7 +171,7 @@ namespace Assets.Scripts.Util
             //Lunch Rush
             day.SchedualEventDuringInterval(12, 0, 15, 0, () =>
             {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
                 {
                     if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
                     {
@@ -182,7 +182,7 @@ namespace Assets.Scripts.Util
 
             day.ScheduleEvent(14, 1, () =>
             {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
                 {
                     ActionManagerSystem.Instance.QueueAction(person, new LeaveBarAction());
                 }
@@ -191,7 +191,7 @@ namespace Assets.Scripts.Util
             //Evening Rush
             day.SchedualEventDuringInterval(16, 0, 20, 55, () =>
             {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, "Crewperson"))
+                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
                 {
                     if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
                     {

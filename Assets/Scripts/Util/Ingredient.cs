@@ -6,7 +6,8 @@ namespace Assets.Scripts.Util
     public enum Ingredient
     {
         Synthol,
-        Alcohol,
+        Rum,
+        Vodka,
         Orangeade,
         Cola,
         Beer
@@ -14,7 +15,7 @@ namespace Assets.Scripts.Util
 
     public static class Ingredients
     {
-        public static readonly List<Ingredient> AlcoholicIngredients = new List<Ingredient> { Ingredient.Synthol, Ingredient.Alcohol, Ingredient.Beer };
+        public static readonly List<Ingredient> AlcoholicIngredients = new List<Ingredient> { Ingredient.Synthol, Ingredient.Rum, Ingredient.Vodka, Ingredient.Beer };
         public static readonly List<Ingredient> DispensedNonAlcoholicIngredients = new List<Ingredient> { Ingredient.Orangeade, Ingredient.Cola };
 
         private static readonly Color Orange = new Color(1.0f, 0.65f, 0.0f);
@@ -23,7 +24,8 @@ namespace Assets.Scripts.Util
         public static readonly Dictionary<Ingredient, Color> IngredientColorMap = new Dictionary<Ingredient, Color>
         {
             {Ingredient.Synthol, Color.green},
-            {Ingredient.Alcohol, Color.white},
+            {Ingredient.Rum, Color.red},
+            {Ingredient.Vodka, Color.white },
             {Ingredient.Orangeade, Orange},
             {Ingredient.Cola, Color.black},
             {Ingredient.Beer, Brown }

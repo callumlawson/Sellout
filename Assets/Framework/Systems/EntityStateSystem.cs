@@ -39,14 +39,14 @@ namespace Assets.Framework.Systems
             Instance = this;
         }
 
-        public Entity GetEntityWithName(string name)
+        public Entity GetEntityWithName(NPCName name)
         {
-            if (!namedEntities.ContainsKey(name))
+            if (!namedEntities.ContainsKey(name.ToString()))
             {
                 return null;
             }
 
-            return namedEntities[name];
+            return namedEntities[name.ToString()];
         }
 
         public void AddSystem(ISystem system)
