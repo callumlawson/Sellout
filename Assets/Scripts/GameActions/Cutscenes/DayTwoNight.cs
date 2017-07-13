@@ -88,9 +88,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 }
                 else
                 {
-                    DialogueSystem.Instance.WriteNPCLine("You know a few kind words can go along way. People come here looking for support sometimes.");
+                    DialogueSystem.Instance.WriteNPCLine("You know, a few kind words can go along way. People come here looking for support sometimes.");
                     DialogueSystem.Instance.WritePlayerChoiceLine("Fair point, I'll work on that.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("I'm not the ship's physiatrist! They should fine somewhere else.", EndConversation(DialogueOutcome.Mean));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("I'm not the ship's physiatrist. They should find somewhere else!", EndConversation(DialogueOutcome.Mean));
                 }
             }
         }
