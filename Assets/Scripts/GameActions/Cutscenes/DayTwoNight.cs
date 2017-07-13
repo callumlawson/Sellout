@@ -40,8 +40,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             
             //Ellie
             var ellieSequence = new ActionSequence("Ellie night two");
-            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetConversationAction(new EllieMorningOne(), ellie));
+            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+            ellieSequence.Add(new SetReactiveConversationAction(new EllieNightTwo(ellie.GetState<RelationshipState>()), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
         }
@@ -71,24 +71,26 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
         private class EllieNightTwo: Conversation
         {
+            private readonly RelationshipState relationship;
 
+            public EllieNightTwo(RelationshipState relationship)
+            {
+                this.relationship = relationship;
+            }
 
             protected override void StartConversation(string converstationInitiator)
             {
-                var decision = StaticStates.Get<PlayerDecisionsState>();
                 DialogueSystem.Instance.StartDialogue("Ellie");
-                if (ellie)
+                if (relationship.PlayerOpinion > 0)
                 {
-                    DialogueSystem.Instance.WriteNPCLine("Have you seen Q? He owes me a, err, drink...");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Well if you need a 'drink' I'm here every day.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("You shouldn't mix with Q, he's trouble.", EndConversation(DialogueOutcome.Mean));
+                    DialogueSystem.Instance.WriteNPCLine("I'm really glad you work here. You always have a nice thing to say.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Thanks!", EndConversation(DialogueOutcome.Nice));
                 }
                 else
                 {
-                    DialogueSystem.Instance.WriteNPCLine("What a bust up!");
-                    DialogueSystem.Instance.WriteNPCLine("How Q managed to find a market for his horrible substances I'll never know.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("You'd be suprised. Being stuck in this space can drives people crazy eventually.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("You'd think in a ship as small as this there would be no room for it.", EndConversation(DialogueOutcome.Mean));
+                    DialogueSystem.Instance.WriteNPCLine("You know a few kind words can go along way. People come here looking for support sometimes.");
+                    DialogueSystem.Instance.WritePlayerChoiceLine("Fair point, I'll work on that.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("I'm not the ship's physiatrist! They should fine somewhere else.", EndConversation(DialogueOutcome.Mean));
                 }
             }
         }
