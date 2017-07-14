@@ -10,7 +10,10 @@ namespace Assets.Scripts.Util.NPC
         Tolstoy,
         Jannet,
         McGraw,
-        Ellie
+        Ellie,
+
+        BirdPerson,
+        ShadowPerson
     }
 
     class FaceUtil

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Util.NPCVisuals;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Util.NPC
@@ -10,17 +11,38 @@ namespace Assets.Scripts.Util.NPC
         UniformTopGray,
         UniformTopGreen,
         UniformTopOrange,
-        BartenderTop
+        BartenderTop,
+
+        BirdPersonTop,
+        ShadowPersonTop
     }
 
     public enum ClothingBottomType
     {
         UniformBottom,
-        BartenderBottom
-    }
+        BartenderBottom,
+
+        BirdPersonBottom,
+        ShadowPersonBottom
+    };
 
     public class ClothingUtil
     {
+        private static List<ClothingTopType> HumanClothingTops = new List<ClothingTopType>()
+        {
+            ClothingTopType.UniformTopRed,
+            ClothingTopType.UniformTopBlue,
+            ClothingTopType.UniformTopGray,
+            ClothingTopType.UniformTopGreen,
+            ClothingTopType.UniformTopOrange,
+        };
+
+        private static List<ClothingBottomType> HumanClothingBottoms = new List<ClothingBottomType>()
+        {
+            ClothingBottomType.UniformBottom,
+            ClothingBottomType.BartenderBottom
+        };
+
         public static ClothingTop GetClothingAsset(ClothingTopType top)
         {
             return GetClothingAsset<ClothingTop>(top.ToString());
@@ -36,6 +58,20 @@ namespace Assets.Scripts.Util.NPC
             var path = "NPCs/Clothing/" + type;
             var resource = Resources.Load<T>(path);
             return Object.Instantiate(resource);
+        }
+
+        public static ClothingTop GetRandomHumanClothingTop()
+        {
+            var choice = Random.Range(0, HumanClothingTops.Count);
+            var choiceType = HumanClothingTops[choice];
+            return GetClothingAsset(choiceType);
+        }
+
+        public static ClothingBottom GetRandomHumanClothingBottom()
+        {
+            var choice = Random.Range(0, HumanClothingBottoms.Count);
+            var choiceType = HumanClothingBottoms[choice];
+            return GetClothingAsset(choiceType);
         }
     }
 }

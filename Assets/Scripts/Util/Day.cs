@@ -166,58 +166,6 @@ namespace Assets.Scripts.Util
             dayEvents.Add(new DayTimeSpan(startTime, endTime), gameEvent);
         }
 
-        public static void SchedualRushHours(Day day, List<Entity> allPeople)
-        {
-            //Lunch Rush
-            day.SchedualEventDuringInterval(12, 0, 15, 0, () =>
-            {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
-                {
-                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
-                    {
-                        PickNpcAction(person);
-                    }
-                }
-            });
-
-            day.ScheduleEvent(14, 1, () =>
-            {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
-                {
-                    ActionManagerSystem.Instance.QueueAction(person, new LeaveBarAction());
-                }
-            });
-
-            //Evening Rush
-            day.SchedualEventDuringInterval(16, 0, 20, 55, () =>
-            {
-                foreach (var person in EntityQueries.GetNPCSWithName(allPeople, NPCName.Crewperson))
-                {
-                    if (ActionManagerSystem.Instance.IsEntityIdle(person) && UnityEngine.Random.value > 0.9f) //Mean time to happen 10min
-                    {
-                        PickNpcAction(person);
-                    }
-                }
-            });
-        }
-
-        private static void PickNpcAction(Entity person)
-        {
-            if (UnityEngine.Random.value > 0.80f)
-            {
-                ActionManagerSystem.Instance.QueueAction(person,
-                    CommonActions.GoToPaypointOrderDrinkAndSitDown(person, DrinkRecipes.GetRandomDrinkRecipe()));
-            }
-            else if (UnityEngine.Random.value > 0.3f)
-            {
-                ActionManagerSystem.Instance.QueueAction(person, CommonActions.ShortSitDown(person));
-            }
-            else
-            {
-                ActionManagerSystem.Instance.QueueAction(person, CommonActions.Wander());
-            }
-        }
-
         public static void SchedualWalkHallway(Day day, List<Entity> entities)
         {
             day.SchedualEventDuringInterval(11, 0, 21, 0, () =>
@@ -233,4 +181,3 @@ namespace Assets.Scripts.Util
         }
     }
 }
-
