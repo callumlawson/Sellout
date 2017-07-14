@@ -10,4 +10,10 @@ namespace Assets.Framework.Util
         public List<string> AssetNames;
         public List<string> AssetPaths;
     }
+
+    [Serializable]
+    public class ScriptableObjectsAssetIndexObject : AssetIndexObject
+    {
+
+    }
 }

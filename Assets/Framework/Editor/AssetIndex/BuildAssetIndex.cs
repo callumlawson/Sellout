@@ -37,6 +37,46 @@ namespace Assets.Framework.Editor.AssetIndex
             assetIndex.AssetNames = indexEntrys.Keys.ToList();
             assetIndex.AssetPaths = indexEntrys.Values.ToList();
             ScriptableObjectUtilities.SaveScriptableObject(assetIndex);
+
+            // Scriptable Objects
+            var scriptableObjectsIndexEntrys = GetAllScriptableAssetsPathsFromFolder("Assets/Resources");
+            var scriptableObjectsAssetIndex = ScriptableObjectUtilities.GetScriptableObject<ScriptableObjectsAssetIndexObject>();
+            scriptableObjectsAssetIndex.AssetNames = scriptableObjectsIndexEntrys.Keys.ToList();
+            scriptableObjectsAssetIndex.AssetPaths = scriptableObjectsIndexEntrys.Values.ToList();
+            ScriptableObjectUtilities.SaveScriptableObject(scriptableObjectsAssetIndex);
+        }
+
+        private static Dictionary<string, string> GetAllScriptableAssetsPathsFromFolder(string path)
+        {
+            if (path != "")
+            {
+                if (path.EndsWith("/"))
+                {
+                    path = path.TrimEnd('/');
+                }
+            }
+
+            var dirInfo = new DirectoryInfo(path);
+            var fileInf = dirInfo.GetFiles("*.asset", SearchOption.AllDirectories);
+
+            //loop through directory loading the game object and checking if it has the component you want
+            var prefabNameAndPaths = new Dictionary<string, string>();
+            foreach (FileInfo fileInfo in fileInf)
+            {
+                var fullPath = fileInfo.FullName.Replace(@"\", "/");
+                var assetPath = "Assets" + fullPath.Replace(Application.dataPath, "");
+                assetPath = assetPath.Replace(".asset", "");
+                assetPath = assetPath.Replace("Assets/Resources/", "");
+                var name = fileInfo.Name.Replace(".asset", "");
+
+                if (prefabNameAndPaths.ContainsKey(name))
+                {
+                    throw new Exception("More than one ScriptableObject has the name: " + name + " please rename one or remove it fromt the resorces folder.");
+                }
+
+                prefabNameAndPaths.Add(name, assetPath);
+            }
+            return prefabNameAndPaths;
         }
 
         private static Dictionary<string, string> GetAllAssetPathsFromFolder(string path)
