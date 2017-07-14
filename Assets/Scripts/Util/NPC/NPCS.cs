@@ -83,7 +83,7 @@ namespace Assets.Scripts.Util.NPC
         {
             return new NpcTemplate
             {
-                Name = NPCName.Crewperson,
+                Name = NPCName.Expendable,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
