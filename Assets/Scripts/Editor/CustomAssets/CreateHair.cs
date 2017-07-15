@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Util.NPCVisuals;
-using System.IO;
+﻿using System.IO;
 using Assets.Scripts.Util.NPC;
 using UnityEditor;
 using UnityEngine;

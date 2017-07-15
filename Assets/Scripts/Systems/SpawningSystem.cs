@@ -105,19 +105,21 @@ namespace Assets.Scripts.Systems
         private void SpawnPeople(EntityStateSystem entityStateSystem)
         {
             var spawnPointPosition = Locations.OutsideDoorLocation();
+
             NPCS.SpawnNpc(entityStateSystem, NPCS.Q, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Tolstoy, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Jannet, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.McGraw, spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.Ellie, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.Jonathan, spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnonHuman(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnonHuman(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnonHuman(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnonHuman(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnnonHuman(), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.BirdPerson), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.ShadowPerson), spawnPointPosition);
+
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateBirdPerson(), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateShadowPerson(), spawnPointPosition);
+            
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());

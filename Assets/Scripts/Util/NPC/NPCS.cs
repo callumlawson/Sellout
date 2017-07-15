@@ -137,15 +137,15 @@ namespace Assets.Scripts.Util.NPC
             Bottom = ClothingBottomType.UniformBottom
         };
 
-        public static NpcTemplate GenerateAnnonHuman()
+        public static NpcTemplate GenerateAnon(SpeciesType species)
         {
             return new NpcTemplate
             {
                 Name = GetRandomAnonymousName(),
-                Face = EnumExtensions.RandomEnumValue<FaceType>(),
-                Hair = HairUtil.GetRandomHumanHair(),
-                Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
-                Bottom = EnumExtensions.RandomEnumValue<ClothingBottomType>()
+                Face = FaceUtil.GetRandomFace(species),
+                Hair = HairUtil.GetRandomHiar(species),
+                Top = ClothingUtil.GetRandomTop(species),
+                Bottom = ClothingUtil.GetRandomBottom(species)
             };
         }
 
@@ -154,8 +154,8 @@ namespace Assets.Scripts.Util.NPC
             return new NpcTemplate
             {
                 Name = GetRandomAnonymousName(),
-                Face = FaceType.BirdPerson,
-                Hair = HairType.BirdPerson,
+                Face = FaceType.Face_BirdPerson,
+                Hair = HairType.None,
                 Top = ClothingTopType.BirdPersonTop,
                 Bottom = ClothingBottomType.BirdPersonBottom
             };
@@ -166,8 +166,8 @@ namespace Assets.Scripts.Util.NPC
             return new NpcTemplate
             {
                 Name = GetRandomAnonymousName(),
-                Face = FaceType.ShadowPerson,
-                Hair = HairType.ShadowPerson,
+                Face = FaceType.Face_ShadowPerson,
+                Hair = HairType.None,
                 Top = ClothingTopType.ShadowPersonTop,
                 Bottom = ClothingBottomType.ShadowPersonBottom
             };
@@ -177,9 +177,7 @@ namespace Assets.Scripts.Util.NPC
         {
             return new NpcTemplate
             {
-                Name = NPCName.Crewperson,
                 Name = GetRandomAnonymousName(),
-                Name = NPCName.Expendable,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
