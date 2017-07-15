@@ -41,8 +41,8 @@ namespace Assets.Scripts.Util.NPC
         public static NpcTemplate Q = new NpcTemplate
         {
             Name = NPCName.Q,
-            Face = FaceType.Q,
-            Hair = HairType.Q,
+            Face = FaceType.Face_Q,
+            Hair = HairType.Hair_Q,
             Top = ClothingTopType.UniformTopRed,
             Bottom = ClothingBottomType.UniformBottom
         };
@@ -50,8 +50,8 @@ namespace Assets.Scripts.Util.NPC
         public static NpcTemplate Tolstoy = new NpcTemplate
         {
             Name = NPCName.Tolstoy,
-            Face = FaceType.Tolstoy,
-            Hair = HairType.Tolstoy,
+            Face = FaceType.Face_Tolstoy,
+            Hair = HairType.Hair_Tolstoy,
             Top = ClothingTopType.UniformTopBlue,
             Bottom = ClothingBottomType.UniformBottom
         };
@@ -59,8 +59,8 @@ namespace Assets.Scripts.Util.NPC
         public static NpcTemplate Jannet = new NpcTemplate
         {
             Name = NPCName.Jannet,
-            Face = FaceType.Jannet,
-            Hair = HairType.Jannet,
+            Face = FaceType.Face_Jannet,
+            Hair = HairType.Hair_Jannet,
             Top = ClothingTopType.UniformTopRed,
             Bottom = ClothingBottomType.UniformBottom
         };
@@ -68,8 +68,8 @@ namespace Assets.Scripts.Util.NPC
         public static NpcTemplate McGraw = new NpcTemplate
         {
             Name = NPCName.McGraw,
-            Face = FaceType.McGraw,
-            Hair = HairType.McGraw,
+            Face = FaceType.Face_McGraw,
+            Hair = HairType.Hair_McGraw,
             Top = ClothingTopType.UniformTopOrange,
             Bottom = ClothingBottomType.UniformBottom
         };
@@ -77,8 +77,8 @@ namespace Assets.Scripts.Util.NPC
         public static NpcTemplate Ellie = new NpcTemplate
         {
             Name = NPCName.Ellie,
-            Face = FaceType.Ellie,
-            Hair = HairType.Ellie,
+            Face = FaceType.Face_Ellie,
+            Hair = HairType.Hair_Ellie,
             Top = ClothingTopType.UniformTopGreen,
             Bottom = ClothingBottomType.UniformBottom
         };
@@ -177,7 +177,9 @@ namespace Assets.Scripts.Util.NPC
         {
             return new NpcTemplate
             {
+                Name = NPCName.Crewperson,
                 Name = GetRandomAnonymousName(),
+                Name = NPCName.Expendable,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),

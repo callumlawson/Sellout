@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Framework.Util;
 using UnityEngine;
 
 namespace Assets.Scripts.Util.NPC
@@ -6,23 +6,16 @@ namespace Assets.Scripts.Util.NPC
     public enum HairType
     {
         None,
-        Bartender,
-        Q,
-        Tolstoy,
-        Jannet,
-        McGraw,
-        Ellie,
-        BirdPerson,
-        ShadowPerson
+        Hair_Bartender,
+        Hair_Q,
+        Hair_Tolstoy,
+        Hair_Jannet,
+        Hair_McGraw,
+        Hair_Ellie
     }
 
     class HairUtil
     {
-        private static List<HairType> HumanHairTypes = new List<HairType>()
-        {
-            HairType.None
-        };
-
         public static Hair GetHairAsset(HairType type)
         {
             if (type == HairType.None)
@@ -30,15 +23,7 @@ namespace Assets.Scripts.Util.NPC
                 return null;
             }
 
-            var path = "NPCs/Hair/Hair_" + type;
-            var resource = Resources.Load<Hair>(path);
-            return Object.Instantiate(resource);
-        }
-
-        public static HairType GetRandomHumanHair()
-        {
-            var choice = Random.Range(0, HumanHairTypes.Count);
-            return HumanHairTypes[choice];
+            return AssetLoader.LoadScriptableObjectAsset<Hair>(type.ToString());
         }
     }
 }

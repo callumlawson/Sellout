@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Assets.Scripts.Util.NPC;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Assets.Scripts.Visualizers.NPCs
@@ -7,9 +8,10 @@ namespace Assets.Scripts.Visualizers.NPCs
     {
         [SerializeField] [UsedImplicitly] private MeshFilter faceMesh;
 
-        public void SetFace(Material face)
+        public void SetFace(Face face)
         {
-            faceMesh.GetComponent<MeshRenderer>().sharedMaterial = face;
+            faceMesh.GetComponent<MeshFilter>().sharedMesh = face.mesh;
+            faceMesh.GetComponent<MeshRenderer>().sharedMaterial = face.material;
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Assets.Scripts.GameActions
             }
             if (randomValue <= 0.75)
             {
-                var ingredient = Ingredients.DispensedNonAlcoholicIngredients.PickRandom();
+                var ingredient = Ingredients.DispensedIngredients.PickRandom();
                 return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeoutInMins: orderTimeOurInMins);
             }
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeoutInMins: orderTimeOurInMins);

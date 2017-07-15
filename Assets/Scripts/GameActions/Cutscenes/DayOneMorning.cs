@@ -125,7 +125,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Don't worry, my favorite drink is easy to make.");
-                DialogueSystem.Instance.WriteNPCLine("Just grab that glass and pour three measures of Synthol then a single measure of Alcohol.");
+                DialogueSystem.Instance.WriteNPCLine("Just grab that glass and pour three measures of Synthol then a single measure of Vodka.");
                 DialogueSystem.Instance.WriteNPCLine("I can't get my brain going in the morning without it.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("You drink a glass of basically straight alcohol for breakfast?", Problem);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Coming right up!", EndConversation(DialogueOutcome.Nice));

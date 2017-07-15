@@ -8,7 +8,7 @@ namespace Assets.Scripts.Util
         public static readonly GameTime GameStartTime = new GameTime(1, 0, 0);
         public const float TickPeriodInSeconds = 0.4f;
         public const float SecondsPerGameMinute = 0.6f;
-        public const int OpeningHour = 21;
+        public const int OpeningHour = 20;
         public const int ClosingHour = 23;
 
         //Economy

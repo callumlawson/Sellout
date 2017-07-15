@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Visualizers;
+using JetBrains.Annotations;
 
 namespace Assets.Scripts.Util.Cameras
 {
@@ -17,7 +18,6 @@ namespace Assets.Scripts.Util.Cameras
         private bool MoveFinished;
         private bool RotateFinished;
 
-        private NameStateVisualizer playerNameStateVisualizer;
         private Renderer[] playerRenderers;
         private Material[] playerMaterials;
         private Collider[] playerColliders;
@@ -30,12 +30,12 @@ namespace Assets.Scripts.Util.Cameras
 
         private List<Tweener> fadeTweeners;
 
+        [UsedImplicitly]
         void Start()
         {
             fadeTweeners = new List<Tweener>();
 
             var player = StaticStates.Get<PlayerState>().Player.GameObject;
-            playerNameStateVisualizer = player.GetComponent<NameStateVisualizer>();
             playerRenderers = player.GetComponentsInChildren<Renderer>();
             playerMaterials = playerRenderers.Select(renderer => renderer.material).ToArray();
             playerColliders = player.GetComponentsInChildren<Collider>();
@@ -49,6 +49,7 @@ namespace Assets.Scripts.Util.Cameras
             ceilingRenderer.enabled = false;
         }
 
+        [UsedImplicitly]
         void Update()
         {
             if (waitingToTurnOnCeiling)
@@ -109,7 +110,6 @@ namespace Assets.Scripts.Util.Cameras
 
         private void FadeOutFinished()
         {
-            playerNameStateVisualizer.SetNameTagHidden(true);
             SetRenderersEnabled(false);
         }
 
@@ -118,8 +118,6 @@ namespace Assets.Scripts.Util.Cameras
             var cameraFollow = GetComponent<CameraFollow>();
             var cameraFollowPosition = cameraFollow.GetNextCameraPosition(false);
             var cameraFollowRotation = cameraFollow.GetFollowRotation();
-
-            playerNameStateVisualizer.SetNameTagHidden(false);
 
             foreach (var fadeTweener in fadeTweeners)
             {
