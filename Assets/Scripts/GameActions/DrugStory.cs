@@ -69,7 +69,7 @@ namespace Assets.Scripts.GameActions
          *      Day 1
          * */
         #region Day 1
-        public static ActionSequence DrugPusherIntro(Entity drugPusher)
+        private static ActionSequence DrugPusherIntro(Entity drugPusher)
         {
             var sequence = new ActionSequence("DrugPusherIntro");
             sequence.Add(new OnActionStatusDecorator(

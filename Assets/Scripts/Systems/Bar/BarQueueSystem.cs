@@ -13,6 +13,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.GameActions.Composite;
 using UnityEngine;
 using Assets.Scripts.GameActions.Framework;
+using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.Systems.Bar
 {
@@ -98,7 +99,7 @@ namespace Assets.Scripts.Systems.Bar
 
         public void OnEntityAdded(Entity entity)
         {
-            if (entity.GetState<PrefabState>().PrefabName != Prefabs.Player && entity.GetState<NameState>().Name != "Expendable")
+            if (entity.GetState<PrefabState>().PrefabName != Prefabs.Player && entity.GetState<NameState>().Name != NPCName.Expendable.ToString())
             {
                 allCharacters.Add(entity);
             }

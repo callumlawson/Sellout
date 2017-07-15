@@ -5,6 +5,7 @@ using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
+using Assets.Scripts.Util.NPC;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -62,7 +63,7 @@ namespace Assets.Scripts.Util
                     person.GetState<PositionState>().Teleport(BehindBarLocation().position);
                     person.GetState<RotationState>().Teleport(BehindBarLocation().rotation);
                 }
-                else if (person.HasState<NameState>() && person.GetState<NameState>().Name == "Expendable")
+                else if (person.HasState<NameState>() && person.GetState<NameState>().Name == NPCName.Expendable.ToString())
                 {
                     person.GetState<PositionState>().Teleport(RandomHallwayEndLocation());
                 }
