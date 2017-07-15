@@ -1,29 +1,29 @@
-﻿using UnityEngine;
+﻿using Assets.Framework.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.Util.NPC
 {
     public enum FaceType
     {
         None,
-        Bartender,
-        Q,
-        Tolstoy,
-        Jannet,
-        McGraw,
-        Ellie
+        Face_Bartender,
+        Face_Q,
+        Face_Tolstoy,
+        Face_Jannet,
+        Face_McGraw,
+        Face_Ellie
     }
 
     class FaceUtil
     {
-        public static Material GetFaceMaterial(FaceType type)
+        public static Face GetFace(FaceType type)
         {
             if (type == FaceType.None)
             {
                 return null;
             }
 
-            var path = "NPCs/Faces/Materials/Face_" + type;
-            return Resources.Load<Material>(path);
+            return AssetLoader.LoadScriptableObjectAsset<Face>(type.ToString());
         }
     }
 }

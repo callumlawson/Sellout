@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using Assets.Framework.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.Util.NPC
 {
     public enum HairType
     {
         None,
-        Bartender,
-        Q,
-        Tolstoy,
-        Jannet,
-        McGraw,
-        Ellie
+        Hair_Bartender,
+        Hair_Q,
+        Hair_Tolstoy,
+        Hair_Jannet,
+        Hair_McGraw,
+        Hair_Ellie
     }
 
     class HairUtil
@@ -22,9 +23,7 @@ namespace Assets.Scripts.Util.NPC
                 return null;
             }
 
-            var path = "NPCs/Hair/Hair_" + type;
-            var resource = Resources.Load<Hair>(path);
-            return Object.Instantiate(resource);
+            return AssetLoader.LoadScriptableObjectAsset<Hair>(type.ToString());
         }
     }
 }
