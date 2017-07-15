@@ -115,14 +115,15 @@ namespace Assets.Scripts.GameActions
                    {
                        if (retry) //If retry is true then you are stuck until you don't fail.
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkPredicate, 90, true, correctDrinkConversation, incorrectDrinkConversation));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkPredicate, 99999, true, correctDrinkConversation, incorrectDrinkConversation));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation()));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
                        }
                        else
                        {
                            if (incorrectDrinkConversation == null)
                            {
-                               var random = UnityEngine.Random.Range(0, 1.0f);
+                               var random = Random.Range(0, 1.0f);
 
                                if (random <= 0.1f)
                                {

@@ -3,9 +3,7 @@ using DG.Tweening;
 using Assets.Framework.States;
 using Assets.Scripts.States;
 using System.Linq;
-using System;
 using System.Collections.Generic;
-using Assets.Scripts.Visualizers;
 using JetBrains.Annotations;
 
 namespace Assets.Scripts.Util.Cameras
