@@ -27,7 +27,7 @@ namespace Assets.Scripts.Visualizers.NPCs
             }
 
             var faceState = entity.GetState<FaceState>();
-            var face = FaceUtil.GetFaceMaterial(faceState.face);
+            var face = FaceUtil.GetFace(faceState.face);
             if (face != null)
             {
                 var faceVisualizer = GetComponentInChildren<FaceVisualizer>();

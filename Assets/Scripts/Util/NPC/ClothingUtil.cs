@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Util.NPCVisuals;
+﻿using Assets.Framework.Util;
+using Assets.Scripts.Util.NPCVisuals;
 using UnityEngine;
 
 namespace Assets.Scripts.Util.NPC
@@ -23,19 +24,12 @@ namespace Assets.Scripts.Util.NPC
     {
         public static ClothingTop GetClothingAsset(ClothingTopType top)
         {
-            return GetClothingAsset<ClothingTop>(top.ToString());
+            return AssetLoader.LoadScriptableObjectAsset<ClothingTop>(top.ToString());
         }
 
         public static ClothingBottom GetClothingAsset(ClothingBottomType bottom)
         {
-            return GetClothingAsset<ClothingBottom>(bottom.ToString());
-        }
-
-        private static T GetClothingAsset<T>(string type) where T : ScriptableObject
-        {
-            var path = "NPCs/Clothing/" + type;
-            var resource = Resources.Load<T>(path);
-            return Object.Instantiate(resource);
-        }
+            return AssetLoader.LoadScriptableObjectAsset<ClothingBottom>(bottom.ToString());
+        }        
     }
 }

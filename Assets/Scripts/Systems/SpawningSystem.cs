@@ -139,8 +139,8 @@ namespace Assets.Scripts.Systems
                 new DialogueOutcomeState(),
                 new PersonAnimationState(),
                 new ClothingState(ClothingTopType.BartenderTop, ClothingBottomType.BartenderBottom),
-                new HairState(HairType.Bartender),
-                new FaceState(FaceType.Bartender),
+                new HairState(HairType.Hair_Bartender),
+                new FaceState(FaceType.Face_Bartender),
                 new IsPersonState(),
                 new InteractiveState()
             }, false);

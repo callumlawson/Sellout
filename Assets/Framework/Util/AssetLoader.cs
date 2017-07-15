@@ -6,6 +6,7 @@ namespace Assets.Framework.Util
     public static class AssetLoader
     {
         private static readonly AssetIndexObject AssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.AssetIndexObject") as AssetIndexObject;
+        private static readonly ScriptableObjectsAssetIndexObject ScriptableAssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.ScriptableObjectsAssetIndexObject") as ScriptableObjectsAssetIndexObject;
 
         public static GameObject LoadAsset(string prefabName)
         {
@@ -16,6 +17,18 @@ namespace Assets.Framework.Util
                 throw new Exception("Tried to load prefab named '" + prefabName + "' from path " + resolvedPath + " but failed.");
             }
             return prefabToSpawn;
+        }
+
+        public static T LoadScriptableObjectAsset<T>(string assetName) where T : ScriptableObject
+        {
+            if (ScriptableAssetIndexObject.AssetNames.Contains(assetName))
+            {
+                var index = ScriptableAssetIndexObject.AssetNames.IndexOf(assetName);
+                var path = ScriptableAssetIndexObject.AssetPaths[index];
+                var resource = Resources.Load<T>(path);
+                return UnityEngine.Object.Instantiate(resource);
+            }
+            throw new Exception("Tried to resolve scriptable object with name: " + assetName + " but it was not in the asset index. Try re-indexing? Tools -> Rebuild Asset Index");
         }
 
         private static string ResolvePrefabPathFromIndex(string prefabName)
