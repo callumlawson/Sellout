@@ -78,6 +78,7 @@ namespace Assets.Scripts.GameActions
                     switch (drugPusher.GetState<ActionBlackboardState>().ReceivedItemResponse) {
                         case ActionBlackboardState.ReceiveItemDecisionResponse.GaveBack:
                             DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedConversation());
+                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, new DestoryEntityInInventoryAction());
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.ThrewOut:
                             DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedStronlyConversation());
@@ -87,6 +88,7 @@ namespace Assets.Scripts.GameActions
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.GaveOtherItem:
                             DoAcceptActionSequence(drugPusher, new DrugPusherOfferAcceptedWithGiftConversation());
+                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, new DestoryEntityInInventoryAction());
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.None:
                             Debug.LogError("Somehow the response to the drug offer was was none.");
