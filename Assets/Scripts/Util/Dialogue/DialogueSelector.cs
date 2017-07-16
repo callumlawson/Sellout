@@ -75,7 +75,7 @@ namespace Assets.Scripts.Util.Dialogue
                 var jobTypeString = data[i]["Job"] as string;
                 var alcoholicRequiredString = data[i]["Alcoholic"] as string;
 
-                DialogueOutcome dialogueOutcome = dialogueOutcome = dialogueOutcomeString.Length == 0 ? dialogueOutcome = DialogueOutcome.Default : (DialogueOutcome)System.Enum.Parse(typeof(DialogueOutcome), dialogueOutcomeString);
+                DialogueOutcome dialogueOutcome = dialogueOutcomeString.Length == 0 ? dialogueOutcome = DialogueOutcome.Default : (DialogueOutcome)System.Enum.Parse(typeof(DialogueOutcome), dialogueOutcomeString);
                 SpeciesType species = speciesTypeString.Length == 0 ? species = SpeciesType.None : (SpeciesType)System.Enum.Parse(typeof(SpeciesType), data[i]["Species"] as string);
                 JobType job = jobTypeString.Length == 0 ? job = JobType.None : (JobType)System.Enum.Parse(typeof(JobType), data[i]["Job"] as string);
                 Required alcoholRequired = alcoholicRequiredString.Length == 0 ? Required.None : (Required)System.Enum.Parse(typeof(Required), data[i]["Alcoholic"] as string);

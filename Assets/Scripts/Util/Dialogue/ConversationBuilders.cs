@@ -77,7 +77,7 @@ namespace Assets.Scripts.Util.Dialogue
 
         protected override void StartConversation(string converstationInitiator)
         {
-            DialogueSystem.Instance.StartDialogue(converstationInitiator, 1.5f, EndConversation(DialogueOutcome.Default));
+            DialogueSystem.Instance.StartDialogue(converstationInitiator, 1.5f, EndConversation(outcome));
             foreach (var line in lines)
             {
                 DialogueSystem.Instance.WriteNPCLine(line);
