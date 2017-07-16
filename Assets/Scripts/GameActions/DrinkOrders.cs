@@ -20,7 +20,8 @@ namespace Assets.Scripts.GameActions
         {
             Exact,
             NonAlcoholic,
-            ContainingIngredient
+            ContainingIngredient,
+            ExcludingIngredient
         }
 
         public abstract class DrinkOrder
@@ -67,39 +68,61 @@ namespace Assets.Scripts.GameActions
             }
         }
 
-        public class IncludingIngredientOrder : DrinkOrder
+        private class IncludingIngredientOrder : DrinkOrder
         {
-            public readonly Ingredient Ingredient;
+            private readonly Ingredient ingredient;
 
             public IncludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ContainingIngredient)
             {
-                Ingredient = ingredient;
+                this.ingredient = ingredient;
                 OrdererName = ordererName;
-                DrinkPredicate = testDrink => testDrink.ContainsIngedient(Ingredient) && DrinkRecipes.Contains(testDrink);
+                DrinkPredicate = testDrink => testDrink.ContainsIngedient(this.ingredient) && DrinkRecipes.Contains(testDrink);
             }
 
             public override string ToString()
             {
-                return "With " + Ingredient;
+                return "With " + ingredient;
+            }
+        }
+
+        private class ExcludingIngredientOrder : DrinkOrder
+        {
+            private readonly Ingredient ingredient;
+
+            public ExcludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ExcludingIngredient)
+            {
+                this.ingredient = ingredient;
+                OrdererName = ordererName;
+                DrinkPredicate = testDrink => !testDrink.ContainsIngedient(this.ingredient) && (DrinkRecipes.Contains(testDrink) || Equals(testDrink, DrinkRecipes.Beer.Contents));
+            }
+
+            public override string ToString()
+            {
+                return "Not " + ingredient;
             }
         }
 
         public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 20)
         {
             var randomValue = Random.value;
-            if (randomValue <= 0.25)
+            if (randomValue <= 0.20)
             {
                 var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name);
                 return OrderDrink(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity), orderTimeoutInMins: orderTimeOurInMins);
             }
-            if (randomValue <= 0.50)
+            if (randomValue <= 0.40)
             {
                 return OrderDrink(entity, new NonAlcoholicDrinkOrder(entity.GetState<NameState>().Name), new OrderNonAlcoholicDrinkConversation(), orderTimeoutInMins: orderTimeOurInMins);
             }
-            if (randomValue <= 0.75)
+            if (randomValue <= 0.60)
             {
                 var ingredient = Ingredients.DispensedIngredients.PickRandom();
                 return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeoutInMins: orderTimeOurInMins);
+            }
+            if (randomValue <= 0.80)
+            {
+                var ingredient = Ingredients.DispensedIngredients.PickRandom();
+                return OrderDrink(entity, new ExcludingIngredientOrder(ingredient, entity.GetState<NameState>().Name), new OrderDrinkExcludingIngredientConversation(ingredient), orderTimeoutInMins: orderTimeOurInMins);
             }
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), DialogueSelector.GetExactDrinkOrderConversation("Beer", entity), orderTimeoutInMins: orderTimeOurInMins);
         }
@@ -164,6 +187,24 @@ namespace Assets.Scripts.GameActions
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Give me something containing " + ingredient + ". It's my favourite");
+            }
+        }
+
+
+        private class OrderDrinkExcludingIngredientConversation : Conversation
+        {
+            private readonly Ingredient ingredient;
+
+            public OrderDrinkExcludingIngredientConversation(Ingredient ingredient)
+            {
+                this.ingredient = ingredient;
+            }
+
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue(converstationInitiator);
+                DialogueSystem.Instance.WriteNPCLine("I'll take any drink without " + ingredient + ". Can't stand that stuff.");
+                DialogueSystem.Instance.WriteNPCLine(Random.value > 0.5 ? "Otherwise I'm not fussy." : "I'm basically allergic.");
             }
         }
     }

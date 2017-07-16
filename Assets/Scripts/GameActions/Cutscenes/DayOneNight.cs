@@ -130,7 +130,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 {
                     DialogueSystem.Instance.WriteNPCLine("I know it's late. I'm finishing up, don't worry.");
                     DialogueSystem.Instance.WritePlayerChoiceLine("I'm not in a rush - take your time.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("You have 10 minutes.", EndConversation(DialogueOutcome.Nice));
+                    DialogueSystem.Instance.WritePlayerChoiceLine("You have 10 minutes.", EndConversation(DialogueOutcome.Mean));
                 }
             }
         }
