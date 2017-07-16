@@ -104,11 +104,6 @@ namespace Assets.Scripts.GameActions
         public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 20)
         {
             var randomValue = Random.value;
-            if (randomValue <= 0.80)
-            {
-                var ingredient = Ingredients.DispensedIngredients.PickRandom();
-                return OrderDrink(entity, new ExcludingIngredientOrder(ingredient, entity.GetState<NameState>().Name), new OrderDrinkExcludingIngredientConversation(ingredient), orderTimeoutInMins: orderTimeOurInMins);
-            }
             if (randomValue <= 0.20)
             {
                 var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name);
@@ -123,7 +118,11 @@ namespace Assets.Scripts.GameActions
                 var ingredient = Ingredients.DispensedIngredients.PickRandom();
                 return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeoutInMins: orderTimeOurInMins);
             }
-           
+            if (randomValue <= 0.80)
+            {
+                var ingredient = Ingredients.DispensedIngredients.PickRandom();
+                return OrderDrink(entity, new ExcludingIngredientOrder(ingredient, entity.GetState<NameState>().Name), new OrderDrinkExcludingIngredientConversation(ingredient), orderTimeoutInMins: orderTimeOurInMins);
+            }
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeoutInMins: orderTimeOurInMins);
         }
 
