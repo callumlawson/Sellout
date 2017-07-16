@@ -33,7 +33,7 @@ namespace Assets.Scripts.Util.NPC
 
     public static class NPCS
     {
-        private static List<NPCName> AnonymousNames = new List<NPCName>()
+        private static readonly List<NPCName> AnonymousNames = new List<NPCName>
         {
             NPCName.Diplomat, NPCName.Trader, NPCName.Traveller
         };
@@ -177,7 +177,7 @@ namespace Assets.Scripts.Util.NPC
         {
             return new NpcTemplate
             {
-                Name = GetRandomAnonymousName(),
+                Name = NPCName.Expendable,
                 Face = EnumExtensions.RandomEnumValue<FaceType>(),
                 Hair = EnumExtensions.RandomEnumValue<HairType>(),
                 Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
