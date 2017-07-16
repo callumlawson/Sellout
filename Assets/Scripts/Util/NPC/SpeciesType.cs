@@ -3,6 +3,7 @@
 
     public enum SpeciesType
     {
+        None,
         Human,
         BirdPerson,
         ShadowPerson,

@@ -10,6 +10,7 @@ using Assets.Scripts.Systems;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Random = UnityEngine.Random;
+using Assets.Scripts.Util.NPC;
 
 namespace Assets.Scripts.GameActions
 {
@@ -89,7 +90,7 @@ namespace Assets.Scripts.GameActions
             if (randomValue <= 0.25)
             {
                 var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomDrinkRecipe(), entity.GetState<NameState>().Name);
-                return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeoutInMins: orderTimeOurInMins);
+                return OrderDrink(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity), orderTimeoutInMins: orderTimeOurInMins);
             }
             if (randomValue <= 0.50)
             {
@@ -100,19 +101,19 @@ namespace Assets.Scripts.GameActions
                 var ingredient = Ingredients.DispensedIngredients.PickRandom();
                 return OrderDrink(entity, new IncludingIngredientOrder(ingredient, entity.GetState<NameState>().Name) , new OrderDrinkIncludingIngredientConversation(ingredient) , orderTimeoutInMins: orderTimeOurInMins);
             }
-            return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), new OrderExactDrinkConverstation("Beer"), orderTimeoutInMins: orderTimeOurInMins);
+            return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), DialogueSelector.GetExactDrinkOrderConversation("Beer", entity), orderTimeoutInMins: orderTimeOurInMins);
         }
 
         public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeOurInMins = 20)
         {
             var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
-            return OrderDrink(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), correctDrinkConversation, incorrectDrinkConversation, orderTimeOurInMins);
+            return OrderDrink(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), correctDrinkConversation, incorrectDrinkConversation, orderTimeOurInMins);
         }
 
         public static GameAction GetRandomAlcoholicDrinkOrderWithoutFailure(Entity entity, int orderTimeOurInMins = 20)
         {
             var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
-            return OrderDrinkWithoutFailure(entity, drinkOrder, new OrderExactDrinkConverstation(drinkOrder.Recipe.DrinkName), orderTimeOurInMins);
+            return OrderDrinkWithoutFailure(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), orderTimeOurInMins);
         }
 
         public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeoutInMins = 20)
@@ -138,22 +139,6 @@ namespace Assets.Scripts.GameActions
             waitForDrink.Add(CommonActions.WaitForDrinkWithoutFailure(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
             orderDrink.Add(waitForDrink);
             return orderDrink;
-        }
-
-        public class OrderExactDrinkConverstation : Conversation
-        {
-            private readonly string drinkName;
-
-            public OrderExactDrinkConverstation(string drinkName)
-            {
-                this.drinkName = drinkName;
-            }
-
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("I'd like a " + drinkName + " please.");
-            }
         }
 
         private class OrderNonAlcoholicDrinkConversation : Conversation

@@ -5,6 +5,7 @@ using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using UnityEngine;
 using Assets.Scripts.States.AI;
+using Assets.Scripts.States.NPC;
 
 namespace Assets.Scripts.Util.NPC
 {
@@ -39,150 +40,88 @@ namespace Assets.Scripts.Util.NPC
         };
 
         public static NpcTemplate Q = new NpcTemplate
-        {
-            Name = NPCName.Q,
-            Face = FaceType.Face_Q,
-            Hair = HairType.Hair_Q,
-            Top = ClothingTopType.UniformTopRed,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+        (
+            name: NPCName.Q,
+            species: SpeciesType.Human,
+            job: JobType.Crew,                                                          // TODO: make Q a drug dealer
+            face: FaceType.Face_Q,
+            hair: HairType.Hair_Q,
+            top: ClothingTopType.UniformTopRed,
+            bottom: ClothingBottomType.UniformBottom
+        );
 
         public static NpcTemplate Tolstoy = new NpcTemplate
-        {
-            Name = NPCName.Tolstoy,
-            Face = FaceType.Face_Tolstoy,
-            Hair = HairType.Hair_Tolstoy,
-            Top = ClothingTopType.UniformTopBlue,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+        (
+            name: NPCName.Tolstoy,
+            species: SpeciesType.Human,
+            job: JobType.Crew,
+            face: FaceType.Face_Tolstoy,
+            hair: HairType.Hair_Tolstoy,
+            top: ClothingTopType.UniformTopBlue,
+            bottom: ClothingBottomType.UniformBottom
+        );
 
         public static NpcTemplate Jannet = new NpcTemplate
-        {
-            Name = NPCName.Jannet,
-            Face = FaceType.Face_Jannet,
-            Hair = HairType.Hair_Jannet,
-            Top = ClothingTopType.UniformTopRed,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+        (
+            name: NPCName.Jannet,
+            species: SpeciesType.Human,
+            job: JobType.Crew,
+            face: FaceType.Face_Jannet,
+            hair: HairType.Hair_Jannet,
+            top: ClothingTopType.UniformTopRed,
+            bottom: ClothingBottomType.UniformBottom
+        );
 
         public static NpcTemplate McGraw = new NpcTemplate
-        {
-            Name = NPCName.McGraw,
-            Face = FaceType.Face_McGraw,
-            Hair = HairType.Hair_McGraw,
-            Top = ClothingTopType.UniformTopOrange,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+        (
+            name: NPCName.McGraw,
+            species: SpeciesType.Human,
+            job: JobType.Crew,
+            face: FaceType.Face_McGraw,
+            hair: HairType.Hair_McGraw,
+            top: ClothingTopType.UniformTopOrange,
+            bottom: ClothingBottomType.UniformBottom
+        );
 
         public static NpcTemplate Ellie = new NpcTemplate
-        {
-            Name = NPCName.Ellie,
-            Face = FaceType.Face_Ellie,
-            Hair = HairType.Hair_Ellie,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Jonathan = new NpcTemplate
-        {
-            Name = NPCName.Jonathan,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Gregory = new NpcTemplate
-        {
-            Name = NPCName.Gregory,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Walter = new NpcTemplate
-        {
-            Name = NPCName.Walter,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Mary = new NpcTemplate
-        {
-            Name = NPCName.Mary,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Laura = new NpcTemplate
-        {
-            Name = NPCName.Laura,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
-
-        public static NpcTemplate Casey = new NpcTemplate
-        {
-            Name = NPCName.Casey,
-            Face = FaceType.None,
-            Hair = HairType.None,
-            Top = ClothingTopType.UniformTopGreen,
-            Bottom = ClothingBottomType.UniformBottom
-        };
+        (
+            name: NPCName.Ellie,
+            species: SpeciesType.Human,
+            job: JobType.Crew,
+            face: FaceType.Face_Ellie,
+            hair: HairType.Hair_Ellie,
+            top: ClothingTopType.UniformTopGreen,
+            bottom: ClothingBottomType.UniformBottom
+        );        
 
         public static NpcTemplate GenerateAnon(SpeciesType species)
         {
+            var job = JobTypeUtil.GetRandomNonCrewJobType();
+            var name = (NPCName)System.Enum.Parse(typeof(NPCName), job.ToString());
             return new NpcTemplate
-            {
-                Name = GetRandomAnonymousName(),
-                Face = FaceUtil.GetRandomFace(species),
-                Hair = HairUtil.GetRandomHiar(species),
-                Top = ClothingUtil.GetRandomTop(species),
-                Bottom = ClothingUtil.GetRandomBottom(species)
-            };
-        }
-
-        public static NpcTemplate GenerateBirdPerson()
-        {
-            return new NpcTemplate
-            {
-                Name = GetRandomAnonymousName(),
-                Face = FaceType.Face_BirdPerson,
-                Hair = HairType.None,
-                Top = ClothingTopType.BirdPersonTop,
-                Bottom = ClothingBottomType.BirdPersonBottom
-            };
-        }
-
-        public static NpcTemplate GenerateShadowPerson()
-        {
-            return new NpcTemplate
-            {
-                Name = GetRandomAnonymousName(),
-                Face = FaceType.Face_ShadowPerson,
-                Hair = HairType.None,
-                Top = ClothingTopType.ShadowPersonTop,
-                Bottom = ClothingBottomType.ShadowPersonBottom
-            };
+            (
+                name: name,
+                species: species,
+                job: job,
+                face: FaceUtil.GetRandomFace(species),
+                hair: HairUtil.GetRandomHiar(species),
+                top: ClothingUtil.GetRandomTop(species),
+                bottom: ClothingUtil.GetRandomBottom(species)
+            );
         }
 
         public static NpcTemplate GenerateHallwayWalker()
         {
             return new NpcTemplate
-            {
-                Name = NPCName.Expendable,
-                Face = EnumExtensions.RandomEnumValue<FaceType>(),
-                Hair = EnumExtensions.RandomEnumValue<HairType>(),
-                Top = EnumExtensions.RandomEnumValue<ClothingTopType>(),
-                Bottom = EnumExtensions.RandomEnumValue<ClothingBottomType>()
-            };
+            (
+                name: NPCName.Expendable,
+                species: SpeciesType.Human,
+                job: JobType.None,
+                face: EnumExtensions.RandomEnumValue<FaceType>(),
+                hair: EnumExtensions.RandomEnumValue<HairType>(),
+                top: EnumExtensions.RandomEnumValue<ClothingTopType>(),
+                bottom: EnumExtensions.RandomEnumValue<ClothingBottomType>()
+            );
         }
 
         public static Entity SpawnNpc(EntityStateSystem entitySystem, NpcTemplate npcTemplate, Vector3 position)
@@ -206,7 +145,9 @@ namespace Assets.Scripts.Util.NPC
                 new HairState(npcTemplate.Hair),
                 new FaceState(npcTemplate.Face),
                 new LifecycleState(),
-                new InteractiveState()
+                new InteractiveState(),
+                new SpeciesState(npcTemplate.Species),
+                new JobState(npcTemplate.Job)
             });
         }
 
@@ -220,18 +161,23 @@ namespace Assets.Scripts.Util.NPC
     public struct NpcTemplate
     {
         public NPCName Name;
+        public SpeciesType Species;
+        public JobType Job;
         public FaceType Face;
         public HairType Hair;
         public ClothingTopType Top;
         public ClothingBottomType Bottom;
 
-        public NpcTemplate(NPCName name, FaceType face, HairType hair, ClothingTopType top, ClothingBottomType bottom) : this()
+        public NpcTemplate(NPCName name, SpeciesType species, JobType job, FaceType face, HairType hair, ClothingTopType top, ClothingBottomType bottom) : this()
         {
+            Name = name;
+            Species = species;
+            Job = job;
+
             Top = top;
             Bottom = bottom;
             Hair = hair;
             Face = face;
-            Name = name;
         }
     }
 }

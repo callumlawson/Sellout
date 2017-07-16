@@ -114,11 +114,9 @@ namespace Assets.Scripts.Systems
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
+            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.Human), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.BirdPerson), spawnPointPosition);
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateAnon(SpeciesType.ShadowPerson), spawnPointPosition);
-
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateBirdPerson(), spawnPointPosition);
-            NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateShadowPerson(), spawnPointPosition);
             
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());
             NPCS.SpawnNpc(entityStateSystem, NPCS.GenerateHallwayWalker(), Locations.RandomHallwayEndLocation());

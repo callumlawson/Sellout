@@ -34,6 +34,30 @@ namespace Assets.Scripts.Util.Dialogue
         }
     }
 
+    public class WaitConversation : Conversation
+    {
+        private string[] lines;
+
+        public WaitConversation(string line)
+        {
+            this.lines = new string[] { line };
+        }
+
+        public WaitConversation(string[] lines)
+        {
+            this.lines = lines;
+        }
+
+        protected override void StartConversation(string converstationInitiator)
+        {
+            DialogueSystem.Instance.StartDialogue(converstationInitiator);
+            foreach (var line in lines)
+            {
+                DialogueSystem.Instance.WriteNPCLine(line);
+            }
+        }
+    }
+
     public class NoResponseConversation : Conversation
     {
         private string[] lines;

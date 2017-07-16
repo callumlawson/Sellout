@@ -1,0 +1,22 @@
+Line,Dialogue Outcome,Species,Job,Alcoholic
+"I'd like a {0}, please.",,Human,,
+Can I get a {0}?,,Human,,
+One {0}.,,Human,,
+"A {0}, please.",,Human,,
+"What a day. One {0}, please.",,Human,,
+Am I glad to see you. One {0} if you could.,,Human,,
+I've had a long shift. Get me a {0}.,,Human,Crew,Yes
+My favorite crewmember. Can I get a {0}?,,Human,Crew,
+"Good to see you. One {0}, please.",,Human,Crew,
+"Hey friend, can I get a {0}?",,Human,Crew,
+"My favorite place on the ship. One {0}, please.",,Human,Crew,
+Hello. Please serve me a {0}.,,ShadowPerson,,
+"Hello, human. Please serve me a {0}.",,ShadowPerson,,
+I am in need of alcohol. Please serve me a {0}.,,ShadowPerson,,Yes
+Please serve me a {0}.,,ShadowPerson,,
+Please serve me a {0}. Thank you.,,ShadowPerson,,
+Hello! I would like to try some of your human alcohol in a {0}!,,BirdPerson,,Yes
+"Well met! One {0}, please! Thank you!",,BirdPerson,,
+"Wow, great bar! I would like a {0}, please!",,BirdPerson,,
+"Good evening! One {0}, please!",,BirdPerson,,
+"I would like a {0}, please! Thank you so much!",,BirdPerson,,
