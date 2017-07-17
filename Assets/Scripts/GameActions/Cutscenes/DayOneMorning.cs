@@ -150,7 +150,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("As you're new I'll give you some advice. Watch out for Q.");
                 DialogueSystem.Instance.WriteNPCLine("He and Dave got up to all sorts of trouble and I don't want that with you.");
                 DialogueSystem.Instance.WriteNPCLine("Now that you are here, perhaps I can have some peace and quiet!");
-                DialogueSystem.Instance.WriteNPCLine("See you around.");
+                DialogueSystem.Instance.WriteNPCLine("To open the bar you need to let the crew know.");
+                DialogueSystem.Instance.WriteNPCLine("The coms console is on the right of the door.");
+                DialogueSystem.Instance.WriteNPCLine("See you around!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Until next time.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Say nothing</i>", EndConversation(DialogueOutcome.Default));
             }
@@ -207,8 +209,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("When it's time to open the bar you need to let the crew know.");
-                DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right inform the ship's computer you are ready.");
+                DialogueSystem.Instance.WriteNPCLine("Don't forget, to open the bar you need to let the crew know.");
+                DialogueSystem.Instance.WriteNPCLine("Use the blue panel to my right.");
                 DialogueSystem.Instance.WriteNPCLine("Good luck!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Thanks.", EndConversation(DialogueOutcome.Default));
             }
