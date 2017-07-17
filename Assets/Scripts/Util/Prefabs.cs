@@ -51,5 +51,17 @@ namespace Assets.Scripts.Util
             DispensingBottle,
             IngredientDispenser
         };
+
+        public static readonly List<string> CubbyPlaceablePrefabs = new List<string>
+        {
+            Drugs
+        };
+
+        public static readonly List<string> SurfacePlaceablePrefabs = new List<string>
+        {
+            Drink,
+            Beer,
+            DispensingBottle
+        };
     }
 }

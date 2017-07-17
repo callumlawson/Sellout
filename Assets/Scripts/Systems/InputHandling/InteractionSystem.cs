@@ -5,7 +5,6 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
-using UnityEngine;
 
 namespace Assets.Scripts.Systems.InputHandling
 {
@@ -36,6 +35,32 @@ namespace Assets.Scripts.Systems.InputHandling
             var entityName = entity.GetState<PrefabState>().PrefabName;
             var interactiveState = entity.GetState<InteractiveState>();
 
+            if (playerState.Player.GetState<InventoryState>().Child != null &&
+                playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle)
+            {
+                interactiveState.CurrentlyInteractive = entityName == Prefabs.Drink || entityName == Prefabs.DrinkSurface;
+                return;
+            }
+
+            if (playerState.Player.GetState<InventoryState>().Child != null &&
+                playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName == Prefabs.Drink)
+            {
+                interactiveState.CurrentlyInteractive = entityName == Prefabs.IngredientDispenser || 
+                                                        entityName == Prefabs.DrinkSurface ||
+                                                        entityName == Prefabs.Person ||
+                                                        entityName == Prefabs.Washup;
+                return;
+            }
+
+            if (playerState.Player.GetState<InventoryState>().Child != null &&
+                playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName == Prefabs.Drugs)
+            {
+                interactiveState.CurrentlyInteractive = entityName == Prefabs.Washup ||
+                                                        entityName == Prefabs.Cubby ||
+                                                        entityName == Prefabs.Person;
+                return;
+            }
+
             if (entity.HasState<IsPersonState>() && entity.HasState<ConversationState>())
             {
                 interactiveState.CurrentlyInteractive = 
@@ -55,9 +80,35 @@ namespace Assets.Scripts.Systems.InputHandling
             {
                 interactiveState.CurrentlyInteractive = playerState.PlayerStatus != PlayerStatus.Bar;
             }
+            if (entityName == Prefabs.IngredientDispenser)
+            {
+                interactiveState.CurrentlyInteractive = 
+                    playerState.Player.GetState<InventoryState>().Child != null &&
+                    playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName == Prefabs.Drink;
+            }
             if (entityName == Prefabs.Washup)
             {
                 interactiveState.CurrentlyInteractive = playerState.Player.GetState<InventoryState>().Child != null;
+            }
+            if (entityName == Prefabs.Cubby)
+            {
+                interactiveState.CurrentlyInteractive =
+                    (playerState.Player.GetState<InventoryState>().Child == null && 
+                    entity.GetState<InventoryState>().Child != null) ||
+                    (playerState.Player.GetState<InventoryState>().Child != null && 
+                    Prefabs.CubbyPlaceablePrefabs.Contains(playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName));
+            }
+            if (entityName == Prefabs.ReceiveSpot)
+            {
+                interactiveState.CurrentlyInteractive = 
+                    entity.GetState<InventoryState>().Child != null && 
+                    playerState.Player.GetState<InventoryState>().Child == null;
+            }
+            if (entityName == Prefabs.DrinkSurface)
+            {
+                interactiveState.CurrentlyInteractive =
+                    playerState.Player.GetState<InventoryState>().Child != null &&
+                    Prefabs.SurfacePlaceablePrefabs.Contains(playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName);
             }
         }
     }

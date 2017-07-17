@@ -28,20 +28,20 @@ namespace Assets.Scripts.Systems.InputHandling
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray, out hit, 200))
             {
                 var objectHit = hit.collider.gameObject;
                 if (objectHit.GetEntityId() != EntityIdComponent.InvalidEntityId)
                 {
                     var nowSelectedEntity = entitySystem.GetEntity(objectHit.GetEntityId());
                     cursorState.DebugEntity = nowSelectedEntity;
-                    if (nowSelectedEntity.HasState<InteractiveState>() && !nowSelectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
+                    if (!nowSelectedEntity.HasState<InteractiveState>() || nowSelectedEntity.GetState<InteractiveState>().CurrentlyInteractive)
                     {
-                        return;
+                        cursorState.SelectedEntity = GetEntitiesInRange().Contains(nowSelectedEntity) ? nowSelectedEntity : null;
                     }
-                    if (GetEntitiesInRange().Contains(nowSelectedEntity))
+                    else
                     {
-                        cursorState.SelectedEntity = nowSelectedEntity;
+                        cursorState.SelectedEntity = null;
                     }
                 }
                 else
@@ -62,7 +62,10 @@ namespace Assets.Scripts.Systems.InputHandling
                 return null;
             }
             var entityIds = colliders.Select(collider => collider.gameObject.GetEntityIdRecursive());
-            var entities = entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId).Select(entityId => entitySystem.GetEntity(entityId)).ToList();
+            var entities =
+                entityIds.Where(entityId => entityId != EntityIdComponent.InvalidEntityId)
+                    .Select(entityId => entitySystem.GetEntity(entityId))
+                    .ToList();
             return entities;
         }
     }

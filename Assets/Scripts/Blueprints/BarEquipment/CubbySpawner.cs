@@ -19,6 +19,7 @@ namespace Assets.Scripts.Blueprints.BarEquipment
                 new RotationState(transform.rotation),
                 new PrefabState(Prefabs.Cubby),
                 new InventoryState(),
+                new InteractiveState(),
                 new VisibleSlotState(),
                 new BarEntityState(),
                 new TooltipState("A spot for placing your items.")

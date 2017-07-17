@@ -285,9 +285,10 @@ namespace Assets.Scripts.Systems.Drinks
 
                 if (selectedEntity == null)
                 {
-                    LerpToHeldItemToPosition(GetNewHeldItemPosition());
+                    LerpToHeldItemToPositionAndRotation(GetNewHeldItemPosition(), Quaternion.identity);
                     return;
                 }
+
                 var selectedPrefabType = selectedEntity.GetState<PrefabState>().PrefabName;
 
                 if (heldPrefabType == Prefabs.DispensingBottle)
