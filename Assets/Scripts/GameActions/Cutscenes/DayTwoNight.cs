@@ -40,7 +40,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             
             //Ellie
             var ellieSequence = new ActionSequence("Ellie night two");
-            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
             ellieSequence.Add(new SetReactiveConversationAction(new EllieNightTwo(ellie.GetState<RelationshipState>()), ellie));
             ellieSequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
