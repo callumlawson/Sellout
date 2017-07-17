@@ -125,8 +125,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.NextPanel();
                 DialogueSystem.Instance.WriteNPCLine("Don't worry, my favorite drink is easy to make.");
-                DialogueSystem.Instance.WriteNPCLine("Just grab that glass and pour three measures of Synthol then a single measure of Vodka.");
-                DialogueSystem.Instance.WriteNPCLine("I can't get my brain going in the morning without it.");
+                DialogueSystem.Instance.WriteNPCLine("Grab a glass from the dispenser on your left and pour me three measures of Synthol and a single measure of Vodka.");
+                DialogueSystem.Instance.WriteNPCLine("I can't get my brain going without it.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I know where to find a glass on my own bar...", EndConversation(DialogueOutcome.Mean));
                 DialogueSystem.Instance.WritePlayerChoiceLine("You drink a glass of basically straight alcohol for breakfast?", Problem);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Coming right up!", EndConversation(DialogueOutcome.Nice));
             }
@@ -137,7 +138,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("Problem with that?");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I guess not. Coming right up.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("It's your liver.", EndConversation(DialogueOutcome.Mean));
-                DialogueSystem.Instance.WriteNPCLine("<i>Click on the bar to get started...</i>");
             }
         }
 
