@@ -196,12 +196,16 @@ namespace Assets.Scripts.Systems
                     person.GetState<LifecycleState>().status = LifecycleState.LifecycleStatus.Offscreen;
                 }
             });
-            people.ForEach(person => RemoveInventoryItem(person));
+            people.ForEach(RemoveInventoryItem);
             Locations.ResetPeopleToSpawnPoints(people);
         }
         
-        private void RemoveInventoryItem(Entity entity)
+        private static void RemoveInventoryItem(Entity entity)
         {
+            if(entity.HasState<IsPlayerState>())
+            {
+                return;
+            }
             var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null)
             {
