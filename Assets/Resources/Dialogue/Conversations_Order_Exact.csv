@@ -15,8 +15,26 @@ Hello. Please serve me a {0}.,,ShadowPerson,,
 I am in need of alcohol. Please serve me a {0}.,,ShadowPerson,,Yes
 Please serve me a {0}.,,ShadowPerson,,
 Please serve me a {0}. Thank you.,,ShadowPerson,,
+Business was hard today. I require alcohol. Please serve me a {0}.,,ShadowPerson,Trader,Yes
+I succeeded in many transactions today. Now I will celebrate. Please serve me a {0}.,,ShadowPerson,Trader,Yes
+I hope your business is going well. Please serve me a {0}.,,ShadowPerson,Trader,
+I am pleased with the negotiations. Please serve me a {0}.,,ShadowPerson,Diplomat,
+Your friends are skilled negotiators. Please serve me a {0}.,,ShadowPerson,Diplomat,
+The human negotiators are very excitable. Please serve me a {0}.,,ShadowPerson,Diplomat,
+This is a satisfactory ship for my journey. Please serve me a {0}.,,ShadowPerson,Traveller,
+This journey is long. I require alcohol. Please serve me a {0}.,,ShadowPerson,Traveller,Yes
+I am please to be getting home. Please serve me a {0}.,,ShadowPerson,Traveller,
 Hello! I would like to try some of your human alcohol in a {0}!,,BirdPerson,,Yes
 "Well met! One {0}, please! Thank you!",,BirdPerson,,
 "Wow, great bar! I would like a {0}, please!",,BirdPerson,,
 "Good evening! One {0}, please!",,BirdPerson,,
 "I would like a {0}, please! Thank you so much!",,BirdPerson,,
+Business was great today! One {0} please to celebrate!,,BirdPerson,Trader,Yes
+Tough day today! I'd love a {0} please!,,BirdPerson,Trader,
+"Us business people should stick together! I'll have a {0}, please!",,BirdPerson,Trader,
+"I love negotiating with humans! They're so intriguing! One {0} please, human!",,BirdPerson,Diplomat,
+"Humans are so tricky, it's fun! One {0}, please!",,BirdPerson,Diplomat,
+"Today was so harmonious! I would like a {0}, please!",,BirdPerson,Diplomat,
+"I'm on a great journey! I'd like a {0}, please!",,BirdPerson,Traveller,
+Travelling through the stars is so great! One {0} please!,,BirdPerson,Traveller,
+I hope your journey is as great as mine! One {0} if you could!,,BirdPerson,Traveller,
