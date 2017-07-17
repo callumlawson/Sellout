@@ -139,7 +139,7 @@ namespace Assets.Scripts.GameActions
             return OrderDrinkWithoutFailure(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), orderTimeOurInMins);
         }
 
-        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeoutInMins = 20)
+        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeoutInMins = 40)
         {
             var wrapper = new ActionSequence("DrinkOrderThenClear");
             var orderDrink = new ParallelUntilAllCompleteAction("OrderDrink");
