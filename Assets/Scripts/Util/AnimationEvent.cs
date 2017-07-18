@@ -6,6 +6,9 @@
         SittingFinishTrigger,
         ChairTalk1Trigger,
         ItemTakeTrigger,
-        ItemRecieveTrigger
+        ItemRecieveTrigger,
+        Cheer1Trigger,
+        Cheer2Trigger,
+        Cheer3Trigger
     }
 }

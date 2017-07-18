@@ -3,20 +3,21 @@ using System.Linq;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
 using Assets.Scripts.States;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 
 namespace Assets.Scripts.Visualizers
 {
-    class AnimationController : MonoBehaviour, IEntityVisualizer
+    [UsedImplicitly]
+    public class AnimationController : MonoBehaviour, IEntityVisualizer
     {
         private NavMeshAgent agent;
         private Animator animator;
 
         private PersonAnimationState personAnimationState;
         private Rigidbody ourRigidbody;
-        private bool isPlayer;
         private Entity entity;
 
         public void OnStartRendering(Entity entity)
@@ -42,6 +43,7 @@ namespace Assets.Scripts.Visualizers
             animator.SetTrigger(animationEvent.ToString());
         }
 
+        [UsedImplicitly]
         public void FixedUpdate()
         {
             if (entity.HasState<IsPlayerState>() && ourRigidbody == null)
