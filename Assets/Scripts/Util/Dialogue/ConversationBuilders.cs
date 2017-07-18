@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Systems;
-using UnityEngine;
 
 namespace Assets.Scripts.Util.Dialogue
 {

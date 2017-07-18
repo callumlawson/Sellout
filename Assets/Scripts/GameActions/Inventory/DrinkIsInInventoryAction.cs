@@ -4,6 +4,7 @@ using Assets.Framework.States;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.GameActions.Inventory
 {
@@ -13,11 +14,11 @@ namespace Assets.Scripts.GameActions.Inventory
         private GameTime startTime;
         private TimeState timeState;
 
-        private Func<DrinkState, bool> drinkPredicate;
+        private DrinkOrders.DrinkOrder drinkOrder;
 
-        public DrinkIsInInventoryAction(Func<DrinkState, bool> drinkPredicate, int timeoutInMins)
+        public DrinkIsInInventoryAction(DrinkOrders.DrinkOrder drinkOrder, int timeoutInMins)
         {
-            this.drinkPredicate = drinkPredicate;
+            this.drinkOrder = drinkOrder;
             this.timeoutInMins = timeoutInMins;
         }
 
@@ -32,7 +33,12 @@ namespace Assets.Scripts.GameActions.Inventory
             var inventoryItem = entity.GetState<InventoryState>().Child;
             if (inventoryItem != null && inventoryItem.HasState<DrinkState>())
             {
-                ActionStatus = drinkPredicate.Invoke(inventoryItem.GetState<DrinkState>()) ? ActionStatus.Succeeded : ActionStatus.Failed;
+                IncorrectDrinkReason reason;
+                var success = drinkOrder.IsValidForOrder(inventoryItem.GetState<DrinkState>(), out reason);
+
+                entity.GetState<ActionBlackboardState>().IncorrectDrinkReason = reason;
+                ActionStatus = success ? ActionStatus.Succeeded : ActionStatus.Failed;
+                
             }
             if (timeState.GameTime - startTime > timeoutInMins)
             {

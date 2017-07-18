@@ -11,6 +11,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Random = UnityEngine.Random;
 using Assets.Scripts.Util.NPC;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.GameActions
 {
@@ -18,6 +19,7 @@ namespace Assets.Scripts.GameActions
     {
         public enum DrinkOrderType
         {
+            AkwaysSucceeds,
             Exact,
             NonAlcoholic,
             ContainingIngredient,
@@ -29,11 +31,54 @@ namespace Assets.Scripts.GameActions
             public const string OrdererSpecies = "Human";
             public string OrdererName;
             public readonly DrinkOrderType OrderType;
-            public Func<DrinkState, bool> DrinkPredicate;
+            public List<DrinkPredicate> DrinkPredicates;
+            public string OrderedItem;
 
-            protected DrinkOrder(DrinkOrderType orderType)
+            protected DrinkOrder(DrinkOrderType orderType, string orderedItem)
             {
                 OrderType = orderType;
+                OrderedItem = orderedItem;
+            }
+
+            public bool IsValidForOrder(DrinkState drink, out IncorrectDrinkReason reason)
+            {
+                foreach (var predicate in DrinkPredicates)
+                {
+                    var success = predicate.test.Invoke(drink);
+                    if (!success)
+                    {
+                        reason = predicate.failure;
+                        return false;
+                    }
+                }
+
+                reason = IncorrectDrinkReason.None;
+                return true;
+            }
+        }
+
+        public struct DrinkPredicate
+        {
+            public Func<DrinkState, bool> test;
+            public IncorrectDrinkReason failure;
+
+            public DrinkPredicate(Func<DrinkState, bool> test, IncorrectDrinkReason failure)
+            {
+                this.test = test;
+                this.failure = failure;
+            }
+        }
+
+        private static DrinkPredicate GlassHasContents = new DrinkPredicate(drink => drink.GetContents().Count != 0, IncorrectDrinkReason.EmptyGlass);
+        private static DrinkPredicate RecipeExists = new DrinkPredicate(drink => DrinkRecipes.Contains(drink) || Equals(drink, DrinkRecipes.Beer.Contents), IncorrectDrinkReason.RecipeDoesNotExist);
+        private static DrinkPredicate RecipeIsNonAlcoholic = new DrinkPredicate(drink => DrinkState.IsNonAlcoholic(drink), IncorrectDrinkReason.Alcoholic);
+        private static DrinkPredicate RecipeIsAlcoholic = new DrinkPredicate(drink => !DrinkState.IsNonAlcoholic(drink), IncorrectDrinkReason.NonAlcoholic);
+
+        public class AlwaysSucceedsDrinkOrder : DrinkOrder
+        {
+            public AlwaysSucceedsDrinkOrder() : base(DrinkOrderType.AkwaysSucceeds, "NONE")
+            {
+                DrinkPredicates = new List<DrinkPredicate>();
             }
         }
 
@@ -41,11 +86,15 @@ namespace Assets.Scripts.GameActions
         {
             public readonly DrinkRecipe Recipe;
 
-            public ExactDrinkorder(DrinkRecipe recipe, string ordererName) : base(DrinkOrderType.Exact)
+            public ExactDrinkorder(DrinkRecipe recipe, string ordererName) : base(DrinkOrderType.Exact, recipe.DrinkName)
             {
                 Recipe = recipe;
                 OrdererName = ordererName;
-                DrinkPredicate = testDrink => DrinkState.IsIdentical(recipe.Contents, testDrink);
+                DrinkPredicates = new List<DrinkPredicate>()
+                {
+                    GlassHasContents,
+                    new DrinkPredicate(testDrink => DrinkState.IsIdentical(recipe.Contents, testDrink), IncorrectDrinkReason.WrongRecipe)
+                };  
             }
 
             public override string ToString()
@@ -56,10 +105,15 @@ namespace Assets.Scripts.GameActions
 
         public class NonAlcoholicDrinkOrder : DrinkOrder
         {
-            public NonAlcoholicDrinkOrder(string ordererName) : base(DrinkOrderType.NonAlcoholic)
+            public NonAlcoholicDrinkOrder(string ordererName) : base(DrinkOrderType.NonAlcoholic, "NONE")
             {
                 OrdererName = ordererName;
-                DrinkPredicate = testDrink => DrinkState.IsNonAlcoholic(testDrink) && DrinkRecipes.Contains(testDrink);
+                DrinkPredicates = new List<DrinkPredicate>()
+                {
+                    GlassHasContents,
+                    RecipeIsNonAlcoholic,
+                    RecipeExists
+                };
             }
 
             public override string ToString()
@@ -72,11 +126,16 @@ namespace Assets.Scripts.GameActions
         {
             private readonly Ingredient ingredient;
 
-            public IncludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ContainingIngredient)
+            public IncludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ContainingIngredient, ingredient.ToString())
             {
                 this.ingredient = ingredient;
                 OrdererName = ordererName;
-                DrinkPredicate = testDrink => testDrink.ContainsIngedient(this.ingredient) && DrinkRecipes.Contains(testDrink);
+                DrinkPredicates = new List<DrinkPredicate>()
+                {
+                    GlassHasContents,
+                    new DrinkPredicate(testDrink => testDrink.ContainsIngedient(this.ingredient), IncorrectDrinkReason.DoesNotContainIngredient),
+                    RecipeExists
+                };
             }
 
             public override string ToString()
@@ -89,11 +148,17 @@ namespace Assets.Scripts.GameActions
         {
             private readonly Ingredient ingredient;
 
-            public ExcludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ExcludingIngredient)
+            public ExcludingIngredientOrder(Ingredient ingredient, string ordererName) : base(DrinkOrderType.ExcludingIngredient, ingredient.ToString())
             {
                 this.ingredient = ingredient;
                 OrdererName = ordererName;
-                DrinkPredicate = testDrink => !testDrink.ContainsIngedient(this.ingredient) && (DrinkRecipes.Contains(testDrink) || Equals(testDrink, DrinkRecipes.Beer.Contents));
+
+                DrinkPredicates = new List<DrinkPredicate>()
+                {
+                    GlassHasContents,
+                    new DrinkPredicate(testDrink => !testDrink.ContainsIngedient(this.ingredient), IncorrectDrinkReason.ContainsIngredient),
+                    RecipeExists
+                };
             }
 
             public override string ToString()
@@ -146,7 +211,7 @@ namespace Assets.Scripts.GameActions
             orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
+            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.OrderedItem, drinkOrder, orderTimeoutInMins, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
             orderDrink.Add(waitForDrink);
             wrapper.Add(orderDrink);
             wrapper.Add(new ClearConversationAction());
@@ -159,7 +224,7 @@ namespace Assets.Scripts.GameActions
             orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            waitForDrink.Add(CommonActions.WaitForDrinkWithoutFailure(entity, drinkOrder.DrinkPredicate, orderTimeoutInMins));
+            waitForDrink.Add(CommonActions.WaitForDrinkWithoutFailure(entity, drinkOrder, orderTimeoutInMins));
             orderDrink.Add(waitForDrink);
             return orderDrink;
         }

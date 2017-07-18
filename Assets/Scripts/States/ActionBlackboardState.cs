@@ -2,6 +2,7 @@
 using System.Text;
 using Assets.Framework.Entities;
 using Assets.Framework.States;
+using Assets.Scripts.Util.Dialogue;
 
 namespace Assets.Scripts.States
 {
@@ -21,6 +22,7 @@ namespace Assets.Scripts.States
         public bool Paused;
         public string CurrentActions;
         public ReceiveItemDecisionResponse ReceivedItemResponse;
+        public IncorrectDrinkReason IncorrectDrinkReason;
 
         public ActionBlackboardState(Entity targetEntity)
         {
