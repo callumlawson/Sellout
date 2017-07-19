@@ -14,7 +14,8 @@ namespace Assets.Scripts.Visualizers.Bar
                 new PrefabState(Prefabs.Beer),
                 new DrinkState(new DrinkState(DrinkRecipes.Beer.Contents)),
                 new PositionState(transform.position),
-                new InventoryState()
+                new InventoryState(),
+                new InteractiveState()
             };
         }
     }

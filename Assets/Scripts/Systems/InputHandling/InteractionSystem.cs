@@ -5,6 +5,7 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.Systems.InputHandling
 {
@@ -34,6 +35,12 @@ namespace Assets.Scripts.Systems.InputHandling
         {
             var entityName = entity.GetState<PrefabState>().PrefabName;
             var interactiveState = entity.GetState<InteractiveState>();
+
+            if (playerState.Player.GetState<InventoryState>().Child != null && entityName == Prefabs.Beer)
+            {
+                interactiveState.CurrentlyInteractive = false;
+                return;
+            }
 
             if (playerState.Player.GetState<InventoryState>().Child != null &&
                 playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName == Prefabs.DispensingBottle)
