@@ -12,6 +12,7 @@ using Random = UnityEngine.Random;
 using UnityEngine;
 using Assets.Scripts.States.AI;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.Visualizers;
 
 namespace Assets.Scripts.Systems
 {
