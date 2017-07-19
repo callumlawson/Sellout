@@ -25,7 +25,7 @@ namespace Assets.Scripts.GameActions
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, new UpdateMoodAction(Mood.Angry));
                     }},
                     {DialogueOutcome.Default, () => {
-                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, CommonActions.WaitForDrink(main, new DrinkOrders.ExactDrinkorder(DrinkRecipes.GetDrinkRecipe("Mind Meld"), main.GetState<NameState>().Name).DrinkPredicate, 10));
+                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(main, CommonActions.WaitForDrink(main, "Mind Meld", new DrinkOrders.ExactDrinkorder(DrinkRecipes.GetDrinkRecipe("Mind Meld"), main.GetState<NameState>().Name), 10));
                     }}
             }));
 

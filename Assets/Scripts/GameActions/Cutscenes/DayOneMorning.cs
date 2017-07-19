@@ -53,7 +53,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 var drinkOrder = new DrinkOrders.ExactDrinkorder(drinkRecipe, mcGraw.GetState<NameState>().Name);
                 orderSequence.Add(new StartDrinkOrderAction(drinkOrder));
                 mcGrawSequence.Add(orderSequence);
-                orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkOrder.DrinkPredicate, 90, true, new DrinkSucsessDialogue()));
+                orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkName, drinkOrder, 90, true, new DrinkSucsessDialogue()));
                 mcGrawSequence.Add(new RemoveTutorialControlLockAction());
                 mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
                 mcGrawSequence.Add(new PauseAction(3.0f));
@@ -102,7 +102,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
             tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningOne(), tolstoy));
             tolstoySequence.Add(new TriggerAnimationAction(AnimationEvent.SittingStartTrigger));
-            tolstoySequence.Add(CommonActions.WaitForDrink(tolstoy, state => true, 99999));
+            tolstoySequence.Add(CommonActions.WaitForDrink(tolstoy, "None", new DrinkOrders.AlwaysSucceedsDrinkOrder(), 99999));
             tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
             tolstoySequence.Add(new ConversationAction(new TolstoyMorningGivenDrink()));
             tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningAfterDrink()));

@@ -17,7 +17,6 @@ using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 using Random = UnityEngine.Random;
 using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Scripts.GameActions.Cusscenes;
-using Assets.Framework.Systems;
 
 namespace Assets.Scripts.GameActions
 {
@@ -98,24 +97,24 @@ namespace Assets.Scripts.GameActions
             return sitDown;
         }
 
-        public static ConditionalActionSequence WaitForDrinkWithoutFailure(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins)
+        public static ConditionalActionSequence WaitForDrinkWithoutFailure(Entity entity, DrinkOrders.DrinkOrder drinkOrder, int timeoutInGameMins)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
-            waitForDrink.Add(new DrinkIsInInventoryAction(drinkPredicate, timeoutInGameMins));
+            waitForDrink.Add(new DrinkIsInInventoryAction(drinkOrder, timeoutInGameMins));
             return waitForDrink;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, Func<DrinkState, bool> drinkPredicate, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, string drinkOrIngerdientOrdered, DrinkOrders.DrinkOrder drinkOrder, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
-               new DrinkIsInInventoryAction(drinkPredicate, timeoutInGameMins), //TODO: Need to account for the "No drink" case here.
+               new DrinkIsInInventoryAction(drinkOrder, timeoutInGameMins), //TODO: Need to account for the "No drink" case here.
                () => {
                    if (entity.GetState<InventoryState>().Child != null)
                    {
                        if (retry) //If retry is true then you are stuck until you don't fail.
                        {
-                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkPredicate, 99999, true, correctDrinkConversation, incorrectDrinkConversation));
+                           ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, WaitForDrink(entity, drinkOrIngerdientOrdered, drinkOrder, 99999, true, correctDrinkConversation, incorrectDrinkConversation));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new Dialogues.OrderDrinkRetryConverstation()));
                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
                        }
@@ -123,28 +122,14 @@ namespace Assets.Scripts.GameActions
                        {
                            if (incorrectDrinkConversation == null)
                            {
-                               var random = Random.Range(0, 1.0f);
+                               var reason = entity.GetState<ActionBlackboardState>().IncorrectDrinkReason;
+                               bool destroyDrink = false;
+                               var conversation = DialogueSelector.GetIncorrectDrinkOrderConversation(drinkOrIngerdientOrdered, entity, reason, out destroyDrink);
 
-                               if (random <= 0.1f)
+                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(conversation));
+                               if (destroyDrink)
                                {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That isn't what I ordered. <i> Throws drink into the sink!", DialogueOutcome.Bad)));
                                    ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
-                               }
-                               else if (random <= 0.25f)
-                               {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That isn't what I ordered. I guess you know best...", DialogueOutcome.Bad)));
-                               }
-                               else if (random <= 0.5f)
-                               {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("That doesn't taste right. It's alright I guess...", DialogueOutcome.Bad)));
-                               }
-                               else if (random <= 0.75f)
-                               {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("Hm... I must have ordered the wrong thing.", DialogueOutcome.Bad)));
-                               }
-                               else
-                               {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("This isn't what I ordered. Whatever, I'll just drink it.", DialogueOutcome.Bad)));
                                }
                            }
                            else
@@ -159,7 +144,9 @@ namespace Assets.Scripts.GameActions
                    }
                    else
                    {
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(new NoResponseConversation("I'm tired of waiting, nevermind.", DialogueOutcome.Bad)));
+                       bool destroyDrink;
+                       var timeoutConversation = DialogueSelector.GetIncorrectDrinkOrderConversation(drinkOrIngerdientOrdered, entity, IncorrectDrinkReason.Timeout, out destroyDrink);
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(timeoutConversation));
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));

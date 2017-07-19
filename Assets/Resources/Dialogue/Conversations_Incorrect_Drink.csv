@@ -1,0 +1,89 @@
+Line,Species,Reason,Destroy Drink
+"That isn't what I ordered. <i> Pours drink into the sink!""</i>",Human,WrongRecipe,Yes
+That isn't what I ordered. I guess I'll drink it...,Human,WrongRecipe,
+That doesn't taste right. It's alright I guess...,Human,WrongRecipe,
+"""Hm... I must have ordered the wrong thing.",Human,WrongRecipe,
+"This isn't what I ordered. Whatever, I'll just drink it.",Human,WrongRecipe,
+This is not what I ordered. I will accept it.,ShadowPerson,WrongRecipe,
+This does not look correct. I will accept it.,ShadowPerson,WrongRecipe,
+This is incorrect. I will accept it.,ShadowPerson,WrongRecipe,
+Um! Uh! I think this might not be right! I will take your word for it!,BirdPerson,WrongRecipe,
+This is not what I expected! I will drink it if you insist!,BirdPerson,WrongRecipe,
+Humans are strange! I will drink this because you gave it to me!,BirdPerson,WrongRecipe,
+These flavors don't go together.,Human,RecipeDoesNotExist,
+Creative... but I don't think this worked.,Human,RecipeDoesNotExist,
+You might want to read up on mixology...,Human,RecipeDoesNotExist,
+This tastes... interesting.,Human,RecipeDoesNotExist,
+What is in this? It tastes funny.,Human,RecipeDoesNotExist,
+These flavors are not pleasing together.,ShadowPerson,RecipeDoesNotExist,
+I thought human bartenders were expert at drink making.,ShadowPerson,RecipeDoesNotExist,
+I do not enjoy this taste combination.,ShadowPerson,RecipeDoesNotExist,
+Uh! Sorry! These flavors are strange!,BirdPerson,RecipeDoesNotExist,
+This must be some human taste! Very strange!,BirdPerson,RecipeDoesNotExist,
+Well! This is a strange drink! I will consume it!,BirdPerson,RecipeDoesNotExist,
+Are you sure this doesn't contain alcohol? Nevermind. .<i> Pours drink into the sink. </i>,Human,Alcoholic,Yes
+I really can't drink alcohol. Nice try though.<i> Pours drink into the sink. </i>,Human,Alcoholic,Yes
+I asked for no alcohol... .<i> Pours drink into the sink. </i>,Human,Alcoholic,Yes
+"Come on, I'm trying to be good. .<i> Pours drink into the sink. </i>",Human,Alcoholic,Yes
+Well... if you insist. One drink can't hurt.,Human,Alcoholic,
+I cannot drink alcohol. .<i> Pours drink into the sink. </i>,ShadowPerson,Alcoholic,Yes
+I will not drink alcohol. .<i> Pours drink into the sink. </i>,ShadowPerson,Alcoholic,Yes
+I require no alcohol. .<i> Pours drink into the sink. </i>,ShadowPerson,Alcoholic,Yes
+I really can't drink alcohol! .<i> Pours drink into the sink. </i>,BirdPerson,Alcoholic,Yes
+"Kind of you, but I can't have alcohol! .<i> Pours drink into the sink. </i>",BirdPerson,Alcoholic,Yes
+I wish I could drink this! I asked for no alcohol! .<i> Pours drink into the sink. </i>,BirdPerson,Alcoholic,Yes
+"You know, I come to the bar for a reason. To drink alcohol. Fine.",Human,NonAlcoholic,
+This tastes really weak.,Human,NonAlcoholic,
+"Come on, I need alcohol after the day I've had!",Human,NonAlcoholic,
+"Is this some new health thing? Fine, I'll drink it.",Human,NonAlcoholic,
+This is very... underwhelming. No alcohol?,Human,NonAlcoholic,
+I require alcohol. This does not contain it. Very well.,ShadowPerson,NonAlcoholic,
+I was expecting an alcoholic beverage.,ShadowPerson,NonAlcoholic,
+Do humans not serve Shadow People alcohol?,ShadowPerson,NonAlcoholic,
+Gosh! I really wanted alcohol! I will take your advice!,BirdPerson,NonAlcoholic,
+I heard that humans loved alcohol! This tastes weak!,BirdPerson,NonAlcoholic,
+I guess no alcohol for me!,BirdPerson,NonAlcoholic,
+Um... you're strange. <i> Places glass in the sink. </i>,Human,EmptyGlass,Yes
+Uh.. <i> Places glass in the sink. </i>,Human,EmptyGlass,Yes
+Are you trying to tell me something? <i> Places glass in the sink. </i>,Human,EmptyGlass,Yes
+Right... <i> Places glass in the sink. </i>,Human,EmptyGlass,Yes
+You a weird bartender. <i> Places glass in the sink. </i>,Human,EmptyGlass,Yes
+... <i> Places glass in the sink. </i>,ShadowPerson,EmptyGlass,Yes
+I do not understand. <i> Places glass in the sink. </i>,ShadowPerson,EmptyGlass,Yes
+Humans have strange customs. Thank you for your gift.,ShadowPerson,EmptyGlass,
+Is this some human custom! Wow! Weird! Thank you! I guess!,BirdPerson,EmptyGlass,
+Uh! You can have this! <i> Places glass in the sink. </i>,BirdPerson,EmptyGlass,Yes
+This is the weirdest bar I've been to! <i> Places glass in the sink. </i>,BirdPerson,EmptyGlass,Yes
+I can't taste the {0}  at all.,Human,DoesNotContainIngredient,
+Are you sure there is {0} in here?,Human,DoesNotContainIngredient,
+I ask for {0}. Nevermind.,Human,DoesNotContainIngredient,
+Um... no {0}? Alright...,Human,DoesNotContainIngredient,
+I really wanted {0}. Whatever.,Human,DoesNotContainIngredient,
+I was expecting {0}.,ShadowPerson,DoesNotContainIngredient,
+Do humans not serve {0}?,ShadowPerson,DoesNotContainIngredient,
+This does not have {0}.,ShadowPerson,DoesNotContainIngredient,
+I really wanted {0}! I will take this instead!,BirdPerson,DoesNotContainIngredient,
+I must not have spoken human! I wanted {0}! That is alright!,BirdPerson,DoesNotContainIngredient,
+No {0}! Strange!,BirdPerson,DoesNotContainIngredient,
+I really don't like {0}. .<i> Pours drink into the sink. </i>,Human,ContainsIngredient,Yes
+"Blech, {0}? .<i> Pours drink into the sink. </i>",Human,ContainsIngredient,Yes
+{0} is the one thing I didn't want. <i> Pours drink into the sink. </i>,Human,ContainsIngredient,Yes
+I'll pass on the {0}. <i> Pours drink into the sink. </i>,Human,ContainsIngredient,Yes
+I didn't want {0}. I'll live with it.,Human,ContainsIngredient,
+I do not want {0}. <i> Pours drink into the sink. </i>,ShadowPerson,ContainsIngredient,Yes
+I dislike {0}. <i> Pours drink into the sink. </i>,ShadowPerson,ContainsIngredient,Yes
+Strange human custom. I did not want {0}. I will try it.,ShadowPerson,ContainsIngredient,
+Sorry! I really don't like {0}!,BirdPerson,ContainsIngredient,Yes
+I taste {0}! No thanks!,BirdPerson,ContainsIngredient,Yes
+Huh! I taste {0}! I did not want this but I will try it for you!,BirdPerson,ContainsIngredient,
+"Nevermind, I'll just go sit down.",Human,Timeout,
+Nevermind.,Human,Timeout,
+"Slow day? That's alright, I'll come back later.",Human,Timeout,
+"It's ok, I'll come back later.",Human,Timeout,
+"I have to go, sorry.",Human,Timeout,
+I will go sit down instead.,ShadowPerson,Timeout,
+I am finished waiting.,ShadowPerson,Timeout,
+The wait is longer than is satisfactory.,ShadowPerson,Timeout,
+Um! Nevermind! I'm going to sit down now!,BirdPerson,Timeout,
+Nevermind!,BirdPerson,Timeout,
+It's been a little too long! Sorry!,BirdPerson,Timeout,
