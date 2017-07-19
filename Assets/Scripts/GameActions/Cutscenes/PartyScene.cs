@@ -43,37 +43,54 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 var jannetSequence = new ActionSequence("Jannet Party Negative");
                 jannetSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
                 jannetSequence.Add(new SetReactiveConversationAction(new JannetPartyNegative(), jannet));
+                jannetSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
             }
 
-            //McGraw
-            var mcGrawSequence = new ActionSequence("McGraw Party");
-            mcGrawSequence.Add(new TeleportAction(Locations.StandPoint3()));
-            mcGrawSequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), mcGraw));
-            mcGrawSequence.Add(new PauseAction(2f));
-            mcGrawSequence.Add(CheerLoop());
-            ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+            //Either McGraw or Q can be your friend at the end. Not both.
+            if (mcGraw.GetState<RelationshipState>().PlayerOpinion > 0)
+            {
+                var mcGrawSequence = new ActionSequence("McGraw Party");
+                mcGrawSequence.Add(new TeleportAction(Locations.StandPoint3()));
+                mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyPositive(), mcGraw));
+                mcGrawSequence.Add(new PauseAction(2f));
+                mcGrawSequence.Add(CheerLoop());
+                ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
-            //Q
-            var qSequence = new ActionSequence("Q Party");
-            qSequence.Add(new TeleportAction(Locations.StandPoint4()));
-            qSequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), q));
-            qSequence.Add(new PauseAction(0.5f));
-            qSequence.Add(CheerLoop());
-            ActionManagerSystem.Instance.QueueAction(q, qSequence);
+                var qSequence = new ActionSequence("Q Party");
+                qSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+                qSequence.Add(new SetReactiveConversationAction(new QPartyNegative(), q));
+                qSequence.Add(CommonActions.SitDownLoop());
+                ActionManagerSystem.Instance.QueueAction(q, qSequence);
+            }
+            else
+            {
+                var qSequence = new ActionSequence("Q Party");
+                qSequence.Add(new TeleportAction(Locations.StandPoint3()));
+                qSequence.Add(new SetReactiveConversationAction(new QPartyPositive(), q));
+                qSequence.Add(new PauseAction(0.5f));
+                qSequence.Add(CheerLoop());
+                ActionManagerSystem.Instance.QueueAction(q, qSequence);
+
+                var mcGrawSequence = new ActionSequence("McGraw Party");
+                mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
+                mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyNegative(), mcGraw));
+                mcGrawSequence.Add(CommonActions.SitDownLoop());
+                ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
+            }
 
             //Tolstoy
             var tolstoySequence = new ActionSequence("Tolstoy Party");
-            tolstoySequence.Add(new TeleportAction(Locations.StandPoint5()));
-            tolstoySequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), tolstoy));
+            tolstoySequence.Add(new TeleportAction(Locations.StandPoint4()));
+            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyPartyPositive(), tolstoy));
             tolstoySequence.Add(new PauseAction(3f));
             tolstoySequence.Add(CheerLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
 
             //Ellie
             var ellieSequence = new ActionSequence("Ellie Party");
-            ellieSequence.Add(new TeleportAction(Locations.StandPoint6()));
-            ellieSequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), ellie));
+            ellieSequence.Add(new TeleportAction(Locations.StandPoint5()));
+            ellieSequence.Add(new SetReactiveConversationAction(new ElliePartyPositive(), ellie));
             ellieSequence.Add(CheerLoop());
             ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
         }
@@ -114,6 +131,86 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
                 DialogueSystem.Instance.WriteNPCLine("You are the worst.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class QPartyPositive : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Q");
+                DialogueSystem.Instance.WriteNPCLine("You are the best.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class QPartyNegative : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Q");
+                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class McGrawPartyPositive : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("McGraw");
+                DialogueSystem.Instance.WriteNPCLine("You are the best.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class McGrawPartyNegative : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("McGraw");
+                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class TolstoyPartyPositive : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.WriteNPCLine("You are the best.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class TolstoyPartyNegative : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Tolstoy");
+                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class ElliePartyPositive : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Ellie");
+                DialogueSystem.Instance.WriteNPCLine("You are the best.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
+        private class ElliePartyNegative : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("Ellie");
+                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
             }
         }
