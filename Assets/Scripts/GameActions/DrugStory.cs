@@ -77,17 +77,17 @@ namespace Assets.Scripts.GameActions
                 () => {
                     switch (drugPusher.GetState<ActionBlackboardState>().ReceivedItemResponse) {
                         case ActionBlackboardState.ReceiveItemDecisionResponse.GaveBack:
-                            DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedConversation());
+                            DoRejectActionSequence(drugPusher, new NoResponseConversation("Whatever, your loss.", DialogueOutcome.Bad));
                             ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, new DestoryEntityInInventoryAction());
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.ThrewOut:
-                            DoRejectActionSequence(drugPusher, new DrugPusherOfferRefusedStronlyConversation());
+                            DoRejectActionSequence(drugPusher, new NoResponseConversation("That was valuable product, moron. I'll take that as a no. Your loss.", DialogueOutcome.Bad));
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.Kept:
-                            DoAcceptActionSequence(drugPusher, new DrugPusherOfferAcceptedConversation());
+                            DoAcceptActionSequence(drugPusher, new NoResponseConversation("Glad we can do business. I'll be back tonight with your cut.", DialogueOutcome.Bad));
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.GaveOtherItem:
-                            DoAcceptActionSequence(drugPusher, new DrugPusherOfferAcceptedWithGiftConversation());
+                            DoAcceptActionSequence(drugPusher, new NoResponseConversation("I guess that's a yes. Glad we can do business. I'll be back tonight with your cut.", DialogueOutcome.Agree));
                             ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, new DestoryEntityInInventoryAction());
                             break;
                         case ActionBlackboardState.ReceiveItemDecisionResponse.None:
@@ -164,46 +164,6 @@ namespace Assets.Scripts.GameActions
                 DialogueSystem.Instance.WriteNPCLine("Here's a sample on the house.");
             }
         }
-
-        private class DrugPusherOfferAcceptedConversation : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Glad we can do business. I'll be back tonight with your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class DrugPusherOfferAcceptedWithGiftConversation : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("I guess that's a yes. Glad we can do business. I'll be back tonight with your cut.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>Nod.</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class DrugPusherOfferRefusedConversation : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("Whatever, your loss.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
-
-        private class DrugPusherOfferRefusedStronlyConversation : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue(converstationInitiator);
-                DialogueSystem.Instance.WriteNPCLine("That was valuable product, moron. I'll take that as a no. Your loss.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i>...</i>", EndConversation(DialogueOutcome.Default));
-            }
-        }
         #endregion
 
         /**
@@ -223,7 +183,7 @@ namespace Assets.Scripts.GameActions
                     DialogueOutcome.Agree, () =>
                     {
                         var sequence = new ActionSequence("Help inspector.");
-                        sequence.Add(new ConversationAction(new SingleOutcomeConversation("Thanks for the help! Glad I could count on you to keep the ship safe.", "Nod", DialogueOutcome.Agree)));
+                        sequence.Add(new ConversationAction(new NoResponseConversation("Thanks for the help! Glad I could count on you to keep the ship safe.", DialogueOutcome.Agree)));
                         sequence.Add(new UpdateMoodAction(Mood.Happy));
 
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(security, sequence);
@@ -234,7 +194,7 @@ namespace Assets.Scripts.GameActions
                     DialogueOutcome.Disagree, () =>
                     {
                         var sequence = new ActionSequence("Didn't help inspector.");
-                        sequence.Add(new ConversationAction(new SingleOutcomeConversation("Thanks for your time. Let me know if you see anything suspicious.", "Nod", DialogueOutcome.Default)));
+                        sequence.Add(new ConversationAction(new NoResponseConversation("Thanks for your time. Let me know if you see anything suspicious.", DialogueOutcome.Default)));
 
                         ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(security, sequence);
                         StaticStates.Get<PlayerDecisionsState>().ToldInspectorAboutDrugPusher = false;
@@ -274,8 +234,8 @@ namespace Assets.Scripts.GameActions
         // Intro
         public static ActionSequence InspectorAskToDrink(Entity inspector)
         {
-            var incorrectDrinkConversation = new SingleOutcomeConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", "Right.", DialogueOutcome.Default);
-            var correctDrinkConversation = new SingleOutcomeConversation("Mm, great drink. Make them like this and he'll be sure to slip up.", "Nod", DialogueOutcome.Default);
+            var incorrectDrinkConversation = new NoResponseConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", DialogueOutcome.Default);
+            var correctDrinkConversation = new NoResponseConversation("Mm, great drink. Make them like this and he'll be sure to slip up.", DialogueOutcome.Default);
 
             var sequence = new ActionSequence("InspectorAskToDrink");
             sequence.Add(new ConversationAction(new InspectorAskToGetDrugPusherDrunk()));
@@ -287,8 +247,8 @@ namespace Assets.Scripts.GameActions
 
         public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
         {
-            var incorrectDrinkConversation = new SingleOutcomeConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", "Right.", DialogueOutcome.Default);
-            var correctDrinkConversation = new SingleOutcomeConversation("Mm, great drink. Make them like this and there's no way he can do his job.", "Nod", DialogueOutcome.Default);
+            var incorrectDrinkConversation = new NoResponseConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", DialogueOutcome.Default);
+            var correctDrinkConversation = new NoResponseConversation("Mm, great drink. Make them like this and there's no way he can do his job.", DialogueOutcome.Default);
 
             var sequence = new ActionSequence("DrugPusherAskToDrink");
             sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
@@ -390,37 +350,37 @@ namespace Assets.Scripts.GameActions
 
         // Inspector Sequence //
         private static List<Conversation> inspectorFailureLines = new List<Conversation> {
-            new SingleOutcomeConversation("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. Too bad because the first one was great I probably should stop drinking anyways.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Well, I probably shouldn't drink anymore anways.", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. I probably shouldn't be drinking anwyays.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. Too bad because the first one was great I probably should stop drinking anyways.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. *Hic* Well, I probably shouldn't drink anymore anways.", DialogueOutcome.Default),
         };
         private static List<Conversation> inspectorSuccessLines = new List<Conversation> {
-            new SingleOutcomeConversation("Ahh, just the thing to take the day off.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Delicious! I'm really feeling these, must be tired from the long day.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad you're on the ship. This is the last one, promise. *Hic*.", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Ahh, just the thing to take the day off.", DialogueOutcome.Default),
+            new NoResponseConversation("Delicious! I'm really feeling these, must be tired from the long day.", DialogueOutcome.Default),
+            new NoResponseConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad you're on the ship. This is the last one, promise. *Hic*.", DialogueOutcome.Default),
         };
 
         // DrugPusher Sequence //
         private static List<Conversation> drugPusherFailureLinesAccepted = new List<Conversation> {
-            new SingleOutcomeConversation("Hm... this doesn't taste right. Figures, you have business sense but not bartending skill.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. Guess the first was a fluke.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Well, I should stop anyways.", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. Figures, you have business sense but not bartending skill.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. Guess the first was a fluke.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. *Hic* Well, I should stop anyways.", DialogueOutcome.Default),
         };
         private static List<Conversation> drugPusherFailureLinesRejected = new List<Conversation> {
-            new SingleOutcomeConversation("Hm... this doesn't taste right. Figures, you have no business sense or bartending skill.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. Guess the first was a fluke. Figures.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Hm... this doesn't taste right. *Hic* Figures, you have no business sense or bartending skill. *Hic*", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. Figures, you have no business sense or bartending skill.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. Guess the first was a fluke. Figures.", DialogueOutcome.Default),
+            new NoResponseConversation("Hm... this doesn't taste right. *Hic* Figures, you have no business sense or bartending skill. *Hic*", DialogueOutcome.Default),
         };
 
         private static List<Conversation> drugPusherSuccessLinesAccepted = new List<Conversation> {
-            new SingleOutcomeConversation("Ahh, I've been needing this.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad we're business partners. *Hic*.", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Ahh, I've been needing this.", DialogueOutcome.Default),
+            new NoResponseConversation("Good stuff, really takes the edge off.", DialogueOutcome.Default),
+            new NoResponseConversation("Yum! *Hic* You're a great bartender. The best bartender. Glad we're business partners. *Hic*.", DialogueOutcome.Default),
         };
         private static List<Conversation> drugPusherSuccessLinesRejected = new List<Conversation> {
-            new SingleOutcomeConversation("Ahh, I've been needing this. No hard feelings from before", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("Good stuff, really takes the edge off.", "Nod.", DialogueOutcome.Default),
-            new SingleOutcomeConversation("*Hic* You may have terrible business sense but you make a good drink. *Hic* I'd better stop before I lose it.", "Nod.", DialogueOutcome.Default),
+            new NoResponseConversation("Ahh, I've been needing this. No hard feelings from before", DialogueOutcome.Default),
+            new NoResponseConversation("Good stuff, really takes the edge off.", DialogueOutcome.Default),
+            new NoResponseConversation("*Hic* You may have terrible business sense but you make a good drink. *Hic* I'd better stop before I lose it.", DialogueOutcome.Default),
         };
 
 
@@ -493,8 +453,7 @@ namespace Assets.Scripts.GameActions
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
                     inspectorActions.Add(new ConversationAction(
-                        new SingleOutcomeConversation("Damn it, he got away. I guess those drinks didn't do much did they. Maybe work on your bartending skills next time.",
-                        "...",
+                        new NoResponseConversation("Damn it, he got away. I guess those drinks didn't do much did they. Maybe work on your bartending skills next time.",
                         DialogueOutcome.Bad)));
 
 
@@ -507,11 +466,10 @@ namespace Assets.Scripts.GameActions
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
                         inspectorActions.Add(new ConversationAction(
-                            new SingleOutcomeConversation(
+                            new NoResponseConversation(
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He did say that you were in on it... he's pretty drunk though so he's probably just making it up."},
-                                "...",
                                 DialogueOutcome.Bad)
                             )
                         );
@@ -519,11 +477,10 @@ namespace Assets.Scripts.GameActions
                     else
                     {
                         inspectorActions.Add(new ConversationAction(
-                            new SingleOutcomeConversation(
+                            new NoResponseConversation(
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
-                                "...",
                                 DialogueOutcome.Bad)
                             )
                         );
@@ -538,11 +495,10 @@ namespace Assets.Scripts.GameActions
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
                         inspectorActions.Add(new ConversationAction(
-                            new SingleOutcomeConversation(
+                            new NoResponseConversation(
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tried to tell me something but he's so drunk he can barely speak! Good job."},
-                                "...",
                                 DialogueOutcome.Bad)
                             )
                         );
@@ -550,11 +506,10 @@ namespace Assets.Scripts.GameActions
                     else
                     {
                         inspectorActions.Add(new ConversationAction(
-                            new SingleOutcomeConversation(
+                            new NoResponseConversation(
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
-                                "...",
                                 DialogueOutcome.Bad)
                             )
                         );
@@ -570,11 +525,10 @@ namespace Assets.Scripts.GameActions
                 if (successfulDrinks == 0 || successfulDrinks == 1)
                 {
                     inspectorActions.Add(new ConversationAction(
-                            new SingleOutcomeConversation(
+                            new NoResponseConversation(
                                 new string[] {
                                     "No thanks to you I was able to catch this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tells me that you were in on it, I'm going to have my eye on you for a long time."},
-                                "...",
                                 DialogueOutcome.Bad)
                             )
                         );
@@ -594,8 +548,7 @@ namespace Assets.Scripts.GameActions
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
                     inspectorActions.Add(new ConversationAction(
-                        new SingleOutcomeConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
-                        "...",
+                        new NoResponseConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
                         DialogueOutcome.Bad)));
 
                     inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
@@ -609,8 +562,7 @@ namespace Assets.Scripts.GameActions
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
                     inspectorActions.Add(new ConversationAction(
-                        new SingleOutcomeConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
-                        "...",
+                        new NoResponseConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
                         DialogueOutcome.Bad)));
 
                     inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
