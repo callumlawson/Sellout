@@ -15,6 +15,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
     /**
      * The Crew assemble in the Bar to throw you a welcome party. 
      * Who's cheering and who's sulking depends on the decisions taken up to this point. 
+     * 
+     * Either Q or McGraw gives a short speach - depending on your actions.
      */
     static class PartyScene
     {
@@ -146,8 +148,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("You are the best.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("I much prefer you to the guy who worked here before.");
+                DialogueSystem.Instance.WriteNPCLine("Glad to have you on board!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thank you!", EndConversation(DialogueOutcome.Nice));
             }
         }
 
@@ -156,8 +159,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Jannet");
-                DialogueSystem.Instance.WriteNPCLine("You are the worst.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("I'm not celebrating.");
+                DialogueSystem.Instance.WriteNPCLine("This bar was far better before you took over.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'm sorry, I'll try and improve things.", EndConversation(DialogueOutcome.Default));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Like I give a dam.", EndConversation(DialogueOutcome.Mean));
             }
         }
 
@@ -166,8 +171,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("You are the best.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("We have a tidy little operation going here.");
+                DialogueSystem.Instance.WriteNPCLine("It will profit both of us - and gives the crew an important way to blow off steam.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Win, win. Pleasure doing business with you.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I regret it. McGraw is just trying to look after the crew.", EndConversation(DialogueOutcome.Mean));
             }
         }
 
@@ -176,7 +183,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Q");
-                DialogueSystem.Instance.WriteNPCLine("That's to you I'm on probation. I could loose my Job!");
+                DialogueSystem.Instance.WriteNPCLine("Thank's to you I'm on probation. I could loose my Job!");
                 DialogueSystem.Instance.WriteNPCLine("No one likes a snitch - Watch your back.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("What happened wasn't my fault. I even tried to protect you.", EndConversation(DialogueOutcome.Mean));
                 DialogueSystem.Instance.WritePlayerChoiceLine("You got what you deserved. Those drugs hurt people.", EndConversation(DialogueOutcome.Mean));
@@ -188,8 +195,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("You are the best.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("I was worried about you, but it worked out in the end.");
+                DialogueSystem.Instance.WriteNPCLine("Q was hurting people, even if he doesn't see it that way.");
+                DialogueSystem.Instance.WriteNPCLine("Thank you.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("In this case it was easy to do the right thing.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'm still not sure I made the right decision.", EndConversation(DialogueOutcome.Mean));
             }
         }
 
@@ -198,11 +208,15 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("McGraw");
-                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("Thanks to you Q is still pedling his horrible plants.");
+                DialogueSystem.Instance.WriteNPCLine("If someone gets hurt it'll be on your head as well.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I don't know what you are talking about.", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WritePlayerChoiceLine("It's harmless and the crew loves it.", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I do actually worry about that. Perhaps I can set it right.", EndConversation(DialogueOutcome.Nice));
             }
         }
 
+        //Need to decide what happens with the romance story line.
         private class TolstoyPartyPositive : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
