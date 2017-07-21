@@ -164,28 +164,7 @@ namespace Assets.Scripts.GameActions
             }
             else
             {
-                var random = UnityEngine.Random.Range(0, 1.0f);
-
-                if (random <= 0.1f)
-                {
-                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Delicious!", DialogueOutcome.Nice)));
-                }
-                else if (random <= 0.25f)
-                {
-                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Thanks!", DialogueOutcome.Nice)));
-                }
-                else if (random <= 0.5f)
-                {
-                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("<i>Nods</i>", DialogueOutcome.Nice)));
-                }
-                else if (random <= 0.75f)
-                {
-                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Thanks.", DialogueOutcome.Nice)));
-                }
-                else
-                {
-                    waitForDrink.Add(new ConversationAction(new NoResponseConversation("Cheers.", DialogueOutcome.Nice)));
-                }
+                waitForDrink.Add(new ConversationAction(DialogueSelector.GetCorrectDrinkOrderConversation(entity)));
             }
 
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
