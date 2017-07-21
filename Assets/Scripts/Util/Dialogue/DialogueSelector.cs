@@ -43,8 +43,21 @@ namespace Assets.Scripts.Util.Dialogue
             }
         }
 
+        private struct CorrectDrinkDialogueOption
+        {
+            public string line;
+            public SpeciesType species;
+
+            public CorrectDrinkDialogueOption(string line, SpeciesType species)
+            {
+                this.line = line;
+                this.species = species;
+            }
+        }
+
         private static List<DialogueOption> drinkOrderOptions = LoadOptions("Conversations_Order_Exact");
         private static List<IncorrectDrinkDialogueOption> incorectDrinkOptions = LoadIncorrectDrinkDialogueOptions("Conversations_Incorrect_Drink");
+        private static List<CorrectDrinkDialogueOption> correctDrinkOptions = LoadCorrcetDrinkDialogueOptions("Conversations_Correct_Drink");
 
         public static Conversation GetExactDrinkOrderConversation(string drinkName, Entity entity, Required required = Required.None)
         {
@@ -71,6 +84,14 @@ namespace Assets.Scripts.Util.Dialogue
             return conversation;
         }
 
+        public static Conversation GetCorrectDrinkOrderConversation(Entity entity)
+        {
+            var choice = correctDrinkOptions.Where(option => OptionIsValid(option, GetEntitySpecies(entity))).PickRandom();
+
+            var conversation = new NoResponseConversation(choice.line, DialogueOutcome.Nice);
+            return conversation;
+        }
+
         private static bool OptionIsValid(DialogueOption option, SpeciesType species, JobType job, Required required)
         {
             var speciesIsValid = option.species == SpeciesType.None || option.species == species;
@@ -84,6 +105,11 @@ namespace Assets.Scripts.Util.Dialogue
             var speciesIsValid = option.species == SpeciesType.None || option.species == species;
             var reasonIsValid = option.reason == IncorrectDrinkReason.None || option.reason == reason;
             return speciesIsValid && reasonIsValid;
+        }
+
+        private static bool OptionIsValid(CorrectDrinkDialogueOption option, SpeciesType species)
+        {
+            return option.species == SpeciesType.None || option.species == species;
         }
 
         private static SpeciesType GetEntitySpecies(Entity entity)
@@ -145,6 +171,28 @@ namespace Assets.Scripts.Util.Dialogue
                 bool destroyDrink = destroyDrinkString.Length == 0 ? false : destroyDrinkString == "Yes";
 
                 options.Add(new IncorrectDrinkDialogueOption(dialogueLine, species, reason, destroyDrink));
+            }
+
+            return options;
+        }
+
+        private static List<CorrectDrinkDialogueOption> LoadCorrcetDrinkDialogueOptions(string file)
+        {
+            var path = Path.Combine("Dialogue", file);
+            var data = CSVReader.Read(path);
+
+            var options = new List<CorrectDrinkDialogueOption>();
+
+            for (var i = 0; i < data.Count; i++)
+            {
+                var datum = data[i];
+
+                var dialogueLine = data[i]["Line"] as string;
+                var speciesTypeString = data[i]["Species"] as string;
+
+                SpeciesType species = speciesTypeString.Length == 0 ? species = SpeciesType.None : (SpeciesType)System.Enum.Parse(typeof(SpeciesType), data[i]["Species"] as string);
+
+                options.Add(new CorrectDrinkDialogueOption(dialogueLine, species));
             }
 
             return options;
