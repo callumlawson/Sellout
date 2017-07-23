@@ -222,8 +222,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Tolstoy");
-                DialogueSystem.Instance.WriteNPCLine("You are the best.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("Thanks to you things are looking up.");
+                DialogueSystem.Instance.WriteNPCLine("I'm really glad you came on board.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks, glad to be here.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Err, thanks. I guess.", EndConversation(DialogueOutcome.Default));
             }
         }
 
