@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
 using Assets.Scripts.GameActions.Composite;
+using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
@@ -34,17 +35,20 @@ namespace Assets.Scripts.GameActions.Cutscenes
             playerSequence.Add(new TeleportAction(Locations.StandPoint1()));
             ActionManagerSystem.Instance.QueueAction(player, playerSequence);
 
+            var mcGrawSequence = new ActionSequence("McGraw Party");
+            var qSequence = new ActionSequence("Q Party");
+
             //Either McGraw or Q can be your friend at the end. Not both.
             if (mcGraw.GetState<RelationshipState>().PlayerOpinion > 0)
             {
-                var mcGrawSequence = new ActionSequence("McGraw Party");
+                mcGrawSequence.Add(new ConversationAction(new McGrawPartyNegative()));
+
                 mcGrawSequence.Add(new TeleportAction(Locations.StandPoint3()));
                 mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyPositive(), mcGraw));
                 mcGrawSequence.Add(new PauseAction(2f));
                 mcGrawSequence.Add(CheerLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
-                var qSequence = new ActionSequence("Q Party");
                 qSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
                 qSequence.Add(new SetReactiveConversationAction(new QPartyNegative(), q));
                 qSequence.Add(CommonActions.SitDownLoop());
@@ -52,14 +56,12 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
             else
             {
-                var qSequence = new ActionSequence("Q Party");
                 qSequence.Add(new TeleportAction(Locations.StandPoint3()));
                 qSequence.Add(new SetReactiveConversationAction(new QPartyPositive(), q));
                 qSequence.Add(new PauseAction(0.5f));
                 qSequence.Add(CheerLoop());
                 ActionManagerSystem.Instance.QueueAction(q, qSequence);
 
-                var mcGrawSequence = new ActionSequence("McGraw Party");
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
                 mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyNegative(), mcGraw));
                 mcGrawSequence.Add(CommonActions.SitDownLoop());
@@ -166,6 +168,19 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
         }
 
+        private class QPartyGreeting : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("McGraw");
+                DialogueSystem.Instance.WriteNPCLine("On behalf of the crew I would like to welcome you onboard!");
+                DialogueSystem.Instance.WriteNPCLine("Thanks to you this is the finest party vessle in the Federation.");
+                DialogueSystem.Instance.WriteNPCLine("And that boring McGraw has been put in his place! Three cheers!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Let's get this !", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i> Blush </i>", EndConversation(DialogueOutcome.Nice));
+            }
+        }
+
         private class QPartyPositive : Conversation
         {
             protected override void StartConversation(string converstationInitiator)
@@ -187,6 +202,19 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("No one likes a snitch - Watch your back.");
                 DialogueSystem.Instance.WritePlayerChoiceLine("What happened wasn't my fault. I even tried to protect you.", EndConversation(DialogueOutcome.Mean));
                 DialogueSystem.Instance.WritePlayerChoiceLine("You got what you deserved. Those drugs hurt people.", EndConversation(DialogueOutcome.Mean));
+            }
+        }
+
+        private class McGrawPartyGreeting : Conversation
+        {
+            protected override void StartConversation(string converstationInitiator)
+            {
+                DialogueSystem.Instance.StartDialogue("McGraw");
+                DialogueSystem.Instance.WriteNPCLine("On behalf of the crew I would like to welcome you onboard!");
+                DialogueSystem.Instance.WriteNPCLine("You've already shown yourself to be a great choice.");
+                DialogueSystem.Instance.WriteNPCLine("Your predcessor wouldn't have handled Q like you did. To you!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("It was nothing!", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("<i> Blush </i>", EndConversation(DialogueOutcome.Nice));
             }
         }
 
@@ -234,8 +262,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Tolstoy");
-                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("So then I said, Clam down Ellie, you gotta listen to me, Ellie.");
+                DialogueSystem.Instance.WriteNPCLine("You know, nobody exists on purpose, nobody belongs anywhere, everybody's gunna die.");
+                DialogueSystem.Instance.WriteNPCLine("She just walked off!");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Wow, that's pretty dark.", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WritePlayerChoiceLine("I know a drink that can help with that.", EndConversation(DialogueOutcome.Nice));
             }
         }
 
@@ -254,8 +285,9 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Ellie");
-                DialogueSystem.Instance.WriteNPCLine("You are the wrost.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("Poor Tolstoy's really lost it.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I'll see if I can sort him a dirnk. That normally helps.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Some people will never be happy.", EndConversation(DialogueOutcome.Mean));
             }
         }
     }
