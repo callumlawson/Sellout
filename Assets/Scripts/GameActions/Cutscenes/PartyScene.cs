@@ -30,6 +30,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCName.Q);
             var jannet = EntityQueries.GetEntityWithName(matchingEntities, NPCName.Jannet);
 
+            var cheeringStartPoint = new SyncedAction(new List<Entity> { mcGraw, ellie, tolstoy, q, jannet});
+
             //Player
             var playerSequence = new ActionSequence("Player Party");
             playerSequence.Add(new TeleportAction(Locations.StandPoint1()));
@@ -41,15 +43,16 @@ namespace Assets.Scripts.GameActions.Cutscenes
             //Either McGraw or Q can be your friend at the end. Not both.
             if (mcGraw.GetState<RelationshipState>().PlayerOpinion > 0)
             {
-                mcGrawSequence.Add(new ConversationAction(new McGrawPartyNegative()));
-
                 mcGrawSequence.Add(new TeleportAction(Locations.StandPoint3()));
+                mcGrawSequence.Add(new ConversationAction(new McGrawPartyGreeting()));
+                mcGrawSequence.Add(cheeringStartPoint);
                 mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyPositive(), mcGraw));
                 mcGrawSequence.Add(new PauseAction(2f));
                 mcGrawSequence.Add(CheerLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
                 qSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
+                qSequence.Add(cheeringStartPoint);
                 qSequence.Add(new SetReactiveConversationAction(new QPartyNegative(), q));
                 qSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(q, qSequence);
@@ -57,22 +60,26 @@ namespace Assets.Scripts.GameActions.Cutscenes
             else
             {
                 qSequence.Add(new TeleportAction(Locations.StandPoint3()));
+                qSequence.Add(new ConversationAction(new QPartyGreeting()));
+                qSequence.Add(cheeringStartPoint);
                 qSequence.Add(new SetReactiveConversationAction(new QPartyPositive(), q));
                 qSequence.Add(new PauseAction(0.5f));
                 qSequence.Add(CheerLoop());
                 ActionManagerSystem.Instance.QueueAction(q, qSequence);
 
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
+                mcGrawSequence.Add(cheeringStartPoint);
                 mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyNegative(), mcGraw));
                 mcGrawSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
             }
 
             //Jannet
-            if (jannet.GetState<RelationshipState>().PlayerOpinion > 0)
+            if (jannet.GetState<RelationshipState>().PlayerOpinion >= 0)
             {
                 var jannetSequence = new ActionSequence("Jannet Party Positive");
                 jannetSequence.Add(new TeleportAction(Locations.StandPoint2()));
+                jannetSequence.Add(cheeringStartPoint);
                 jannetSequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), jannet));
                 jannetSequence.Add(new PauseAction(1.0f));
                 jannetSequence.Add(CheerLoop());
@@ -82,16 +89,18 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 var jannetSequence = new ActionSequence("Jannet Party Negative");
                 jannetSequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+                jannetSequence.Add(cheeringStartPoint);
                 jannetSequence.Add(new SetReactiveConversationAction(new JannetPartyNegative(), jannet));
                 jannetSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
             }
 
             //Tolstoy
-            if (tolstoy.GetState<RelationshipState>().PlayerOpinion > 0)
+            if (tolstoy.GetState<RelationshipState>().PlayerOpinion >= 0)
             {
                 var tolstoySequence = new ActionSequence("Tolstoy Party");
                 tolstoySequence.Add(new TeleportAction(Locations.StandPoint4()));
+                tolstoySequence.Add(cheeringStartPoint);
                 tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyPartyPositive(), tolstoy));
                 tolstoySequence.Add(new PauseAction(3f));
                 tolstoySequence.Add(CheerLoop());
@@ -101,16 +110,18 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 var tolstoySequence = new ActionSequence("Tolstoy Party Negative");
                 tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint3()));
+                tolstoySequence.Add(cheeringStartPoint);
                 tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyPartyNegative(), tolstoy));
                 tolstoySequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
             }
 
             //Ellies
-            if (ellie.GetState<RelationshipState>().PlayerOpinion > 0)
+            if (ellie.GetState<RelationshipState>().PlayerOpinion >= 0)
             {
                 var ellieSequence = new ActionSequence("Ellie Party");
                 ellieSequence.Add(new TeleportAction(Locations.StandPoint5()));
+                ellieSequence.Add(cheeringStartPoint);
                 ellieSequence.Add(new SetReactiveConversationAction(new ElliePartyPositive(), ellie));
                 ellieSequence.Add(CheerLoop());
                 ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
@@ -119,6 +130,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 var ellieSequence = new ActionSequence("Tolstoy Party Negative");
                 ellieSequence.Add(new TeleportAction(Locations.SitDownPoint4()));
+                ellieSequence.Add(cheeringStartPoint);
                 ellieSequence.Add(new SetReactiveConversationAction(new ElliePartyNegative(), ellie));
                 ellieSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
@@ -176,8 +188,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.WriteNPCLine("On behalf of the crew I would like to welcome you onboard!");
                 DialogueSystem.Instance.WriteNPCLine("Thanks to you this is the finest party vessle in the Federation.");
                 DialogueSystem.Instance.WriteNPCLine("And that boring McGraw has been put in his place! Three cheers!");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Let's get this !", EndConversation(DialogueOutcome.Nice));
-                DialogueSystem.Instance.WritePlayerChoiceLine("<i> Blush </i>", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Let's get this party started!", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WritePlayerChoiceLine("Is he ok?", EndConversation(DialogueOutcome.Mean));
             }
         }
 
