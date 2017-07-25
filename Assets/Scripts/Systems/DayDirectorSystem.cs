@@ -97,9 +97,16 @@ namespace Assets.Scripts.Systems
                     if(time.GameTime != Constants.GameStartTime)
                     {
                         time.GameTime.IncrementDay();
-                        if (time.GameTime.GetDay() == 2)
+                        switch (time.GameTime.GetDay())
                         {
-                            DayTwoMorning.Start(people);
+                            case 1:
+                                break;
+                            case 2:
+                                DayTwoMorning.Start(people);
+                                break;
+                            case 4:
+                                WelcomeSignControllerVisualizer.Instance.SetWelcomeSignActive(false);
+                                break;
                         }
                     }
                     break;
@@ -125,6 +132,9 @@ namespace Assets.Scripts.Systems
                             break;
                         case 2:
                             DayTwoNight.Start(people);
+                            break;
+                        case 3:
+                            PartyScene.Start(people);
                             break;
                     }
                     break;
