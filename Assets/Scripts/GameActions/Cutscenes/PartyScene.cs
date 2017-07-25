@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
-using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
 using Assets.Scripts.GameActions.Waypoints;
@@ -111,7 +110,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             //Tolstoy
             if (tolstoy.GetState<RelationshipState>().PlayerOpinion >= 0)
             {
-                var tolstoySequence = new ActionSequence("Tolstoy Party");
+                var tolstoySequence = new ActionSequence("Tolstoy Party Positive");
                 tolstoySequence.Add(new TeleportAction(Locations.StandPoint4()));
                 tolstoySequence.Add(cheeringStartPoint);
                 tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyPartyPositive(), tolstoy));
@@ -147,7 +146,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
             else
             {
-                var ellieSequence = new ActionSequence("Tolstoy Party Negative");
+                var ellieSequence = new ActionSequence("Ellie Party Negative");
                 ellieSequence.Add(new TeleportAction(Locations.SitDownPoint4()));
                 ellieSequence.Add(cheeringStartPoint);
                 ellieSequence.Add(new SetReactiveConversationAction(new ElliePartyNegative(), ellie));
@@ -206,7 +205,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
         {
             protected override void StartConversation(string converstationInitiator)
             {
-                DialogueSystem.Instance.StartDialogue("McGraw");
+                DialogueSystem.Instance.StartDialogue("Q");
                 DialogueSystem.Instance.WriteNPCLine("On behalf of the crew I would like to welcome you onboard!");
                 DialogueSystem.Instance.WriteNPCLine("Thanks to you this is the finest party vessle in the Federation.");
                 DialogueSystem.Instance.WriteNPCLine("And that boring McGraw has been put in his place! Three cheers!");
@@ -309,8 +308,8 @@ namespace Assets.Scripts.GameActions.Cutscenes
             protected override void StartConversation(string converstationInitiator)
             {
                 DialogueSystem.Instance.StartDialogue("Ellie");
-                DialogueSystem.Instance.WriteNPCLine("You are the best.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
+                DialogueSystem.Instance.WriteNPCLine("You're the best.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("Wow, thanks!", EndConversation(DialogueOutcome.Nice));
             }
         }
 
