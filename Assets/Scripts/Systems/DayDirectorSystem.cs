@@ -25,7 +25,7 @@ namespace Assets.Scripts.Systems
 
         public static DayDirectorSystem Instance;
 
-        private bool doingPhaseChange = false;
+        private bool doingPhaseChange;
 
         public DayDirectorSystem()
         {
@@ -48,9 +48,10 @@ namespace Assets.Scripts.Systems
 
             Interface.Instance.BlackFader.FadeToBlack(4.0f, GetFadeTitle(nextDayPhase), () =>
             {
-                DoPhaseCleanup();
-
-                DoPhaseSetup(nextDayPhase);
+                ResetNPCs();
+                ResetBarStateAndDialogues();
+                WaypointSystem.Instance.ClearAllWaypoints();
+                SetLighting(nextDayPhase);
 
                 StaticStates.Get<DayPhaseState>().IncrementDayPhase();
 
@@ -79,7 +80,7 @@ namespace Assets.Scripts.Systems
             switch (newDayPhase)
             {
                 case DayPhase.Morning:
-                    return string.Format("Day {0}", time.GameTime.GetDay());
+                    return string.Format("Day {0}", time.GameTime.GetDay() + 1);
                 case DayPhase.Open:
                     return "Opening Time!";
                 case DayPhase.Night:
@@ -184,18 +185,6 @@ namespace Assets.Scripts.Systems
             DayOneMorning.Start(people);
         }
 
-        private void DoPhaseCleanup()
-        {
-            ResetNPCs();
-            ResetBarStateAndDialogues();
-            WaypointSystem.Instance.ClearAllWaypoints();
-        }
-
-        private void DoPhaseSetup(DayPhase newDayPhase)
-        {
-            SetLighting(newDayPhase);
-        }
-
         private void ResetNPCs()
         {
             people.ForEach(person => ActionManagerSystem.Instance.TryCancelThenHardClearActions(person));
@@ -225,7 +214,7 @@ namespace Assets.Scripts.Systems
             }
         }
 
-        private void ResetBarStateAndDialogues()
+        private static void ResetBarStateAndDialogues()
         {
             DialogueSystem.Instance.StopDialogue();
             EventSystem.EndDrinkOrderEvent.Invoke();
