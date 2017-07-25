@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using Assets.Framework.Entities;
+using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.GameActions.Dialogue;
+using Assets.Scripts.GameActions.Waypoints;
 using Assets.Scripts.States;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.Visualizers;
 using UnityEngine;
 using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 
@@ -34,6 +37,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
             //Player
             var playerSequence = new ActionSequence("Player Party");
+            playerSequence.Add(new CallbackAction(() => WelcomeSignControllerVisualizer.Instance.SetWelcomeSignActive(true)));
             playerSequence.Add(new TeleportAction(Locations.StandPoint1()));
             ActionManagerSystem.Instance.QueueAction(player, playerSequence);
 
@@ -41,14 +45,17 @@ namespace Assets.Scripts.GameActions.Cutscenes
             var qSequence = new ActionSequence("Q Party");
 
             //Either McGraw or Q can be your friend at the end. Not both.
-            if (mcGraw.GetState<RelationshipState>().PlayerOpinion > 0)
+            if (mcGraw.GetState<RelationshipState>().PlayerOpinion >= 0)
             {
                 mcGrawSequence.Add(new TeleportAction(Locations.StandPoint3()));
                 mcGrawSequence.Add(new ConversationAction(new McGrawPartyGreeting()));
                 mcGrawSequence.Add(cheeringStartPoint);
                 mcGrawSequence.Add(new SetReactiveConversationAction(new McGrawPartyPositive(), mcGraw));
-                mcGrawSequence.Add(new PauseAction(2f));
-                mcGrawSequence.Add(CheerLoop());
+                mcGrawSequence.Add(new PauseAction(1f));
+                mcGrawSequence.Add(CheerLoop(2));
+                mcGrawSequence.Add(new GetWaypointAction(Goal.Sit, true, true));
+                mcGrawSequence.Add(new GoToWaypointAction());
+                mcGrawSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
 
                 qSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
@@ -64,7 +71,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 qSequence.Add(cheeringStartPoint);
                 qSequence.Add(new SetReactiveConversationAction(new QPartyPositive(), q));
                 qSequence.Add(new PauseAction(0.5f));
-                qSequence.Add(CheerLoop());
+                qSequence.Add(CheerLoop(3));
+                qSequence.Add(new GetWaypointAction(Goal.Sit, true, true));
+                qSequence.Add(new GoToWaypointAction());
+                qSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(q, qSequence);
 
                 mcGrawSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
@@ -81,8 +91,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 jannetSequence.Add(new TeleportAction(Locations.StandPoint2()));
                 jannetSequence.Add(cheeringStartPoint);
                 jannetSequence.Add(new SetReactiveConversationAction(new JannetPartyPositive(), jannet));
-                jannetSequence.Add(new PauseAction(1.0f));
-                jannetSequence.Add(CheerLoop());
+                jannetSequence.Add(new PauseAction(1.2f));
+                jannetSequence.Add(CheerLoop(3));
+                jannetSequence.Add(new GetWaypointAction(Goal.Sit, true, true));
+                jannetSequence.Add(new GoToWaypointAction());
+                jannetSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(jannet, jannetSequence);
             }
             else
@@ -102,8 +115,11 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 tolstoySequence.Add(new TeleportAction(Locations.StandPoint4()));
                 tolstoySequence.Add(cheeringStartPoint);
                 tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyPartyPositive(), tolstoy));
-                tolstoySequence.Add(new PauseAction(3f));
-                tolstoySequence.Add(CheerLoop());
+                tolstoySequence.Add(new PauseAction(1f));
+                tolstoySequence.Add(CheerLoop(2));
+                tolstoySequence.Add(new GetWaypointAction(Goal.Sit, true, true));
+                tolstoySequence.Add(new GoToWaypointAction());
+                tolstoySequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
             }
             else
@@ -123,7 +139,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 ellieSequence.Add(new TeleportAction(Locations.StandPoint5()));
                 ellieSequence.Add(cheeringStartPoint);
                 ellieSequence.Add(new SetReactiveConversationAction(new ElliePartyPositive(), ellie));
-                ellieSequence.Add(CheerLoop());
+                ellieSequence.Add(CheerLoop(3));
+                ellieSequence.Add(new GetWaypointAction(Goal.Sit, true, true));
+                ellieSequence.Add(new GoToWaypointAction());
+                ellieSequence.Add(CommonActions.SitDownLoop());
                 ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
             }
             else
@@ -137,7 +156,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             }
         }
 
-        private static ConditionalActionSequence CheerLoop()
+        private static ConditionalActionSequence CheerLoop(int repetitions)
         {
             var cheer = new ConditionalActionSequence("Cheer");
             if (Random.value < 0.50f)
@@ -153,7 +172,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 cheer.Add(new TriggerAnimationAction(AnimationEvent.Cheer2Trigger));
             }
             cheer.Add(new PauseAction(4.0f));
-            cheer.Add(new CallbackAction(() => cheer.Add(CheerLoop()))); //Lol
+            if (repetitions > 1)
+            {
+                cheer.Add(new CallbackAction(() => cheer.Add(CheerLoop(repetitions - 1)))); //Lol    
+            }
             return cheer;
         }
 
