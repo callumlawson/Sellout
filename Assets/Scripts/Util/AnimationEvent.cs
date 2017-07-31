@@ -9,6 +9,13 @@
         ItemRecieveTrigger,
         Cheer1Trigger,
         Cheer2Trigger,
-        Cheer3Trigger
+        Cheer3Trigger,
+        TriggerStartWaryIdle,
+        TriggerStopWaryIdle,
+        TriggerGetHit,
+        TriggerFlyBack,
+        TriggerGetUp,
+        TriggerPunch1,
+        TriggerPunch2
     }
 }

@@ -2,6 +2,7 @@
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
+using UnityEngine;
 
 namespace Assets.Scripts.GameActions
 {
@@ -9,9 +10,9 @@ namespace Assets.Scripts.GameActions
     //have the action succeed when the animation completes.
     class TriggerAnimationAction : GameAction, ICancellableAction
     {
-        private readonly AnimationEvent animationEvent;
+        private readonly Util.AnimationEvent animationEvent;
 
-        public TriggerAnimationAction(AnimationEvent animationEvent)
+        public TriggerAnimationAction(Util.AnimationEvent animationEvent)
         {
             this.animationEvent = animationEvent;
         }

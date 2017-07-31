@@ -99,6 +99,7 @@ namespace Assets.Scripts.Systems
 
             if (timeoutInSeconds > 0.1f)
             {
+                conversationTimeout.Kill();
                 conversationTimeout = DOTween.Sequence().SetDelay(timeoutInSeconds).OnComplete(() =>
                 {
                     if (onEndMethod != null)

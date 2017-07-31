@@ -61,22 +61,25 @@ namespace Assets.Scripts.Util.Dialogue
     {
         private string[] lines;
         private DialogueOutcome outcome;
+        private float timeoutSeconds;
 
-        public NoResponseConversation(string line, DialogueOutcome outcome)
+        public NoResponseConversation(string line, DialogueOutcome outcome, float timeoutSeconds = 1.5f)
         {
             this.lines = new string[] { line };
             this.outcome = outcome;
+            this.timeoutSeconds = timeoutSeconds;
         }
 
-        public NoResponseConversation(string[] lines, DialogueOutcome outcome)
+        public NoResponseConversation(string[] lines, DialogueOutcome outcome, float timeoutSeconds = 1.5f)
         {
             this.lines = lines;
             this.outcome = outcome;
+            this.timeoutSeconds = timeoutSeconds;
         }
 
         protected override void StartConversation(string converstationInitiator)
         {
-            DialogueSystem.Instance.StartDialogue(converstationInitiator, 1.5f, EndConversation(outcome));
+            DialogueSystem.Instance.StartDialogue(converstationInitiator, timeoutSeconds, EndConversation(outcome));
             foreach (var line in lines)
             {
                 DialogueSystem.Instance.WriteNPCLine(line);
