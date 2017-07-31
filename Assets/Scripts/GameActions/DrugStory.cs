@@ -399,12 +399,13 @@ namespace Assets.Scripts.GameActions
             CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             showdownInspector.Add(new SetTargetEntityAction(drugPusher));
-            showdownInspector.Add(new GoToMovingEntityAction());
+            showdownInspector.Add(new GoToMovingEntityAction(3.0f));
 
             CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
             //Placeholder "agument". Perhaps the player could see what was being said?
             //Floating speach bubbles?
+            /*
             showdownInspector.Add(new PauseAction(2));
             showdownInspector.Add(new UpdateMoodAction(Mood.Angry));
 
@@ -418,26 +419,70 @@ namespace Assets.Scripts.GameActions
             showdownPusher.Add(new UpdateMoodAction(Mood.Angry));
 
             CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+            */
 
             showdownPusher.Add(CommonActions.StandUp());
             showdownPusher.Add(new SetTargetEntityAction(inspector));
-            showdownPusher.Add(new GoToMovingEntityAction(1.0f));
+            showdownPusher.Add(new GoToMovingEntityAction());
+
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerStartWaryIdle));
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerStartWaryIdle));
+
+            showdownPusher.Add(new PauseAction(2));
 
             CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
 
-            showdownInspector.Add(new PlayParticleEffectAction(Particles.Dustup, inspector, drugPusher));
-            showdownPusher.Add(new PauseAction(5));
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerStopWaryIdle));
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerStopWaryIdle));
 
-            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);            
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+            
+            ActionSequence inspectorFight;
+            ActionSequence pusherFight;
+            Fight(inspector, drugPusher, out inspectorFight, out pusherFight);            
+
+            showdownInspector.Add(inspectorFight);
+            showdownPusher.Add(pusherFight);
 
             ActionManagerSystem.Instance.QueueAction(drugPusher, showdownPusher);
             ActionManagerSystem.Instance.QueueAction(inspector, showdownInspector);
 
             Resolution(inspector, drugPusher);
         }
+        
+        private static void Fight(Entity inspector, Entity drugPusher, out ActionSequence showdownInspector, out ActionSequence showdownPusher)
+        {
+            showdownInspector = new ActionSequence("ShowdownInspectorFight");
+            showdownPusher = new ActionSequence("ShowdownPusherFight");
+
+            showdownInspector.Add(new PlayParticleEffectAction(Particles.Dustup, inspector, drugPusher));
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerPunch1));
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetHit));
+            showdownPusher.Add(new PauseAction(1));
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetHit));
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerPunch1));
+            showdownPusher.Add(new PauseAction(1));
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerPunch1));
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetHit));
+            showdownPusher.Add(new PauseAction(1));
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+
+            showdownPusher.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetHit));
+            showdownInspector.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerPunch1));
+            showdownPusher.Add(new PauseAction(1));
+            CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
+        }
 
         private static void Resolution(Entity inspector, Entity drugPusher)
         {
+            var resolutionTimeout = 10.0f;
+
             var decisionState = StaticStates.Get<PlayerDecisionsState>();
             var successfulDrinks = decisionState.NumberOfDrinksServedInDrugStory;
 
@@ -448,14 +493,19 @@ namespace Assets.Scripts.GameActions
             {
                 if (successfulDrinks == 0 || successfulDrinks == 1)
                 {
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    inspectorActions.Add(new PauseAction(2.0f));
+
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+
                     inspectorActions.Add(new ConversationAction(
                         new NoResponseConversation("Damn it, he got away. I guess those drinks didn't do much did they. Maybe work on your bartending skills next time.",
-                        DialogueOutcome.Bad)));
-
+                        DialogueOutcome.Bad,
+                        resolutionTimeout)));
 
                     inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
@@ -463,6 +513,9 @@ namespace Assets.Scripts.GameActions
                 }
                 else if (successfulDrinks == 2)
                 {
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    drugPusherActions.Add(new PauseAction(2.0f));
+
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
                         inspectorActions.Add(new ConversationAction(
@@ -470,7 +523,8 @@ namespace Assets.Scripts.GameActions
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He did say that you were in on it... he's pretty drunk though so he's probably just making it up."},
-                                DialogueOutcome.Bad)
+                                DialogueOutcome.Bad,
+                                resolutionTimeout)
                             )
                         );
                     }
@@ -481,17 +535,25 @@ namespace Assets.Scripts.GameActions
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
-                                DialogueOutcome.Bad)
+                                DialogueOutcome.Bad,
+                                resolutionTimeout)
                             )
                         );
                     }
 
                     CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+                    drugPusherActions.Add(new PauseAction(1.0f));
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+
                     drugPusherActions.Add(new LeaveBarAction());
                     inspectorActions.Add(new LeaveBarAction());
                 }
                 else if (successfulDrinks == 3)
                 {
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    drugPusherActions.Add(new PauseAction(2.0f));
+
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
                         inspectorActions.Add(new ConversationAction(
@@ -499,7 +561,8 @@ namespace Assets.Scripts.GameActions
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tried to tell me something but he's so drunk he can barely speak! Good job."},
-                                DialogueOutcome.Bad)
+                                DialogueOutcome.Bad,
+                                resolutionTimeout)
                             )
                         );
                     }
@@ -510,12 +573,17 @@ namespace Assets.Scripts.GameActions
                                 new string[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
-                                DialogueOutcome.Bad)
+                                DialogueOutcome.Bad,
+                                resolutionTimeout)
                             )
                         );
                     }
 
                     CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+                    drugPusherActions.Add(new PauseAction(1.0f));
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
+
                     drugPusherActions.Add(new LeaveBarAction());
                     inspectorActions.Add(new LeaveBarAction());
                 }
@@ -524,32 +592,41 @@ namespace Assets.Scripts.GameActions
             {
                 if (successfulDrinks == 0 || successfulDrinks == 1)
                 {
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    drugPusherActions.Add(new PauseAction(1.5f));
+
                     inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
                                 new string[] {
                                     "No thanks to you I was able to catch this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tells me that you were in on it, I'm going to have my eye on you for a long time."},
-                                DialogueOutcome.Bad)
+                                DialogueOutcome.Bad,
+                                resolutionTimeout)
                             )
                         );
                     CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
-                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
-                    drugPusherActions.Add(new LeaveBarAction());
-                    drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
+                    drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+                    drugPusherActions.Add(new PauseAction(1.0f));
+                    CommonActions.AddSyncEntityAction(inspector, drugPusher, inspectorActions, drugPusherActions);
 
-                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
+                    drugPusherActions.Add(new LeaveBarAction());                    
                     inspectorActions.Add(new LeaveBarAction());
-                    inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
                 }
                 else if (successfulDrinks == 2)
                 {
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    inspectorActions.Add(new PauseAction(2.0f));
+
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+
                     inspectorActions.Add(new ConversationAction(
                         new NoResponseConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
-                        DialogueOutcome.Bad)));
+                        DialogueOutcome.Bad,
+                        resolutionTimeout)));
 
                     inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
@@ -557,13 +634,19 @@ namespace Assets.Scripts.GameActions
                 }
                 else if (successfulDrinks == 3)
                 {
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
+                    inspectorActions.Add(new PauseAction(2.0f));
+
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Run));
                     drugPusherActions.Add(new LeaveBarAction());
                     drugPusherActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Walk));
 
+                    inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
+
                     inspectorActions.Add(new ConversationAction(
                         new NoResponseConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
-                        DialogueOutcome.Bad)));
+                        DialogueOutcome.Bad,
+                        resolutionTimeout)));
 
                     inspectorActions.Add(new SetMovementSpeedAction(SetMovementSpeedAction.MovementType.Slow));
                     inspectorActions.Add(new LeaveBarAction());
