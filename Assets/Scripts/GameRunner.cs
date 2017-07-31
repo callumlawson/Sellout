@@ -47,6 +47,7 @@ namespace Assets.Scripts
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
             StaticStates.Add(new MoneyState(0));
             StaticStates.Add(new PlayerDecisionsState());
+            StaticStates.Add(new OutcomeTrackerState());
 
             //Debug
             entitySystem.AddSystem(new DebugControlsSystem());

@@ -30,6 +30,7 @@ namespace Assets.Scripts.Util
 
         //UI
         public const string DiagloguePanelUI = "DialoguePanel";
+        public const string ListPanelUI = "ListPanel";
         public const string BarDiagloguePanelUI = "BarDialoguePanel";
         public const string DialogueLineUI = "DialogueLine";
         public const string ResponseLineUI = "ResponseLine";
