@@ -405,7 +405,6 @@ namespace Assets.Scripts.GameActions
 
             //Placeholder "agument". Perhaps the player could see what was being said?
             //Floating speach bubbles?
-            /*
             showdownInspector.Add(new PauseAction(2));
             showdownInspector.Add(new UpdateMoodAction(Mood.Angry));
 
@@ -419,7 +418,6 @@ namespace Assets.Scripts.GameActions
             showdownPusher.Add(new UpdateMoodAction(Mood.Angry));
 
             CommonActions.AddSyncEntityAction(inspector, drugPusher, showdownInspector, showdownPusher);
-            */
 
             showdownPusher.Add(CommonActions.StandUp());
             showdownPusher.Add(new SetTargetEntityAction(inspector));
