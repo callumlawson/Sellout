@@ -46,7 +46,7 @@ namespace Assets.Scripts.Systems
 
             var nextDayPhase = StaticStates.Get<DayPhaseState>().GetNextDayPhase();
 
-            Interface.Instance.BlackFader.FadeToBlack(4.0f, GetFadeTitle(nextDayPhase), () =>
+            Interface.Instance.BlackFader.FadeToBlack(8.0f, GetFadeTitle(nextDayPhase), () =>
             {
                 ResetNPCs();
                 ResetBarStateAndDialogues();

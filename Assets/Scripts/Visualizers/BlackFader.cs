@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Assets.Framework.States;
 using Assets.Framework.Util;
 using Assets.Scripts.States;
@@ -21,6 +22,8 @@ namespace Assets.Scripts.Visualizers
         private GameObject defaultDialogueLinesParent;
         private GameObject dialogueLineUI;
 
+        private const float LineOffsetInSeconds = 0.6f;
+
         [UsedImplicitly]
         public void Start()
         {
@@ -31,26 +34,21 @@ namespace Assets.Scripts.Visualizers
             dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
         }
 
-        public void FadeToBlack(float timeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
+        public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
         {
-            defaultDialogueUI.SetActive(true);
+            ShowStoryOutcomes(delayTimeInSeconds);
+
             if (fadeIn)
             {
-                Background.DOFade(1.0f, timeInSeconds/4);
+                Background.DOFade(1.0f, delayTimeInSeconds/4);
                 Background.raycastTarget = true;
                 DOTween.Sequence()
-                    .SetDelay(timeInSeconds - timeInSeconds/4)
+                    .SetDelay(delayTimeInSeconds - delayTimeInSeconds/4)
                     .OnComplete(() =>
                     {
                         Background.raycastTarget = false;
-                        CleanUpDialogueLines();
-                        foreach (var outcome in StaticStates.Get<OutcomeTrackerState>().TodaysOutcomes)
-                        {
-                            CreateLine(outcome);
-                        }
-                        defaultDialogueUI.SetActive(false);
                     });
-                Background.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds - timeInSeconds/4);
+                Background.DOFade(0.0f, delayTimeInSeconds/4).SetDelay(delayTimeInSeconds - delayTimeInSeconds/4);
             }
             else
             {
@@ -60,13 +58,12 @@ namespace Assets.Scripts.Visualizers
                     new Color(backgroundMaterialColor.r, backgroundMaterialColor.b, backgroundMaterialColor.g, 1.0f);
                 Background.raycastTarget = true;
                 DOTween.Sequence()
-                    .SetDelay(timeInSeconds - timeInSeconds / 2)
+                    .SetDelay(delayTimeInSeconds - delayTimeInSeconds / 2)
                     .OnComplete(() =>
                     {
-                        defaultDialogueUI.SetActive(false);
                         Background.raycastTarget = false;
                     });
-                Background.DOFade(0.0f, timeInSeconds/2).SetDelay(timeInSeconds/2);
+                Background.DOFade(0.0f, delayTimeInSeconds/2).SetDelay(delayTimeInSeconds/2);
             }
 
             if (Text != null && text != "")
@@ -74,18 +71,18 @@ namespace Assets.Scripts.Visualizers
                 if (fadeIn)
                 {
                     Text.text = text;
-                    Text.DOFade(1.0f, timeInSeconds/4).SetDelay(timeInSeconds/8);
-                    Text.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds - timeInSeconds/4 - timeInSeconds/8);
+                    Text.DOFade(1.0f, delayTimeInSeconds/4).SetDelay(delayTimeInSeconds/8);
+                    Text.DOFade(0.0f, delayTimeInSeconds/4).SetDelay(delayTimeInSeconds - delayTimeInSeconds/4 - delayTimeInSeconds/8);
                 }
                 else
                 {
                     Text.text = text;
                     Text.DOFade(1.0f, 0.0f);
-                    Text.DOFade(0.0f, timeInSeconds/4).SetDelay(timeInSeconds/2);
+                    Text.DOFade(0.0f, delayTimeInSeconds/4).SetDelay(delayTimeInSeconds/2);
                 }
             }
 
-            DOTween.Sequence().SetDelay(timeInSeconds/4).OnComplete(() =>
+            DOTween.Sequence().SetDelay(delayTimeInSeconds/4).OnComplete(() =>
             {
                 if (midFade != null)
                 {
@@ -94,14 +91,31 @@ namespace Assets.Scripts.Visualizers
             });
         }
 
-        private void CreateLine(string line)
+        private void ShowStoryOutcomes(float timeInSeconds)
+        {
+            var outcomes = StaticStates.Get<OutcomeTrackerState>().TodaysOutcomes;
+
+            if (!outcomes.Any()) return;
+
+            defaultDialogueUI.SetActive(true);
+            CleanUpDialogueLines();
+            for (var index = 0; index < outcomes.Count; index++)
+            {
+                var outcome = outcomes[index];
+                CreateLine(outcome, timeInSeconds, index);
+            }
+        }
+
+        private void CreateLine(string line, float fadetime, int lineNumber)
         {
             var lineGameObject = Instantiate(dialogueLineUI);
             lineGameObject.transform.SetParent(defaultDialogueLinesParent.transform);
             var text = lineGameObject.GetComponentInChildren<Text>();
-            text.DOFade(0.0f, 0.0f);
+            var textMaterialColor = text.GetComponent<Text>().color;
+            text.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b, textMaterialColor.g, 0.0f);
             text.text = line;
-            text.DOFade(1.0f, 0.5f);
+            text.DOFade(1.0f, fadetime / 4).SetDelay(fadetime / 8 + lineNumber * LineOffsetInSeconds);
+            text.DOFade(0.0f, fadetime / 4).SetDelay(fadetime - fadetime / 4 - fadetime / 8);
         }
 
         private void CleanUpDialogueLines()

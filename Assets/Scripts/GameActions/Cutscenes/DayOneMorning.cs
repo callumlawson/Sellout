@@ -39,10 +39,20 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 mcGrawSequence.Add(new DialogueBranchAction(new Dictionary<DialogueOutcome, Action>
                 {
                     {
-                        DialogueOutcome.Nice, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Happy))
+                        DialogueOutcome.Nice, () =>
+                        {
+                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw,
+                                new UpdateMoodAction(Mood.Happy));
+                            StaticStates.Get<OutcomeTrackerState>().AddOutcome("You made a good impression on McGraw.");
+                        }
                     },
                     {
-                        DialogueOutcome.Mean, () => ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw, new UpdateMoodAction(Mood.Angry))
+                        DialogueOutcome.Mean, () =>
+                        {
+                            ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(mcGraw,
+                                new UpdateMoodAction(Mood.Angry));
+                            StaticStates.Get<OutcomeTrackerState>().AddOutcome("You and McGraw haven't got off to the best start.");
+                        }
                     }
                 }));
                 mcGrawSequence.Add(CommonActions.QueueForDrinkOrder(mcGraw, 10, 20));
