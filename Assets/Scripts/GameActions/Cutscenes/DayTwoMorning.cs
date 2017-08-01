@@ -4,8 +4,8 @@ using Assets.Scripts.GameActions.Composite;
 using Assets.Scripts.Systems;
 using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
-using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.Stories;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
@@ -14,9 +14,15 @@ namespace Assets.Scripts.GameActions.Cutscenes
         public static void Start(List<Entity> matchingEntities) {
 
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
-            var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
-            var tolstoy = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Tolstoy.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
+
+            var loveStoryActions = LoveStory.DayTwoMorning();
+            foreach (var actionPair in loveStoryActions)
+            {
+                var entity = actionPair.GetEntity();
+                var action = actionPair.GetGameAction();
+                ActionManagerSystem.Instance.QueueAction(entity, action);
+            }
 
             //McGraw
             var mcGrawSequence = new ActionSequence("McGraw Day Two Morning");
@@ -29,46 +35,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
             mcGrawSequence.Add(new PauseAction(2.0f)); //WORKAROUND FOR SYNC ACTION BUG
             mcGrawSequence.Add(DrugStory.InspectorQuestions(mcGraw));
             ActionManagerSystem.Instance.QueueAction(mcGraw, mcGrawSequence);
-
-            //Ellie
-            var ellieSequence = new ActionSequence("Ellie Day Two Morning");
-            ellieSequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
-            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint1()));
-            ellieSequence.Add(new SetReactiveConversationAction(new EllieMorningOne(), ellie));
-            ellieSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
-
-            //Tolstoy
-            var tolstoySequence = new ActionSequence("Tolstoy Day Two Morning");
-            tolstoySequence.Add(new PauseAction(0.5f)); //WORKAROUND FOR SYNC ACTION BUG
-            tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
-            tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningOne(), tolstoy));
-            tolstoySequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
-        }
-
-        private class TolstoyMorningOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("Tolstoy");
-                DialogueSystem.Instance.WriteNPCLine("You really need to get window shields.");
-                DialogueSystem.Instance.WriteNPCLine("This horrible purple light makes my drinks look wierd.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("How can you not want to look at the stars?", EndConversation(DialogueOutcome.Mean));
-                DialogueSystem.Instance.WritePlayerChoiceLine("I'll look into that.", EndConversation(DialogueOutcome.Nice));
-            }
-        }
-
-        private class EllieMorningOne : Conversation
-        {
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("Ellie");
-                DialogueSystem.Instance.WriteNPCLine("I love this purple nebula.");
-                DialogueSystem.Instance.WriteNPCLine("Imagine the strange new worlds it could be hiding!");
-                DialogueSystem.Instance.WritePlayerChoiceLine("It is beautiful.", EndConversation(DialogueOutcome.Nice));
-                DialogueSystem.Instance.WritePlayerChoiceLine("I've never really cared much for space.", EndConversation(DialogueOutcome.Mean));
-            }
         }
     }
 }

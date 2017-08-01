@@ -14,6 +14,7 @@ using Assets.Scripts.GameActions.Composite;
 using UnityEngine;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.Stories;
 
 namespace Assets.Scripts.Systems.Bar
 {

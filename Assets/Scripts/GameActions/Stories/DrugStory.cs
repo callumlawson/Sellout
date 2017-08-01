@@ -21,7 +21,7 @@ using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.Framework;
 using Assets.Scripts.GameActions.Navigation;
 
-namespace Assets.Scripts.GameActions
+namespace Assets.Scripts.GameActions.Stories
 {
     static class DrugStory
     {

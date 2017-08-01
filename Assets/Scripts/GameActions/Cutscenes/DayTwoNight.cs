@@ -8,16 +8,24 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
+using Assets.Scripts.GameActions.Stories;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
     static class DayTwoNight
     {
         public static void Start(List<Entity> matchingEntities) {
-           
+
+            var loveStoryActions = LoveStory.DayTwoNight();
+            foreach (var actionPair in loveStoryActions)
+            {
+                var entity = actionPair.GetEntity();
+                var action = actionPair.GetGameAction();
+                ActionManagerSystem.Instance.QueueAction(entity, action);
+            }
+
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var jannet = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Jannet.Name);
-            var ellie = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Ellie.Name);
             var q = EntityQueries.GetEntityWithName(matchingEntities, NPCS.Q.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 
@@ -37,13 +45,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
 
             //McGraw and Q
             DrugStory.DrugPusherInspectorShowdown(mcGraw, q, Locations.SitDownPoint2());  
-            
-            //Ellie
-            var ellieSequence = new ActionSequence("Ellie night two");
-            ellieSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
-            ellieSequence.Add(new SetReactiveConversationAction(new EllieNightTwo(ellie.GetState<RelationshipState>()), ellie));
-            ellieSequence.Add(CommonActions.SitDownLoop());
-            ActionManagerSystem.Instance.QueueAction(ellie, ellieSequence);
         }
 
         private class JannetNightTwo : Conversation
@@ -65,32 +66,6 @@ namespace Assets.Scripts.GameActions.Cutscenes
                     DialogueSystem.Instance.WriteNPCLine("How Q managed to find a market for his horrible substances I'll never know.");
                     DialogueSystem.Instance.WritePlayerChoiceLine("You'd be suprised. Being stuck in this space can drives people crazy eventually.", EndConversation(DialogueOutcome.Nice));
                     DialogueSystem.Instance.WritePlayerChoiceLine("You'd think in a ship as small as this there would be no room for it.", EndConversation(DialogueOutcome.Nice));
-                }
-            }
-        }
-
-        private class EllieNightTwo: Conversation
-        {
-            private readonly RelationshipState relationship;
-
-            public EllieNightTwo(RelationshipState relationship)
-            {
-                this.relationship = relationship;
-            }
-
-            protected override void StartConversation(string converstationInitiator)
-            {
-                DialogueSystem.Instance.StartDialogue("Ellie");
-                if (relationship.PlayerOpinion > 0)
-                {
-                    DialogueSystem.Instance.WriteNPCLine("I'm really glad you work here. You always have a nice thing to say.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Thanks!", EndConversation(DialogueOutcome.Nice));
-                }
-                else
-                {
-                    DialogueSystem.Instance.WriteNPCLine("You know, a few kind words can go along way. People come here looking for support sometimes.");
-                    DialogueSystem.Instance.WritePlayerChoiceLine("Fair point, I'll work on that.", EndConversation(DialogueOutcome.Nice));
-                    DialogueSystem.Instance.WritePlayerChoiceLine("I'm not the ship's physiatrist. They should find somewhere else!", EndConversation(DialogueOutcome.Mean));
                 }
             }
         }
