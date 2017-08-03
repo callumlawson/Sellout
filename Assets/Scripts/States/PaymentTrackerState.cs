@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using Assets.Framework.States;
 namespace Assets.Scripts.States
 {
+    public enum PaymentType
+    {
+        DrinkSale,
+        DrinkIngredient,
+        DrugMoney,
+        Fine
+    }
+
     [Serializable]
     public class PaymentTrackerState : IState
     {
-        public readonly List<string> TodaysPayments = new List<string>();
+        public readonly Dictionary<PaymentType, int> TodaysPayments = new Dictionary<PaymentType, int>();
 
         public PaymentTrackerState()
         {
-            TodaysPayments.Add("Test");
-            TodaysPayments.Add("Test2");
+            TodaysPayments.Add(PaymentType.DrinkSale, 0);
+            TodaysPayments.Add(PaymentType.DrinkIngredient, 0);
+            TodaysPayments.Add(PaymentType.DrugMoney, 0);
+            TodaysPayments.Add(PaymentType.Fine, 0);
         }
 
-        public void AddOutcome(string outcome)
+        public void AddPayment(int amount, PaymentType paymentType)
         {
-            TodaysPayments.Add(outcome);
+            TodaysPayments[paymentType] += amount;
         }
 
         public void ClearOutcomes()

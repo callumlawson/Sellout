@@ -168,7 +168,7 @@ namespace Assets.Scripts.GameActions
             }
 
             waitForDrink.Add(new TriggerAnimationAction(AnimationEvent.ItemTakeTrigger));
-            waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney));
+            waitForDrink.Add(new ModifyMoneyAction(Constants.DrinkSucsessMoney, PaymentType.DrinkSale));
 
             waitForDrink.Add(new EndDrinkOrderAction());
             waitForDrink.Add(new ReleaseWaypointAction());

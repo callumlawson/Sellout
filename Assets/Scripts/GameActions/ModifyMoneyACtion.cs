@@ -10,10 +10,12 @@ namespace Assets.Scripts.GameActions
     class ModifyMoneyAction : GameAction
     {
         private readonly int moneyDelta;
+        private readonly PaymentType paymentType;
 
-        public ModifyMoneyAction(int moneyDelta)
+        public ModifyMoneyAction(int moneyDelta, PaymentType paymentType)
         {
             this.moneyDelta = moneyDelta;
+            this.paymentType = paymentType;
         }
 
         public override void OnStart(Entity entity)

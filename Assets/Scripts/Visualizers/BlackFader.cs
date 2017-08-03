@@ -36,7 +36,8 @@ namespace Assets.Scripts.Visualizers
 
         public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
         {
-            ShowStoryOutcomes(delayTimeInSeconds);
+            //ShowStoryOutcomes(delayTimeInSeconds);
+            ShowPayments(delayTimeInSeconds);
 
             if (fadeIn)
             {
@@ -103,6 +104,26 @@ namespace Assets.Scripts.Visualizers
             {
                 var outcome = outcomes[index];
                 CreateLine(outcome, timeInSeconds, index);
+            }
+        }
+
+        private void ShowPayments(float timeInSeconds)
+        {
+            var payments = StaticStates.Get<PaymentTrackerState>().TodaysPayments;
+
+            if (!payments.Any()) return;
+
+            defaultDialogueUI.SetActive(true);
+            CleanUpDialogueLines();
+            CreateLine(payments[PaymentType.DrinkSale].ToString(), timeInSeconds, 0);
+            CreateLine(payments[PaymentType.DrinkIngredient].ToString(), timeInSeconds, 1);
+            if (payments[PaymentType.DrugMoney] != 0)
+            {
+                CreateLine(payments[PaymentType.DrugMoney].ToString(), timeInSeconds, 2);
+            }
+            if (payments[PaymentType.Fine] != 0)
+            {
+                CreateLine(payments[PaymentType.Fine].ToString(), timeInSeconds, 3);
             }
         }
 

@@ -48,6 +48,7 @@ namespace Assets.Scripts
             StaticStates.Add(new MoneyState(0));
             StaticStates.Add(new PlayerDecisionsState());
             StaticStates.Add(new OutcomeTrackerState());
+            StaticStates.Add(new PaymentTrackerState());
 
             //Debug
             entitySystem.AddSystem(new DebugControlsSystem());

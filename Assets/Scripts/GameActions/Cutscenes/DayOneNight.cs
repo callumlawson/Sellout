@@ -77,7 +77,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
             getPayed.Add(CommonActions.TalkToPlayer(new DrugPusherPayment()));
             getPayed.Add(new TriggerAnimationAction(AnimationEvent.ItemRecieveTrigger));
             getPayed.Add(new PauseAction(0.5f));
-            getPayed.Add(new ModifyMoneyAction(100));
+            getPayed.Add(new ModifyMoneyAction(100, PaymentType.DrugMoney));
             getPayed.Add(new LeaveBarAction());
             return getPayed;
         }
