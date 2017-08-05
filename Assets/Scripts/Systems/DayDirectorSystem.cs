@@ -105,6 +105,9 @@ namespace Assets.Scripts.Systems
                             case 2:
                                 DayTwoMorning.Start(people);
                                 break;
+                            case 3:
+                                DayThreeMorning.Start(people);
+                                break;
                             case 4:
                                 WelcomeSignControllerVisualizer.Instance.SetWelcomeSignActive(false);
                                 break;
