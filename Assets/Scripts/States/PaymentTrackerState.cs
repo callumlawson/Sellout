@@ -7,8 +7,7 @@ namespace Assets.Scripts.States
     {
         DrinkSale,
         DrinkIngredient,
-        DrugMoney,
-        Fine
+        DrugMoney
     }
 
     [Serializable]
@@ -21,7 +20,6 @@ namespace Assets.Scripts.States
             TodaysPayments.Add(PaymentType.DrinkSale, 0);
             TodaysPayments.Add(PaymentType.DrinkIngredient, 0);
             TodaysPayments.Add(PaymentType.DrugMoney, 0);
-            TodaysPayments.Add(PaymentType.Fine, 0);
         }
 
         public void AddPayment(int amount, PaymentType paymentType)

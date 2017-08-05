@@ -22,7 +22,7 @@ namespace Assets.Scripts.Visualizers
         private GameObject defaultDialogueLinesParent;
         private GameObject dialogueLineUI;
 
-        private const float LineOffsetInSeconds = 0.6f;
+        private const float LineOffsetInSeconds = 0.3f;
 
         [UsedImplicitly]
         public void Start()
@@ -36,11 +36,13 @@ namespace Assets.Scripts.Visualizers
 
         public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
         {
-            //ShowStoryOutcomes(delayTimeInSeconds);
-            ShowPayments(delayTimeInSeconds);
-
             if (fadeIn)
             {
+                defaultDialogueUI.SetActive(true);
+                CleanUpDialogueLines();
+                ShowPayments(delayTimeInSeconds);
+                ShowStoryOutcomes(delayTimeInSeconds);
+
                 Background.DOFade(1.0f, delayTimeInSeconds/4);
                 Background.raycastTarget = true;
                 DOTween.Sequence()
@@ -92,20 +94,7 @@ namespace Assets.Scripts.Visualizers
             });
         }
 
-        private void ShowStoryOutcomes(float timeInSeconds)
-        {
-            var outcomes = StaticStates.Get<OutcomeTrackerState>().TodaysOutcomes;
-
-            if (!outcomes.Any()) return;
-
-            defaultDialogueUI.SetActive(true);
-            CleanUpDialogueLines();
-            for (var index = 0; index < outcomes.Count; index++)
-            {
-                var outcome = outcomes[index];
-                CreateLine(outcome, timeInSeconds, index);
-            }
-        }
+ 
 
         private void ShowPayments(float timeInSeconds)
         {
@@ -113,17 +102,27 @@ namespace Assets.Scripts.Visualizers
 
             if (!payments.Any()) return;
 
-            defaultDialogueUI.SetActive(true);
-            CleanUpDialogueLines();
-            CreateLine(payments[PaymentType.DrinkSale].ToString(), timeInSeconds, 0);
-            CreateLine(payments[PaymentType.DrinkIngredient].ToString(), timeInSeconds, 1);
+            CreateLine("Ballance Sheet:", timeInSeconds, 0);
+            CreateLine("Drink Sales: " + payments[PaymentType.DrinkSale], timeInSeconds, 1);
+            CreateLine("Ingredient Costs: " + payments[PaymentType.DrinkIngredient], timeInSeconds, 2);
             if (payments[PaymentType.DrugMoney] != 0)
             {
-                CreateLine(payments[PaymentType.DrugMoney].ToString(), timeInSeconds, 2);
+                CreateLine("Drug Money: " + payments[PaymentType.DrugMoney], timeInSeconds, 3);
             }
-            if (payments[PaymentType.Fine] != 0)
+            CreateLine("Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4);
+        }
+
+        private void ShowStoryOutcomes(float timeInSeconds)
+        {
+            var outcomes = StaticStates.Get<OutcomeTrackerState>().TodaysOutcomes;
+
+            if (!outcomes.Any()) return;
+
+            CreateLine("Happenings:", timeInSeconds, 5);
+            for (var index = 0; index < outcomes.Count; index++)
             {
-                CreateLine(payments[PaymentType.Fine].ToString(), timeInSeconds, 3);
+                var outcome = outcomes[index];
+                CreateLine(outcome, timeInSeconds, index + 6);
             }
         }
 
