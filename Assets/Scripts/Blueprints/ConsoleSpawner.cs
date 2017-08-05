@@ -17,8 +17,7 @@ namespace Assets.Scripts.Blueprints
                 new RotationState(transform.rotation),
                 new PositionState(transform.position),
                 new PrefabState(Prefabs.Console),
-                new TooltipState("Open the bar in the Morning. Leave at night."),
-                new InteractiveState()
+                new TooltipState("Open the bar in the Morning. Leave at night.")
             };
         }
     }

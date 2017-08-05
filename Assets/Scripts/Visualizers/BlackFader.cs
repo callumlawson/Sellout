@@ -34,15 +34,18 @@ namespace Assets.Scripts.Visualizers
             dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
         }
 
-        public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true)
+        public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true, bool endOfDay = false)
         {
-            if (fadeIn)
+            if (endOfDay)
             {
                 defaultDialogueUI.SetActive(true);
                 CleanUpDialogueLines();
                 ShowPayments(delayTimeInSeconds);
                 ShowStoryOutcomes(delayTimeInSeconds);
+            }
 
+            if (fadeIn)
+            {
                 Background.DOFade(1.0f, delayTimeInSeconds/4);
                 Background.raycastTarget = true;
                 DOTween.Sequence()

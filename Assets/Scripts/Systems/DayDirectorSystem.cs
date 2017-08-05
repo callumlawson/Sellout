@@ -58,7 +58,7 @@ namespace Assets.Scripts.Systems
                 EntityStateSystem.Instance.Resume();
 
                 doingPhaseChange = false;
-            });
+            }, true, nextDayPhase == DayPhase.Morning);
         }
 
         public List<Type> RequiredStates()
