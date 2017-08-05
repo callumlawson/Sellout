@@ -253,6 +253,7 @@ namespace Assets.Scripts.GameActions.Stories
             var sequence = new ActionSequence("DrugPusherAskToDrink");
             sequence.Add(new ConversationAction(new DrugPusherAskToGetinspectorDrunk()));
             sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(drugPusher, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
+            sequence.Add(CommonActions.Wander());
             sequence.Add(CommonActions.TalkToBarPatronsLoop());
             return sequence;
         }

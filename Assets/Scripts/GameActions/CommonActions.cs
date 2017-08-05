@@ -17,6 +17,7 @@ using AnimationEvent = Assets.Scripts.Util.AnimationEvent;
 using Random = UnityEngine.Random;
 using Assets.Scripts.GameActions.AILifecycle;
 using Assets.Scripts.GameActions.Cusscenes;
+using Assets.Scripts.GameActions.Framework;
 
 namespace Assets.Scripts.GameActions
 {
@@ -104,7 +105,7 @@ namespace Assets.Scripts.GameActions
             return waitForDrink;
         }
 
-        public static ConditionalActionSequence WaitForDrink(Entity entity, string drinkOrIngerdientOrdered, DrinkOrders.DrinkOrder drinkOrder, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null)
+        public static ConditionalActionSequence WaitForDrink(Entity entity, string drinkOrIngerdientOrdered, DrinkOrders.DrinkOrder drinkOrder, int timeoutInGameMins, bool retry = false, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, Dictionary<String, GameAction> otherDrinkActions = null)
         {
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new OnFailureDecorator(
@@ -120,27 +121,35 @@ namespace Assets.Scripts.GameActions
                        }
                        else
                        {
-                           if (incorrectDrinkConversation == null)
+                           var drinkInHand = entity.GetState<InventoryState>().Child.HasState<DrinkState>() ? entity.GetState<InventoryState>().Child.GetState<DrinkState>() : null;
+                           var otherDrinkResponse = drinkInHand != null && otherDrinkActions != null ? otherDrinkActions.Keys.First(otherDrink => DrinkState.IsIdentical(drinkInHand, DrinkRecipes.GetDrinkRecipe(otherDrink).Contents)) : null;
+                           if (otherDrinkResponse != null)
                            {
-                               var reason = entity.GetState<ActionBlackboardState>().IncorrectDrinkReason;
-                               bool destroyDrink = false;
-                               var conversation = DialogueSelector.GetIncorrectDrinkOrderConversation(drinkOrIngerdientOrdered, entity, reason, out destroyDrink);
-
-                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(conversation));
-                               if (destroyDrink)
-                               {
-                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
-                               }
+                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, otherDrinkActions[otherDrinkResponse]);
                            }
                            else
                            {
-                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(incorrectDrinkConversation));
+                               if (incorrectDrinkConversation == null)
+                               {
+                                   var reason = entity.GetState<ActionBlackboardState>().IncorrectDrinkReason;
+                                   bool destroyDrink = false;
+                                   var conversation = DialogueSelector.GetIncorrectDrinkOrderConversation(drinkOrIngerdientOrdered, entity, reason, out destroyDrink);
+
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(conversation));
+                                   if (destroyDrink)
+                                   {
+                                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new DestoryEntityInInventoryAction());
+                                   }
+                               }
+                               else
+                               {
+                                   ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ConversationAction(incorrectDrinkConversation));
+                               }
+                               ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
                            }
                        }
                        ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new EndDrinkOrderAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());
-                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new UpdateMoodAction(Mood.Angry));
-                       
+                       ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(entity, new ReleaseWaypointAction());                                              
                    }
                    else
                    {

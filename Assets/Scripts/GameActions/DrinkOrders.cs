@@ -72,7 +72,6 @@ namespace Assets.Scripts.GameActions
         private static DrinkPredicate GlassHasContents = new DrinkPredicate(drink => drink.GetContents().Count != 0, IncorrectDrinkReason.EmptyGlass);
         private static DrinkPredicate RecipeExists = new DrinkPredicate(drink => DrinkRecipes.Contains(drink) || Equals(drink, DrinkRecipes.Beer.Contents), IncorrectDrinkReason.RecipeDoesNotExist);
         private static DrinkPredicate RecipeIsNonAlcoholic = new DrinkPredicate(drink => DrinkState.IsNonAlcoholic(drink), IncorrectDrinkReason.Alcoholic);
-        private static DrinkPredicate RecipeIsAlcoholic = new DrinkPredicate(drink => !DrinkState.IsNonAlcoholic(drink), IncorrectDrinkReason.NonAlcoholic);
 
         public class AlwaysSucceedsDrinkOrder : DrinkOrder
         {
@@ -192,10 +191,10 @@ namespace Assets.Scripts.GameActions
             return OrderDrink(entity, new ExactDrinkorder(DrinkRecipes.Beer, entity.GetState<NameState>().Name), DialogueSelector.GetExactDrinkOrderConversation("Beer", entity), orderTimeoutInMins: orderTimeOurInMins);
         }
 
-        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeOurInMins = 20)
+        public static GameAction GetRandomAlcoholicDrinkOrder(Entity entity, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, Dictionary<String, GameAction> otherDrinkActions = null, int orderTimeOurInMins = 20)
         {
             var drinkOrder = new ExactDrinkorder(DrinkRecipes.GetRandomAlcoholicDrinkRecipe(), entity.GetState<NameState>().Name);
-            return OrderDrink(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), correctDrinkConversation, incorrectDrinkConversation, orderTimeOurInMins);
+            return OrderDrink(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), correctDrinkConversation, incorrectDrinkConversation, otherDrinkActions, orderTimeOurInMins);
         }
 
         public static GameAction GetRandomAlcoholicDrinkOrderWithoutFailure(Entity entity, int orderTimeOurInMins = 20)
@@ -204,14 +203,14 @@ namespace Assets.Scripts.GameActions
             return OrderDrinkWithoutFailure(entity, drinkOrder, DialogueSelector.GetExactDrinkOrderConversation(drinkOrder.Recipe.DrinkName, entity, required: Required.Yes), orderTimeOurInMins);
         }
 
-        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, int orderTimeoutInMins = 40)
+        public static ActionSequence OrderDrink(Entity entity, DrinkOrder drinkOrder, Conversation conversation, Conversation correctDrinkConversation = null, Conversation incorrectDrinkConversation = null, Dictionary<String, GameAction> otherDrinkActions = null, int orderTimeoutInMins = 40)
         {
             var wrapper = new ActionSequence("DrinkOrderThenClear");
             var orderDrink = new ParallelUntilAllCompleteAction("OrderDrink");
             orderDrink.Add(new ReportSuccessDecorator(new ConversationAction(conversation)));
             var waitForDrink = new ConditionalActionSequence("WaitForDrink");
             waitForDrink.Add(new StartDrinkOrderAction(drinkOrder));
-            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.OrderedItem, drinkOrder, orderTimeoutInMins, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation));
+            waitForDrink.Add(CommonActions.WaitForDrink(entity, drinkOrder.OrderedItem, drinkOrder, orderTimeoutInMins, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation, otherDrinkActions: otherDrinkActions));
             orderDrink.Add(waitForDrink);
             wrapper.Add(orderDrink);
             wrapper.Add(new ClearConversationAction());
