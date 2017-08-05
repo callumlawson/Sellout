@@ -84,6 +84,11 @@ namespace Assets.Scripts.Util
             return GameObject.FindGameObjectWithTag("StandPoint6").transform;
         }
 
+        public static Transform StandPointWindow()
+        {
+            return GameObject.FindGameObjectWithTag("StandPointWindow").transform;
+        }
+
         public static Transform CenterOfBar()
         {
             return GameObject.FindGameObjectWithTag("CenterOfBarPoint").transform;

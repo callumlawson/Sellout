@@ -94,8 +94,6 @@ namespace Assets.Scripts.Visualizers
             });
         }
 
- 
-
         private void ShowPayments(float timeInSeconds)
         {
             var payments = StaticStates.Get<PaymentTrackerState>().TodaysPayments;
