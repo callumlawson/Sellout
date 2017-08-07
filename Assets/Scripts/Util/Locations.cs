@@ -54,6 +54,16 @@ namespace Assets.Scripts.Util
             return GameObject.FindGameObjectWithTag("SitDownPoint4").transform;
         }
 
+        public static Transform SitDownPoint5()
+        {
+            return GameObject.FindGameObjectWithTag("SitDownPoint5").transform;
+        }
+
+        public static Transform SitDownPoint6()
+        {
+            return GameObject.FindGameObjectWithTag("SitDownPoint6").transform;
+        }
+
         public static Transform StandPoint1()
         {
             return GameObject.FindGameObjectWithTag("StandPoint1").transform;

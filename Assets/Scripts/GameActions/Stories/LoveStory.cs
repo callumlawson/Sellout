@@ -323,15 +323,15 @@ namespace Assets.Scripts.GameActions.Stories
 
             if (StaticStates.Get<PlayerDecisionsState>().GaveEllieTolstoysDrink)
             {
-                tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+                tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint5()));
                 tolstoySequence.Add(new SetReactiveConversationAction(new TosltoyNightTwoSuccess()));
 
-                ellieSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
+                ellieSequence.Add(new TeleportAction(Locations.SitDownPoint6()));
                 ellieSequence.Add(new SetReactiveConversationAction(new EllieNightTwoSuccess()));
             }
             else
             {
-                tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint2()));
+                tolstoySequence.Add(new TeleportAction(Locations.SitDownPoint1()));
                 tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyNightTwoFailure()));
 
                 ellieSequence.Add(new TeleportAction(Locations.SitDownPoint3()));
