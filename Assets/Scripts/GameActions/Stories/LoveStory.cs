@@ -57,7 +57,11 @@ namespace Assets.Scripts.GameActions.Stories
             tolstoySequence.Add(new UpdateMoodAction(Mood.Happy));
             tolstoySequence.Add(new ConversationAction(new TolstoyMorningGivenDrink()));
             tolstoySequence.Add(new SetReactiveConversationAction(new TolstoyMorningAfterDrink()));
-            tolstoySequence.Add(new CallbackAction(() => StaticStates.Get<PlayerDecisionsState>().GaveTolstoyDrink = true));
+            tolstoySequence.Add(new CallbackAction(() =>
+            {
+                StaticStates.Get<PlayerDecisionsState>().GaveTolstoyDrink = true;
+                StaticStates.Get<OutcomeTrackerState>().AddOutcome("Tolstoy's was suprised by your kindness.");
+            }));
             tolstoySequence.Add(CommonActions.SitDownLoop());
             ActionManagerSystem.Instance.QueueAction(tolstoy, tolstoySequence);
             

@@ -116,6 +116,7 @@ namespace Assets.Scripts.GameActions.Stories
 
             ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, acceptSequence);
 
+            StaticStates.Get<OutcomeTrackerState>().AddOutcome("You are now in business with Q - what could go wrong?");
             StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = true;
         }
 
@@ -131,6 +132,7 @@ namespace Assets.Scripts.GameActions.Stories
 
             ActionManagerSystem.Instance.AddActionToFrontOfQueueForEntity(drugPusher, disagreeSequence);
 
+            StaticStates.Get<OutcomeTrackerState>().AddOutcome("Q is not happy. You have the impression your predecessor paid less attention to the rules.");
             StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer = false;
         }
 
@@ -232,7 +234,7 @@ namespace Assets.Scripts.GameActions.Stories
         #region Day 2 - Open
 
         // Intro
-        public static ActionSequence InspectorAskToDrink(Entity inspector)
+        private static ActionSequence InspectorAskToDrink(Entity inspector)
         {
             var incorrectDrinkConversation = new NoResponseConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", DialogueOutcome.Default);
             var correctDrinkConversation = new NoResponseConversation("Mm, great drink. Make them like this and he'll be sure to slip up.", DialogueOutcome.Default);
@@ -245,7 +247,7 @@ namespace Assets.Scripts.GameActions.Stories
             return sequence;
         }
 
-        public static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
+        private static ActionSequence DrugPusherAskToDrink(Entity drugPusher)
         {
             var incorrectDrinkConversation = new NoResponseConversation("Well.. this isn't right. I hope you do better when you serve him drinks.", DialogueOutcome.Default);
             var correctDrinkConversation = new NoResponseConversation("Mm, great drink. Make them like this and there's no way he can do his job.", DialogueOutcome.Default);
@@ -282,7 +284,7 @@ namespace Assets.Scripts.GameActions.Stories
         }
 
         // Minigame
-        public static ActionSequence InspectorDrinkText(Entity inspector)
+        private static ActionSequence InspectorDrinkText(Entity inspector)
         {
             var failureConversations = inspectorFailureLines;
             var successConversations = inspectorSuccessLines;
@@ -291,7 +293,7 @@ namespace Assets.Scripts.GameActions.Stories
             return DrinkTest(0, 3, inspector, failureConversations, successConversations, betweenDrinks, afterSuccess);
         }
 
-        public static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
+        private static ActionSequence DrugPusherDrinkTest(Entity drugPusher)
         {
             var failureConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherFailureLinesAccepted : drugPusherFailureLinesRejected;
             var successConversations = StaticStates.Get<PlayerDecisionsState>().AcceptedDrugPushersOffer ? drugPusherSuccessLinesAccepted : drugPusherSuccessLinesRejected;
@@ -300,7 +302,7 @@ namespace Assets.Scripts.GameActions.Stories
             return DrinkTest(0, 3, drugPusher, failureConversations, successConversations, betweenDrinks, afterSuccess);
         }
 
-        public static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
+        private static ActionSequence DrinkTest(int currentSuccesses, int maxSuccesses, Entity drinker, List<Conversation> failureConversations, List<Conversation> successConversations, List<GameAction> betweenDrinks, GameAction afterSuccess)
         {
             var sequence = new ActionSequence("DrinkTest: " + drinker);
 
@@ -517,9 +519,10 @@ namespace Assets.Scripts.GameActions.Stories
 
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
+                        StaticStates.Get<OutcomeTrackerState>().AddOutcome("McGraw got Q but you are not absolved of your part in it.");
                         inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
-                                new string[] {
+                                new[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He did say that you were in on it... he's pretty drunk though so he's probably just making it up."},
                                 DialogueOutcome.Bad,
@@ -529,9 +532,10 @@ namespace Assets.Scripts.GameActions.Stories
                     }
                     else
                     {
+                        StaticStates.Get<OutcomeTrackerState>().AddOutcome("McGraw is very pleased with your performance. Q is most certainly not.");
                         inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
-                                new string[] {
+                                new[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
                                 DialogueOutcome.Bad,
@@ -555,9 +559,10 @@ namespace Assets.Scripts.GameActions.Stories
 
                     if (decisionState.AcceptedDrugPushersOffer)
                     {
+                        StaticStates.Get<OutcomeTrackerState>().AddOutcome("McGraw is very pleased with your performance and has no idea your were on the take! Win win.");
                         inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
-                                new string[] {
+                                new[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tried to tell me something but he's so drunk he can barely speak! Good job."},
                                 DialogueOutcome.Bad,
@@ -567,9 +572,10 @@ namespace Assets.Scripts.GameActions.Stories
                     }
                     else
                     {
+                        StaticStates.Get<OutcomeTrackerState>().AddOutcome("McGraw is very pleased with your performance and has no idea your were on the take! Win win.");
                         inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
-                                new string[] {
+                                new[] {
                                     "Thanks to your help I was able to stop this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "You're a great asset to this crew."},
                                 DialogueOutcome.Bad,
@@ -594,9 +600,10 @@ namespace Assets.Scripts.GameActions.Stories
                     drugPusherActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerFlyBack));
                     drugPusherActions.Add(new PauseAction(1.5f));
 
+                    StaticStates.Get<OutcomeTrackerState>().AddOutcome("McGraw is going to be watching you carefully.");
                     inspectorActions.Add(new ConversationAction(
                             new NoResponseConversation(
-                                new string[] {
+                                new[] {
                                     "No thanks to you I was able to catch this criminal. He had enough Space Weed on him to put him away for a good while.",
                                     "He tells me that you were in on it, I'm going to have my eye on you for a long time."},
                                 DialogueOutcome.Bad,
@@ -622,6 +629,7 @@ namespace Assets.Scripts.GameActions.Stories
 
                     inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
 
+                    StaticStates.Get<OutcomeTrackerState>().AddOutcome("Q is very plesed with your actions. McGraw is none the wiser");
                     inspectorActions.Add(new ConversationAction(
                         new NoResponseConversation("*Hic* Damn, he got away. I shouldn't have drank so much. I'm sorry you had to see that.",
                         DialogueOutcome.Bad,
@@ -642,6 +650,7 @@ namespace Assets.Scripts.GameActions.Stories
 
                     inspectorActions.Add(new TriggerAnimationAction(Util.AnimationEvent.TriggerGetUp));
 
+                    StaticStates.Get<OutcomeTrackerState>().AddOutcome("Q is very plesed with your actions. McGraw is none the wiser");
                     inspectorActions.Add(new ConversationAction(
                         new NoResponseConversation("*Hic* Damn... I shouldn't have drank so much. Sorry you had to see that, you're a good kid. *Hic*",
                         DialogueOutcome.Bad,
