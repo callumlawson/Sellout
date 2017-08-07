@@ -62,7 +62,7 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 mcGrawSequence.Add(orderSequence);
                 orderSequence.Add(CommonActions.WaitForDrink(mcGraw, drinkName, drinkOrder, 90, true, new DrinkSucsessDialogue()));
                 mcGrawSequence.Add(new RemoveTutorialControlLockAction());
-                mcGrawSequence.Add(new FadeToBlackAction(6.5f, "Alright, First day. Just open the bar then serve the right drinks. Easy."));
+                mcGrawSequence.Add(new FadeToBlackAction(6.5f, "First day. Just open the bar then serve the right drinks, Easy?"));
                 mcGrawSequence.Add(new PauseAction(3.0f));
                 mcGrawSequence.Add(new CallbackAction(() =>
                 {

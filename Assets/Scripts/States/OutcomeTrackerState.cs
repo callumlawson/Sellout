@@ -8,12 +8,6 @@ namespace Assets.Scripts.States
     {
         public readonly List<string> TodaysOutcomes = new List<string>();
 
-        public OutcomeTrackerState()
-        {
-            TodaysOutcomes.Add("Test");
-            TodaysOutcomes.Add("Test2");
-        }
-
         public void AddOutcome(string outcome)
         {
             TodaysOutcomes.Add(outcome);

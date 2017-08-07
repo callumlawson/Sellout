@@ -31,7 +31,7 @@ namespace Assets.Scripts.Visualizers
             defaultDialogueUI.transform.SetParent(UIRoot.transform);
             defaultDialogueLinesParent = defaultDialogueUI.GetComponentInChildren<VerticalLayoutGroup>().gameObject;
             defaultDialogueUI.SetActive(false);
-            dialogueLineUI = AssetLoader.LoadAsset(Prefabs.DialogueLineUI);
+            dialogueLineUI = AssetLoader.LoadAsset(Prefabs.EndOfDayLineUI);
         }
 
         public void FadeToBlack(float delayTimeInSeconds, string text = "", Action midFade = null, bool fadeIn = true, bool endOfDay = false)
@@ -103,14 +103,15 @@ namespace Assets.Scripts.Visualizers
 
             if (!payments.Any()) return;
 
-            CreateLine("Ballance Sheet:", timeInSeconds, 0);
+            CreateLine("Ballance Sheet", timeInSeconds, 0, true);
             CreateLine("Drink Sales: " + payments[PaymentType.DrinkSale], timeInSeconds, 1);
             CreateLine("Ingredient Costs: " + payments[PaymentType.DrinkIngredient], timeInSeconds, 2);
             if (payments[PaymentType.DrugMoney] != 0)
             {
                 CreateLine("Drug Money: " + payments[PaymentType.DrugMoney], timeInSeconds, 3);
             }
-            CreateLine("Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4);
+            CreateLine("Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4, false, TextAnchor.MiddleRight);
+            CreateLine("", timeInSeconds, 4);
         }
 
         private void ShowStoryOutcomes(float timeInSeconds)
@@ -119,7 +120,7 @@ namespace Assets.Scripts.Visualizers
 
             if (!outcomes.Any()) return;
 
-            CreateLine("Happenings:", timeInSeconds, 5);
+            CreateLine("Happenings:", timeInSeconds, 5, true);
             for (var index = 0; index < outcomes.Count; index++)
             {
                 var outcome = outcomes[index];
@@ -127,14 +128,24 @@ namespace Assets.Scripts.Visualizers
             }
         }
 
-        private void CreateLine(string line, float fadetime, int lineNumber)
+        private void CreateLine(string line, float fadetime, int lineNumber, bool yellow = false, TextAnchor alignment =  TextAnchor.MiddleLeft)
         {
             var lineGameObject = Instantiate(dialogueLineUI);
             lineGameObject.transform.SetParent(defaultDialogueLinesParent.transform);
             var text = lineGameObject.GetComponentInChildren<Text>();
-            var textMaterialColor = text.GetComponent<Text>().color;
-            text.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b, textMaterialColor.g, 0.0f);
             text.text = line;
+            text.alignment = alignment;
+            var textMaterialColor = text.GetComponent<Text>().color;
+            if (yellow)
+            {
+                text.GetComponent<Text>().color = new Color(1.0f, 1.0f,
+                   0.0f, 0.0f);
+            }
+            else
+            {
+                text.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b,
+                   textMaterialColor.g, 0.0f);
+            }
             text.DOFade(1.0f, fadetime / 4).SetDelay(fadetime / 8 + lineNumber * LineOffsetInSeconds);
             text.DOFade(0.0f, fadetime / 4).SetDelay(fadetime - fadetime / 4 - fadetime / 8);
         }

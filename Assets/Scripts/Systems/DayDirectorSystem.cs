@@ -39,26 +39,29 @@ namespace Assets.Scripts.Systems
                 Debug.Log("Unable to increment day phase as we're already in the middle of incrementing the day phase.");
                 return;
             }
-
             doingPhaseChange = true;
-
             EntityStateSystem.Instance.Pause();
 
             var nextDayPhase = StaticStates.Get<DayPhaseState>().GetNextDayPhase();
-
-            Interface.Instance.BlackFader.FadeToBlack(8.0f, GetFadeTitle(nextDayPhase), () =>
+            var isEndOfDay = nextDayPhase == DayPhase.Morning;
+            var fadeTime = isEndOfDay ? 12.0f : 6.0f;
+            Interface.Instance.BlackFader.FadeToBlack(fadeTime, GetFadeTitle(nextDayPhase), () =>
             {
                 ResetNPCs();
                 ResetBarStateAndDialogues();
                 WaypointSystem.Instance.ClearAllWaypoints();
                 SetLighting(nextDayPhase);
-
                 StaticStates.Get<DayPhaseState>().IncrementDayPhase();
-
+                if (isEndOfDay)
+                {
+                    StaticStates.Get<OutcomeTrackerState>().ClearOutcomes();
+                    StaticStates.Get<PaymentTrackerState>().ClearOutcomes();
+                }
                 EntityStateSystem.Instance.Resume();
-
                 doingPhaseChange = false;
-            }, true, nextDayPhase == DayPhase.Morning);
+            }, 
+            fadeIn: true, 
+            endOfDay: isEndOfDay);
         }
 
         public List<Type> RequiredStates()
@@ -182,7 +185,7 @@ namespace Assets.Scripts.Systems
             Locations.ResetPeopleToSpawnPoints(people);
             if (!GameSettings.SkipFirstDayFadein)
             {
-                Interface.Instance.BlackFader.FadeToBlack(4.0f, "Day 1", null, false);
+                Interface.Instance.BlackFader.FadeToBlack(6.0f, "New job, new life. Here's to better things.", null, false);
             }
 
             DayOneMorning.Start(people);

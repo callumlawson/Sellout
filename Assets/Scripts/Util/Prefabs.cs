@@ -33,6 +33,7 @@ namespace Assets.Scripts.Util
         public const string ListPanelUI = "ListPanel";
         public const string BarDiagloguePanelUI = "BarDialoguePanel";
         public const string DialogueLineUI = "DialogueLine";
+        public const string EndOfDayLineUI = "EndOfDayLine";
         public const string ResponseLineUI = "ResponseLine";
         public const string NameTagUI = "NameTag";
         public const string MoodBubbleUI = "MoodBubble";
