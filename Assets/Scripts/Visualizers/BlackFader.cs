@@ -102,13 +102,13 @@ namespace Assets.Scripts.Visualizers
             var payments = StaticStates.Get<PaymentTrackerState>().TodaysPayments;
 
             CreateLine("Ballance Sheet", timeInSeconds, 0, true);
-            CreateLine("Drink Sales: " + payments[PaymentType.DrinkSale], timeInSeconds, 1);
-            CreateLine("Ingredient Costs: " + payments[PaymentType.DrinkIngredient], timeInSeconds, 2);
+            CreateLine("Drink Sales", timeInSeconds, 1, false, payments[PaymentType.DrinkSale].ToString());
+            CreateLine("Ingredient Costs", timeInSeconds, 2, false, payments[PaymentType.DrinkIngredient].ToString());
             if (payments[PaymentType.DrugMoney] != 0)
             {
-                CreateLine("Drug Money: " + payments[PaymentType.DrugMoney], timeInSeconds, 3);
+                CreateLine("Drug Money", timeInSeconds, 3, false, payments[PaymentType.DrugMoney].ToString());
             }
-            CreateLine("New Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4, false, TextAnchor.MiddleRight);
+            CreateLine("", timeInSeconds, 4, false, "Current Total: " + StaticStates.Get<MoneyState>().CurrentMoney);
             CreateLine("", timeInSeconds, 4);
         }
 
@@ -126,26 +126,33 @@ namespace Assets.Scripts.Visualizers
             }
         }
 
-        private void CreateLine(string line, float fadetime, int lineNumber, bool yellow = false, TextAnchor alignment =  TextAnchor.MiddleLeft)
+        private void CreateLine(string lineLeft, float fadetime, int lineNumber, bool yellow = false, string lineRight = "")
         {
             var lineGameObject = Instantiate(dialogueLineUI);
             lineGameObject.transform.SetParent(defaultDialogueLinesParent.transform);
-            var text = lineGameObject.GetComponentInChildren<Text>();
-            text.text = line;
-            text.alignment = alignment;
-            var textMaterialColor = text.GetComponent<Text>().color;
+            var texts = lineGameObject.GetComponentsInChildren<Text>();
+            var leftText = texts[0];
+            var rightText = texts[1];
+
+            leftText.text = lineLeft;
+            var textMaterialColor = leftText.GetComponent<Text>().color;
             if (yellow)
             {
-                text.GetComponent<Text>().color = new Color(1.0f, 1.0f,
+                leftText.GetComponent<Text>().color = new Color(1.0f, 1.0f,
                    0.0f, 0.0f);
             }
             else
             {
-                text.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b,
+                leftText.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b,
                    textMaterialColor.g, 0.0f);
             }
-            text.DOFade(1.0f, fadetime / 4).SetDelay(fadetime / 8 + lineNumber * LineOffsetInSeconds);
-            text.DOFade(0.0f, fadetime / 4).SetDelay(fadetime - fadetime / 4 - fadetime / 8);
+            leftText.DOFade(1.0f, fadetime / 4).SetDelay(fadetime / 8 + lineNumber * LineOffsetInSeconds);
+            leftText.DOFade(0.0f, fadetime / 4).SetDelay(fadetime - fadetime / 4 - fadetime / 8);
+
+            rightText.text = lineRight;
+            rightText.GetComponent<Text>().color = new Color(textMaterialColor.r, textMaterialColor.b, textMaterialColor.g, 0.0f);
+            rightText.DOFade(1.0f, fadetime / 4).SetDelay(fadetime / 8 + lineNumber * LineOffsetInSeconds);
+            rightText.DOFade(0.0f, fadetime / 4).SetDelay(fadetime - fadetime / 4 - fadetime / 8);
         }
 
         private void CleanUpDialogueLines()
