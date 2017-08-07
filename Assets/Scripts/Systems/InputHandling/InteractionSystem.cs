@@ -5,7 +5,6 @@ using Assets.Framework.States;
 using Assets.Framework.Systems;
 using Assets.Scripts.States;
 using Assets.Scripts.Util;
-using UnityEngine;
 
 namespace Assets.Scripts.Systems.InputHandling
 {
@@ -114,8 +113,9 @@ namespace Assets.Scripts.Systems.InputHandling
             if (entityName == Prefabs.DrinkSurface)
             {
                 interactiveState.CurrentlyInteractive =
-                    playerState.Player.GetState<InventoryState>().Child != null &&
-                    Prefabs.SurfacePlaceablePrefabs.Contains(playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName);
+                    (playerState.Player.GetState<InventoryState>().Child != null &&
+                    Prefabs.SurfacePlaceablePrefabs.Contains(playerState.Player.GetState<InventoryState>().Child.GetState<PrefabState>().PrefabName)) ||
+                    playerState.PlayerStatus != PlayerStatus.Bar;
             }
         }
     }

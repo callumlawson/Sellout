@@ -80,7 +80,7 @@ namespace Assets.Scripts.Systems.AI
             if (targetEntity != null && targetEntity.HasState<PrefabState>())
             {
                 var prefab = targetEntity.GetState<PrefabState>();
-                if (!playerState.CutsceneControlLock || (playerState.CutsceneControlLock && prefab.PrefabName == Prefabs.Counter))
+                if (!playerState.CutsceneControlLock || (playerState.CutsceneControlLock && (prefab.PrefabName == Prefabs.Counter || prefab.PrefabName == Prefabs.DrinkSurface)))
                 {
                     ActionManagerSystem.Instance.QueueAction(player, new ReleaseWaypointAction());
                     QueueActionsForPrefab(targetEntity, prefab.PrefabName);

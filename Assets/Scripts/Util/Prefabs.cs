@@ -45,7 +45,6 @@ namespace Assets.Scripts.Util
             MixologyBook,
             BeerStack,
             BarConsole,
-            DrinkSurface,
             Beer,
             Cubby,
             ServeSpot,
