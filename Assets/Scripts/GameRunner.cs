@@ -45,7 +45,7 @@ namespace Assets.Scripts
             StaticStates.Add(new DayPhaseState(DayPhase.Morning));
             StaticStates.Add(new TimeState(Constants.GameStartTime));
             StaticStates.Add(new CursorState(null, new SerializableVector3()));
-            StaticStates.Add(new MoneyState(0));
+            StaticStates.Add(new MoneyState(Constants.StartingMoney));
             StaticStates.Add(new PlayerDecisionsState());
             StaticStates.Add(new OutcomeTrackerState());
             StaticStates.Add(new PaymentTrackerState());

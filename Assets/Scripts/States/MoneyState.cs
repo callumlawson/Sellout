@@ -15,7 +15,7 @@ namespace Assets.Scripts.States
 
         public void ModifyMoney(int amount)
         {
-            CurrentMoney = Math.Max(CurrentMoney += amount, 0);
+            CurrentMoney = CurrentMoney += amount;
         }
 
         public override string ToString()

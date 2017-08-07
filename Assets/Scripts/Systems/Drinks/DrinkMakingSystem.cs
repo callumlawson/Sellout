@@ -351,6 +351,8 @@ namespace Assets.Scripts.Systems.Drinks
             {
                 var ingredient = dispenser.GetState<DrinkState>().GetContents().Keys.First();
                 dispenser.GameObject.GetComponent<OneShotAudioPlayer>().PlayOneShot();
+                StaticStates.Get<PaymentTrackerState>().AddPayment(-Constants.IngredientCost, PaymentType.DrinkIngredient);
+                StaticStates.Get<MoneyState>().ModifyMoney(-Constants.IngredientCost);
                 drink.GetState<DrinkState>().ChangeIngredientAmount(ingredient, 1);
             }
         }

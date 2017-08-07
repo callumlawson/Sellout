@@ -12,7 +12,9 @@ namespace Assets.Scripts.Util
         public const int ClosingHour = 23;
 
         //Economy
-        public const int DrinkSucsessMoney = 5;
+        public const int StartingMoney = 20;
+        public const int DrinkSucsessMoney = 10;
+        public const int IngredientCost = 1;
 
         //Drinks
         public const int MaxUnitsInDrink = 6;

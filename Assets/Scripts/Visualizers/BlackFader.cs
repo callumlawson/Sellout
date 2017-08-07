@@ -108,7 +108,7 @@ namespace Assets.Scripts.Visualizers
             {
                 CreateLine("Drug Money: " + payments[PaymentType.DrugMoney], timeInSeconds, 3);
             }
-            CreateLine("Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4, false, TextAnchor.MiddleRight);
+            CreateLine("New Total: " + StaticStates.Get<MoneyState>().CurrentMoney, timeInSeconds, 4, false, TextAnchor.MiddleRight);
             CreateLine("", timeInSeconds, 4);
         }
 
@@ -118,7 +118,7 @@ namespace Assets.Scripts.Visualizers
 
             if (!outcomes.Any()) return;
 
-            CreateLine("Happenings:", timeInSeconds, 5, true);
+            CreateLine("Events", timeInSeconds, 5, true);
             for (var index = 0; index < outcomes.Count; index++)
             {
                 var outcome = outcomes[index];
