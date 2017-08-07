@@ -24,6 +24,7 @@ namespace Assets.Scripts.GameActions
             {
                 StandardSoundPlayer.Instance.PlaySfx(SFXEvent.Kaching);
             }
+            StaticStates.Get<PaymentTrackerState>().AddPayment(moneyDelta, paymentType);
             StaticStates.Get<MoneyState>().ModifyMoney(moneyDelta);
             ActionStatus = ActionStatus.Succeeded;
         }

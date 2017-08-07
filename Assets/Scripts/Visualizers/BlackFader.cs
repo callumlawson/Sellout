@@ -101,8 +101,6 @@ namespace Assets.Scripts.Visualizers
         {
             var payments = StaticStates.Get<PaymentTrackerState>().TodaysPayments;
 
-            if (!payments.Any()) return;
-
             CreateLine("Ballance Sheet", timeInSeconds, 0, true);
             CreateLine("Drink Sales: " + payments[PaymentType.DrinkSale], timeInSeconds, 1);
             CreateLine("Ingredient Costs: " + payments[PaymentType.DrinkIngredient], timeInSeconds, 2);
