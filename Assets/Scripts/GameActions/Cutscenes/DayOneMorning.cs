@@ -107,16 +107,16 @@ namespace Assets.Scripts.GameActions.Cutscenes
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("Morning!");
                 DialogueSystem.Instance.WriteNPCLine("I should introduce myself. McGraw - head of security");
-                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks, I'm still learning names. What can I get you at this early hour?", SoItBegings);
+                DialogueSystem.Instance.WritePlayerChoiceLine("Thanks, I'm still learning names. What can I do for you at this early hour?", SoItBegings);
             }
 
             private void SoItBegings()
             {
                 DialogueSystem.Instance.NextPanel();
-                DialogueSystem.Instance.WriteNPCLine("Don't worry, my favorite drink is easy to make.");
-                DialogueSystem.Instance.WriteNPCLine("Grab a glass from the dispenser on your left and pour me three measures of Synthol and a single measure of Vodka.");
+                DialogueSystem.Instance.WriteNPCLine("Don't worry, my favorite drink - a Mind Meld - is easy to make.");
                 DialogueSystem.Instance.WriteNPCLine("I can't get my brain going without it.");
-                DialogueSystem.Instance.WritePlayerChoiceLine("I know where to find a glass on my own bar...", EndConversation(DialogueOutcome.Mean));
+                DialogueSystem.Instance.WriteNPCLine("You can find the recipe by touching the blue 'Drinks' panel to your left.");
+                DialogueSystem.Instance.WritePlayerChoiceLine("I know how to make a Mind Meld, thanks...", EndConversation(DialogueOutcome.Mean));
                 DialogueSystem.Instance.WritePlayerChoiceLine("You drink a glass of basically straight alcohol for breakfast?", Problem);
                 DialogueSystem.Instance.WritePlayerChoiceLine("Coming right up!", EndConversation(DialogueOutcome.Nice));
             }
