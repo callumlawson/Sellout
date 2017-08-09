@@ -35,6 +35,12 @@ namespace Assets.Scripts.Systems.InputHandling
             var entityName = entity.GetState<PrefabState>().PrefabName;
             var interactiveState = entity.GetState<InteractiveState>();
 
+            if (Interface.Instance.MixologyBookUI.transform.GetChild(0).gameObject.activeSelf)
+            {
+                interactiveState.CurrentlyInteractive = false;
+                return;
+            }
+
             if (playerState.Player.GetState<InventoryState>().Child != null && entityName == Prefabs.Beer)
             {
                 interactiveState.CurrentlyInteractive = false;
