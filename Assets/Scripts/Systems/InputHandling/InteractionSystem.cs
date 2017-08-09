@@ -80,7 +80,7 @@ namespace Assets.Scripts.Systems.InputHandling
             }
             if (Prefabs.BarObjectPrefabs.Contains(entityName))
             {
-                interactiveState.CurrentlyInteractive = playerState.PlayerStatus == PlayerStatus.Bar;
+                interactiveState.CurrentlyInteractive = true;
             }
             if (entityName == Prefabs.Counter)
             {
