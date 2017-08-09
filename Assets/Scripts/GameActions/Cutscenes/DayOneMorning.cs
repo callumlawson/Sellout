@@ -136,11 +136,10 @@ namespace Assets.Scripts.GameActions.Cutscenes
             {
                 DialogueSystem.Instance.StartDialogue(converstationInitiator);
                 DialogueSystem.Instance.WriteNPCLine("That's... actually pretty good.");
-                DialogueSystem.Instance.WriteNPCLine("As you're new I'll give you some advice. Watch out for Q.");
-                DialogueSystem.Instance.WriteNPCLine("He and Dave got up to all sorts of trouble and I don't want that with you.");
-                DialogueSystem.Instance.WriteNPCLine("Now that you are here, perhaps I can have some peace and quiet!");
-                DialogueSystem.Instance.WriteNPCLine("To open the bar you need to let the crew know.");
-                DialogueSystem.Instance.WriteNPCLine("The coms console is on the right of the door.");
+                DialogueSystem.Instance.WriteNPCLine("As you're new I'll give you some advice...");
+                DialogueSystem.Instance.WriteNPCLine("Watch out for Q, he gets up to all sorts of trouble and I don't want that with you.");
+                DialogueSystem.Instance.WriteNPCLine("Once you have introduced yourself to the crew you need to activate the console near the door.");
+                DialogueSystem.Instance.WriteNPCLine("That will let them know it's time for drinks!");
                 DialogueSystem.Instance.WriteNPCLine("See you around!");
                 DialogueSystem.Instance.WritePlayerChoiceLine("Until next time.", EndConversation(DialogueOutcome.Nice));
                 DialogueSystem.Instance.WritePlayerChoiceLine("<i>Say nothing</i>", EndConversation(DialogueOutcome.Default));
