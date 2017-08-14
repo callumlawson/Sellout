@@ -32,6 +32,7 @@ namespace Assets.Scripts.Util.Cameras
         void Start()
         {
             cameraBounds = GameObject.FindGameObjectWithTag("CameraBounds").GetComponent<Collider>();
+            GetComponent<Camera>().depthTextureMode = DepthTextureMode.Depth;
         }
 
         [UsedImplicitly]

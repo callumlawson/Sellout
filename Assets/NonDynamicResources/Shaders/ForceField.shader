@@ -1,7 +1,7 @@
 // Shader created with Shader Forge v1.37 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.37;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:3,bdst:7,dpts:2,wrdp:False,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:True,qofs:0,qpre:3,rntp:2,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:32809,y:32418,varname:node_2865,prsc:2|diff-5313-OUT,spec-620-OUT,gloss-620-OUT,emission-5313-OUT,amdfl-5313-OUT,amspl-5313-OUT,alpha-89-OUT,voffset-7136-OUT,tess-9053-OUT;n:type:ShaderForge.SFN_Lerp,id:7373,x:32054,y:32288,varname:node_7373,prsc:2|A-7916-RGB,B-6470-RGB,T-2232-OUT;n:type:ShaderForge.SFN_Color,id:7916,x:31781,y:32181,ptovrint:False,ptlb:Color1,ptin:_Color1,varname:_Color1,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.04411763,c2:0.208925,c3:1,c4:1;n:type:ShaderForge.SFN_Color,id:6470,x:31781,y:32354,ptovrint:False,ptlb:Color2,ptin:_Color2,varname:_Color2,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.06293254,c2:0.363417,c3:0.7132353,c4:1;n:type:ShaderForge.SFN_TexCoord,id:7045,x:31254,y:32645,varname:node_7045,prsc:2,uv:0,uaff:False;n:type:ShaderForge.SFN_Sin,id:593,x:31817,y:32536,varname:node_593,prsc:2|IN-656-OUT;n:type:ShaderForge.SFN_Multiply,id:656,x:31622,y:32536,varname:node_656,prsc:2|A-6200-OUT,B-5936-OUT;n:type:ShaderForge.SFN_Vector1,id:6200,x:31428,y:32536,varname:node_6200,prsc:2,v1:5;n:type:ShaderForge.SFN_Add,id:5936,x:31839,y:32681,varname:node_5936,prsc:2|A-9314-OUT,B-4257-OUT;n:type:ShaderForge.SFN_Time,id:1466,x:31524,y:32828,varname:node_1466,prsc:2;n:type:ShaderForge.SFN_RemapRange,id:2232,x:32024,y:32542,varname:node_2232,prsc:2,frmn:-1,frmx:1,tomn:0,tomx:1|IN-593-OUT;n:type:ShaderForge.SFN_Multiply,id:4257,x:31751,y:32827,varname:node_4257,prsc:2|A-1466-TSL,B-6330-OUT;n:type:ShaderForge.SFN_ValueProperty,id:6330,x:31521,y:33000,ptovrint:False,ptlb:scroll_speed,ptin:_scroll_speed,varname:_scroll_speed,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:2;n:type:ShaderForge.SFN_Multiply,id:5313,x:32480,y:32402,varname:node_5313,prsc:2|A-5115-RGB,B-7373-OUT;n:type:ShaderForge.SFN_Color,id:5115,x:32261,y:32175,ptovrint:False,ptlb:BlendColor,ptin:_BlendColor,varname:node_5115,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:1,c2:1,c3:1,c4:1;n:type:ShaderForge.SFN_Negate,id:9314,x:31650,y:32681,varname:node_9314,prsc:2|IN-7875-OUT;n:type:ShaderForge.SFN_Vector1,id:620,x:33049,y:32492,varname:node_620,prsc:2,v1:0;n:type:ShaderForge.SFN_Multiply,id:7136,x:32436,y:32807,varname:node_7136,prsc:2|A-2232-OUT,B-7098-OUT,C-8202-OUT;n:type:ShaderForge.SFN_NormalVector,id:7098,x:32179,y:32786,prsc:2,pt:False;n:type:ShaderForge.SFN_Vector1,id:8202,x:32184,y:32972,varname:node_8202,prsc:2,v1:0.05;n:type:ShaderForge.SFN_Multiply,id:7875,x:31453,y:32678,varname:node_7875,prsc:2|A-7045-V,B-8604-OUT;n:type:ShaderForge.SFN_ValueProperty,id:8604,x:31270,y:32845,ptovrint:False,ptlb:LineDensity,ptin:_LineDensity,varname:node_8604,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:10;n:type:ShaderForge.SFN_RemapRange,id:89,x:32543,y:32562,varname:node_89,prsc:2,frmn:0,frmx:1,tomn:0,tomx:0.2|IN-2232-OUT;n:type:ShaderForge.SFN_ValueProperty,id:9053,x:32600,y:32868,ptovrint:False,ptlb:Tesselation_Factor,ptin:_Tesselation_Factor,varname:node_9053,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:3;proporder:7916-6470-6330-5115-8604-9053;pass:END;sub:END;*/
+/*SF_DATA;ver:1.37;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:3,bdst:7,dpts:2,wrdp:False,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:True,qofs:0,qpre:3,rntp:2,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:32809,y:32418,varname:node_2865,prsc:2|diff-5313-OUT,spec-620-OUT,gloss-620-OUT,emission-5313-OUT,amdfl-5313-OUT,alpha-5295-OUT,voffset-7136-OUT,tess-9053-OUT;n:type:ShaderForge.SFN_Lerp,id:7373,x:31950,y:32303,varname:node_7373,prsc:2|A-7916-RGB,B-6470-RGB,T-2232-OUT;n:type:ShaderForge.SFN_Color,id:7916,x:31677,y:32196,ptovrint:False,ptlb:Color1,ptin:_Color1,varname:_Color1,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.04411763,c2:0.208925,c3:1,c4:1;n:type:ShaderForge.SFN_Color,id:6470,x:31677,y:32369,ptovrint:False,ptlb:Color2,ptin:_Color2,varname:_Color2,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.06293254,c2:0.363417,c3:0.7132353,c4:1;n:type:ShaderForge.SFN_TexCoord,id:7045,x:30945,y:32734,varname:node_7045,prsc:2,uv:0,uaff:False;n:type:ShaderForge.SFN_Sin,id:593,x:31508,y:32625,varname:node_593,prsc:2|IN-656-OUT;n:type:ShaderForge.SFN_Multiply,id:656,x:31313,y:32625,varname:node_656,prsc:2|A-6200-OUT,B-5936-OUT;n:type:ShaderForge.SFN_Vector1,id:6200,x:31119,y:32625,varname:node_6200,prsc:2,v1:5;n:type:ShaderForge.SFN_Add,id:5936,x:31530,y:32770,varname:node_5936,prsc:2|A-9314-OUT,B-4257-OUT;n:type:ShaderForge.SFN_Time,id:1466,x:31215,y:32917,varname:node_1466,prsc:2;n:type:ShaderForge.SFN_RemapRange,id:2232,x:31715,y:32631,varname:node_2232,prsc:2,frmn:-1,frmx:1,tomn:0,tomx:1|IN-593-OUT;n:type:ShaderForge.SFN_Multiply,id:4257,x:31442,y:32916,varname:node_4257,prsc:2|A-1466-TSL,B-6330-OUT;n:type:ShaderForge.SFN_ValueProperty,id:6330,x:31212,y:33089,ptovrint:False,ptlb:scroll_speed,ptin:_scroll_speed,varname:_scroll_speed,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:2;n:type:ShaderForge.SFN_Multiply,id:5313,x:32376,y:32417,varname:node_5313,prsc:2|A-5115-RGB,B-7373-OUT;n:type:ShaderForge.SFN_Color,id:5115,x:32157,y:32190,ptovrint:False,ptlb:BlendColor,ptin:_BlendColor,varname:node_5115,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:1,c2:1,c3:1,c4:1;n:type:ShaderForge.SFN_Negate,id:9314,x:31341,y:32770,varname:node_9314,prsc:2|IN-7875-OUT;n:type:ShaderForge.SFN_Vector1,id:620,x:33049,y:32492,varname:node_620,prsc:2,v1:0;n:type:ShaderForge.SFN_Multiply,id:7136,x:32140,y:32894,varname:node_7136,prsc:2|A-2232-OUT,B-7098-OUT,C-8202-OUT;n:type:ShaderForge.SFN_NormalVector,id:7098,x:31878,y:32888,prsc:2,pt:False;n:type:ShaderForge.SFN_Vector1,id:8202,x:31888,y:33059,varname:node_8202,prsc:2,v1:0.05;n:type:ShaderForge.SFN_Multiply,id:7875,x:31144,y:32767,varname:node_7875,prsc:2|A-7045-V,B-8604-OUT;n:type:ShaderForge.SFN_ValueProperty,id:8604,x:30961,y:32934,ptovrint:False,ptlb:LineDensity,ptin:_LineDensity,varname:node_8604,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:10;n:type:ShaderForge.SFN_RemapRange,id:89,x:32501,y:32537,varname:node_89,prsc:2,frmn:0,frmx:1,tomn:0,tomx:0.2|IN-2232-OUT;n:type:ShaderForge.SFN_ValueProperty,id:9053,x:32599,y:32869,ptovrint:False,ptlb:Tesselation_Factor,ptin:_Tesselation_Factor,varname:node_9053,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:3;n:type:ShaderForge.SFN_DepthBlend,id:9580,x:32165,y:32760,varname:node_9580,prsc:2|DIST-967-OUT;n:type:ShaderForge.SFN_ValueProperty,id:967,x:31993,y:32758,ptovrint:False,ptlb:Depth,ptin:_Depth,varname:_Tesselation_Factor_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1.2;n:type:ShaderForge.SFN_Multiply,id:5295,x:32639,y:32676,varname:node_5295,prsc:2|A-89-OUT,B-4971-OUT;n:type:ShaderForge.SFN_Divide,id:4438,x:32310,y:32695,varname:node_4438,prsc:2|A-5334-OUT,B-9580-OUT;n:type:ShaderForge.SFN_Vector1,id:5334,x:32158,y:32634,varname:node_5334,prsc:2,v1:0.3;n:type:ShaderForge.SFN_ConstantClamp,id:4971,x:32455,y:32695,varname:node_4971,prsc:2,min:1,max:4|IN-4438-OUT;proporder:7916-6470-6330-5115-8604-9053-967;pass:END;sub:END;*/
 
 Shader "Shader Forge/ForceField" {
     Properties {
@@ -11,6 +11,7 @@ Shader "Shader Forge/ForceField" {
         _BlendColor ("BlendColor", Color) = (1,1,1,1)
         _LineDensity ("LineDensity", Float ) = 10
         _Tesselation_Factor ("Tesselation_Factor", Float ) = 3
+        _Depth ("Depth", Float ) = 1.2
         [HideInInspector]_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
     }
     SubShader {
@@ -47,6 +48,7 @@ Shader "Shader Forge/ForceField" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 5.0
+            uniform sampler2D _CameraDepthTexture;
             uniform float4 _TimeEditor;
             uniform float4 _Color1;
             uniform float4 _Color2;
@@ -54,6 +56,7 @@ Shader "Shader Forge/ForceField" {
             uniform float4 _BlendColor;
             uniform float _LineDensity;
             uniform float _Tesselation_Factor;
+            uniform float _Depth;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -71,9 +74,10 @@ Shader "Shader Forge/ForceField" {
                 float3 normalDir : TEXCOORD4;
                 float3 tangentDir : TEXCOORD5;
                 float3 bitangentDir : TEXCOORD6;
-                UNITY_FOG_COORDS(7)
+                float4 projPos : TEXCOORD7;
+                UNITY_FOG_COORDS(8)
                 #if defined(LIGHTMAP_ON) || defined(UNITY_SHOULD_SAMPLE_SH)
-                    float4 ambientOrLightmapUV : TEXCOORD8;
+                    float4 ambientOrLightmapUV : TEXCOORD9;
                 #endif
             };
             VertexOutput vert (VertexInput v) {
@@ -99,6 +103,8 @@ Shader "Shader Forge/ForceField" {
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = UnityObjectToClipPos( v.vertex );
                 UNITY_TRANSFER_FOG(o,o.pos);
+                o.projPos = ComputeScreenPos (o.pos);
+                COMPUTE_EYEDEPTH(o.projPos.z);
                 return o;
             }
             #ifdef UNITY_CAN_COMPILE_TESSELLATION
@@ -173,6 +179,8 @@ Shader "Shader Forge/ForceField" {
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float3 normalDirection = i.normalDir;
                 float3 viewReflectDirection = reflect( -viewDirection, normalDirection );
+                float sceneZ = max(0,LinearEyeDepth (UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)))) - _ProjectionParams.g);
+                float partZ = max(0,i.projPos.z - _ProjectionParams.g);
                 float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
                 float3 lightColor = _LightColor0.rgb;
                 float3 halfDirection = normalize(viewDirection+lightDirection);
@@ -229,12 +237,12 @@ Shader "Shader Forge/ForceField" {
                 lightColor = gi.light.color;
 ////// Specular:
                 float NdotL = saturate(dot( normalDirection, lightDirection ));
-                float4 node_1466 = _Time + _TimeEditor;
-                float node_2232 = (sin((5.0*((-1*(i.uv0.g*_LineDensity))+(node_1466.r*_scroll_speed))))*0.5+0.5);
-                float3 node_5313 = (_BlendColor.rgb*lerp(_Color1.rgb,_Color2.rgb,node_2232));
                 float LdotH = saturate(dot(lightDirection, halfDirection));
                 float3 specularColor = node_620;
                 float specularMonochrome;
+                float4 node_1466 = _Time + _TimeEditor;
+                float node_2232 = (sin((5.0*((-1*(i.uv0.g*_LineDensity))+(node_1466.r*_scroll_speed))))*0.5+0.5);
+                float3 node_5313 = (_BlendColor.rgb*lerp(_Color1.rgb,_Color2.rgb,node_2232));
                 float3 diffuseColor = node_5313; // Need this for specular when using metallic
                 diffuseColor = DiffuseAndSpecularFromMetallic( diffuseColor, specularColor, specularColor, specularMonochrome );
                 specularMonochrome = 1.0-specularMonochrome;
@@ -260,7 +268,7 @@ Shader "Shader Forge/ForceField" {
                 specularPBL *= any(specularColor) ? 1.0 : 0.0;
                 float3 directSpecular = attenColor*specularPBL*FresnelTerm(specularColor, LdotH);
                 half grazingTerm = saturate( gloss + specularMonochrome );
-                float3 indirectSpecular = (gi.indirect.specular + node_5313);
+                float3 indirectSpecular = (gi.indirect.specular);
                 indirectSpecular *= FresnelLerp (specularColor, grazingTerm, NdotV);
                 indirectSpecular *= surfaceReduction;
                 float3 specular = (directSpecular + indirectSpecular);
@@ -278,7 +286,7 @@ Shader "Shader Forge/ForceField" {
                 float3 emissive = node_5313;
 /// Final Color:
                 float3 finalColor = diffuse + specular + emissive;
-                fixed4 finalRGBA = fixed4(finalColor,(node_2232*0.2+0.0));
+                fixed4 finalRGBA = fixed4(finalColor,((node_2232*0.2+0.0)*clamp((0.3/saturate((sceneZ-partZ)/_Depth)),1,4)));
                 UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
                 return finalRGBA;
             }
@@ -313,6 +321,7 @@ Shader "Shader Forge/ForceField" {
             #pragma multi_compile_fog
             #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 5.0
+            uniform sampler2D _CameraDepthTexture;
             uniform float4 _TimeEditor;
             uniform float4 _Color1;
             uniform float4 _Color2;
@@ -320,6 +329,7 @@ Shader "Shader Forge/ForceField" {
             uniform float4 _BlendColor;
             uniform float _LineDensity;
             uniform float _Tesselation_Factor;
+            uniform float _Depth;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -337,8 +347,9 @@ Shader "Shader Forge/ForceField" {
                 float3 normalDir : TEXCOORD4;
                 float3 tangentDir : TEXCOORD5;
                 float3 bitangentDir : TEXCOORD6;
-                LIGHTING_COORDS(7,8)
-                UNITY_FOG_COORDS(9)
+                float4 projPos : TEXCOORD7;
+                LIGHTING_COORDS(8,9)
+                UNITY_FOG_COORDS(10)
             };
             VertexOutput vert (VertexInput v) {
                 VertexOutput o = (VertexOutput)0;
@@ -355,6 +366,8 @@ Shader "Shader Forge/ForceField" {
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = UnityObjectToClipPos( v.vertex );
                 UNITY_TRANSFER_FOG(o,o.pos);
+                o.projPos = ComputeScreenPos (o.pos);
+                COMPUTE_EYEDEPTH(o.projPos.z);
                 TRANSFER_VERTEX_TO_FRAGMENT(o)
                 return o;
             }
@@ -429,6 +442,8 @@ Shader "Shader Forge/ForceField" {
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float3 normalDirection = i.normalDir;
+                float sceneZ = max(0,LinearEyeDepth (UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)))) - _ProjectionParams.g);
+                float partZ = max(0,i.projPos.z - _ProjectionParams.g);
                 float3 lightDirection = normalize(lerp(_WorldSpaceLightPos0.xyz, _WorldSpaceLightPos0.xyz - i.posWorld.xyz,_WorldSpaceLightPos0.w));
                 float3 lightColor = _LightColor0.rgb;
                 float3 halfDirection = normalize(viewDirection+lightDirection);
@@ -479,7 +494,7 @@ Shader "Shader Forge/ForceField" {
                 float3 diffuse = directDiffuse * diffuseColor;
 /// Final Color:
                 float3 finalColor = diffuse + specular;
-                fixed4 finalRGBA = fixed4(finalColor * (node_2232*0.2+0.0),0);
+                fixed4 finalRGBA = fixed4(finalColor * ((node_2232*0.2+0.0)*clamp((0.3/saturate((sceneZ-partZ)/_Depth)),1,4)),0);
                 UNITY_APPLY_FOG(i.fogCoord, finalRGBA);
                 return finalRGBA;
             }
