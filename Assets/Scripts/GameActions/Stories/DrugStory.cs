@@ -164,6 +164,7 @@ namespace Assets.Scripts.GameActions.Stories
                 DialogueSystem.Instance.WriteNPCLine("I want to sell Space Weed in your bar.");
                 DialogueSystem.Instance.WriteNPCLine("If you turn a blind eye I'll give you some product and a cut of the money");
                 DialogueSystem.Instance.WriteNPCLine("Here's a sample on the house.");
+                DialogueSystem.Instance.WriteNPCLine("If you accept, hide it behind the bar and I'll get to work.");
             }
         }
         #endregion
