@@ -99,14 +99,14 @@ namespace Assets.Scripts.Visualizers
 
         private void ShowPayments(float timeInSeconds)
         {
-            var payments = StaticStates.Get<PaymentTrackerState>().TodaysPayments;
+            var payments = StaticStates.Get<PaymentTrackerState>();
 
             CreateLine("Ballance Sheet", timeInSeconds, 0, true);
-            CreateLine("Drink Sales", timeInSeconds, 1, false, payments[PaymentType.DrinkSale].ToString());
-            CreateLine("Ingredient Costs", timeInSeconds, 2, false, payments[PaymentType.DrinkIngredient].ToString());
-            if (payments[PaymentType.DrugMoney] != 0)
+            CreateLine("Drink Sales", timeInSeconds, 1, false, payments.GetPayment(PaymentType.DrinkSale).ToString());
+            CreateLine("Ingredient Costs", timeInSeconds, 2, false, payments.GetPayment(PaymentType.DrinkIngredient).ToString());
+            if (payments.GetPayment(PaymentType.DrugMoney) != 0)
             {
-                CreateLine("Drug Money", timeInSeconds, 3, false, payments[PaymentType.DrugMoney].ToString());
+                CreateLine("Drug Money", timeInSeconds, 3, false, payments.GetPayment(PaymentType.DrugMoney).ToString());
             }
             CreateLine("", timeInSeconds, 4, false, "Current Total: " + StaticStates.Get<MoneyState>().CurrentMoney);
             CreateLine("", timeInSeconds, 4);

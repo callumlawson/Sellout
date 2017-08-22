@@ -166,7 +166,7 @@ namespace Assets.Scripts.GameActions
             }
         }
 
-        public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 20)
+        public static GameAction GetRandomOrder(Entity entity, int orderTimeOurInMins = 120)
         {
             var randomValue = Random.value;
             if (randomValue <= 0.20)

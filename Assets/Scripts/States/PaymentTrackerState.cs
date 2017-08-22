@@ -13,23 +13,28 @@ namespace Assets.Scripts.States
     [Serializable]
     public class PaymentTrackerState : IState
     {
-        public readonly Dictionary<PaymentType, int> TodaysPayments = new Dictionary<PaymentType, int>();
-
-        public PaymentTrackerState()
-        {
-            TodaysPayments.Add(PaymentType.DrinkSale, 0);
-            TodaysPayments.Add(PaymentType.DrinkIngredient, 0);
-            TodaysPayments.Add(PaymentType.DrugMoney, 0);
-        }
+        private readonly Dictionary<PaymentType, int> todaysPayments = new Dictionary<PaymentType, int>();
 
         public void AddPayment(int amount, PaymentType paymentType)
         {
-            TodaysPayments[paymentType] += amount;
+            if (todaysPayments.ContainsKey(paymentType))
+            {
+                todaysPayments[paymentType] += amount;
+            }
+            else
+            {
+                todaysPayments.Add(paymentType, amount);       
+            }
+        }
+
+        public int GetPayment(PaymentType paymentType)
+        {
+            return todaysPayments.ContainsKey(paymentType) ? todaysPayments[paymentType] : 0;
         }
 
         public void ClearOutcomes()
         {
-            TodaysPayments.Clear();
+            todaysPayments.Clear();
         }
     }
 }
