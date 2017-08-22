@@ -23,9 +23,12 @@
 */
 
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace cakeslice
 {
+    [ExecuteInEditMode]
     [RequireComponent(typeof(Renderer))]
     public class Outline : MonoBehaviour
     {
@@ -46,20 +49,24 @@ namespace cakeslice
 
         void OnEnable()
         {
-            Object[] cameras = GameObject.FindObjectsOfType(typeof(OutlineEffect));
-            foreach(Object c in cameras)
+			IEnumerable<OutlineEffect> effects = Camera.allCameras.AsEnumerable()
+				.Select(c => c.GetComponent<OutlineEffect>())
+				.Where(e => e != null);
+
+			foreach (OutlineEffect effect in effects)
             {
-                OutlineEffect effect = c as OutlineEffect;
                 effect.AddOutline(this);
             }
         }
 
         void OnDisable()
         {
-            Object[] cameras = GameObject.FindObjectsOfType(typeof(OutlineEffect));
-            foreach(Object c in cameras)
+			IEnumerable<OutlineEffect> effects = Camera.allCameras.AsEnumerable()
+				.Select(c => c.GetComponent<OutlineEffect>())
+				.Where(e => e != null);
+
+			foreach (OutlineEffect effect in effects)
             {
-                OutlineEffect effect = c as OutlineEffect;
                 effect.RemoveOutline(this);
             }
         }

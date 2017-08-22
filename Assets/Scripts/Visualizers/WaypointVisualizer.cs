@@ -8,19 +8,14 @@ namespace Assets.Scripts.Visualizers
     [UsedImplicitly]
     public class WaypointVisualizer : MonoBehaviour, IEntityVisualizer
     {
-        private MeshRenderer ourRenderer;
-        private Collider ourCollider;
-
         public void OnStartRendering(Entity entity)
         {
-            ourRenderer = GetComponentInChildren<MeshRenderer>();
-            ourCollider = GetComponentInChildren<Collider>();
+            //Do Nothing.
         }
 
         public void OnFrame()
         {
-            ourRenderer.enabled = GameSettings.IsDebugOn;
-            ourCollider.enabled = GameSettings.IsDebugOn;
+            transform.GetChild(0).gameObject.SetActive(GameSettings.IsDebugOn);
         }
 
         public void OnStopRendering(Entity entity)
