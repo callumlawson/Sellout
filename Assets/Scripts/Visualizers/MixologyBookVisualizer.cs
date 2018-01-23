@@ -30,6 +30,12 @@ namespace Assets.Scripts.Visualizers
             {
                 mixologyUI.transform.GetChild(0).gameObject.SetActive(activeState.IsActive);
             }
+
+            if (Input.GetKeyUp(KeyCode.Escape) && activeState.IsActive)
+            {
+                activeState.IsActive = false;
+                mixologyUI.transform.GetChild(0).gameObject.SetActive(activeState.IsActive);
+            }
         }
 
         public void OnStopRendering(Entity entity)
