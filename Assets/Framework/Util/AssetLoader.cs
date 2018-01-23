@@ -5,11 +5,16 @@ namespace Assets.Framework.Util
 {
     public static class AssetLoader
     {
-        private static readonly AssetIndexObject AssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.AssetIndexObject") as AssetIndexObject;
-        private static readonly ScriptableObjectsAssetIndexObject ScriptableAssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.ScriptableObjectsAssetIndexObject") as ScriptableObjectsAssetIndexObject;
+        private static AssetIndexObject AssetIndexObject;
+        private static ScriptableObjectsAssetIndexObject ScriptableAssetIndexObject;
 
         public static GameObject LoadAsset(string prefabName)
         {
+            if (AssetIndexObject == null)
+            {
+                AssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.AssetIndexObject") as AssetIndexObject;
+            }
+
             var resolvedPath = ResolvePrefabPathFromIndex(prefabName);
             var prefabToSpawn = Resources.Load(resolvedPath) as GameObject;
             if (prefabToSpawn == null)
@@ -21,6 +26,11 @@ namespace Assets.Framework.Util
 
         public static T LoadScriptableObjectAsset<T>(string assetName) where T : ScriptableObject
         {
+            if(ScriptableAssetIndexObject == null)
+            {
+                ScriptableAssetIndexObject = Resources.Load("AssetInfo/Assets.Framework.Util.ScriptableObjectsAssetIndexObject") as ScriptableObjectsAssetIndexObject;
+            }
+
             if (ScriptableAssetIndexObject.AssetNames.Contains(assetName))
             {
                 var index = ScriptableAssetIndexObject.AssetNames.IndexOf(assetName);

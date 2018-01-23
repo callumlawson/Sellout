@@ -265,9 +265,6 @@ namespace Assets.Scripts.GameActions.Stories
 
             var sequence = new ActionSequence("Ellie ask for drink.");
 
-            var randomRecipeNotFavorite = DrinkRecipes.Recipes.Where(recipe => recipe.DrinkName != elliesFavoriteDrink).PickRandom();            
-            var drinkOrder = new DrinkOrders.ExactDrinkorder(randomRecipeNotFavorite, ellie.GetState<NameState>().Name);
-
             sequence.Add(DrinkOrders.GetRandomAlcoholicDrinkOrder(ellie, correctDrinkConversation: correctDrinkConversation, incorrectDrinkConversation: incorrectDrinkConversation, otherDrinkActions: otherDrinkActions));
             sequence.Add(CommonActions.GoToSeat());
             sequence.Add(CommonActions.SitDownLoop());

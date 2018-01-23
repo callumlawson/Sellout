@@ -6,12 +6,15 @@ using Assets.Scripts.Systems.AI;
 using Assets.Scripts.Util;
 using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.Stories;
+using UnityEngine.Analytics;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
     static class DayTwoMorning
     {
         public static void Start(List<Entity> matchingEntities) {
+
+            Analytics.CustomEvent("Day Two Started");
 
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);

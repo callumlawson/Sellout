@@ -181,6 +181,7 @@ namespace Assets.Scripts.Systems
             var lineTemplate = lineType == LineType.Dialogue ? dialogueLineUI : responseLineUI;
             var lineGameObject = Object.Instantiate(lineTemplate);
             lineGameObject.transform.SetParent(currentDialogueLinesParent.transform);
+            lineGameObject.transform.localScale = new Vector3(1, 1, 1);
             var text = lineGameObject.GetComponentInChildren<Text>();
             text.DOFade(0.0f, 0.0f);
             text.text = line;

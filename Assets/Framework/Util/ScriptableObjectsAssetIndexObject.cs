@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.Framework.Util
 {
     [Serializable]
-    public class AssetIndexObject : ScriptableObject
+    public class ScriptableObjectsAssetIndexObject : ScriptableObject
     {
         public List<string> AssetNames;
         public List<string> AssetPaths;

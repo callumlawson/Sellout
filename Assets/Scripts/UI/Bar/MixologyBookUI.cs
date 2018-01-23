@@ -33,8 +33,9 @@ namespace Assets.Scripts.UI.Bar
                 AddRecipe(DrinkRecipes.Recipes[i]);
                 if (i < DrinkRecipes.Recipes.Count - 1)
                 {
-                    var breakUI = Instantiate(breakTemplate);
-                    breakUI.transform.SetParent(recipeContentPane.transform);
+                    //Remove breaks to try and avoid non scrolling issue.
+                    //var breakUI = Instantiate(breakTemplate);
+                    //breakUI.transform.SetParent(recipeContentPane.transform);
                 }
             }
 

@@ -14,13 +14,16 @@ using Assets.Scripts.Util;
 using Assets.Scripts.Util.Dialogue;
 using Assets.Scripts.Util.NPC;
 using Assets.Scripts.GameActions.Stories;
+using UnityEngine.Analytics;
 
 namespace Assets.Scripts.GameActions.Cutscenes
 {
     static class DayOneMorning
     {
         public static void Start(List<Entity> matchingEntities) {
-           
+
+            Analytics.CustomEvent("Day Three Started");
+
             var mcGraw = EntityQueries.GetEntityWithName(matchingEntities, NPCS.McGraw.Name);
             var player = EntityQueries.GetEntityWithName(matchingEntities, NPCName.You);
 

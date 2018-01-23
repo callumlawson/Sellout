@@ -15,7 +15,7 @@ namespace Assets.Scripts.States
 
         public void ModifyMoney(int amount)
         {
-            CurrentMoney = CurrentMoney += amount;
+            CurrentMoney += amount;
         }
 
         public override string ToString()
